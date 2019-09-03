@@ -1,0 +1,51 @@
+<div *ngIf="view === 'list'; else reportViewTpl" fxLayout="column" fxLayoutGap="10px">
+    <form [formGroup]="dateForm" fxLayout fxLayoutGap="10px">
+        <!-- <mat-form-field class="m-l-10" [appearance]="appearance" (click)="dp.open()">
+                <mat-label>{{ 'POINT_ENTRY.DATE' | translate }}</mat-label>
+                <input matInput readonly formControlName="date" [matDatepicker]="dp">
+                <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                <mat-datepicker #dp>
+                </mat-datepicker>
+            </mat-form-field> -->
+        <mat-form-field class="m-l-10" [appearance]="appearance">
+            <mat-label>{{ 'POINT_ENTRY.NUMBER' | translate }}</mat-label>
+            <input poistiveNumber type="text" matInput formControlName="pointNo">
+        </mat-form-field>
+        <div fxLayout fxLayoutAlign="center center">
+            <button (click)="fetchData()" [disabled]="dateForm.get('pointNo').invalid" fxHide.lt-md mat-raised-button
+                color="primary">Apply</button>
+            <button (click)="fetchData()" [disabled]="dateForm.get('pointNo').invalid" class="m-b-25" fxHide.gt-sm
+                mat-mini-fab color="primary">
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </div>
+    </form>
+    <div fxLayout fxLayoutAlign="center center">
+        <ng-container *ngIf="!fetchingData; else fetchingTpl">
+            <expand-table @fadeIn [data]="points" [expandFirstRow]="true" *ngIf="points?.length; else emptyTpl" fxFlex
+                [columns]="columns" [dataSource]="pointDataSource">
+                <ng-container *expandDetails="let point">
+                    <point-report-view (downloadPdf)="onDownloadPdf($event)" #report fxFlex class="m-t-10" [point]="point"></point-report-view>
+                </ng-container>
+            </expand-table>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #fetchingTpl>
+    <div class="spinner-container">
+        <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
+    </div>
+</ng-template>
+
+<ng-template #emptyTpl>
+    <mat-card>
+        <mat-card-content>No Point found for the selected date.</mat-card-content>
+    </mat-card>
+</ng-template>
+
+<ng-template #reportViewTpl>
+    <div class="p-l-10 p-r-10">
+        <point-report-view *ngIf="points?.length" [viewOnly]="true" [point]="points[0]"></point-report-view>
+    </div>
+</ng-template>

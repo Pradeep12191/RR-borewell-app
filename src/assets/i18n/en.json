@@ -1,0 +1,355 @@
+{
+    "LANG": "English",
+    "POINT_ENTRY": {
+        "BASIC_INFO": "Basic Info",
+        "SELECT_RIG": "Select RIG",
+        "DATE": "Date",
+        "NUMBER": "Point Number",
+        "SELECT_BORE_TYPE": "Select Bore Type",
+        "PARTY_NAME": "Party Name",
+        "PARTY_STATE": "Select Party State",
+        "PARTY_CITY": "Party City",
+        "PARTY_MOBILE_NUMBER": "Party Mobile Number",
+        "PARTY_AREA": "Party Area",
+        "CASING_TYPE": "Casing Type",
+        "PIPE_SELECTION": "Pipe Selection",
+        "PVC_TYPE": "Pipe Type",
+        "AGENT_TYPE": {
+            "LABEL": "Agent Type",
+            "AGENT": "Agent",
+            "SELF": "Self",
+            "SELECT_AGENT": "Select Agent"
+        },
+        "POINT_ENTRY": {
+            "TITLE": "Point Entry",
+            "TOTAL_FEET": "Total Feet",
+            "SHOW_HIDE_START_FEET": "Show/Hide Start Feet",
+            "START_FEET": "Start Feet",
+            "END_FEET": "End Feet",
+            "AMOUNT_PER_FEET": "Amount Per Feet",
+            "AMOUNT": "Amount",
+            "TOTAL_FEET_AMOUNT": "Total Feet Amount",
+            "CASING": "Casing Details",
+            "CASING_DEPTH": "Depth",
+            "CASING_DEPTH_RATE": "Depth Rate",
+            "CASING_FEET_AMOUNT": "Amount",
+            "WELDING": "Welding",
+            "AMT_PER_WELDING": "Amount Per Welding",
+            "WELDING_AMT": "Welding Amount",
+            "OTHER_CHARGES": "Other Charges",
+            "ALLOWANCE": "Travel Allowance / Bata",
+            "TOTAL_CHARGE_AMT": "Total Charge Amount"
+        },
+        "OTHER_CHARGES": {
+            "TITLE": "Other Charges",
+            "SELECT_CHARGES": "Select Charges",
+            "CHARGE_AMT": "Charge Amount"
+        },
+        "RPM_DETAILS": {
+            "TITLE": "RPM Details / BIT Details",
+            "UPLOAD": "Upload End RPM File",
+            "START_RPM": "Start RPM",
+            "END_RPM": "End RPM",
+            "TOTAL_RPM": "Total RPM",
+            "BIT_CALC": "Bit Calculations",
+            "SELECT_BIT": "Select Bit",
+            "LAST_BIT_SCALE": "Last Bit Scale",
+            "FEET": "Feet",
+            "MSG": "Bit Scale must be in MM"
+        },
+        "HAMMER_DETAILS": {
+            "TITLE": "Hammer Details",
+            "HAMMER_CALC": "Hammer Calculations",
+            "SELECT_HAMMER": "Select Hammer",
+            "LAST_SCALE": "Last Scale",
+            "FEET": "Feet",
+            "MSG": "Hammer Scale must be in MM"
+        },
+        "OVERALL_AMT": "Over All Total Amount",
+        "TOTAL_AMT": "Total Amount",
+        "COMMISSION_AMT": "Commission Amount",
+        "REMARKS": "Remarks",
+        "STEP_LABEL":{
+            "INFO": "Info",
+            "POINT_ENTRY": "Point Entry",
+            "OTHER_DETAILS": "Other Details"
+        },
+        "COL":{
+            "RIG": "Rig",
+            "POINT_NO": "Point No.",
+            "BORE_TYPE": "Bore Type",
+            "PARTY_STATE": "Party State"
+        }
+    },
+    "ADD_VEHICLE": {
+        "VEHICLE_TYPE": "Vehicle Type",
+        "BORE_SIZE": "Bore Size",
+        "VEHICLE_NO": "Vehicle No.",
+        "REG_NO": "Vehicle Registration Number (Ex: TN34 A1234)",
+        "OWNER": "Vehicle Owned By",
+        "REG_ADDR": "Registration Address",
+        "MANUFACTURER": "Vehicle Manufacturer",
+        "YEAR_MANUFACTURE": "Year Of Manufacturer",
+        "ENGINE_NUMBER": "Engine Number",
+        "ENGINE_NO": "Engine No.",
+        "CHASSIS_NUMBER": "Chassis Number",
+        "REG_CERT": "Register Certificate (Image)",
+        "CONTACT_DETAILS": {
+            "TITLE": "Contact Details",
+            "CONTACT_TYPE": "Contact Type",
+            "MOBILE_NUMBER": "Mobile Number",
+            "MSG": "(Contact Details For Text Messaging Reminder)"
+        },
+        "INSURANCE_DETAILS": {
+            "TITLE": "Insurance Details",
+            "COMPANY_DETAILS": "Insurance Company Details",
+            "INSURANCE": "Insurance (Image)"
+        },
+        "LABOUR_INSURANCE_DETAILS": {
+            "TITLE": "Labour Insurance Details",
+            "COMPANY_DETAILS": "Insurance Company Details"
+        },
+        "PERMIT_DETAILS": {
+            "TITLE": "Permit Details",
+            "STATE": "State Permit Details"
+        },
+        "ROAD_TAX": {
+            "TITLE": "Road Tax"
+        },
+        "FITNESS_CERT": {
+            "TITLE": "Fitness Certificate"
+        },
+        "POLLUTION_CERT": {
+            "TITLE": "Pollution Certificate"
+        },
+        "GENERAL": {
+            "VALID_UPTO": "Valid Upto",
+            "REMIND": "Remind Me Before",
+            "1_DAY": "1 Day",
+            "2_DAY": "2 Days",
+            "7_DAY": "7 Days",
+            "30_DAY": "30 Days"
+        },
+        "STEP_LABEL": {
+            "VEHICLE_INFO": "Info",
+            "VEHICLE_DETAILS": "Details",
+            "VEHICLE_CERT": "Certificates"
+        }
+    },
+    "ADD_HAMMER": {
+        "TITLE": "Add Hammer",
+        "PURCHASE_DATE": "Hammer Purchase Date",
+        "NAME": "Hammer Name",
+        "COMPANY_NAME": "Hammer Company Name",
+        "DISTRIBUTOR_DETAILS": "Hammer Distributor Details",
+        "SELECT_RIG": "Select RIG",
+        "HAMMER_NUMBER": "Hammer Number",
+        "BARREL_SCALE": "Barrel Scale (MM)",
+        "SPECH_SET_SIZE": "Spech Set Size",
+        "PISTON_NUMBER": "Piston Number",
+        "CONTROL_TUBE_NUMBER": "Control Tube Number (MM)",
+        "DISTRIBUTOR":{
+            "TITLE": "Add Hammer Distributor",
+            "NAME_COL": "Distributor Name",
+            "NAME": "Hammer Distributor Name",
+            "ADDRESS": "Hammer Distributor Address"
+        },
+        "COL_TITLE":{
+            "DISTRIBUTOR_NAME": "Distributor Name",
+            "NAME": "Name",
+            "NUMBER": "Number",
+            "COMPANY_NAME": "Company Name",
+            "PURCHASE_DATE": "Purchase Date",
+            "RIG": "Rig"
+        },
+        "COMPANY": {
+            "TITLE": "Add Hammer Company Name",
+            "NAME": "Hammer Company Name",
+            "ADDRESS": "Hammer Company Address"
+        }
+    },
+    "ADD_BIT": {
+        "TITLE": "Add Drill Bit",
+        "PURCHASE_DATE": "Drill Bit Purchase Date",
+        "PURCHASE_DATE_COL": "Date",
+        "TYPE": "Bit Type",
+        "DRILLING": "Drill/OB Bit",
+        "DRILLING_COL": "Drilling",
+        "VEHICLE": "Select the Vehicle",
+        "NAME": "Bit Name",
+        "DISTRIBUTOR_DETAILS": "Bit Distributor Details",
+        "SIZE": "Bit Size",
+        "NUMBER": "Bit Number",
+        "INITIAL_SCALE": "Bit Intial Scale (MM)",
+        "BIT_DISTRIBUTOR": {
+            "TITLE": "Add Bit Distributor",
+            "NAME": "Bit Distributor",
+            "NAME_COL": "Distributor Name",
+            "ADDRESS": "Bit Distributor Address"
+        },
+        "BIT_SIZE": {
+            "TITLE": "Add Bit Size",
+            "NAME": "Bit Size"
+        }
+    },
+    "ADD_AGENT": {
+        "TITLE": "ADD AGENT",
+        "OFFICE_NAME": "Agent Office Name",
+        "NAME": "Agent Name",
+        "STATE": "Agent State",
+        "TYPE": "Agent Type",
+        "ADDRESS": "Address",
+        "CITY": "Agent City",
+        "AREA": "Agent Area",
+        "NUMBER": "Mobile Number",
+        "RE-BORE":{
+            "TITLE": "Re-Bore Details",
+            "CHARGES": "Re-Bore Charges",
+            "AMT": "Re-Bore Amount",
+            "FLUSHING_CHARGE": "Flushing Charge",
+            "ADDl_REDRILLING_CHARGE": "Additional Re Drilling Charge"
+        },
+        "POINT": {
+            "TITLE": "Agent Point Particulars",
+            "START_FEET": "Start Feet",
+            "END_FEET": "End Feet",
+            "PER_FEET": "Per Feet",
+            "PARTICULARS": "Particulars",
+            "AMOUNT": "Amount"
+        },
+        "COMMISSION": {
+            "TITLE": "Commission Particulars",
+            "TYPE": "Drilling Commission Type",
+            "PER_FEET": "Drilling Commission Per Feet",
+            "CASING_TYPE": "Casing Commission Type",
+            "CASING_PER_FEET": "Casing Commission Per Feet",
+            "CASING_PAYMENT_TYPE": "Casing Payment Type"
+        },
+        "STEP_LABEL": {
+            "INFO": "Info",
+            "POINT": "Point",
+            "COMMISSION": "Commission",
+            "NEW_BORE": "New Bore",
+            "RE_BORE": "Re Bore"
+        },
+        "COL": {
+            "OFFICE_NAME": "Office Name",
+            "NAME": "Name",
+            "STATE": "State",
+            "CITY": "City",
+            "AREA": "Area",
+            "TYPE": "Type",
+            "ADDRESS": "Address",
+            "MOBILE": "Mobile No.",
+            "NEW_BORE": "New Bore Details"
+        }
+    },
+    "NAV": {
+        "DASHBOARD": "Dashboard",
+        "MASTER": "Master",
+        "VEHICLE": "Vehicle",
+        "ADD_VEHICLE": "Add Vehicle",
+        "VIEW_VEHICLE": "View / Edit Vehicle",
+        "LINK_VEHICLE": "Vehicle Link / Unlink",
+        "BIT": "Bit",
+        "ADD_BIT": "Add Bit",
+        "VIEW_BIT": "View Bit",
+        "HAMMER": "Hammer",
+        "ADD_HAMMER": "Add Hammer",
+        "VIEW_HAMMER": "View Hammer",
+        "AGENT": "Agent",
+        "ADD_AGENT": "Add Agent",
+        "VIEW_AGENT": "View Agent",
+        "POINT_DETAILS": "Point Details",
+        "POINT_ENTRY": "RPM Entry",
+        "LABOUR_MANAGEMENT_DETAILS": "Labour Management Details",
+        "LABOUR_RULE": "Labour Rule",
+        "ADD_LABOUR": "Add Labour",
+        "VIEW_LABOUR": "View / Edit Labour",
+        "LABOUR_LINK": "Labour Link / Unlink",
+        "LABOUR_ADVANCE": "Labour Advance",
+        "LABOUR_ADVANCE_REFUND": "Labour Advance Refund",
+        "REPORTS": {
+            "TITLE": "Reports",
+            "POINT_DETAILS": {
+                "TITLE": "Point Details",
+                "DRILL_LOG": "Drill Log",
+                "RPM_DETAILS": "RPM Details",
+                "POINT_REPORT": "Point Report"
+            },
+            "AGENT_BALANCE_SHEET": "Agent Balance Sheet",
+            "AGENT_DETAILS": "Agent Details",
+            "VEHICLE": {
+                "TITLE": "Vehicle",
+                "REPORT": "Vehicle Report",
+                "PAIR_REPORT": "Vehicle Pair / Unpair Report",
+                "SERVICE_REMAINDER": "Vehicle Service Remainder",
+                "DARK_ENTRY": "Dark Km Entry"
+            },
+            "TYRE": "Tyre",
+            "BIT": "Bit",
+            "HAMMER": "Hammer",
+            "RECEIPTS": {
+                "TITLE": "Receipts and Advance",
+                "AMT": "Amount Receipt",
+                "ADVANCES": "Receipts & Advances"
+            },
+            "EXPENSES": {
+                "TITLE": "Expenses and Payments",
+                "FUEL": "Fuel Expense",
+                "MATERIAL": "Material Expense",
+                "MISCELLANEOUS": "Miscellaneous Expense",
+                "OTHER": "Other Payment Issue"
+            },
+            "CREDIT": {
+                "TITLE": "Daily Credit & Debit Reports",
+                "MANAGER": "Manager Wise",
+                "VEHICLE": "Vehicle Wise"
+            },
+            "BALANCE": {
+                "TITLE": "Balance Reports",
+                "MANAGER": "Manager Wise",
+                "VEHICLE": "Vehicle Wise",
+                "COMPANY": "Company Wise"
+            },
+            "LABOUR": {
+                "TITLE": "Labour Reports",
+                "DETAILS": "Labour Details",
+                "ADVANCE_REFUND": "Advance Refund",
+                "DATE": "Date Wise Labour Advance Refund",
+                "ISSUED": "Labour Advanced Issued"
+            },
+            "GENERAL":{
+                "TITLE":"General Alert",
+                "VEHICLE": "Vehicle Insurance",
+                "LABOUR": "Labour Insurance",
+                "PERMIT": "Permit Details",
+                "ROAD_TAX": "Road Tax",
+                "FITNESS": "Fitness Certificate",
+                "POLLUTION": "Polltuion Certificate"
+            }
+        },
+        "SERVICES":{
+            "TITLE": "Services",
+            "HEAD": "Vehicle Service Head",
+            "MAINTENANCE": "Vehicle Service Maintenance"
+        }
+    },
+    "BTN": {
+        "ADD_MORE": "ADD MORE",
+        "CLEAR": "CLEAR",
+        "SAVE": "SAVE",
+        "REMOVE": "Remove",
+        "NEXT": "NEXT",
+        "BACK": "BACK",
+        "SUBMIT": "SUBMIT",
+        "CANCEL": "CANCEL",
+        "ADD_NEW_COMPANY_NAME": "ADD NEW COMPANY NAME",
+        "ADD_NEW_DISTRIBUTOR": "ADD NEW DISTRIBUTOR",
+        "ADD_NEW_SIZE": "ADD NEW SIZE"
+    },
+    "COLUMN":{
+        "SERIAL_NO": "S.No."
+    }
+    
+}

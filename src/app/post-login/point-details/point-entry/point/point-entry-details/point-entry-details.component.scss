@@ -1,0 +1,25 @@
+mat-form-field.calc-field{
+   ::ng-deep .mat-form-field-infix{
+        width: 0px;
+    }
+}
+
+.last-field{
+    max-width: calc(33% - 10px);
+}
+
+.m-r-n-10{
+    margin-right: -10px;
+}
+
+.m-b-20{
+    margin-bottom: 20px !important;
+}
+
+.m-t-n-18{
+    margin-top: -18px;
+}
+
+.m-t-n-10{
+    margin-top: -10px;
+}

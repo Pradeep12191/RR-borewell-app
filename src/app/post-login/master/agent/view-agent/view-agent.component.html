@@ -1,0 +1,149 @@
+<expand-table [columns]="columns" [dataSource]="agentDataSource">
+    <ng-container *expandDetails="let agent">
+        <div fxLayout="column" class="m-t-10 m-b-10 width-100" fxLayoutGap="10px">
+            <div class="card adjust-margin">
+                <div class="section-title contact-title ">Agent Info</div>
+                <div fxLayout="column" class="m-t-16" fxLayoutGap="10px">
+                    <div fxLayout fxLayoutGap="10px">
+                        <div class="bold " fxFlex.lt-md="35" fxFlex="30">{{ 'ADD_AGENT.COL.OFFICE_NAME' |
+                            translate}}</div>
+                        <div class="bold">:</div>
+                        <div class="text-transform-upper">{{ agent.officeName }}</div>
+                    </div>
+                    <div fxLayout fxLayoutGap="10px">
+                        <div class="bold" fxFlex.lt-md="35" fxFlex="30">{{ 'ADD_AGENT.COL.NAME' | translate }}</div>
+                        <div class="bold">:</div>
+                        <div>{{ agent.name }}</div>
+                    </div>
+                    <div fxLayout fxLayoutGap="10px">
+                        <div class="bold" fxFlex.lt-md="35" fxFlex="30">{{ 'ADD_AGENT.COL.MOBILE' | translate
+                            }}</div>
+                        <div class="bold">:</div>
+                        <div>{{ agent.mobileNumber }}</div>
+                    </div>
+                    <div fxLayout fxLayoutGap="10px">
+                        <div class="bold" fxFlex.lt-md="35" fxFlex="30">{{ 'ADD_AGENT.COL.AREA' | translate }}</div>
+                        <div class="bold">:</div>
+                        <div>{{ agent.area }}</div>
+                    </div>
+                    <div fxLayout fxLayoutGap="10px">
+                        <div class="bold" fxFlex.lt-md="35" fxFlex="30">{{ 'ADD_AGENT.COL.CITY' | translate }}</div>
+                        <div class="bold">:</div>
+                        <div>{{ agent.city }}</div>
+                    </div>
+                    <div fxLayout fxLayoutGap="10px">
+                        <div class="bold" fxFlex.lt-md="35" fxFlex="30">{{ 'ADD_AGENT.COL.STATE' | translate }}</div>
+                        <div class="bold">:</div>
+                        <div>{{ agent.state }}</div>
+                    </div>
+                    <div fxLayout fxLayoutGap="10px">
+                        <div class="bold" fxFlex.lt-md="35" fxFlex="30">{{ 'ADD_AGENT.COL.TYPE' | translate }}</div>
+                        <div class="bold">:</div>
+                        <div>{{ agent.type }}</div>
+                    </div>
+                    <!-- <div fxLayout fxLayoutGap="10px">
+                        <div class="bold" fxFlex.lt-md="35" fxFlex="30">{{ 'ADD_AGENT.COL.ADDRESS' | translate
+                            }}</div>
+                        <div class="bold">:</div>
+                        <div>{{ agent.address }}</div>
+                    </div> -->
+                </div>
+            </div>
+            <div class="card adjust-margin">
+                <div class="section-title contact-title">New Bore Charges</div>
+                <div class="m-t-16">
+                    <div fxLayout="column" fxLayoutGap="10px">
+                        <div fxLayout fxLayoutGap="10px">
+                            <div fxFlex="35" class="bold">Allowance</div>
+                            <div class="bold">:</div>
+                            <div>{{ agent.newBore?.allowance | currency: 'INR' }}</div>
+                        </div>
+                        <div fxLayout fxLayoutGap="10px">
+                            <div fxFlex="35" class="bold">Amount per Welding</div>
+                            <div class="bold">:</div>
+                            <div>{{ agent.newBore?.amtPerWelding | currency:'INR' }}</div>
+                        </div>
+                    </div>
+                    <div fxLayout="column" class="m-t-16">
+                        <div class="sub-header">Casing Details</div>
+                        <div class="table-header" fxLayout fxLayoutGap="10px" class="m-t-10 m-b-10">
+                            <div class="bold" fxFlex>Casing</div>
+                            <div class="bold text-center" fxFlex>Depth Rate</div>
+                        </div>
+                        <div fxLayout="column" fxLayoutGap="10px">
+                            <div fxLayout *ngFor="let casing of agent.newBore?.casingArray" fxLayoutGap="10px">
+                                <div fxFlex>{{ casing.name }}</div>
+                                <div fxFlex class="text-center">{{ casing.depthRate | currency: 'INR' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div fxLayout="column" class="m-t-16">
+                        <div class="sub-header">Point Particulars</div>
+                        <div class="table-header" fxLayout fxLayoutGap="10px" class="m-t-10 m-b-10">
+                            <div fxFlex="17.5" class="bold text-center">Start Feet</div>
+                            <div fxFlex="17.5" class="bold text-center">End Feet</div>
+                            <div fxFlex="30" class="bold text-center">Particulars</div>
+                            <div fxFlex="17.5" class="bold text-center">Per Feet</div>
+                            <div fxFlex="17.5" class="bold text-center">Amount</div>
+                        </div>
+                        <div fxLayout="column">
+                            <div fxLayout fxLayoutAlign="start center" style="min-height: 32px" [class.grey]="odd" *ngFor="let particular of agent.newBore?.particulars; let odd = odd">
+                                <div class="text-center"  fxFlex="17.5">{{ particular.startFeet }}</div>
+                                <div class="text-center" fxFlex="17.5">{{ particular.endFeet }}</div>
+                                <div class="text-center" fxFlex="30">{{ particular.particulars }}</div>
+                                <div class="text-center" fxFlex="17.5">{{ particular.perFeet }}</div>
+                                <div class="text-center" fxFlex="17.5">{{ particular.amount }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card adjust-margin">
+                <div class="section-title contact-title">Re Bore Charges</div>
+                <div class="m-t-16">
+                    <div fxLayout="column" fxLayoutGap="10px">
+                        <div fxLayout fxLayoutGap="10px">
+                            <div fxFlex="50" class="bold">Allowance</div>
+                            <div class="bold">:</div>
+                            <div>{{ agent.reBore?.allowance | currency: 'INR' }}</div>
+                        </div>
+                        <div fxLayout fxLayoutGap="10px">
+                            <div fxFlex="50" class="bold">Amount per Welding</div>
+                            <div class="bold">:</div>
+                            <div>{{ agent.reBore?.amtPerWelding | currency:'INR' }}</div>
+                        </div>
+                        <div fxLayout fxLayoutGap="10px">
+                            <div fxFlex="50" class="bold">Addtional Re Drilling Charge</div>
+                            <div class="bold">:</div>
+                            <div>{{ agent.reBore?.addlReDrillingCharge | currency: 'INR' }}</div>
+                        </div>
+                        <div fxLayout fxLayoutGap="10px">
+                            <div fxFlex="50" class="bold">Flushing Charge</div>
+                            <div class="bold">:</div>
+                            <div>{{ agent.reBore?.flushingChange | currency: 'INR' }}</div>
+                        </div>
+                    </div>
+                    <div fxLayout="column" class="m-t-16">
+                        <div class="sub-header">Casing Details</div>
+                        <div class="table-header" fxLayout fxLayoutGap="10px" class="m-t-10 m-b-10">
+                            <div class="bold" fxFlex>Casing</div>
+                            <div class="bold text-center" fxFlex>Depth Rate</div>
+                        </div>
+                        <div fxLayout="column" fxLayoutGap="10px">
+                            <div fxLayout *ngFor="let casing of agent.reBore?.casingArray" fxLayoutGap="10px">
+                                <div fxFlex>{{ casing.name }}</div>
+                                <div fxFlex class="text-center">{{ casing.depthRate | currency: 'INR' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</expand-table>
+
+<ng-template #emptyTpl>
+    <mat-card>
+        <mat-card-content>No Agent Found.</mat-card-content>
+    </mat-card>
+</ng-template>

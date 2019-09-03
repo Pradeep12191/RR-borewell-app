@@ -1,0 +1,153 @@
+{
+    "formAppearance": "outline",
+    "apiUrl": "http://103.207.4.72:8080/rigapi2/webapi/resource/",
+    "mobileNav": false,
+    "classicSidenav": true,
+    "errorMessageTimeout": 2000,
+    "urls": [
+        {
+            "name": "auth",
+            "url": "login"
+        },
+        {
+            "name": "userInfo",
+            "url": "userbasicinfo"
+        },
+        {
+            "name": "addHammer",
+            "url": "addHammer"
+        },
+        {
+            "name": "addBit",
+            "url": "addbit"
+        },
+        {
+            "name": "addVehicle",
+            "url": "addVehicle"
+        },
+        {
+            "name": "state",
+            "url": "statelist"
+        },
+        {
+            "name": "addAgent",
+            "url": "addAgent"
+        },
+        {
+            "name": "updateLang",
+            "url": "updatelanguage"
+        },
+        {
+            "name": "addbit_distributor",
+            "url": "addbit_distributor"
+        },
+        {
+            "name": "addHammer_distributor",
+            "url": "addHammer_distributor"
+        },
+        {
+            "name": "addHammer_company",
+            "url": "addHammer_company"
+        },
+        {
+            "name": "gethammer_company_list",
+            "url": "gethammer_company_list"
+        },
+        {
+            "name": "viewhammerlist",
+            "url": "viewhammerlist"
+        },
+        {
+            "name": "gethammer_distributor_list",
+            "url": "gethammer_distributor_list"
+        },
+        {
+            "name": "bitlist",
+            "url": "getbitlist"
+        },
+        {
+            "name": "addbit_size",
+            "url": "addbit_size"
+        },
+        {
+            "name": "vehicle_list",
+            "url": "getvehiclenames"
+        },
+        {
+            "name": "distributor_list",
+            "url": "getbitdistributor_list"
+        },
+        {
+            "name": "bitsize_list",
+            "url": "getbitsize_list"
+        },
+        {
+            "name": "view_bit",
+            "url": "viewbitlist"
+        },
+        {
+            "name": "vehicle_types",
+            "url": "vehicle_type"
+        },
+        {
+            "name": "bore_size",
+            "url": "boresize"
+        },
+        {
+            "name": "view_vehicle_list",
+            "url": "viewvehiclelist"
+        },
+        {
+            "name": "contact_types",
+            "url": "contact_type"
+        },
+        {
+            "name": "viewagentlist",
+            "url": "viewagentlist"
+        },
+        {
+            "name": "agent_types",
+            "url": "getagent_type"
+        },
+        {
+            "name": "drilling_commission_types",
+            "url": "getdrill_comm_type"
+        },
+        {
+            "name": "casing_commission_types",
+            "url": "getcase_comm_type"
+        },
+        {
+            "name": "casing_payment_types",
+            "url": "getcase_payment_type"
+        },
+        {
+            "name": "getbore_type",
+            "url": "getbore_type"
+        },
+        {
+            "name": "getcasing_type",
+            "url": "getcasing_type"
+        },
+        {
+            "name": "getpipe_type",
+            "url": "getpipe_type"
+        },
+        {
+            "name": "createpoint",
+            "url": "createpoint"
+        },
+        {
+            "name": "viewpointlist",
+            "url": "viewpointlist"
+        },
+        {
+            "name": "getpvctype",
+            "url": "getpvctype"
+        },
+        {
+            "name": "RPMEntry",
+            "url": "createrpmentry"
+        }
+    ]
+}

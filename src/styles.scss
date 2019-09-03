@@ -1,1 +1,329 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(assets/fonts/MaterialIcons-Regular.eot);
+    /* For IE6-8 */
+    src: local('Material Icons'), local('MaterialIcons-Regular'), url(assets/fonts/MaterialIcons-Regular.woff2) format('woff2'), url(assets/fonts/MaterialIcons-Regular.woff) format('woff'), url(assets/fonts/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+$panel-header-color: #006064;
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+  
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+  
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+
+html, body{
+    height: 100%;
+}
+
+body{
+    background-color: #e5e6e6;
+}
+
+.bore-well-expansion-panel.mat-expansion-panel{
+    border-radius: 0px;
+
+    .mat-expansion-panel-body{
+        padding-top: 16px;
+    }
+    
+    .mat-expansion-panel-header{
+        background-color: $panel-header-color;
+        .mat-expansion-indicator::after{
+            color: white
+        }
+        // height: 48px !important;
+        &:hover, &:focus{
+            background-color: $panel-header-color;
+        }
+        .mat-expansion-panel-header-title{
+            color: white;
+            font-size: 20px;
+        }
+    }
+
+    &:not(.mat-expanded) .mat-expansion-panel-header:not([aria-disabled=true]):hover{
+        background-color: $panel-header-color;
+    }
+}
+
+.remove-btn{
+    cursor: pointer;
+    color: red;
+}
+
+.asterix{
+    color: red
+}
+
+@for $i from 1 through 100{
+    .m-t-#{$i} {
+        margin-top: #{$i}px
+    }
+}
+
+@for $i from 1 through 24{
+    .font-#{$i} {
+        font-size: #{$i}px
+    }
+}
+
+@for $i from 1 through 100{
+    .m-b-#{$i} {
+        margin-bottom: #{$i}px
+    }
+}
+
+@for $i from 1 through 100{
+    .m-r-#{$i} {
+        margin-right: #{$i}px
+    }
+}
+
+@for $i from 1 through 100{
+    .m-r-n-#{$i} {
+        margin-right: -#{$i}px
+    }
+}
+
+@for $i from 1 through 100{
+    .m-l-#{$i} {
+        margin-left: #{$i}px
+    }
+}
+
+@for $i from 1 through 100{
+    .p-t-#{$i} {
+        padding-top: #{$i}px
+    }
+}
+
+@for $i from 1 through 100{
+    .max-width-#{$i} {
+        max-width: #{$i} + '%'
+    }
+}
+
+@for $i from 1 through 100{
+    .p-#{$i} {
+        padding: #{$i} + 'px'
+    }
+}
+
+@for $i from 1 through 100{
+    .p-b-#{$i} {
+        padding-bottom: #{$i} + 'px'
+    }
+}
+
+@for $i from 1 through 100{
+    .p-l-#{$i} {
+        padding-left: #{$i} + 'px'
+    }
+}
+
+@for $i from 1 through 100{
+    .p-r-#{$i} {
+        padding-right: #{$i} + 'px'
+    }
+}
+
+.splash-shine{
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background: #D1913C;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #FFD194, #D1913C);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #FFD194, #D1913C); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */    
+}
+
+mat-form-field.calc-field{
+    .mat-form-field-infix{
+         width: 0px;
+     }
+ }
+
+ .error{
+     font-weight: bold;
+     color: crimson;
+ }
+
+.bold{
+    font-weight: bold;
+}
+
+.width-100{
+    width: 100% 
+}
+
+ .text-center{
+     text-align: center;
+ }
+ .text-right{
+     text-align: right;
+ }
+
+ .font-italic{
+     font-style: italic;
+ }
+
+
+
+ mat-card{
+    mat-card-content{
+        padding: 16px;
+    }
+    mat-card-header{
+        background-color:$panel-header-color;
+        color: white;
+    }
+    &.mat-card{
+        border-radius: 0px;
+        padding: 0px;
+        .mat-card-header  .mat-card-title{
+            margin-top: 12px
+        }
+    }
+    
+ }
+
+ .line{
+    border-bottom: 1px solid;
+ }
+
+ mat-form-field.custom{
+    .mat-form-field-flex > .mat-form-field-infix { padding: 0.4em 0px !important;}
+    .mat-form-field-label-wrapper { top: -1.5em; }
+    
+    .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+        transform: translateY(-1.1em) scale(.75);
+        width: 133.33333%;
+    }
+ }
+
+ .dashed{
+    border-bottom: 1px dashed #006064;
+    margin-bottom: 20px;
+}
+
+ .text-transform-upper{
+     text-transform: uppercase;
+ }
+
+ .text-transform-caps{
+    text-transform: capitalize;
+}
+ .profile-menu-panel{
+    margin-right: 62px;
+    // padding: 16px;
+    margin-top: -42px;
+    border-radius: 0px !important;
+    min-width: 300px !important;
+    max-width: 300px;
+    .mat-menu-content{
+        padding: 0px !important;
+    }
+ }
+
+
+ .view-btn.mat-flat-button{
+     font-size: 12px;
+     line-height: 24px;
+ }
+
+ .hyphen-container{
+     position: relative;
+    .hyphen{
+        border:1px solid;
+        width: 5px;
+        top: calc(50% - 10px);
+        position: absolute;
+    }
+ }
+
+ .equal-container {
+     .equal-line{
+        border:1px solid;
+        width: 5px;
+     }
+ }
+
+ .stepper-no-padding{
+    .mat-horizontal-content-container{
+        padding: 0px;
+    }
+ }
+
+ .stepper-label-wrap{
+    .mat-step-text-label{
+        white-space: normal;   
+    }
+ }
+
+ .card{
+    border-radius: 4px;
+    padding: 15px;
+    padding-top: 0px;
+    // background-color: #eee;
+    box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+    .section-title{
+        font-size: 1.4rem;
+        font-weight: bold;
+        border-bottom: 1px solid #ccc;
+        padding: 15px;
+        margin-left: -15px;
+        margin-right: -15px;
+        background: #5e6073;
+        color: white;
+        border-top-right-radius: 4px;
+        border-top-left-radius: 4px;
+        &.contact-title{
+            font-size: 1rem;
+        }
+    }
+}
+
+ .card-no-padding{
+     &.mat-card >  mat-card-content{
+         padding: 0px;
+     }
+ }
+
+ mat-card.mat-card.no-box-shadow{
+    box-shadow: none;
+ }
+
+ .confirm-dialog{
+     .mat-dialog-container{
+         padding: 0;
+     }
+ }
+ 

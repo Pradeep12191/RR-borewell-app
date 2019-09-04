@@ -1,24 +1,19 @@
 <div class="m-b-16 shift-top-30">
-    <button mat-raised-button color="primary" (click)="openAddVehicle()">
-        <mat-icon class="m-r-5">add</mat-icon>
-        VEHICLE
-    </button>
+    <div fxLayout fxLayoutGap="10px">
+        <div>
+            <button mat-raised-button color="primary" (click)="openAddVehicle()">
+                <mat-icon class="m-r-5">add</mat-icon>
+                VEHICLE
+            </button>
+        </div>
+        <div fxFlex fxLayoutAlign="center center" class="header">
+            <h2>Vehicle Information</h2>
+        </div>
+    </div>
+
+
 </div>
-
-
-<div fxLayout="column" fxLayoutGap="16px">
-    <mat-card>
-        <mat-card-content>
-            <div class="font-20">
-                TN1234 6822
-            </div>
-        </mat-card-content>
-    </mat-card>
-    <mat-card>
-        <mat-card-content>
-            <div class="font-20">
-                TN1234 6822
-            </div>
-        </mat-card-content>
-    </mat-card>
+<div>
+    <expand-table [data]="vehicles" *ngIf="vehicles?.length; else emptyTpl" fxFlex [columns]="columns" [dataSource]="vehicleDataSource">
+    </expand-table>
 </div>

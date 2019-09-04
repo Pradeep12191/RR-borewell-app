@@ -5,4 +5,5 @@ export interface Column {
     width: string;
     type: string;
     mobileWidth?: string;
+    isCenter?: boolean
 }

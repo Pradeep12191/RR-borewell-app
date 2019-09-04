@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { VehicleComponent } from './vehicle.component';
 import { VehicleRoutingModule } from './vehicle.routing.module';
 import { AddVehicleDialogComponent } from './add-vehicle-dialog/add-vehicle-dialog.component';
+import { ExpandTableModule } from '../../expand-table/expand-table.module';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { AddVehicleDialogComponent } from './add-vehicle-dialog/add-vehicle-dial
         MaterialModule,
         SharedModule,
         FlexLayoutModule,
-        VehicleRoutingModule
+        VehicleRoutingModule,
+        ExpandTableModule
     ],
     declarations: [
         AddVehicleDialogComponent,

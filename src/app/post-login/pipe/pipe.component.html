@@ -1,0 +1,25 @@
+<div class="m-b-16 shift-top-30">
+    <div fxLayout fxLayoutGap="10px">
+        <div>
+            <button mat-raised-button color="primary">
+                <mat-icon class="m-r-5">add</mat-icon>
+                PIPE
+            </button>
+        </div>
+        <div fxFlex fxLayoutAlign="center center" class="header">
+            <h2>Pipe Information</h2>
+        </div>
+        <div>
+            <button mat-raised-button color="primary">
+                <mat-icon class="m-r-5">directions_car</mat-icon>
+                GIVE VEHICLE
+            </button>
+        </div>
+    </div>
+
+
+</div>
+<div>
+    <expand-table [data]="pipes" *ngIf="pipes?.length; else emptyTpl" fxFlex [columns]="columns" [dataSource]="pipeDataSource">
+    </expand-table>
+</div>

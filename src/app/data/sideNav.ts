@@ -8,7 +8,7 @@ export const SIDE_NAV_ITEMS: NavItem[] = [
         name: 'Vehicle',
         isMain: true,
         icon: 'directions_car',
-        path: 'vehicle',
+        path: 'vehicles',
         level: 0,
         paddingLeft: LEVEL_0_PADDING
     },
@@ -30,24 +30,16 @@ export const SIDE_NAV_ITEMS: NavItem[] = [
             {
                 name: 'Pipe',
                 isFirstChild: true,
+                path: 'pipes',
                 level: 1,
                 paddingLeft: LEVEL_1_PADDING,
-                children: [
-                    { name: 'Add Pipe', isFirstChild: true, path: 'ytd10', level: 2, paddingLeft: LEVEL_2_PADDING },
-                    { name: 'View Pipe', path: 'ytd10', level: 2, paddingLeft: LEVEL_2_PADDING },
-                    { name: 'Give Vehicle', isLastChild: true, path: 'ytd10', level: 2, paddingLeft: LEVEL_2_PADDING },
-                ]
             },
             {
                 name: 'Bit',
                 isLastChild: true,
+                path: 'bit',
                 level: 1,
                 paddingLeft: LEVEL_1_PADDING,
-                children: [
-                    { name: 'Add Bit', isFirstChild: true, path: 'ytd10', level: 2, paddingLeft: LEVEL_2_PADDING },
-                    { name: 'View Bit', path: 'ytd10', level: 2, paddingLeft: LEVEL_2_PADDING },
-                    { name: 'Give Vehicle', isLastChild: true, path: 'ytd10', level: 2, paddingLeft: LEVEL_2_PADDING },
-                ]
             }
         ],
     },

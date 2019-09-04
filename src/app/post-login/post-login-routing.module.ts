@@ -16,7 +16,8 @@ const routes: Routes = [
                 }
             },
             { path: 'dashboard', component: DashboardComponent },
-            { path: 'vehicle', loadChildren: () => import('./vehicle/vehicle.module').then(mod => mod.VehicleModule) },
+            { path: 'vehicles', loadChildren: () => import('./vehicle/vehicle.module').then(mod => mod.VehicleModule) },
+            { path: 'pipes', loadChildren: () => import('./pipe/pipe.module').then(mod => mod.PipeModule) },
             { path: 'pointDetails', loadChildren: () => import('./point-details/point-entry/point-entry.module').then(mod => mod.PointEntryModule) },
             { path: 'rpmDetails', loadChildren: () => import('./point-details/rpm-entry/rpm-entry.module').then(mod => mod.RpmEntryModule) },
             { path: '**', component: S404Component }

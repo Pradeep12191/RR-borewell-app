@@ -6,6 +6,7 @@ import { SharedModule } from '../../shared.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { VehicleComponent } from './vehicle.component';
 import { VehicleRoutingModule } from './vehicle.routing.module';
+import { AddVehicleDialogComponent } from './add-vehicle-dialog/add-vehicle-dialog.component';
 
 
 @NgModule({
@@ -17,7 +18,11 @@ import { VehicleRoutingModule } from './vehicle.routing.module';
         FlexLayoutModule,
         VehicleRoutingModule
     ],
-    declarations: [VehicleComponent],
+    declarations: [
+        AddVehicleDialogComponent,
+        VehicleComponent
+    ],
+    entryComponents: [AddVehicleDialogComponent]
 })
 export class VehicleModule {
 

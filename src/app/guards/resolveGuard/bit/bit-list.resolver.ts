@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { ConfigService } from '../../../services/config.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
-import { Bit } from '../../../post-login/master/bit/Bit';
 
 export class BitListResolver implements Resolve<any>{
     constructor(
@@ -19,6 +18,6 @@ export class BitListResolver implements Resolve<any>{
     bitsUrl;
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
-        return this.http.get<Bit[]>(this.bitsUrl + '/' + this.authService.userid)
+        return this.http.get(this.bitsUrl + '/' + this.authService.userid)
     }
 }

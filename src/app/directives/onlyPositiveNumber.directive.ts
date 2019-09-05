@@ -1,7 +1,7 @@
 import { Directive, HostListener, HostBinding, Input } from '@angular/core';
 
 @Directive({
-    selector: '[poistiveNumber]'
+    selector: '[positiveNumber]'
 })
 export class PositiveNumberDirective {
     @Input() allowDecimal = false;

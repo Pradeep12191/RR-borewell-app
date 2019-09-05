@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Column } from '../../expand-table/Column';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatDialog } from '@angular/material';
+import { AddPipeDialogComponent } from './add-pipe-dialog/add-pipe-dialog.component';
 
 @Component({
     templateUrl: './pipe.component.html',
@@ -24,7 +25,18 @@ export class PipeComponent {
         { type: '4\'\'Inch 6Kg', count: '20' },
         { type: '4\'\'Inch 4Kg', count: '20' }
     ]
-    constructor() {
+    constructor(
+        private dialog: MatDialog
+    ) {
         this.pipeDataSource = new MatTableDataSource(this.pipes)
+    }
+
+    addPipe() {
+        const dialogRef = this.dialog.open(AddPipeDialogComponent, {
+            width: '70vw'
+        });
+        dialogRef.afterClosed().subscribe((pipeList) => {
+            console.log(pipeList);
+        })
     }
 }

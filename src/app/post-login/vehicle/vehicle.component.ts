@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ConfigService } from '../../services/config.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatTableDataSource } from '@angular/material';
@@ -6,22 +6,22 @@ import { AddVehicleDialogComponent } from './add-vehicle-dialog/add-vehicle-dial
 import { Column } from '../../expand-table/Column';
 import { ActivatedRoute } from '@angular/router';
 import { Vehicle } from './Vehicle';
+import { Subscription } from 'rxjs';
 
 
 @Component({
     templateUrl: './vehicle.component.html',
     styleUrls: ['./vehicle.component.scss']
 })
-export class VehicleComponent {
+export class VehicleComponent implements OnDestroy {
     vehicles: Vehicle[];
     vehicleTypes = [];
     vehicleDataSource: MatTableDataSource<Vehicle>;
+    routeSubscription: Subscription;
     public columns: Column[] = [
         { id: 'serialNo', name: 'COLUMN.SERIAL_NO', type: 'index', width: '15' },
-        { id: 'regNo', name: 'Registration Number', type: 'string', width: '35' },
-        { id: 'type', name: 'Type', type: 'string', width: '30' },
-        { id: 'edit', name: '', type: 'button', width: '10' },
-        { id: 'delete', name: '', type: 'button', width: '10' },
+        { id: 'regNo', name: 'Registration Number', type: 'string', width: '45' },
+        { id: 'type', name: 'Type', type: 'string', width: '40' }
     ]
 
     constructor(
@@ -29,7 +29,7 @@ export class VehicleComponent {
         private route: ActivatedRoute
     ) {
 
-        this.route.data.subscribe(data => {
+        this.routeSubscription = this.route.data.subscribe(data => {
             console.log(data)
             if (data.vehicleTypes) {
                 this.vehicleTypes = data.vehicleTypes;
@@ -39,6 +39,10 @@ export class VehicleComponent {
                 this.vehicleDataSource = new MatTableDataSource(this.vehicles);
             }
         })
+    }
+
+    ngOnDestroy() {
+        if (this.routeSubscription) { this.routeSubscription.unsubscribe(); }
     }
 
     openAddVehicle() {

@@ -7,6 +7,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PipeComponent } from './pipe.component';
 import { PipeRoutingModule } from './pipe-routing.module';
+import { AddPipeDialogComponent } from './add-pipe-dialog/add-pipe-dialog.component';
+import { DirectiveModule } from '../../directives/directive.module';
 
 @NgModule({
     imports: [
@@ -16,10 +18,15 @@ import { PipeRoutingModule } from './pipe-routing.module';
         SharedModule,
         FlexLayoutModule,
         PipeRoutingModule,
-        ExpandTableModule
+        ExpandTableModule,
+        DirectiveModule
     ],
     declarations: [
-        PipeComponent
+        PipeComponent,
+        AddPipeDialogComponent
+    ],
+    entryComponents: [
+        AddPipeDialogComponent
     ]
 })
 export class PipeModule {

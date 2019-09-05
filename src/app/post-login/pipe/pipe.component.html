@@ -22,4 +22,10 @@
 <div>
     <expand-table [data]="pipes" *ngIf="pipes?.length; else emptyTpl" fxFlex [columns]="columns" [dataSource]="pipeDataSource">
     </expand-table>
+
+    <ng-template #emptyTpl>
+        <mat-card>
+            <mat-card-content>No Pipes Found.</mat-card-content>
+        </mat-card>
+    </ng-template>
 </div>

@@ -29,7 +29,7 @@
                     </div>
                     <mat-form-field class="calc-field" [appearance]="appearance" fxFlex>
                         <mat-label>Amount</mat-label>
-                        <input poistiveNumber [allowDecimal]="true" matInput formControlName="perLiterAmt" (input)="calcTotalAmout()">
+                        <input positiveNumber [allowDecimal]="true" matInput formControlName="perLiterAmt" (input)="calcTotalAmout()">
                     </mat-form-field>
                 </div>
                 <div fxLayout>
@@ -37,7 +37,7 @@
                         <div class="bold m-b-17">Total Liter</div>
                     </div>
                     <mat-form-field class="calc-field" [appearance]="appearance" fxFlex>
-                        <input poistiveNumber [allowDecimal]="true" matInput formControlName="totalLiter" (input)="calcTotalAmout()">
+                        <input positiveNumber [allowDecimal]="true" matInput formControlName="totalLiter" (input)="calcTotalAmout()">
                     </mat-form-field>
                 </div>
                 <div>

@@ -4,6 +4,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { AddVehicleDialogComponent } from './add-vehicle-dialog/add-vehicle-dialog.component';
 import { Column } from '../../expand-table/Column';
+import { ActivatedRoute } from '@angular/router';
+import { Vehicle } from './Vehicle';
 
 
 @Component({
@@ -11,11 +13,9 @@ import { Column } from '../../expand-table/Column';
     styleUrls: ['./vehicle.component.scss']
 })
 export class VehicleComponent {
-    vehicles = [
-        {regNo: 'TN13D 6288', type: 'Lorry'},
-        {regNo: 'TN13D 6288', type: 'Lorry'}
-    ]
-    vehicleDataSource: MatTableDataSource<any>;
+    vehicles: Vehicle[];
+    vehicleTypes = [];
+    vehicleDataSource: MatTableDataSource<Vehicle>;
     public columns: Column[] = [
         { id: 'serialNo', name: 'COLUMN.SERIAL_NO', type: 'index', width: '15' },
         { id: 'regNo', name: 'Registration Number', type: 'string', width: '35' },
@@ -25,14 +25,32 @@ export class VehicleComponent {
     ]
 
     constructor(
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private route: ActivatedRoute
     ) {
-        this.vehicleDataSource = new MatTableDataSource(this.vehicles); 
+
+        this.route.data.subscribe(data => {
+            console.log(data)
+            if (data.vehicleTypes) {
+                this.vehicleTypes = data.vehicleTypes;
+            }
+            if (data.vehicles) {
+                this.vehicles = data.vehicles
+                this.vehicleDataSource = new MatTableDataSource(this.vehicles);
+            }
+        })
     }
 
     openAddVehicle() {
-        const dialogRef = this.dialog.open(AddVehicleDialogComponent)
-        dialogRef.afterClosed().subscribe((response) => {
+        const dialogRef = this.dialog.open(AddVehicleDialogComponent, {
+            data: { vehicleTypes: this.vehicleTypes }
+        })
+        dialogRef.afterClosed().subscribe((vehicle: Vehicle) => {
+            console.log(vehicle)
+            if (vehicle) {
+                this.vehicles.push(vehicle);
+                this.vehicleDataSource = new MatTableDataSource<Vehicle>(this.vehicles);
+            }
 
         })
     }

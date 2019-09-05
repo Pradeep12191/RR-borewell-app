@@ -1,6 +1,6 @@
-<h1 mat-dialog-title>Add Vehicle</h1>
-<div mat-dialog-content>
-    <form [formGroup]="vehicleForm">
+<form [formGroup]="vehicleForm">
+    <h1 mat-dialog-title>Add Vehicle</h1>
+    <div mat-dialog-content>
         <div fxLayout="column" fxLayoutGap="10px">
             <mat-form-field [appearance]="appearance" fxFlex="35">
                 <mat-label>Vehicle Registration No.</mat-label>
@@ -9,12 +9,14 @@
             <mat-form-field fxFlex="35" [appearance]="appearance">
                 <mat-label>Vehicle Type</mat-label>
                 <mat-select required formControlName="type">
-                    <mat-option [value]="vehicleType" *ngFor="let vehicleType of vehicleTypes">{{ vehicleType }}</mat-option>
+                    <mat-option [value]="vehicleType.type" *ngFor="let vehicleType of vehicleTypes">{{ vehicleType.type
+                        }}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
-    </form>
-</div>
-<div mat-dialog-actions>
-    <button [disabled]="vehicleForm.invalid" mat-raised-button color="primary" (click)="saveVehicle()">SAVE</button>
-</div>
+
+    </div>
+    <div mat-dialog-actions>
+        <button [disabled]="vehicleForm.invalid" mat-raised-button color="primary" (click)="saveVehicle()">SAVE</button>
+    </div>
+</form>

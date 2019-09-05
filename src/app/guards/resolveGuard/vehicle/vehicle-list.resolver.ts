@@ -11,7 +11,7 @@ export class VehicleListResolver implements Resolve<any>{
         private authService: AuthService
     ) {
         const baseUrl = this.config.getConfig('apiUrl');
-        const url = this.config.getUrl('view_vehicle_list');
+        const url = this.config.getUrl('get_vehicle_list');
         this.vehiclesUrl = baseUrl + url; 
     }
 

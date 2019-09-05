@@ -27,6 +27,7 @@ import { PipeTypeResolver } from '../guards/resolveGuard/select-option/pipe-type
 import { VehiclesResolver } from '../guards/resolveGuard/vehicles.resolver';
 import { PVCTypeResolver } from '../guards/resolveGuard/select-option/pvc-type.resolver';
 import { NullFilterPipe } from '../pipes/nullFilter.pipe';
+import { VehicleListResolver } from '../guards/resolveGuard/vehicle/vehicle-list.resolver';
 
 
 
@@ -49,18 +50,8 @@ import { NullFilterPipe } from '../pipes/nullFilter.pipe';
     providers: [
         StateResolver,
         UserInfoResolver,
-        VehicleTypeResolver,
-        VehiclesResolver,
-        BoreSizeResolver,
-        ContactTypeResolver,
-        AgentTypeResolver,
-        DrillingCommissionTypeResolver,
-        CasingCommissionTypeResolver,
-        CasingPaymentTypeResolver,
-        BoreTypeResolver,
-        CasingTypeResolver,
-        PipeTypeResolver,
-        PVCTypeResolver
+        VehicleListResolver,
+        VehicleTypeResolver
     ],
 })
 export class PostLoginModule {

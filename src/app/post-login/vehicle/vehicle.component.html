@@ -16,4 +16,9 @@
 <div>
     <expand-table [data]="vehicles" *ngIf="vehicles?.length; else emptyTpl" fxFlex [columns]="columns" [dataSource]="vehicleDataSource">
     </expand-table>
+    <ng-template #emptyTpl>
+        <mat-card>
+            <mat-card-content>No vehicle added.</mat-card-content>
+        </mat-card>
+    </ng-template>
 </div>

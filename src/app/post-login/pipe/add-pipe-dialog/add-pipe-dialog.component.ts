@@ -36,7 +36,7 @@ export class AddPipeDialogComponent {
         this.postUrl = this.config.getAbsoluteUrl('addPipe');
         this.godownTypes = data.godownTypes;
         const pipes = data.pipes;
-        console.log(pipes);
+        // console.log(pipes);
         this.pipes.forEach(pipe => {
             pipe.count = pipes.find(pipeData => pipeData.key === pipe.key).count;
         })
@@ -87,7 +87,7 @@ export class AddPipeDialogComponent {
     }
 
     private buildPipeForm(start) {
-        console.log(start)
+        // console.log(start)
         return this.fb.group({ count: '', start, end: start })
     }
 }

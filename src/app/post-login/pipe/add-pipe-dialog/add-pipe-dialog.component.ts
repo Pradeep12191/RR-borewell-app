@@ -1,7 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { ConfigService } from '../../../services/config.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { HttpClient } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     templateUrl: './add-pipe-dialog.component.html',
@@ -21,12 +23,17 @@ export class AddPipeDialogComponent {
         { type: '8\'\'Inch 4Kg', groupName: 'p_8Inch4Kg', key: 'p_8Inch4Kg1', count: '' },
         { type: '11\'\'Inch 4Kg', groupName: 'p_11Inch4Kg', key: 'p_11Inch4Kg1', count: '' },
     ]
+    postUrl;
     constructor(
         private config: ConfigService,
         private fb: FormBuilder,
-        @Inject(MAT_DIALOG_DATA) private data
+        @Inject(MAT_DIALOG_DATA) private data,
+        private http: HttpClient,
+        private tostr: ToastrService,
+        private dialogRef: MatDialogRef<AddPipeDialogComponent>
     ) {
         this.appearance = this.config.getConfig('formAppearance');
+        this.postUrl = this.config.getAbsoluteUrl('addPipe');
         this.godownTypes = data.godownTypes;
         const pipes = data.pipes;
         console.log(pipes);
@@ -45,6 +52,14 @@ export class AddPipeDialogComponent {
 
     savePipe() {
         console.log(JSON.stringify(this.form.value, null, 2));
+        this.http.post(this.postUrl, this.form.value).subscribe((response) => {
+            this.tostr.success('Pipe Information added successfully', null, { timeOut: 2000 });
+            this.dialogRef.close();
+        }, (err) => {
+            if (err) {
+                this.tostr.error('Error while saving Pipe Information', null, { timeOut: 1500 });
+            }
+        })
     }
 
     caclPipeAdded(pipeCtrl: FormGroup, grpName) {

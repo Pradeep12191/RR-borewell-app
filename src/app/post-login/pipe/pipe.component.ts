@@ -38,14 +38,14 @@ export class PipeComponent {
     // ]
 
     pipes = [
-        { type: '11\'\'Inch 4Kg', key: 'p_11Inch4Kg1', count: '' },
-        { type: '8\'\'Inch 4Kg', key: 'p_8Inch4Kg1', count: '' },
-        { type: '7\'\'Inch 8Kg', key: 'p_7Inch8Kg1', count: '' },
-        { type: '7\'\'Inch 6Kg', key: 'p_7Inch6Kg1', count: '' },
-        { type: '5\'\'Inch 8Kg', key: 'p_5Inch8Kg1', count: '' },
-        { type: '5\'\'Inch 6Kg', key: 'p_5Inch6Kg1', count: '' },
+        { type: '4\'\'Inch 4Kg', key: 'p_4Inch4Kg1', count: '' },
         { type: '4\'\'Inch 6Kg', key: 'p_4Inch6Kg1', count: '' },
-        { type: '4\'\'Inch 4Kg', key: 'p_4Inch4Kg1', count: '' }
+        { type: '5\'\'Inch 6Kg', key: 'p_5Inch6Kg1', count: '' },
+        { type: '5\'\'Inch 8Kg', key: 'p_5Inch8Kg1', count: '' },
+        { type: '7\'\'Inch 6Kg', key: 'p_7Inch6Kg1', count: '' },
+        { type: '7\'\'Inch 8Kg', key: 'p_7Inch8Kg1', count: '' },
+        { type: '8\'\'Inch 4Kg', key: 'p_8Inch4Kg1', count: '' },
+        { type: '11\'\'Inch 4Kg', key: 'p_11Inch4Kg1', count: '' },
     ]
     appearance;
     pipeUrl;

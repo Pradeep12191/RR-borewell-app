@@ -1,11 +1,19 @@
 import { Component } from '@angular/core';
 import { Column } from '../../expand-table/Column';
-import { MatTableDataSource, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatDialog, MatSelectChange } from '@angular/material';
 import { AddPipeDialogComponent } from './add-pipe-dialog/add-pipe-dialog.component';
+import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { ConfigService } from '../../services/config.service';
+import { FADE_IN_ANIMATION } from '../../animations';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     templateUrl: './pipe.component.html',
-    styleUrls: ['./pipe.component.scss']
+    styleUrls: ['./pipe.component.scss'],
+    animations: [FADE_IN_ANIMATION]
 })
 export class PipeComponent {
 
@@ -15,20 +23,69 @@ export class PipeComponent {
         { id: 'type', name: 'Type', type: 'string', width: '45' },
         { id: 'count', name: 'No. of Pipes Available', type: 'string', width: '40', isCenter: true },
     ]
+    public godownTypes = [];
+    public selectedGodown;
+    loading;
+    // pipes = [
+    //     { type: '11\'\'Inch 4Kg', count: '20' },
+    //     { type: '8\'\'Inch 4Kg', count: '20' },
+    //     { type: '7\'\'Inch 8Kg', count: '20' },
+    //     { type: '7\'\'Inch 6Kg', count: '20' },
+    //     { type: '5\'\'Inch 8Kg', count: '20' },
+    //     { type: '5\'\'Inch 6Kg', count: '20' },
+    //     { type: '4\'\'Inch 6Kg', count: '20' },
+    //     { type: '4\'\'Inch 4Kg', count: '20' }
+    // ]
+
     pipes = [
-        { type: '11\'\'Inch 4Kg', count: '20' },
-        { type: '8\'\'Inch 4Kg', count: '20' },
-        { type: '7\'\'Inch 8Kg', count: '20' },
-        { type: '7\'\'Inch 6Kg', count: '20' },
-        { type: '5\'\'Inch 8Kg', count: '20' },
-        { type: '5\'\'Inch 6Kg', count: '20' },
-        { type: '4\'\'Inch 6Kg', count: '20' },
-        { type: '4\'\'Inch 4Kg', count: '20' }
+        { type: '11\'\'Inch 4Kg', key: 'p_11Inch4Kg1', count: '' },
+        { type: '8\'\'Inch 4Kg', key: 'p_8Inch4Kg1', count: '' },
+        { type: '7\'\'Inch 8Kg', key: 'p_7Inch8Kg1', count: '' },
+        { type: '7\'\'Inch 6Kg', key: 'p_7Inch6Kg1', count: '' },
+        { type: '5\'\'Inch 8Kg', key: 'p_5Inch8Kg1', count: '' },
+        { type: '5\'\'Inch 6Kg', key: 'p_5Inch6Kg1', count: '' },
+        { type: '4\'\'Inch 6Kg', key: 'p_4Inch6Kg1', count: '' },
+        { type: '4\'\'Inch 4Kg', key: 'p_4Inch4Kg1', count: '' }
     ]
+    appearance;
+    pipeUrl;
+
     constructor(
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private route: ActivatedRoute,
+        private config: ConfigService,
+        private http: HttpClient,
+        private auth: AuthService,
+        private toastr: ToastrService
     ) {
-        this.pipeDataSource = new MatTableDataSource(this.pipes)
+        this.appearance = this.config.getConfig('formAppearance')
+        this.pipeUrl = this.config.getAbsoluteUrl('pipeCount') + '/' + this.auth.userid;
+        this.route.data.subscribe((data) => {
+            this.godownTypes = data.pipeData.goDowns;
+            this.selectedGodown = data.pipeData.godownId;
+            const pipes = data.pipeData.pipes;
+            this.pipes.forEach(pipeObj => {
+                pipeObj.count = pipes[pipeObj.key]
+            });
+            this.pipeDataSource = new MatTableDataSource(this.pipes)
+        })
+    }
+
+    public godownChange($event: MatSelectChange) {
+        this.loading = true;
+        const pipeUrl = this.pipeUrl + '/' + $event.value;
+        this.http.get(pipeUrl).subscribe(pipes => {
+            this.pipes.forEach(pipeObj => {
+                pipeObj.count = pipes[pipeObj.key]
+            });
+            this.pipeDataSource = new MatTableDataSource(this.pipes);
+            this.loading = false;
+        }, (err) => {
+            if (err) {
+                this.toastr.error('Error while Fetching Pipe Information', null, {timeOut: 2000})
+            }
+            this.loading = false;
+        });
     }
 
     addPipe() {

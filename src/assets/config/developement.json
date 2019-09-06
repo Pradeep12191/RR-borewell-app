@@ -26,6 +26,14 @@
             "url": "addvehicle"
         },
         {
+            "name": "godownTypes",
+            "url": "get_godown_types"
+        },
+        {
+            "name": "pipeCount",
+            "url": "get_pipecount"
+        },
+        {
             "name": "RPMEntry",
             "url": "createrpmentry"
         }

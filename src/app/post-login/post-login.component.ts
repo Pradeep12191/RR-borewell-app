@@ -59,6 +59,7 @@ export class PostLoginComponent implements OnInit, OnDestroy {
     this.isMobileSideNav = this.config.getConfig('mobileNav');
     this.classicSidenav = this.config.getConfig('classicSidenav');
     this.dataSource.data = SIDE_NAV_ITEMS;
+    this.activeMainNode = SIDE_NAV_ITEMS.find(navItem => navItem.name === 'Godown Inventory')
     this.mediaObserver.media$.subscribe((media) => {
       if (media.mqAlias === 'xs' || media.mqAlias === 'sm') {
         this.isSmallDevice = true;

@@ -90,7 +90,11 @@ export class PipeComponent {
 
     addPipe() {
         const dialogRef = this.dialog.open(AddPipeDialogComponent, {
-            width: '70vw'
+            width: '70vw',
+            data: {
+                godownTypes: this.godownTypes,
+                pipes: this.pipes
+            }
         });
         dialogRef.afterClosed().subscribe((pipeList) => {
             console.log(pipeList);

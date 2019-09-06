@@ -7,12 +7,12 @@
         <div fxLayout fxLayoutAlign="center center" fxLayoutGap="25px">
             <mat-form-field [appearance]="appearance" fxFlex="30">
                 <mat-label>Bill No</mat-label>
-                <input type="text" matInput>
+                <input type="text" matInput formControlName="billNo">
             </mat-form-field>
             <mat-form-field [appearance]="appearance" fxFlex="40">
                 <mat-label>Godown Type</mat-label>
-                <mat-select>
-                    <mat-option [value]="godownType" *ngFor="let godownType of godownTypes">{{ godownType }}</mat-option>
+                <mat-select formControlName="godownType">
+                    <mat-option [value]="godownType" *ngFor="let godownType of godownTypes">{{ godownType.godownType | uppercase }}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
@@ -27,13 +27,13 @@
                 <div fxLayout *ngFor="let pipe of pipes" [formGroupName]="pipe.groupName">
                     <div fxLayout fxLayoutAlign="center center" fxFlex="33" class="text-center">{{ pipe.type }}</div>
                     <div class="input-wrapper" fxFlex="33" >
-                        <input type="text" formControlName="count" placeholder="Count" positiveNumber>
+                        <input type="text" (input)="caclPipeAdded(form.get(pipe.groupName), pipe.groupName)" formControlName="count" placeholder="Count" positiveNumber>
                         <!-- <label>Count</label> -->
                         <span class="focus-border">
                             <i></i>
                         </span>
                     </div>
-                    <div fxLayout fxLayoutAlign="center center" class="text-center" fxFlex="33">10</div>
+                    <div fxLayout fxLayoutAlign="center center" class="text-center" fxFlex="33">{{ pipeAddedDisplay(form.get(pipe.groupName)) }}</div>
                 </div>
             </div>
 

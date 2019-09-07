@@ -15,23 +15,28 @@ export class AuthGuard implements CanActivate {
         private config: ConfigService,
         private http: HttpClient
     ) {
-        this.userInfoUrl = this.config.getAbsoluteUrl('userInfo') + '/' + this.auth.userid;
+        this.userInfoUrl = this.config.getAbsoluteUrl('userInfo') + '/' + this.auth.username;
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)
         : Observable<boolean> | Promise<boolean> | boolean {
-
-        return this.http.get(this.userInfoUrl).pipe(switchMap((response) => {
-            return of(true);
-        }), catchError((err: HttpErrorResponse) => {
-            if (err.status === 403) {
-                this.auth.userid = null;
-                this.auth.token = null;
+            if(this.auth.isLoggedIn()){
+                return this.http.get(this.userInfoUrl).pipe(switchMap((response) => {
+                    return of(true);
+                }), catchError((err: HttpErrorResponse) => {
+                    if (err.status === 403) {
+                        this.auth.userid = null;
+                        this.auth.token = null;
+                        this.router.navigate(['login']);
+                        return of(false);
+                    }
+                    throwError(err);
+                }))                
+            }else{
                 this.router.navigate(['login']);
                 return of(false);
             }
-            throwError(err);
-        }))
+
         // if (this.auth.isLoggedIn()) {
         //     return true
         // }

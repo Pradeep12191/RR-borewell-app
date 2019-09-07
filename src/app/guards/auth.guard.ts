@@ -20,7 +20,9 @@ export class AuthGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)
         : Observable<boolean> | Promise<boolean> | boolean {
+            
             if(this.auth.isLoggedIn()){
+                // if already logged in check the user is valid user or not
                 return this.http.get(this.userInfoUrl).pipe(switchMap((response) => {
                     return of(true);
                 }), catchError((err: HttpErrorResponse) => {

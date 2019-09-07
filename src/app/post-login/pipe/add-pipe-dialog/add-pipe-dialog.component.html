@@ -11,7 +11,7 @@
             </mat-form-field>
             <mat-form-field [appearance]="appearance" fxFlex="40">
                 <mat-label>Godown Type</mat-label>
-                <mat-select formControlName="godownType">
+                <mat-select (selectionChange)="godownChange($event)" formControlName="godownType">
                     <mat-option [value]="godownType" *ngFor="let godownType of godownTypes">{{ godownType.godownType | uppercase }}</mat-option>
                 </mat-select>
             </mat-form-field>

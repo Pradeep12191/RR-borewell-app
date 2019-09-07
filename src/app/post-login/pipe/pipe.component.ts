@@ -38,14 +38,14 @@ export class PipeComponent {
     // ]
 
     pipes = [
-        { type: '4\'\'Inch 4Kg', key: 'p_4Inch4Kg1', count: '' },
-        { type: '4\'\'Inch 6Kg', key: 'p_4Inch6Kg1', count: '' },
-        { type: '5\'\'Inch 6Kg', key: 'p_5Inch6Kg1', count: '' },
-        { type: '5\'\'Inch 8Kg', key: 'p_5Inch8Kg1', count: '' },
-        { type: '7\'\'Inch 6Kg', key: 'p_7Inch6Kg1', count: '' },
-        { type: '7\'\'Inch 8Kg', key: 'p_7Inch8Kg1', count: '' },
-        { type: '8\'\'Inch 4Kg', key: 'p_8Inch4Kg1', count: '' },
-        { type: '11\'\'Inch 4Kg', key: 'p_11Inch4Kg1', count: '' },
+        { type: '4\'\'Inch 4Kg', key: 'p_4Inch4Kg1', count: '0' },
+        { type: '4\'\'Inch 6Kg', key: 'p_4Inch6Kg1', count: '0' },
+        { type: '5\'\'Inch 6Kg', key: 'p_5Inch6Kg1', count: '0' },
+        { type: '5\'\'Inch 8Kg', key: 'p_5Inch8Kg1', count: '0' },
+        { type: '7\'\'Inch 6Kg', key: 'p_7Inch6Kg1', count: '0' },
+        { type: '7\'\'Inch 8Kg', key: 'p_7Inch8Kg1', count: '0' },
+        { type: '8\'\'Inch 4Kg', key: 'p_8Inch4Kg1', count: '0' },
+        { type: '11\'\'Inch 4Kg', key: 'p_11Inch4Kg1', count: '0' },
     ]
     appearance;
     pipeUrl;
@@ -65,7 +65,7 @@ export class PipeComponent {
             this.selectedGodown = data.pipeData.godownId;
             const pipes = data.pipeData.pipes;
             this.pipes.forEach(pipeObj => {
-                pipeObj.count = pipes[pipeObj.key]
+                pipeObj.count = pipes[pipeObj.key] ? pipes[pipeObj.key] : 0
             });
             this.pipeDataSource = new MatTableDataSource(this.pipes)
         })
@@ -76,13 +76,13 @@ export class PipeComponent {
         const pipeUrl = this.pipeUrl + '/' + $event.value;
         this.http.get(pipeUrl).subscribe(pipes => {
             this.pipes.forEach(pipeObj => {
-                pipeObj.count = pipes[pipeObj.key]
+                pipeObj.count = pipes[pipeObj.key] ? pipes[pipeObj.key] : 0
             });
             this.pipeDataSource = new MatTableDataSource(this.pipes);
             this.loading = false;
         }, (err) => {
             if (err) {
-                this.toastr.error('Error while Fetching Pipe Information', null, {timeOut: 2000})
+                this.toastr.error('Error while Fetching Pipe Information', null, { timeOut: 2000 })
             }
             this.loading = false;
         });
@@ -92,12 +92,23 @@ export class PipeComponent {
         const dialogRef = this.dialog.open(AddPipeDialogComponent, {
             width: '70vw',
             data: {
+                selectedGodownId: this.selectedGodown,
                 godownTypes: this.godownTypes,
                 pipes: this.pipes
             }
         });
-        dialogRef.afterClosed().subscribe((pipeList) => {
-            console.log(pipeList);
+        dialogRef.afterClosed().subscribe((pipes) => {
+            if (pipes) {
+                this.pipes.forEach(pipeObj => {
+                    pipeObj.count = pipes[pipeObj.key] ? pipes[pipeObj.key] : 0
+                });
+                this.pipeDataSource = new MatTableDataSource(this.pipes);
+                if (pipes.godown_id) {
+                    this.selectedGodown = pipes.godown_id
+                }
+            }
+
+
         })
     }
 }

@@ -2,7 +2,7 @@
 
     <ng-container *ngFor="let col of columns">
         <ng-container [matColumnDef]="col.id">
-            <mat-header-cell [fxLayoutAlign]="col.isCenter ? 'center center' : 'start center'" [fxFlex]="col.width" [fxFlex.lt-md]="col.mobileWidth" *matHeaderCellDef>
+            <mat-header-cell [style.textAlign]="col.isCenter ? 'center': ''" [fxLayoutAlign]="col.isCenter ? 'center center' : 'start center'" [fxFlex]="col.width" [fxFlex.lt-md]="col.mobileWidth" *matHeaderCellDef>
                 {{ col.name | translate }}
             </mat-header-cell>
             <mat-cell [fxLayoutAlign]="col.isCenter ? 'center center' : 'start center'" [fxFlex]="col.width" [fxFlex.lt-md]="col.mobileWidth" *matCellDef="let row; let i = dataIndex">
@@ -19,6 +19,11 @@
                             <mat-icon>delete_outline</mat-icon>
                         </button>
                     </ng-container>
+                </ng-container>
+                <ng-container *ngIf="col.type === 'iconButton'">
+                    <button mat-icon-button color="primary" (click)="buttonIconClick(col.action, row)">
+                        <mat-icon>{{ col.iconName }}</mat-icon>
+                    </button>
                 </ng-container>
                 <ng-container *ngIf="col.type === 'toggle'">
                     <div fxLayout fxLayoutAlign="center center" class="arrow-container" (click)="expandedRow = expandedRow === row ? null : row">
@@ -38,7 +43,7 @@
     </ng-container>
 
 
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-header-row *matHeaderRowDef="displayedColumns" fxLayoutGap="10px"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" fxLayoutGap="10px"></mat-row>
     <mat-row [@expand]="expandedRow === row ? 'expanded': 'collapsed'" class="detail-row" *matRowDef="let row; columns: ['expandedDetail']"></mat-row>
 </mat-table>

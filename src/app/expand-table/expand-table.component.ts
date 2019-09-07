@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ContentChild, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, ContentChild, TemplateRef, EventEmitter, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { Column } from './Column';
 import { MediaObserver } from '@angular/flex-layout';
@@ -16,6 +16,7 @@ export class ExpandTableComponent implements OnInit {
     @Input() data: any[];
     @Input() dataSource: MatTableDataSource<any>;
     @Input() expandFirstRow;
+    @Output() iconButtonClick = new EventEmitter();
     @ContentChild(ExpandDetailsDirective, { read: TemplateRef, static: false }) detailsTpl: TemplateRef<ExpandDetailsDirective>;
     displayedColumns = [];
     expandedRow;
@@ -36,5 +37,9 @@ export class ExpandTableComponent implements OnInit {
                 this.expandedRow = this.data[0]
             }
         }
+    }
+
+    buttonIconClick(action, rowData) {
+        this.iconButtonClick.emit({ action, rowData })
     }
 }

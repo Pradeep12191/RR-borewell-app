@@ -19,9 +19,12 @@ export class PipeComponent {
 
     pipeDataSource: MatTableDataSource<any>;
     public columns: Column[] = [
-        { id: 'S.No.', name: 'COLUMN.SERIAL_NO', type: 'index', width: '15' },
-        { id: 'type', name: 'Type', type: 'string', width: '45' },
+        { id: 'S.No.', name: 'COLUMN.SERIAL_NO', type: 'index', width: '5' },
+        { id: 'type', name: 'Type', type: 'string', width: '15', isCenter: true},
         { id: 'count', name: 'No. of Pipes Available', type: 'string', width: '40', isCenter: true },
+        { id: 'length', name: 'Length', type: 'string', width: '25', isCenter: true },
+        { id: 'assignVehicle', name: 'Assign Vehicle', type: 'iconButton', width: '15', isCenter: true, action: 'ASSIGN_VEHICLE', iconName: 'directions_car'},
+        { id: 'viewPipeData', name: 'View Pipe Data', type: 'iconButton', isCenter: true, width: '15', action: 'VIEW_PIPE_DATA', iconName: 'arrow_forward'},
     ]
     public godownTypes = [];
     public selectedGodown;
@@ -39,14 +42,14 @@ export class PipeComponent {
     // ]
 
     pipes = [
-        { type: '4\'\'Inch 4Kg', key: 'p_4Inch4Kg1', count: '0' },
-        { type: '4\'\'Inch 6Kg', key: 'p_4Inch6Kg1', count: '0' },
-        { type: '5\'\'Inch 6Kg', key: 'p_5Inch6Kg1', count: '0' },
-        { type: '5\'\'Inch 8Kg', key: 'p_5Inch8Kg1', count: '0' },
-        { type: '7\'\'Inch 6Kg', key: 'p_7Inch6Kg1', count: '0' },
-        { type: '7\'\'Inch 8Kg', key: 'p_7Inch8Kg1', count: '0' },
-        { type: '8\'\'Inch 4Kg', key: 'p_8Inch4Kg1', count: '0' },
-        { type: '11\'\'Inch 4Kg', key: 'p_11Inch4Kg1', count: '0' },
+        { type: '4\'\'4', key: 'p_4Inch4Kg1', count: '0', length: '0' },
+        { type: '4\'\'6', key: 'p_4Inch6Kg1', count: '0', length: '0' },
+        { type: '5\'\'6', key: 'p_5Inch6Kg1', count: '0', length: '0' },
+        { type: '5\'\'8', key: 'p_5Inch8Kg1', count: '0', length: '0' },
+        { type: '7\'\'6', key: 'p_7Inch6Kg1', count: '0', length: '0' },
+        { type: '7\'\'8', key: 'p_7Inch8Kg1', count: '0', length: '0' },
+        { type: '8\'\'4', key: 'p_8Inch4Kg1', count: '0', length: '0' },
+        { type: '11\'\'4', key: 'p_11Inch4Kg1', count: '0', length: '0' },
     ]
     appearance;
     pipeUrl;
@@ -66,10 +69,15 @@ export class PipeComponent {
             this.selectedGodown = data.pipeData.godownId;
             const pipes = data.pipeData.pipes;
             this.pipes.forEach(pipeObj => {
-                pipeObj.count = pipes[pipeObj.key] ? pipes[pipeObj.key] : 0
+                pipeObj.count = pipes[pipeObj.key] ? pipes[pipeObj.key].toString() : '0';
+                pipeObj.length = pipes[pipeObj.key] ? (pipes[pipeObj.key] * 20).toString() : '0';
             });
             this.pipeDataSource = new MatTableDataSource(this.pipes)
         })
+    }
+
+    public onButtonClick($event){
+        console.log($event);
     }
 
     public godownChange($event: MatSelectChange) {
@@ -81,7 +89,8 @@ export class PipeComponent {
             this.godownSelectDisabled = false;
         })).subscribe(pipes => {
             this.pipes.forEach(pipeObj => {
-                pipeObj.count = pipes[pipeObj.key] ? pipes[pipeObj.key] : 0
+                pipeObj.count = pipes[pipeObj.key] ? pipes[pipeObj.key].toString() : '0';
+                pipeObj.length = pipes[pipeObj.key] ? (pipes[pipeObj.key] * 20).toString() : '0';
             });
             this.pipeDataSource = new MatTableDataSource(this.pipes);
         }, (err) => {

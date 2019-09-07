@@ -21,11 +21,15 @@
     //   }
     mat-row{
         border-bottom-color: rgba(0,0,0,.12);
+        background-color: white;
         &:hover{
             // background-color:  rgba(229, 230, 230, 0.25);
         }
     }
     mat-row:nth-child(4n +1) mat-cell.mat-cell, mat-row:nth-child(4n) mat-cell.mat-cell{
+        background-color: rgb(247, 247, 247);
+    }
+    mat-row:nth-child(4n +1), mat-row:nth-child(4n){
         background-color: rgb(247, 247, 247);
     }
 

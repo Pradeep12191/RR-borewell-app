@@ -16,13 +16,13 @@ export class GodownTypesResolver implements Resolve<any> {
         private auth: AuthService
     ) {
         this.url = this.config.getAbsoluteUrl('godownTypes');
-        this.pipesUrl = this.config.getAbsoluteUrl('pipeCount') + '/' + this.auth.userid;
+        this.pipesUrl = this.config.getAbsoluteUrl('pipeCount');
     }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         return this.http.get(this.url).pipe(mergeMap(response => {
             const goDowns = response;
-            return this.http.get(this.pipesUrl + '/' + response[1].godown_id).pipe(map((pipes) => {
+            return this.http.get(this.pipesUrl + '/' + this.auth.userid + '/' + response[1].godown_id).pipe(map((pipes) => {
                 return {goDowns, pipes, godownId: response[1].godown_id}
             }))
             // return of(response);

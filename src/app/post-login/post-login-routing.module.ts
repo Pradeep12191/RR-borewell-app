@@ -10,10 +10,7 @@ const routes: Routes = [
     {
         path: '', component: PostLoginComponent, children: [
             {
-                path: '', component: HeaderComponent, outlet: 'header',
-                resolve: {
-                    userInfo: UserInfoResolver
-                }
+                path: '', component: HeaderComponent, outlet: 'header'
             },
             { path: 'dashboard', component: DashboardComponent },
             { path: 'vehicles', loadChildren: () => import('./vehicle/vehicle.module').then(mod => mod.VehicleModule) },
@@ -21,7 +18,10 @@ const routes: Routes = [
             { path: 'pointDetails', loadChildren: () => import('./point-details/point-entry/point-entry.module').then(mod => mod.PointEntryModule) },
             { path: 'rpmDetails', loadChildren: () => import('./point-details/rpm-entry/rpm-entry.module').then(mod => mod.RpmEntryModule) },
             { path: '**', component: S404Component }
-        ]
+        ],
+        resolve: {
+            userInfo: UserInfoResolver
+        }
     }
 
 ]

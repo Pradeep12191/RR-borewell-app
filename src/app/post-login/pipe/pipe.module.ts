@@ -30,7 +30,9 @@ import { GodownTypesResolver } from '../../guards/resolveGuard/select-option/god
     entryComponents: [
         AddPipeDialogComponent
     ],
-    providers: [GodownTypesResolver]
+    providers: [
+        GodownTypesResolver
+    ]
 })
 export class PipeModule {
 

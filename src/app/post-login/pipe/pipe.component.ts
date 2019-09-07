@@ -112,7 +112,8 @@ export class PipeComponent {
         dialogRef.afterClosed().subscribe((pipes) => {
             if (pipes) {
                 this.pipes.forEach(pipeObj => {
-                    pipeObj.count = pipes[pipeObj.key] ? pipes[pipeObj.key] : 0
+                    pipeObj.count = pipes[pipeObj.key] ? pipes[pipeObj.key].toString() : '0';
+                    pipeObj.length = pipes[pipeObj.key] ? (pipes[pipeObj.key] * 20).toString() : '0';
                 });
                 this.pipeDataSource = new MatTableDataSource(this.pipes);
                 if (pipes.godown_id) {

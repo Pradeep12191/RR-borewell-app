@@ -16,25 +16,7 @@ export class AddPipeDialogComponent {
     godownTypes = [];
     form: FormGroup;
     selectedGodown;
-    _nativeInputs: QueryList<ElementRef>;
-    _matSelects: QueryList<MatSelect>;
-    _matInputs: QueryList<MatInput>;
     _inputElems: QueryList<ElementRef | MatSelect | MatInput>
-    @ViewChildren(MatSelect) set selectElems(elems: QueryList<MatSelect>) {
-        setTimeout(() => {
-            this._matSelects = elems;
-        });
-    }
-    @ViewChildren(MatInput) set matInputs(elems: QueryList<MatInput>) {
-        setTimeout(() => {
-            this._matInputs = elems;
-        });
-    };
-    @ViewChildren('nativeInput') set nativeInputs(elems: QueryList<ElementRef>) {
-        setTimeout(() => {
-            this._nativeInputs = elems;
-        });
-    }
     @ViewChildren('inputFocus') set inputElems(elems: QueryList<ElementRef | MatSelect | MatInput>) {
         setTimeout(() => {
             this._inputElems = elems;

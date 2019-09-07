@@ -2,16 +2,16 @@
 <mat-toolbar color="primary">
     <span>Add Pipe</span>
 </mat-toolbar>
-<form [formGroup]="form">
+<form [formGroup]="form" [enterFocusJump]="_inputElems">
     <div mat-dialog-content>
         <div fxLayout fxLayoutAlign="center center" fxLayoutGap="25px">
             <mat-form-field [appearance]="appearance" fxFlex="30">
                 <mat-label>Bill No</mat-label>
-                <input type="text" matInput formControlName="billNo">
+                <input type="text" matInput formControlName="billNo" #inputFocus="matInput" focusIndex="0">
             </mat-form-field>
             <mat-form-field [appearance]="appearance" fxFlex="40">
                 <mat-label>Godown Type</mat-label>
-                <mat-select (selectionChange)="godownChange($event)" formControlName="godownType">
+                <mat-select (selectionChange)="godownChange($event)" formControlName="godownType" #inputFocus focusIndex="1">
                     <mat-option [value]="godownType" *ngFor="let godownType of godownTypes">{{ godownType.godownType | uppercase }}</mat-option>
                 </mat-select>
             </mat-form-field>
@@ -24,10 +24,10 @@
                 <div fxFlex="33" class="bold font-12 text-center">PIPES ADDED</div>
             </div>
             <div fxLayout="column" fxLayoutGap="10px">
-                <div fxLayout *ngFor="let pipe of pipes" [formGroupName]="pipe.groupName">
+                <div fxLayout *ngFor="let pipe of pipes; let i = index" [formGroupName]="pipe.groupName">
                     <div fxLayout fxLayoutAlign="center center" fxFlex="33" class="text-center">{{ pipe.type }}</div>
                     <div class="input-wrapper" fxFlex="33" >
-                        <input type="text" (input)="caclPipeAdded(form.get(pipe.groupName), pipe.groupName)" formControlName="count" placeholder="Count" positiveNumber>
+                        <input type="text" [attr.focusIndex]="2 + i" (input)="caclPipeAdded(form.get(pipe.groupName), pipe.groupName)" formControlName="count" placeholder="Count" positiveNumber #inputFocus>
                         <!-- <label>Count</label> -->
                         <span class="focus-border">
                             <i></i>
@@ -40,7 +40,7 @@
         </div>
         <mat-form-field [appearance]="appearance" style="width: 100%">
             <mat-label>Remarks</mat-label>
-            <textarea name="" id="" cols="30" rows="3" matInput formControlName="remarks"></textarea>
+            <textarea #inputFocus #inputFocus="matInput" focusIndex="10" name="" id="" cols="30" rows="3" matInput formControlName="remarks"></textarea>
         </mat-form-field>
     </div>
 </form>

@@ -1,7 +1,7 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { ConfigService } from '../../../services/config.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef, MatSelect, MatSelectChange } from '@angular/material';
+import { FormBuilder, FormGroup, FormControl, NgControl, FormControlName } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef, MatSelect, MatSelectChange, MatInput } from '@angular/material';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../../services/auth.service';
@@ -16,6 +16,30 @@ export class AddPipeDialogComponent {
     godownTypes = [];
     form: FormGroup;
     selectedGodown;
+    _nativeInputs: QueryList<ElementRef>;
+    _matSelects: QueryList<MatSelect>;
+    _matInputs: QueryList<MatInput>;
+    _inputElems: QueryList<ElementRef | MatSelect | MatInput>
+    @ViewChildren(MatSelect) set selectElems(elems: QueryList<MatSelect>) {
+        setTimeout(() => {
+            this._matSelects = elems;
+        });
+    }
+    @ViewChildren(MatInput) set matInputs(elems: QueryList<MatInput>) {
+        setTimeout(() => {
+            this._matInputs = elems;
+        });
+    };
+    @ViewChildren('nativeInput') set nativeInputs(elems: QueryList<ElementRef>) {
+        setTimeout(() => {
+            this._nativeInputs = elems;
+        });
+    }
+    @ViewChildren('inputFocus') set inputElems(elems: QueryList<ElementRef | MatSelect | MatInput>) {
+        setTimeout(() => {
+            this._inputElems = elems;
+        });
+    }
     pipes = [
         { type: '4\'\'Inch 4Kg', groupName: 'p_4Inch4Kg', key: 'p_4Inch4Kg1', count: '0' },
         { type: '4\'\'Inch 6Kg', groupName: 'p_4Inch6Kg', key: 'p_4Inch6Kg1', count: '0' },

@@ -17,16 +17,21 @@
         </div>
     </div>
 
-    <div fxLayout class="m-t-16">
+    <div fxLayout class="m-t-16" fxLayoutGap="25px">
         <mat-form-field fxFlex="25" [appearance]="appearance">
-            <mat-select [(ngModel)]="selectedGodown" (selectionChange)="godownChange($event)">
-                <mat-option [value]="godown.godown_id" *ngFor="let godown of godownTypes">{{ godown.godownType | uppercase }}</mat-option>
+            <mat-select [disabled]="godownSelectDisabled" [(ngModel)]="selectedGodown" (selectionChange)="godownChange($event)">
+                <mat-option [value]="godown.godown_id" *ngFor="let godown of godownTypes">{{ godown.godownType |
+                    uppercase }}</mat-option>
             </mat-select>
         </mat-form-field>
+        <div fxLayout="column" fxLayoutAlign="center center" *ngIf="loading">
+            <mat-spinner diameter="25" strokeWidth="2"></mat-spinner>
+        </div>
     </div>
 
 </div>
-<div *ngIf="!loading; else loader">
+<!-- <div *ngIf="!loading; else loader"> -->
+<div>
     <expand-table @fadeIn [data]="pipes" *ngIf="pipes?.length; else emptyTpl" fxFlex [columns]="columns" [dataSource]="pipeDataSource">
     </expand-table>
 
@@ -36,9 +41,10 @@
         </mat-card>
     </ng-template>
 </div>
+<!-- </div> -->
 
-<ng-template #loader>
+<!-- <ng-template #loader>
     <div class="spinner-container">
         <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
     </div>
-</ng-template>
+</ng-template> -->

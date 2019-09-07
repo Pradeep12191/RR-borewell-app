@@ -3,7 +3,7 @@ import { Column } from '../../expand-table/Column';
 import { MatTableDataSource, MatDialog, MatSelectChange } from '@angular/material';
 import { AddPipeDialogComponent } from './add-pipe-dialog/add-pipe-dialog.component';
 import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { map, finalize } from 'rxjs/operators';
 import { ConfigService } from '../../services/config.service';
 import { FADE_IN_ANIMATION } from '../../animations';
 import { HttpClient } from '@angular/common/http';
@@ -25,6 +25,7 @@ export class PipeComponent {
     ]
     public godownTypes = [];
     public selectedGodown;
+    public godownSelectDisabled;
     loading;
     // pipes = [
     //     { type: '11\'\'Inch 4Kg', count: '20' },
@@ -73,18 +74,20 @@ export class PipeComponent {
 
     public godownChange($event: MatSelectChange) {
         this.loading = true;
+        this.godownSelectDisabled = true;
         const pipeUrl = this.pipeUrl + '/' + $event.value;
-        this.http.get(pipeUrl).subscribe(pipes => {
+        this.http.get(pipeUrl).pipe(finalize(() => {
+            this.loading = false;
+            this.godownSelectDisabled = false;
+        })).subscribe(pipes => {
             this.pipes.forEach(pipeObj => {
                 pipeObj.count = pipes[pipeObj.key] ? pipes[pipeObj.key] : 0
             });
             this.pipeDataSource = new MatTableDataSource(this.pipes);
-            this.loading = false;
         }, (err) => {
             if (err) {
                 this.toastr.error('Error while Fetching Pipe Information', null, { timeOut: 2000 })
             }
-            this.loading = false;
         });
     }
 

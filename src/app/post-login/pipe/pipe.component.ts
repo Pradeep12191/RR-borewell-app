@@ -102,12 +102,13 @@ export class PipeComponent {
 
     addPipe() {
         const dialogRef = this.dialog.open(AddPipeDialogComponent, {
-            width: '70vw',
+            width: '60vw',
             data: {
                 selectedGodownId: this.selectedGodown,
                 godownTypes: this.godownTypes,
                 pipes: this.pipes
-            }
+            },
+            disableClose: true
         });
         dialogRef.afterClosed().subscribe((pipes) => {
             if (pipes) {

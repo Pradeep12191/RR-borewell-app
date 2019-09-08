@@ -1,0 +1,50 @@
+<form [formGroup]="form">
+    <div fxLayout fxLayoutAlign="center center" fxLayoutGap="25px" class="m-b-15">
+        <mat-form-field [appearance]="appearance" fxFlex="40">
+            <mat-label>Godown Type</mat-label>
+            <mat-select cdkFocusInitial (keyup.enter)="onEnter($event, 0)" (selectionChange)="godownChange($event)" formControlName="godownType"
+                #inputFocus focusIndex="1">
+                <mat-option [value]="godownType" *ngFor="let godownType of godownTypes">{{ godownType.godownType |
+                    uppercase }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field [appearance]="appearance" fxFlex="30">
+            <mat-label>Bill No</mat-label>
+            <input type="text" (change)="onBillNoChange()" (keyup.enter)="onBillEnter()" matInput formControlName="billNo"
+                #inputFocus="matInput">
+            <mat-error *ngIf="form.get('billNo').hasError('required')">Bill No is required</mat-error>
+            <mat-error *ngIf="form.get('billNo').hasError('notUnique')">Bill No already exists</mat-error>
+        </mat-form-field>
+        <div class="m-l-10">
+            <mat-spinner diameter="25" strokeWidth="2" *ngIf="billNoValidationPending"></mat-spinner>
+        </div>
+    </div>
+    <div fxLayout="column" fxLayoutGap="20px" class="m-b-16 field-set">
+        <div class="field-set-label" style="margin: 0 !important">Pipe Details</div>
+        <div fxLayout>
+            <div fxFlex="33" class="bold font-12 text-center">NAME</div>
+            <div fxFlex="33" class="bold font-12 text-center">NO. OF. PIPES</div>
+            <div fxFlex="33" class="bold font-12 text-center">PIPES ADDED</div>
+        </div>
+        <div fxLayout="column" fxLayoutGap="10px">
+            <div fxLayout *ngFor="let pipe of pipes; let i = index" [formGroupName]="pipe.groupName">
+                <div fxLayout fxLayoutAlign="center center" fxFlex="33" class="text-center">{{ pipe.type }}</div>
+                <div class="input-wrapper" fxFlex="33">
+                    <input type="text" (keyup.enter)="onEnter($event, 2 + i)" (input)="caclPipeAdded(form.get(pipe.groupName), pipe.groupName)"
+                        formControlName="count" placeholder="Count" positiveNumber #inputFocus>
+                    <!-- <label>Count</label> -->
+                    <span class="focus-border">
+                        <i></i>
+                    </span>
+                </div>
+                <div fxLayout fxLayoutAlign="center center" class="text-center" fxFlex="33">{{
+                    pipeAddedDisplay(form.get(pipe.groupName)) }}</div>
+            </div>
+        </div>
+    </div>
+    <mat-form-field [appearance]="appearance" style="width: 100%">
+        <mat-label>Remarks</mat-label>
+        <textarea #inputFocus #inputFocus="matInput" focusIndex="10" name="" id="" cols="30" rows="3" matInput
+            formControlName="remarks"></textarea>
+    </mat-form-field>
+</form>

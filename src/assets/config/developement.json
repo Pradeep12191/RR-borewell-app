@@ -40,6 +40,10 @@
         {
             "name": "RPMEntry",
             "url": "createrpmentry"
+        },
+        {
+            "name": "billNoExists",
+            "url": "check_duplicate_billno"
         }
     ]
 }

@@ -25,7 +25,6 @@ import { NewLinePipe } from '../../pipes/newLine.pipe';
     ],
     declarations: [
         ViewBillComponent,
-        NewLinePipe
     ],
     providers: [
         BillsResolver

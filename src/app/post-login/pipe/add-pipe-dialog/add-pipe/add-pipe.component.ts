@@ -48,7 +48,7 @@ export class AddPipeComponent {
             if (godownTypeSelect) {
                 godownTypeSelect.open();
             }
-        }, 300)
+        }, 500)
 
     }
 

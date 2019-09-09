@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { Column } from '../../expand-table/Column';
 import { MatTableDataSource, MatDialog, MatSelectChange } from '@angular/material';
 import { AddPipeDialogComponent } from './add-pipe-dialog/add-pipe-dialog.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map, finalize } from 'rxjs/operators';
 import { ConfigService } from '../../services/config.service';
 import { FADE_IN_ANIMATION } from '../../animations';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { AppService } from '../../services/app.service';
 
 @Component({
     templateUrl: './pipe.component.html',
@@ -20,26 +21,16 @@ export class PipeComponent {
     pipeDataSource: MatTableDataSource<any>;
     public columns: Column[] = [
         { id: 'S.No.', name: 'COLUMN.SERIAL_NO', type: 'index', width: '5' },
-        { id: 'type', name: 'Type', type: 'string', width: '15', isCenter: true},
+        { id: 'type', name: 'Type', type: 'string', width: '15', isCenter: true },
         { id: 'count', name: 'No. of Pipes Available', type: 'string', width: '40', isCenter: true },
         { id: 'length', name: 'Length', type: 'string', width: '25', isCenter: true },
-        { id: 'assignVehicle', name: 'Assign Vehicle', type: 'iconButton', width: '15', isCenter: true, action: 'ASSIGN_VEHICLE', iconName: 'directions_car'},
-        { id: 'viewPipeData', name: 'View Pipe Data', type: 'iconButton', isCenter: true, width: '15', action: 'VIEW_PIPE_DATA', iconName: 'arrow_forward'},
+        { id: 'assignVehicle', name: 'Assign Vehicle', type: 'iconButton', width: '15', isCenter: true, action: 'ASSIGN_VEHICLE', iconName: 'directions_car' },
+        { id: 'viewPipeData', name: 'View Pipe Data', type: 'iconButton', isCenter: true, width: '15', action: 'VIEW_PIPE_DATA', iconName: 'arrow_forward' },
     ]
     public godownTypes = [];
     public selectedGodown;
     public godownSelectDisabled;
     loading;
-    // pipes = [
-    //     { type: '11\'\'Inch 4Kg', count: '20' },
-    //     { type: '8\'\'Inch 4Kg', count: '20' },
-    //     { type: '7\'\'Inch 8Kg', count: '20' },
-    //     { type: '7\'\'Inch 6Kg', count: '20' },
-    //     { type: '5\'\'Inch 8Kg', count: '20' },
-    //     { type: '5\'\'Inch 6Kg', count: '20' },
-    //     { type: '4\'\'Inch 6Kg', count: '20' },
-    //     { type: '4\'\'Inch 4Kg', count: '20' }
-    // ]
 
     pipes = [
         { type: '4\'\'4', key: 'p_4Inch4Kg1', count: '0', length: '0' },
@@ -60,7 +51,9 @@ export class PipeComponent {
         private config: ConfigService,
         private http: HttpClient,
         private auth: AuthService,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private router: Router,
+        private app: AppService
     ) {
         this.appearance = this.config.getConfig('formAppearance')
         this.pipeUrl = this.config.getAbsoluteUrl('pipeCount') + '/' + this.auth.userid;
@@ -76,7 +69,7 @@ export class PipeComponent {
         })
     }
 
-    public onButtonClick($event){
+    public onButtonClick($event) {
         console.log($event);
     }
 
@@ -84,6 +77,7 @@ export class PipeComponent {
         this.loading = true;
         this.godownSelectDisabled = true;
         const pipeUrl = this.pipeUrl + '/' + $event.value;
+        this.app.selectedGodownId = $event.value;
         this.http.get(pipeUrl).pipe(finalize(() => {
             this.loading = false;
             this.godownSelectDisabled = false;
@@ -119,10 +113,13 @@ export class PipeComponent {
                 this.pipeDataSource = new MatTableDataSource(this.pipes);
                 if (pipes.godown_id) {
                     this.selectedGodown = pipes.godown_id
+                    this.app.selectedGodownId = this.selectedGodown;
                 }
             }
-
-
         })
+    }
+
+    navigateToViewBill() {
+        this.router.navigate(['postlogin', 'viewBills'])
     }
 }

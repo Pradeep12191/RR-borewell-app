@@ -25,6 +25,7 @@ import { LoginGuard } from './guards/login.guard';
 import { CustomPreloadingStrategy } from './services/pre-load.service';
 import { CommonService } from './services/common.service';
 import { LoaderInterceptorService } from './interceptors/loader.interceptor.service';
+import { AppService } from './services/app.service';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json?t=' + new Date().getTime());
 }
@@ -87,7 +88,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     LoaderService,
     AuthService,
     CookieService,
-    CommonService
+    CommonService,
+    AppService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,12 +1,15 @@
 import { NgModule } from '@angular/core';
 import { NullFilterPipe } from './nullFilter.pipe';
+import { NewLinePipe } from './newLine.pipe';
 
 @NgModule({
     declarations: [
-        NullFilterPipe
+        NullFilterPipe,
+        NewLinePipe
     ],
     exports: [
-        NullFilterPipe
+        NullFilterPipe,
+        NewLinePipe
     ]
 })
 export class PipesModule {

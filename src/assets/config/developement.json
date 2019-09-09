@@ -44,6 +44,10 @@
         {
             "name": "billNoExists",
             "url": "check_duplicate_billno"
+        },
+        {
+            "name": "bills",
+            "url": "get_bill_list"
         }
     ]
 }

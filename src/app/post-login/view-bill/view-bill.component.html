@@ -36,7 +36,7 @@
 </div>
 
 <div fxLayout fxLayoutAlign="center center">
-    <expand-table *ngIf="bills && bills.length; else singleBillTpl" fxFlex="60" [data]="bills" [columns]="columns"
+    <expand-table [expandAll]="expandAll" [dataChanges]="dataChanges" [accordionEffect]="false" *ngIf="bills && bills.length; else singleBillTpl" fxFlex="60" [data]="bills" [columns]="columns"
         [dataSource]="billDataSource">
         <ng-container *expandDetails="let bill">
             <div fxLayout="column" class="m-b-16" fxFlex>
@@ -55,7 +55,7 @@
         </div>
         <ng-template #emptyTpl>
             <mat-card>
-                <mat-card-content>Entered Bill No not found for <strong>{{ displayGodownLabel(selectedGodown) |
+                <mat-card-content>No Bill found for <strong>{{ displayGodownLabel(selectedGodown) |
                         uppercase }}</strong>
                     Godown.</mat-card-content>
             </mat-card>

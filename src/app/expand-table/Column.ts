@@ -7,5 +7,6 @@ export interface Column {
     mobileWidth?: string;
     action?: string,
     iconName?: string;
-    isCenter?: boolean
+    isCenter?: boolean,
+    style?: any;
 }

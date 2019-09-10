@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../../../material.module';
-import { SharedModule } from '../../../../shared.module';
+import { SharedModule } from '../../../../shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { PointReportRoutingModule } from './point-report-routing.module';
 import { PointReportComponent } from './point-report.component';

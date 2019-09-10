@@ -15,3 +15,41 @@
 .mat-column-serialNo{
     padding-left: 16px;
 }
+
+.plus-container{
+    padding: 5px;
+    background-color: white;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.plus-icon{
+    width: 15px;
+    height: 15px;
+    background-color: white;
+    border-radius: 4px;
+    position: relative;
+    &.expand::before{
+        transform: rotate(90deg);
+    }
+    &::before{
+        content: '';
+        position: absolute;
+        width: 2px;
+        height: 100%;
+        left: 50%;
+        top: 0;
+        margin-left: -1px;
+        background-color: black;
+        transition: linear all 300ms;
+    }
+    &::after{
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        left: 0;;
+        margin-top: -1px;
+        top: 50%;
+        background-color: black;
+    }
+}

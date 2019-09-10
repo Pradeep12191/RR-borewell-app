@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Column } from '../../expand-table/Column';
 import { MatTableDataSource } from '@angular/material';
@@ -19,6 +19,7 @@ export class ViewBillComponent implements OnDestroy {
     singleBill;
     billDataSource: MatTableDataSource<any>;
     appearance;
+    dataChanges = new Subject<any>();
     pipes = [
         { type: '4\'\'4 kg', key: 'p_4Inch4Kg', count: '0', length: '0' },
         { type: '4\'\'6 kg', key: 'p_4Inch6Kg', count: '0', length: '0' },
@@ -31,8 +32,8 @@ export class ViewBillComponent implements OnDestroy {
     ]
     public columns: Column[] = [
         { id: 'serialNo', name: 'COLUMN.SERIAL_NO', type: 'index', width: '15' },
-        { id: 'billNo', name: 'Bill Number', type: 'string', width: '70', isCenter: true },
-        { id: 'more_details', name: '', type: 'toggle', width: '15' }
+        { id: 'billNo', name: 'Bill Number', type: 'string', width: '55', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold'} },
+        { id: 'more_details', name: 'Collapse All', type: 'toggle', width: '30', isCenter: true }
     ];
     selectedGodown;
     godowns;
@@ -42,6 +43,7 @@ export class ViewBillComponent implements OnDestroy {
     godownTypeLoading;
     godownTypeDisabled;
     searchBillNoUrl;
+    expandAll;
     constructor(
         private route: ActivatedRoute,
         private config: ConfigService,
@@ -60,6 +62,8 @@ export class ViewBillComponent implements OnDestroy {
             this.billDataSource = new MatTableDataSource(data.bills);
         });
         this.searchBillNoUrl = this.config.getAbsoluteUrl('bills');
+        this.expandAll = true;
+
     }
 
     pipeAddedDisplay(pipe) {
@@ -113,6 +117,7 @@ export class ViewBillComponent implements OnDestroy {
                     this.singleBill = null;
                 }
                 this.billDataSource = new MatTableDataSource(this.bills);
+                this.dataChanges.next();
                 this.billNoDisabled = false;
                 this.billNoLoading = false;
                 this.godownTypeDisabled = false;

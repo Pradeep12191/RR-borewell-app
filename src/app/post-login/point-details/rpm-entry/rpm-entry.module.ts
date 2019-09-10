@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { DirectiveModule } from '../../../directives/directive.module';
-import { SharedModule } from '../../../shared.module';
+import { SharedModule } from '../../../shared/shared.module';
 import { MaterialModule } from '../../../material.module';
 import { RpmEntryComponent } from './rpm-entry.component';
 import { RpmEntryRoutingModule } from './rpm-entry-routing.module';

@@ -10,7 +10,7 @@ import { OtherChargesComponent } from './point/other-charges/other-charges.compo
 import { PointEntryService } from './point-entry.service';
 import { BitDetailsComponent } from './point/bit-details/bit-details.component';
 import { HammerDetailsComponent } from './point/hammer-details/hammer-details.component';
-import { SharedModule } from '../../../shared.module';
+import { SharedModule } from '../../../shared/shared.module';
 import { PointEntryResolve } from '../../../guards/resolveGuard/point-entry.guard';
 import { DirectiveModule } from '../../../directives/directive.module';
 import { PointInfoComponent } from './point-info/point-info.component';

@@ -48,6 +48,10 @@
         {
             "name": "bills",
             "url": "get_bill_list"
+        },
+        {
+            "name": "searchBillNo",
+            "url": "get_bill_no"
         }
     ]
 }

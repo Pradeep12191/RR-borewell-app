@@ -19,14 +19,14 @@ export class AddPipeDialogComponent {
     stepIndex = 0
 
     pipes = [
-        { type: '4\'\'4', groupName: 'p_4Inch4Kg', key: 'p_4Inch4Kg1', count: '0' },
-        { type: '4\'\'6', groupName: 'p_4Inch6Kg', key: 'p_4Inch6Kg1', count: '0' },
-        { type: '5\'\'6', groupName: 'p_5Inch6Kg', key: 'p_5Inch6Kg1', count: '0' },
-        { type: '5\'\'8', groupName: 'p_5Inch8Kg', key: 'p_5Inch8Kg1', count: '0' },
-        { type: '7\'\'6', groupName: 'p_7Inch6Kg', key: 'p_7Inch6Kg1', count: '0' },
-        { type: '7\'\'8', groupName: 'p_7Inch8Kg', key: 'p_7Inch8Kg1', count: '0' },
-        { type: '8\'\'4', groupName: 'p_8Inch4Kg', key: 'p_8Inch4Kg1', count: '0' },
-        { type: '11\'\'4', groupName: 'p_11Inch4Kg', key: 'p_11Inch4Kg1', count: '0' },
+        { type: '4\'\'4 kg', groupName: 'p_4Inch4Kg', key: 'p_4Inch4Kg1', count: '0' },
+        { type: '4\'\'6 kg', groupName: 'p_4Inch6Kg', key: 'p_4Inch6Kg1', count: '0' },
+        { type: '5\'\'6 kg', groupName: 'p_5Inch6Kg', key: 'p_5Inch6Kg1', count: '0' },
+        { type: '5\'\'8 kg', groupName: 'p_5Inch8Kg', key: 'p_5Inch8Kg1', count: '0' },
+        { type: '7\'\'6 kg', groupName: 'p_7Inch6Kg', key: 'p_7Inch6Kg1', count: '0' },
+        { type: '7\'\'8 kg', groupName: 'p_7Inch8Kg', key: 'p_7Inch8Kg1', count: '0' },
+        { type: '8\'\'4 kg', groupName: 'p_8Inch4Kg', key: 'p_8Inch4Kg1', count: '0' },
+        { type: '11\'\'4 kg', groupName: 'p_11Inch4Kg', key: 'p_11Inch4Kg1', count: '0' },
     ]
 
     postUrl;

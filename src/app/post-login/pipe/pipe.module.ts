@@ -9,7 +9,7 @@ import { PipeComponent } from './pipe.component';
 import { PipeRoutingModule } from './pipe-routing.module';
 import { AddPipeDialogComponent } from './add-pipe-dialog/add-pipe-dialog.component';
 import { DirectiveModule } from '../../directives/directive.module';
-import { GodownTypesResolver } from '../../guards/resolveGuard/select-option/godown-types.resolver';
+import { PipesResolver } from '../../guards/resolveGuard/select-option/pipes.resolver';
 import { AddPipeComponent } from './add-pipe-dialog/add-pipe/add-pipe.component';
 import { ConfirmPipeComponent } from './add-pipe-dialog/confirm-pipe/confirm-pipe.component';
 
@@ -35,7 +35,7 @@ import { ConfirmPipeComponent } from './add-pipe-dialog/confirm-pipe/confirm-pip
         AddPipeDialogComponent
     ],
     providers: [
-        GodownTypesResolver
+        PipesResolver
     ]
 })
 export class PipeModule {

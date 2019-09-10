@@ -2,7 +2,7 @@ import { Resolve } from '@angular/router';
 import { ConfigService } from '../../services/config.service';
 import { AuthService } from '../../services/auth.service';
 import { AppService } from '../../services/app.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 
@@ -20,6 +20,10 @@ export class BillsResolver implements Resolve<any> {
     resolve() {
         const start = 0;
         const end = 200;
-        return this.http.get(this.billsUrl + '/' + this.auth.userid + '/' + this.app.selectedGodownId + '/' + start + '/' + end);
+        let params = new HttpParams().set('user_id', this.auth.userid);
+        params = params.append('gudown_id', this.app.selectedGodownId.toString());
+        params = params.append('start', '0');
+        params = params.append('end', '100');
+        return this.http.get(this.billsUrl, {params});
     }
 }

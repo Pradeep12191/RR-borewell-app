@@ -14,6 +14,7 @@ import { StateResolver } from '../guards/resolveGuard/state.resolver';
 import { UserInfoResolver } from '../guards/resolveGuard/user-info.resolver';
 import { VehicleTypeResolver } from '../guards/resolveGuard/vehicle/vehicle-type.resolver';
 import { VehicleListResolver } from '../guards/resolveGuard/vehicle/vehicle-list.resolver';
+import { GodownTypesResolver } from '../guards/resolveGuard/select-option/godown-types.resolver';
 
 
 
@@ -37,7 +38,8 @@ import { VehicleListResolver } from '../guards/resolveGuard/vehicle/vehicle-list
         StateResolver,
         UserInfoResolver,
         VehicleListResolver,
-        VehicleTypeResolver
+        VehicleTypeResolver,
+        GodownTypesResolver
     ],
 })
 export class PostLoginModule {

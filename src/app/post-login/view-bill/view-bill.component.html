@@ -1,36 +1,96 @@
+<div class="back-btn">
+    <button (click)="backToPipes()" color="primary" mat-raised-button>
+        <mat-icon>arrow_back</mat-icon>
+        PIPES
+    </button>
+</div>
+<div fxLayout fxLayoutAlign="center center" class="shift-top-30">
+    <div fxLayout fxFlex="75" fxLayoutAlign="space-between">
+        <div fxLayout fxLayoutGap="10px">
+            <mat-form-field [appearance]="appearance">
+                <mat-label>Godown Type</mat-label>
+                <mat-select (selectionChange)="onBillNoChange('godownType')" [disabled]="godownTypeDisabled"
+                    [(ngModel)]="selectedGodown">
+                    <mat-option [value]="godown.godown_id" *ngFor="let godown of godowns">{{ godown.godownType |
+                        uppercase
+                        }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div fxLayout="column" fxLayoutAlign="center center" *ngIf="godownTypeLoading">
+                <mat-spinner diameter="25" strokeWidth="2"></mat-spinner>
+            </div>
+        </div>
+        <h2>Bill Information</h2>
+        <div fxLayout fxLayoutGap="10px">
+            <mat-form-field [appearance]="appearance">
+                <mat-label>Search Bill</mat-label>
+                <input (change)="onBillNoChange('billNo')" [disabled]="billNoDisabled" type="text" matInput [(ngModel)]="billNo">
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+            <div fxLayout="column" fxLayoutAlign="center center" *ngIf="billNoLoading">
+                <mat-spinner diameter="25" strokeWidth="2"></mat-spinner>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 <div fxLayout fxLayoutAlign="center center">
-    <expand-table fxFlex="60" [data]="bills" [columns]="columns" [dataSource]="billDataSource">
+    <expand-table *ngIf="bills && bills.length; else singleBillTpl" fxFlex="60" [data]="bills" [columns]="columns"
+        [dataSource]="billDataSource">
         <ng-container *expandDetails="let bill">
             <div fxLayout="column" class="m-b-16" fxFlex>
-                <div class="card m-b-16 m-t-16" fxFlex>
-                    <div class="section-title m-b-16 contact-title">
-                        Pipe Information
-                    </div>
-                    <div fxLayout="column" fxLayoutGap="10px">
-                        <div class="p-b-5 line" fxLayout fxLayoutGap="5px">
-                            <div fxFlex class="text-center bold">
-                                NAME
-                            </div>
-                            <div fxFlex class="text-center bold">
-                                NO.OF.PIPES
-                            </div>
-                            <div fxFlex class="text-center bold">
-                                PIPES ADDED
-                            </div>
-                        </div>
-                        <div fxLayout *ngFor="let pipe of pipes">
-                            <div fxFlex class="text-center">{{ pipe.type }}</div>
-                            <div fxFlex class="bold text-center">{{ bill[pipe.key].count || 0 }}</div>
-                            <div fxFlex class="bold text-center">{{ pipeAddedDisplay(bill[pipe.key]) }}</div>
-                        </div>
-                    </div>
-                </div>
-                <ng-container *ngIf="bill.remarks">
-                    <div class="font-italic bold m-b-5">Remarks</div>
-                    <div class="dashed m-b-5"></div>
-                    <div class="m-l-5 font-italic" [innerHTML]="bill.remarks | newLine"></div>
-                </ng-container>
+                <ng-container *ngTemplateOutlet="billDetailsTpl; context: { $implicit: bill }"> </ng-container>
             </div>
         </ng-container>
     </expand-table>
+    <ng-template #singleBillTpl>
+        <div fxLayout="column" *ngIf="singleBill; else emptyTpl">
+            <div fxLayout fxLayoutGap="5px">
+                <div fxFlex="15">Bill No</div>
+                <div>:</div>
+                <div fxFlex class="bold">{{ singleBill.billNo }}</div>
+            </div>
+            <ng-container *ngTemplateOutlet="billDetailsTpl; context: { $implicit: singleBill }"> </ng-container>
+        </div>
+        <ng-template #emptyTpl>
+            <mat-card>
+                <mat-card-content>Entered Bill No not found for <strong>{{ displayGodownLabel(selectedGodown) |
+                        uppercase }}</strong>
+                    Godown.</mat-card-content>
+            </mat-card>
+        </ng-template>
+    </ng-template>
+
 </div>
+
+<ng-template let-bill #billDetailsTpl>
+    <div class="card m-b-16 m-t-16 white" fxFlex>
+        <div class="section-title m-b-16 contact-title">
+            Pipe Information
+        </div>
+        <div fxLayout="column" fxLayoutGap="10px">
+            <div class="p-b-5 line" fxLayout fxLayoutGap="5px">
+                <div fxFlex class="text-center bold">
+                    PIPE SIZE
+                </div>
+                <div fxFlex class="text-center bold">
+                    NO.OF.PIPES
+                </div>
+                <div fxFlex class="text-center bold">
+                    PIPES SERIAL NO.
+                </div>
+            </div>
+            <div fxLayout *ngFor="let pipe of pipes">
+                <div fxFlex class="text-center">{{ pipe.type }}</div>
+                <div fxFlex class="bold text-center">{{ bill[pipe.key].count || 0 }}</div>
+                <div fxFlex class="bold text-center">{{ pipeAddedDisplay(bill[pipe.key]) }}</div>
+            </div>
+        </div>
+    </div>
+    <ng-container *ngIf="bill.remarks">
+        <div class="font-italic bold m-b-5">Remarks</div>
+        <div class="dashed m-b-5"></div>
+        <div class="m-l-5 font-italic" [innerHTML]="bill.remarks | newLine"></div>
+    </ng-container>
+</ng-template>

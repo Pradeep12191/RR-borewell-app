@@ -22,9 +22,9 @@
     <div fxLayout="column" fxLayoutGap="20px" class="m-b-16 field-set">
         <div class="field-set-label" style="margin: 0 !important">Pipe Details</div>
         <div fxLayout>
-            <div fxFlex="33" class="bold font-12 text-center">NAME</div>
+            <div fxFlex="33" class="bold font-12 text-center">PIPE SIZE</div>
             <div fxFlex="33" class="bold font-12 text-center">NO. OF. PIPES</div>
-            <div fxFlex="33" class="bold font-12 text-center">PIPES ADDED</div>
+            <div fxFlex="33" class="bold font-12 text-center">PIPES SERIAL NO.</div>
         </div>
         <div fxLayout="column" fxLayoutGap="10px">
             <div fxLayout *ngFor="let pipe of pipes; let i = index" [formGroupName]="pipe.groupName">

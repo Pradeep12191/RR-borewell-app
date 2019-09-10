@@ -20,10 +20,10 @@ export class PipeComponent {
 
     pipeDataSource: MatTableDataSource<any>;
     public columns: Column[] = [
-        { id: 'S.No.', name: 'COLUMN.SERIAL_NO', type: 'index', width: '5' },
+        { id: 'S.No.', name: 'COLUMN.SERIAL_NO', type: 'index', width: '10' },
         { id: 'type', name: 'Type', type: 'string', width: '15', isCenter: true },
-        { id: 'count', name: 'No. of Pipes Available', type: 'string', width: '40', isCenter: true },
-        { id: 'length', name: 'Length', type: 'string', width: '25', isCenter: true },
+        { id: 'count', name: 'No. of Pipe Length', type: 'string', width: '30', isCenter: true },
+        { id: 'length', name: 'Feet', type: 'string', width: '25', isCenter: true },
         { id: 'assignVehicle', name: 'Assign Vehicle', type: 'iconButton', width: '15', isCenter: true, action: 'ASSIGN_VEHICLE', iconName: 'directions_car' },
         { id: 'viewPipeData', name: 'View Pipe Data', type: 'iconButton', isCenter: true, width: '15', action: 'VIEW_PIPE_DATA', iconName: 'arrow_forward' },
     ]
@@ -33,14 +33,14 @@ export class PipeComponent {
     loading;
 
     pipes = [
-        { type: '4\'\'4', key: 'p_4Inch4Kg1', count: '0', length: '0' },
-        { type: '4\'\'6', key: 'p_4Inch6Kg1', count: '0', length: '0' },
-        { type: '5\'\'6', key: 'p_5Inch6Kg1', count: '0', length: '0' },
-        { type: '5\'\'8', key: 'p_5Inch8Kg1', count: '0', length: '0' },
-        { type: '7\'\'6', key: 'p_7Inch6Kg1', count: '0', length: '0' },
-        { type: '7\'\'8', key: 'p_7Inch8Kg1', count: '0', length: '0' },
-        { type: '8\'\'4', key: 'p_8Inch4Kg1', count: '0', length: '0' },
-        { type: '11\'\'4', key: 'p_11Inch4Kg1', count: '0', length: '0' },
+        { type: '4\'\'4 kg', key: 'p_4Inch4Kg1', count: '0', length: '0' },
+        { type: '4\'\'6 kg', key: 'p_4Inch6Kg1', count: '0', length: '0' },
+        { type: '5\'\'6 kg', key: 'p_5Inch6Kg1', count: '0', length: '0' },
+        { type: '5\'\'8 kg', key: 'p_5Inch8Kg1', count: '0', length: '0' },
+        { type: '7\'\'6 kg', key: 'p_7Inch6Kg1', count: '0', length: '0' },
+        { type: '7\'\'8 kg', key: 'p_7Inch8Kg1', count: '0', length: '0' },
+        { type: '8\'\'4 kg', key: 'p_8Inch4Kg1', count: '0', length: '0' },
+        { type: '11\'\'4 kg', key: 'p_11Inch4Kg1', count: '0', length: '0' },
     ]
     appearance;
     pipeUrl;

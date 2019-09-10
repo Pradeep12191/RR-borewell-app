@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PipeComponent } from './pipe.component';
-import { GodownTypesResolver } from '../../guards/resolveGuard/select-option/godown-types.resolver';
+import { PipesResolver } from '../../guards/resolveGuard/select-option/pipes.resolver';
 
 const routes: Routes = [
     {
         path: '', component: PipeComponent, resolve: {
-            pipeData: GodownTypesResolver
+            pipeData: PipesResolver
         }
     }
 ]

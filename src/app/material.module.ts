@@ -53,6 +53,7 @@ export const MY_FORMATS = {
         MatDividerModule,
         MatDialogModule,
         MatTableModule,
+        MatListModule,
         MatListModule
     ],
     providers: [

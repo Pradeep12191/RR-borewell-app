@@ -1,0 +1,70 @@
+h2, h4{
+    margin: 0;
+}
+
+.transfer-items{
+    &-card{
+        min-height: 420px;
+        max-height: 420px;
+        mat-card-content{
+            height: 100%;   
+        }
+        .chk-box-container, .empty-msg-container{
+            height: calc(420px - 98px);
+            overflow: auto;
+        }
+        .left-header{
+            min-height: 66px;
+        }
+        .header-shadow{
+            box-shadow: 0px 1px 0px -1px rgba(0, 0, 0, 0.2),
+            0px 2px 0px -1px rgba(0, 0, 0, 0.14),
+            0px 3px 3px -1px rgba(0, 0, 0, 0.12);
+        }
+    }
+    &-left{
+        margin-right: 10px;
+
+    }
+    &-right{
+        margin-left: 10px;
+    }
+    &-left, &-right{
+        border: 1px solid transparent;
+        height: 100%;
+        box-shadow: 1px 1px 7px 0px inset #ccc;
+        border-radius: 4px;
+        // border-color: #ccc;
+    }
+
+}
+.clear-btn{
+    font-size: 14px;
+    font-weight: bold;
+}
+mat-list-option.custom-list-option, mat-list-item.custom-list-option{
+    height: 36px;
+    ::ng-deep{
+        .mat-list-item-content{
+            justify-content: space-between;
+            width: 100%;
+        }
+    }
+}
+
+.empty-stamp{
+    margin-top: -16px;
+    background: orange;
+    // transform: rotate(-35deg);
+    mat-card-content{
+        color: white;
+        font-size: 16px;
+    }
+}
+
+mat-list-item{
+    transition: background-color 300ms linear;
+}
+mat-list-item:hover{
+    background-color: #eee;
+}

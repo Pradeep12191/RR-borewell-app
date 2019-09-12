@@ -1,0 +1,58 @@
+<div class="shift-top-30" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+    <h2>Give Pipe To Vehicle</h2>
+    <h4>{{ pipeName }}</h4>
+</div>
+<div fxLayout class="m-t-10" fxLayoutAlign="center center">
+    <mat-card fxFlex="60" class="transfer-items-card" fxLayout="column">
+        <mat-card-content fxFlex>
+            <div fxLayout fxFlex>
+                <div fxFlex class="transfer-items-left ">
+                    <div fxLayout class="header-shadow">
+                        <div fxFlex class="m-t-16 m-l-10 m-r-10 m-b-16 input-wrapper">
+                            <input type="text" placeholder="Search Pipe Number" positiveNumber>
+                            <!-- <label>Count</label> -->
+                            <span class="focus-border">
+                                <i></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="chk-box-container">
+                        <!-- <div class="m-t-10 m-l-20" fxLayout="column" fxLayoutGap="10px">
+                            <div fxLayout *ngFor="let pipeSerialNo of pipeSerialNos">
+                                <mat-checkbox>{{ pipeSerialNo }}</mat-checkbox>
+                            </div>
+                        </div> -->
+                        <mat-selection-list #shoes color="primary" (selectionChange)="onSelect($event)">
+                            <mat-list-option class="custom-list-option" [value]="pipeSerialNo" *ngFor="let pipeSerialNo of pipeSerialNos"
+                                checkboxPosition="before">
+                                {{pipeSerialNo}}
+                            </mat-list-option>
+                        </mat-selection-list>
+                    </div>
+                </div>
+                <div fxFlex class="transfer-items-right">
+                    <div fxLayout class="left-header header-shadow" fxLayoutAlign="center center">
+                        <div class="font-16 bold">TN34 6822</div>
+                    </div>
+                    <div class="chk-box-container" *ngIf="selectedPipes.length; else emptyTpl">
+                        <mat-list>
+                            <mat-list-item fxLayout="row" class="custom-list-option" *ngFor="let pipeSerialNo of selectedPipes">
+                                <div>{{ pipeSerialNo }}</div>
+                                <button mat-icon-button color="primary" fxFlexAlign="end">
+                                    <mat-icon class="clear-btn">clear</mat-icon>
+                                </button>
+                            </mat-list-item>
+                        </mat-list>
+                    </div>
+                    <ng-template #emptyTpl>
+                        <div class="empty-msg-container" fxLayout="column" fxLayoutAlign="center center">
+                            <mat-card class="m-l-16 m-r-16" class="empty-stamp">
+                                <mat-card-content>No Pipe Assigned</mat-card-content>
+                            </mat-card>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

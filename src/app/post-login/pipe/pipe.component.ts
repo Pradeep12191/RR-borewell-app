@@ -70,7 +70,10 @@ export class PipeComponent {
     }
 
     public onButtonClick($event) {
-        console.log($event);
+        if ($event.action === 'ASSIGN_VEHICLE') {
+            this.router.navigate(['postlogin/assignVehicle', $event.rowData.key]);
+        }
+        
     }
 
     public godownChange($event: MatSelectChange) {
@@ -118,6 +121,7 @@ export class PipeComponent {
             }
         })
     }
+
 
     navigateToViewBill() {
         this.router.navigate(['postlogin', 'viewBills'])

@@ -5,7 +5,7 @@ h2, h4{
 .transfer-items{
     &-card{
         min-height: 420px;
-        max-height: 420px;
+        // max-height: 420px;
         mat-card-content{
             height: 100%;   
         }
@@ -14,7 +14,7 @@ h2, h4{
             overflow: auto;
         }
         .left-header{
-            min-height: 66px;
+            min-height: 68px;
         }
         .header-shadow{
             box-shadow: 0px 1px 0px -1px rgba(0, 0, 0, 0.2),
@@ -42,6 +42,23 @@ h2, h4{
     font-size: 14px;
     font-weight: bold;
 }
+
+.input-clear{
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1;
+    .clear-icon{
+        font-size: 16px;
+        height: 16px;
+        cursor: pointer;
+    }
+}
+
+
+
+
 mat-list-option.custom-list-option, mat-list-item.custom-list-option{
     height: 36px;
     ::ng-deep{

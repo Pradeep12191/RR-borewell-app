@@ -5,7 +5,7 @@ import { MatDialog, MatTableDataSource } from '@angular/material';
 import { AddVehicleDialogComponent } from './add-vehicle-dialog/add-vehicle-dialog.component';
 import { Column } from '../../expand-table/Column';
 import { ActivatedRoute } from '@angular/router';
-import { Vehicle } from './Vehicle';
+import { Vehicle } from '../../models/Vehicle';
 import { Subscription } from 'rxjs';
 
 

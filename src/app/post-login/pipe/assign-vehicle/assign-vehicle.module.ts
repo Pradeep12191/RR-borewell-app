@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { DirectiveModule } from '../../../directives/directive.module';
 import { AssignVehicleComponent } from './assign-vehicle.component';
 import { AssignVehicleRoutingModule } from './assign-vehicle-routing.module';
+import { PipesModule } from '../../../pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -16,7 +17,8 @@ import { AssignVehicleRoutingModule } from './assign-vehicle-routing.module';
         SharedModule,
         FlexLayoutModule,
         AssignVehicleRoutingModule,
-        DirectiveModule
+        DirectiveModule,
+        PipesModule
     ],
     declarations: [
         AssignVehicleComponent

@@ -1,5 +1,5 @@
 export interface Vehicle{
-    regNo: string,
     vehicle_id: string;
+    regNo: string;
     type: string;
 }

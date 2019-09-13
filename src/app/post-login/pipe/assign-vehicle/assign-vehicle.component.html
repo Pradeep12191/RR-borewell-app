@@ -2,15 +2,25 @@
     <h2>Give Pipe To Vehicle</h2>
     <h4>{{ pipeName }}</h4>
 </div>
-<div fxLayout class="m-t-10" fxLayoutAlign="center center">
-    <mat-card fxFlex="60" class="transfer-items-card" fxLayout="column">
-        <mat-card-content fxFlex>
+<div fxLayout fxLayoutGap="16px" class="m-t-10" fxLayoutAlign="center center">
+    <mat-card fxFlex="75" class="transfer-items-card" fxLayout="column">
+        <mat-card-content fxLayout="column" fxFlex>
             <div fxLayout fxFlex>
                 <div fxFlex class="transfer-items-left ">
                     <div fxLayout class="header-shadow">
-                        <div fxFlex class="m-t-16 m-l-10 m-r-10 m-b-16 input-wrapper">
-                            <input type="text" placeholder="Search Pipe Number" positiveNumber>
+                        <div class="m-l-16" fxLayout fxLayoutAlign="center center">
+                            <mat-checkbox [(ngModel)]="selectAllChecked" (change)="selectAllChange($event)" color="primary"
+                                matTooltip="select all pipe"></mat-checkbox>
+                        </div>
+
+                        <div fxFlex class="m-t-16 m-l-10 m-r-10 m-b-16 input-wrapper" fxLayout>
+                            <input #searchInput type="text" [value]="searchTerm" (input)="searchTerm = $event.target.value"
+                                placeholder="Search Pipe Number" positiveNumber>
                             <!-- <label>Count</label> -->
+                            <div (click)="searchTerm = ''; searchInput.focus()" *ngIf="searchTerm?.length" fxLayout
+                                fxLayoutAlign="center center" class="input-clear">
+                                <mat-icon class="clear-icon">clear</mat-icon>
+                            </div>
                             <span class="focus-border">
                                 <i></i>
                             </span>
@@ -23,22 +33,28 @@
                             </div>
                         </div> -->
                         <mat-selection-list #shoes color="primary" (selectionChange)="onSelect($event)">
-                            <mat-list-option class="custom-list-option" [value]="pipeSerialNo" *ngFor="let pipeSerialNo of pipeSerialNos"
+                            <mat-list-option class="custom-list-option" [selected]="pipeSerialNo.isSelected" [value]="pipeSerialNo"
+                                *ngFor="let pipeSerialNo of pipeSerialNos | startsWithFilter:searchTerm:'value'"
                                 checkboxPosition="before">
-                                {{pipeSerialNo}}
+                                {{pipeSerialNo.value}}
                             </mat-list-option>
                         </mat-selection-list>
                     </div>
                 </div>
                 <div fxFlex class="transfer-items-right">
                     <div fxLayout class="left-header header-shadow" fxLayoutAlign="center center">
-                        <div class="font-16 bold">TN34 6822</div>
+                        <mat-form-field class="m-t-10" [floatLabel]="'always'">
+                            <mat-label>Vehicle</mat-label>
+                            <mat-select (selectionChange)="onVehicleChange($event)" required [(ngModel)]="selectedVehicle" placeholder="Select Vehicle">
+                                <mat-option [value]="vehicle" *ngFor="let vehicle of vehicles">{{ vehicle.regNo }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
                     </div>
                     <div class="chk-box-container" *ngIf="selectedPipes.length; else emptyTpl">
                         <mat-list>
                             <mat-list-item fxLayout="row" class="custom-list-option" *ngFor="let pipeSerialNo of selectedPipes">
                                 <div>{{ pipeSerialNo }}</div>
-                                <button mat-icon-button color="primary" fxFlexAlign="end">
+                                <button (click)="removeItem(pipeSerialNo)" mat-icon-button color="primary" fxFlexAlign="end">
                                     <mat-icon class="clear-btn">clear</mat-icon>
                                 </button>
                             </mat-list-item>
@@ -53,6 +69,17 @@
                     </ng-template>
                 </div>
             </div>
+            <div *ngIf="othersSelected" fxLayout class="m-t-16">
+                <mat-form-field [appearance]="appearance" fxFlex>
+                    <mat-label>Remarks</mat-label>
+                    <textarea matInput cols="30" rows="6" required [(ngModel)]="otherRemarks"></textarea>
+                </mat-form-field>
+            </div>
         </mat-card-content>
     </mat-card>
+</div>
+<div fxLayout fxLayoutAlign="center center" class="m-t-16">
+    <div fxFlex="75" fxLayoutAlign="end end">
+        <button mat-raised-button color="primary">SAVE</button>
+    </div>
 </div>

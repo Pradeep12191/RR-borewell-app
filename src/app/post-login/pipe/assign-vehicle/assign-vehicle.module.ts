@@ -9,6 +9,7 @@ import { AssignVehicleComponent } from './assign-vehicle.component';
 import { AssignVehicleRoutingModule } from './assign-vehicle-routing.module';
 import { PipesModule } from '../../../pipes/pipes.module';
 import { PipeSerialNosResolver } from '../../../guards/resolveGuard/pipes/pipe-serial-nos.resolver';
+import { AssignVehicleConfirmDialogComponent } from './assign-vehicle-confirm-dialog/assign-vehicle-confirm-dialog.component';
 
 @NgModule({
     imports: [
@@ -22,12 +23,14 @@ import { PipeSerialNosResolver } from '../../../guards/resolveGuard/pipes/pipe-s
         PipesModule
     ],
     declarations: [
-        AssignVehicleComponent
+        AssignVehicleComponent,
+        AssignVehicleConfirmDialogComponent
     ],
     providers: [
         PipeSerialNosResolver
-    ]
-    
+    ],
+    entryComponents: [AssignVehicleConfirmDialogComponent]
+
 })
 export class AssignVehicleModule {
 

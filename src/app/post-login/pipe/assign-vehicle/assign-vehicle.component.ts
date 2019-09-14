@@ -1,12 +1,13 @@
 import { Component, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatSelectionListChange, MatCheckboxChange, MatSelectionList, MatSelectChange, MatSelect } from '@angular/material';
+import { MatSelectionListChange, MatCheckboxChange, MatSelectionList, MatSelectChange, MatSelect, MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { Vehicle } from '../../../models/Vehicle';
 import { ConfigService } from '../../../services/config.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { AssignVehicleConfirmDialogComponent } from './assign-vehicle-confirm-dialog/assign-vehicle-confirm-dialog.component';
 
 @Component({
     templateUrl: './assign-vehicle.component.html',
@@ -37,7 +38,6 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
     appearance;
     othersSelected;
     otherRemarks;
-    updateUrl;
     godownId;
     godownType;
     pipeKey;
@@ -48,7 +48,8 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
         private router: Router,
         private http: HttpClient,
         private auth: AuthService,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private dialog: MatDialog
     ) {
         this.route.paramMap.subscribe(paramMap => {
             this.pipeKey = paramMap.get('pipeKey');
@@ -67,7 +68,6 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
 
 
         this.appearance = this.config.getConfig('formAppearance');
-        this.updateUrl = this.config.getAbsoluteUrl('AssignPipeToVehicle');
     }
 
     ngOnDestroy() {
@@ -134,32 +134,35 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
         this.router.navigate(['postlogin', 'pipes']);
     }
 
-    savePipe() {
-        const pipePostParam = this.pipes.find(pipe => pipe.key === this.pipeKey).postParam;
-        let params = new HttpParams().set('user_id', this.auth.userid);
-        params = params.append('gudownid', this.godownId);
-        params = params.append('pipe_size', pipePostParam);
-        const payload = this.selectedPipes.map(pipe => {
-            const data = {}
-            data['user_id'] = this.auth.userid;
-            data['gudown_type'] = this.godownType;
-            data['gudown_id'] = this.godownId;
-            data['vehicle_no'] = this.selectedVehicle.regNo;
-            data['vehicle_id'] = this.selectedVehicle.vehicle_id;
-            data['serial_no'] = pipe.serial_no;
-            data['serial_no_id'] = pipe.serial_no;
-            data['pipe_size'] = pipePostParam;
-            data['billno'] = pipe.billno;
-            data['remarks'] = '';
-            return data;
-        });
-        console.log(JSON.stringify(payload, null, 2));
-        this.http.put(this.updateUrl, payload).subscribe(() => {
-            this.toastr.success(`Pipes assigned to vehicle - ${this.selectedVehicle.regNo} successfully`, null, { timeOut: 2000 })
-        }, (err) => {
-            if (err) {
-                this.toastr.error(`Error while assigning pipes to vehicle - ${this.selectedVehicle.regNo}`, null, { timeOut: 2000 })
+    openConfirm() {
+        const selectedPipe = this.pipes.find(pipe => pipe.key === this.pipeKey)
+        const pipePostParam = selectedPipe.postParam;
+        const pipeType = selectedPipe.type;
+
+        if (!this.selectedVehicle || !this.selectedPipes.length) {
+            if (!this.selectedVehicle) {
+                return this.toastr.error('Please Select a Vehicle', null, { timeOut: 2000 })
             }
-        })
+            if (!this.selectedPipes.length) {
+                return this.toastr.error('Please assign atleast one pipe to vehicle', null, { timeOut: 2000 })
+            }
+        }
+
+        this.dialog.open(AssignVehicleConfirmDialogComponent, {
+            disableClose: true,
+            width: '40vw',
+            position: { top: '25px' },
+            maxHeight: '95vh',
+            data: {
+                pipes: this.selectedPipes,
+                vehicle: this.selectedVehicle,
+                godownType: this.godownType,
+                pipeSize: pipeType,
+                pipePostParam,
+                godownId: this.godownId
+            }
+        });
+
+
     }
 }

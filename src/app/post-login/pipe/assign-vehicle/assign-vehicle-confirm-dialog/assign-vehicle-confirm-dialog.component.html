@@ -1,0 +1,62 @@
+<mat-toolbar color="primary">
+    <div fxFlex fxLayoutAlign="center center">
+        <div>Confirmation</div>
+    </div>
+    <button mat-icon-button mat-dialog-close>
+        <mat-icon>clear</mat-icon>
+    </button>
+</mat-toolbar>
+
+<div mat-dialog-content>
+    <div class="card m-b-16">
+        <div class="section-title m-b-16 contact-title">
+            Assign Pipes to Vehicle
+        </div>
+        <div fxLayout="column" class="m-b-16" fxLayoutGap="15px">
+            <div fxLayout fxLayoutGap="10px">
+                <div fxFlex="40" class="text-transform-upper bold font-12" fxLayout fxLayoutAlign="start center">
+                    <div>
+                        Vehicle Reg No
+                    </div>
+                </div>
+                <div>{{ vehicle?.regNo }}</div>
+            </div>
+            <div fxLayout fxLayoutGap="10px">
+                <div fxFlex="40" class="text-transform-upper bold font-12" fxLayout fxLayoutAlign="start center">
+                    <div>
+                        Pipe Type
+                    </div>
+                </div>
+                <div>{{ pipeSize }}</div>
+            </div>
+            <div fxLayout fxLayoutGap="10px">
+                <div fxFlex="40" class="text-transform-upper bold font-12" fxLayout fxLayoutAlign="start center">
+                    <div>
+                        Godown Type
+                    </div>
+                </div>
+                <div>{{ godownType | uppercase }}</div>
+            </div>
+        </div>
+        <div fxLayout="column" class="container">
+            <div fxLayout class="font-14 bold text-center bgc-primary header">
+                <div fxFlex>Bill No</div>
+                <div fxFlex>Pipe Serial No</div>
+            </div>
+            <div fxLayout="column" fxLayoutGap="10px" class="text-center table-content">
+                <div fxLayout *ngFor="let pipe of pipes">
+                    <div fxFlex>{{ pipe.billno }}</div>
+                    <div fxFlex>{{ pipe.serial_no }}</div>
+                </div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-actions>
+    <div fxFlex fxLayout fxLayoutAlign="space-between">
+        <button mat-raised-button color="primary" mat-dialog-close>CANCEL</button>
+        <button mat-raised-button color="primary" (click)="savePipe()">SAVE</button>
+    </div>
+</div>

@@ -57,7 +57,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatButtonModule,
     MatIconModule,
     MatProgressBarModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot({ preventDuplicates: true })
   ],
   providers: [
     {

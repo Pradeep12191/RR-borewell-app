@@ -8,6 +8,7 @@ import { DirectiveModule } from '../../../directives/directive.module';
 import { AssignVehicleComponent } from './assign-vehicle.component';
 import { AssignVehicleRoutingModule } from './assign-vehicle-routing.module';
 import { PipesModule } from '../../../pipes/pipes.module';
+import { PipeSerialNosResolver } from '../../../guards/resolveGuard/pipes/pipe-serial-nos.resolver';
 
 @NgModule({
     imports: [
@@ -23,6 +24,9 @@ import { PipesModule } from '../../../pipes/pipes.module';
     declarations: [
         AssignVehicleComponent
     ],
+    providers: [
+        PipeSerialNosResolver
+    ]
     
 })
 export class AssignVehicleModule {

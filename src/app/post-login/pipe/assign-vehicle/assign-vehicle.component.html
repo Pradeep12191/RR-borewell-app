@@ -1,7 +1,16 @@
-<div class="shift-top-30" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
-    <h2>Give Pipe To Vehicle</h2>
-    <h4>{{ pipeName }}</h4>
+<div fxLayout class="shift-top-30">
+    <div fxLayout fxLayoutAlign="start center">
+        <button (click)="backToPipes()" color="primary" mat-raised-button>
+            <mat-icon>arrow_back</mat-icon>
+            PIPES
+        </button>
+    </div>
+    <div fxLayout="column" fxFlex="80" fxLayoutAlign="center center" fxLayoutGap="10px">
+        <h2>Give Pipe To Vehicle</h2>
+        <h4>{{ pipeName }}</h4>
+    </div>
 </div>
+
 <div fxLayout fxLayoutGap="16px" class="m-t-10" fxLayoutAlign="center center">
     <mat-card fxFlex="75" class="transfer-items-card" fxLayout="column">
         <mat-card-content fxLayout="column" fxFlex>
@@ -32,11 +41,11 @@
                                 <mat-checkbox>{{ pipeSerialNo }}</mat-checkbox>
                             </div>
                         </div> -->
-                        <mat-selection-list #shoes color="primary" (selectionChange)="onSelect($event)">
+                        <mat-selection-list color="primary" (selectionChange)="onSelect($event)">
                             <mat-list-option class="custom-list-option" [selected]="pipeSerialNo.isSelected" [value]="pipeSerialNo"
-                                *ngFor="let pipeSerialNo of pipeSerialNos | startsWithFilter:searchTerm:'value'"
+                                *ngFor="let pipeSerialNo of pipeSerialNos | startsWithFilter:searchTerm:'serial_no'"
                                 checkboxPosition="before">
-                                {{pipeSerialNo.value}}
+                                {{pipeSerialNo.serial_no}}
                             </mat-list-option>
                         </mat-selection-list>
                     </div>
@@ -45,16 +54,17 @@
                     <div fxLayout class="left-header header-shadow" fxLayoutAlign="center center">
                         <mat-form-field class="m-t-10" [floatLabel]="'always'">
                             <mat-label>Vehicle</mat-label>
-                            <mat-select (selectionChange)="onVehicleChange($event)" required [(ngModel)]="selectedVehicle" placeholder="Select Vehicle">
+                            <mat-select #vehiclesSelect (selectionChange)="onVehicleChange($event)" required [(ngModel)]="selectedVehicle"
+                                placeholder="Select Vehicle">
                                 <mat-option [value]="vehicle" *ngFor="let vehicle of vehicles">{{ vehicle.regNo }}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="chk-box-container" *ngIf="selectedPipes.length; else emptyTpl">
+                    <div class="chk-box-container" *ngIf="selectedPipes?.length; else emptyTpl">
                         <mat-list>
-                            <mat-list-item fxLayout="row" class="custom-list-option" *ngFor="let pipeSerialNo of selectedPipes">
-                                <div>{{ pipeSerialNo }}</div>
-                                <button (click)="removeItem(pipeSerialNo)" mat-icon-button color="primary" fxFlexAlign="end">
+                            <mat-list-item fxLayout="row" class="custom-list-option" *ngFor="let pipe of selectedPipes">
+                                <div>{{ pipe.serial_no }}</div>
+                                <button (click)="removeItem(pipe)" mat-icon-button color="primary" fxFlexAlign="end">
                                     <mat-icon class="clear-btn">clear</mat-icon>
                                 </button>
                             </mat-list-item>
@@ -80,6 +90,6 @@
 </div>
 <div fxLayout fxLayoutAlign="center center" class="m-t-16">
     <div fxFlex="75" fxLayoutAlign="end end">
-        <button mat-raised-button color="primary">SAVE</button>
+        <button (click)="savePipe()" mat-raised-button color="primary">SAVE</button>
     </div>
 </div>

@@ -27,7 +27,7 @@ export class PipeComponent {
         { id: 'assignVehicle', name: 'Assign Vehicle', type: 'iconButton', width: '15', isCenter: true, action: 'ASSIGN_VEHICLE', iconName: 'directions_car' },
         { id: 'viewPipeData', name: 'View Pipe Data', type: 'iconButton', isCenter: true, width: '15', action: 'VIEW_PIPE_DATA', iconName: 'arrow_forward' },
     ]
-    public godownTypes = [];
+    public godownTypes: { godownType: string, godown_id: string }[] = [];
     public selectedGodown;
     public godownSelectDisabled;
     loading;
@@ -70,10 +70,11 @@ export class PipeComponent {
     }
 
     public onButtonClick($event) {
+        const selectedGodwn = this.godownTypes.find(godown => godown.godown_id === this.selectedGodown)
         if ($event.action === 'ASSIGN_VEHICLE') {
-            this.router.navigate(['postlogin/assignVehicle', $event.rowData.key]);
+            this.router.navigate(['postlogin/assignVehicle', $event.rowData.key, selectedGodwn]);
         }
-        
+
     }
 
     public godownChange($event: MatSelectChange) {

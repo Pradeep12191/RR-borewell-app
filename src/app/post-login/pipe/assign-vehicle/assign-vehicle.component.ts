@@ -45,8 +45,7 @@ export class AssignVehicleComponent implements OnDestroy {
 
         this.route.data.subscribe(data => {
             console.log(data);
-            this.vehicles = data.vehicles;
-            this.vehicles.push({ regNo: 'Others', type: '', vehicle_id: 'others' })
+            this.vehicles = [...data.vehicles, { regNo: 'Others', type: '', vehicle_id: 'others' }];
         })
 
         this.pipeSerialNos = Array.from({ length: 50 }).map((_, i) => {

@@ -55,8 +55,12 @@ export class AddPipeDialogComponent {
     }
 
     savePipe() {
-        console.log(JSON.stringify(this.form.value, null, 2));
-        this.http.post(this.postUrl, this.form.value).subscribe((response) => {
+        const formValue = this.form.value;
+        this.pipes.forEach(pipe => {
+            formValue[pipe.groupName].count === '' ? formValue[pipe.groupName].count = '0' : ''
+        })
+        console.log(JSON.stringify(formValue, null, 2));
+        this.http.post(this.postUrl, formValue).subscribe((response) => {
             this.tostr.success('Pipe Information added successfully', null, { timeOut: 2000 });
             this.dialogRef.close(response);
         }, (err) => {
@@ -67,7 +71,7 @@ export class AddPipeDialogComponent {
     }
 
     stepChange(event: StepperSelectionEvent) {
-       console.log(event)
+        console.log(event)
     }
 
     private buildPipeForm(start) {

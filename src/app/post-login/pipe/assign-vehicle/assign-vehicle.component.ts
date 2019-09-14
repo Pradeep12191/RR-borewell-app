@@ -6,6 +6,7 @@ import { Vehicle } from '../../../models/Vehicle';
 import { ConfigService } from '../../../services/config.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     templateUrl: './assign-vehicle.component.html',
@@ -46,7 +47,8 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
         private config: ConfigService,
         private router: Router,
         private http: HttpClient,
-        private auth: AuthService
+        private auth: AuthService,
+        private toastr: ToastrService
     ) {
         this.route.paramMap.subscribe(paramMap => {
             this.pipeKey = paramMap.get('pipeKey');
@@ -103,9 +105,9 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
         if (rightListIndex !== - 1) {
             this.selectedPipes.splice(rightListIndex, 1);
         }
-        
+
         this.pipeSerialNos.find((pipe, i) => pipe === pipeSerialNo).isSelected = false;
-    
+
         this.selectAllChecked = this.pipeSerialNos.every(pipe => pipe.isSelected);
     }
 
@@ -151,6 +153,13 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
             data['remarks'] = '';
             return data;
         });
-        console.log(JSON.stringify(payload, null, 2))
+        console.log(JSON.stringify(payload, null, 2));
+        this.http.put(this.updateUrl, payload).subscribe(() => {
+            this.toastr.success(`Pipes assigned to vehicle - ${this.selectedVehicle.regNo} successfully`, null, { timeOut: 2000 })
+        }, (err) => {
+            if (err) {
+                this.toastr.error(`Error while assigning pipes to vehicle - ${this.selectedVehicle.regNo}`, null, { timeOut: 2000 })
+            }
+        })
     }
 }

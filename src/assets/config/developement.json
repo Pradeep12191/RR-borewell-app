@@ -56,6 +56,10 @@
         {
             "name": "pipeSerialNos",
             "url": "get_serial_EV"
+        },
+        {
+            "name": "AssignPipeToVehicle",
+            "url": ""
         }
     ]
 }

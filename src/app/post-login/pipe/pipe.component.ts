@@ -5,7 +5,7 @@ import { AddPipeDialogComponent } from './add-pipe-dialog/add-pipe-dialog.compon
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { ConfigService } from '../../services/config.service';
-import { FADE_IN_ANIMATION } from '../../animations';
+import { FADE_IN_ANIMATION, listStateTrigger } from '../../animations';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
@@ -17,10 +17,10 @@ const PIPE_LENGTH = 20;
 @Component({
     templateUrl: './pipe.component.html',
     styleUrls: ['./pipe.component.scss'],
-    animations: [FADE_IN_ANIMATION]
+    animations: [FADE_IN_ANIMATION, listStateTrigger]
 })
 export class PipeComponent {
-
+    items = [];
     pipeDataSource: MatTableDataSource<any>;
     public columns: Column[] = [
         { id: 'S.No.', name: 'COLUMN.SERIAL_NO', type: 'index', width: '10' },
@@ -53,7 +53,12 @@ export class PipeComponent {
         this.route.data.subscribe((data) => {
             this.godownTypes = data.pipeData.goDowns;
             this.selectedGodown = data.pipeData.godownId;
-            this.updatePipes(data.pipeData.pipes);
+
+            setTimeout(() => {
+                // this.items = [1, 2, 3, 4, 5, 6, 7, 8]
+                this.updatePipes(data.pipeData.pipes);
+            })
+
         })
     }
 
@@ -65,6 +70,16 @@ export class PipeComponent {
         if ($event.action === 'VIEW_PIPE_DATA') {
             this.router.navigate(['postlogin/viewPipeData'])
         }
+    }
+
+    public assignVehicle(pipe: Pipe, event: MouseEvent) {
+        const selectedGodwn = this.godownTypes.find(godown => godown.godown_id === this.selectedGodown)
+        this.router.navigate(['postlogin/assignVehicle', pipe.pipe_size, pipe.pipe_type, selectedGodwn]);
+        event.stopPropagation();
+    }
+
+    public viewPipeData(pipe: Pipe) {
+        this.router.navigate(['postlogin/viewPipeData'])
     }
 
     public godownChange($event: MatSelectChange) {

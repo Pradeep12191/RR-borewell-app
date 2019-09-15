@@ -13,3 +13,66 @@
     margin-top: -20px;
     margin-left: -20px;
 }
+
+.pipe-card{
+    width: 250px;
+    box-shadow: 1px 2px 2px 1px #ccc;
+    cursor: pointer;
+    transition: all ease-in-out 300ms;
+    transform: translateY(0px);
+    position: relative;
+    &:hover .pipe-title{
+        // background: #ffb347;  /* fallback for old browsers */
+        // background: -webkit-linear-gradient(to right, darken(#ffcc33, 5%), darken(#ffb347, 10%));  /* Chrome 10-25, Safari 5.1-6 */
+        // background: linear-gradient(to right, darken(#ffcc33, 5%), darken(#ffb347, 10%)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        // background: white;
+        
+    }
+    &:hover{
+        transform: translateY(-8px);
+        box-shadow: 1px 3px 5px 1px darken(#ccc, 25%);
+    }
+    .pipe-title{
+        padding: 16px 25px;
+        transition: all ease-in-out 0.3s 300ms;
+        font-size: 44px;
+        border-bottom: 1px solid #ccc;
+        background: white;
+        // background: #ffb347;  /* fallback for old browsers */
+        // background: -webkit-linear-gradient(to right, #ffcc33, #ffb347);  /* Chrome 10-25, Safari 5.1-6 */
+        // background: linear-gradient(to right, #ffcc33, #ffb347); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    .bottom-info{
+        .pipe-info{
+            padding: 10px;
+        }
+        
+    }
+
+    .pipe-arrow-button{
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .pipe-card-btn{
+        // margin-top: -10px;
+        // margin-right: -10px;
+        // margin-bottom: -10px;
+        color: white;
+        background: #614385;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #516395, #614385);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #516395, #614385); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        .pipe-card-btn-title{
+            font-size: 11px;
+            /* font-weight: bold; */
+            letter-spacing: 2px;
+            margin-top: 0px;
+            text-align: center;
+            text-transform: uppercase;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+    }
+}

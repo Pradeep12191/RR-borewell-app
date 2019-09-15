@@ -54,6 +54,9 @@ export class AddPipeDialogComponent {
         // this.pipes.forEach(pipe => {
         //     formValue[pipe.groupName].count === '' ? formValue[pipe.groupName].count = '0' : ''
         // })
+        formValue.pipes.forEach(pipe => {
+            pipe.count === '' ? pipe.count = '0' : ''
+        })
         console.log(JSON.stringify(formValue, null, 2));
         this.http.post(this.postUrl, formValue).subscribe((response) => {
             this.tostr.success('Pipe Information added successfully', null, { timeOut: 2000 });

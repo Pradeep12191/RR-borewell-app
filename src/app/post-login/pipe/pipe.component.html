@@ -32,8 +32,9 @@
 </div>
 <!-- <div *ngIf="!loading; else loader"> -->
 <div>
-    <expand-table (iconButtonClick)="onButtonClick($event)" @fadeIn [data]="pipes" *ngIf="pipes?.length; else emptyTpl" fxFlex [columns]="columns" [dataSource]="pipeDataSource">
-    </expand-table>
+    <!-- <expand-table (iconButtonClick)="onButtonClick($event)" @fadeIn [data]="pipes" *ngIf="pipes?.length; else emptyTpl"
+        fxFlex [columns]="columns" [dataSource]="pipeDataSource">
+    </expand-table> -->
 
     <ng-template #emptyTpl>
         <mat-card>
@@ -41,6 +42,49 @@
         </mat-card>
     </ng-template>
 </div>
+
+<!-- <div class="m-t-16"></div>  -->
+
+<div fxLayout="row wrap" *ngIf="pipes?.length; else emptyTpl" [@listState]="pipes?.length">
+    <div fxFlex="33" fxLayout fxLayoutAlign="center center" class="m-b-32" *ngFor="let pipe of pipes">
+        <div class="pipe-card" (click)="viewPipeData(pipe)">
+            <div fxLayout class="pipe-title" fxLayout fxLayoutAlign="center center">
+                {{ pipe.pipe_type}}
+                <button mat-icon-button class="pipe-arrow-button">
+                    <mat-icon>arrow_forward</mat-icon>
+                </button>
+            </div>
+            <div fxLayout class="bottom-info" fxLayoutGap="10">
+                <div fxFlex="75" class="pipe-info">
+                    <div fxLayout="column" fxLayoutGap="10px">
+                        <div fxLayout fxLayoutGap="10px">
+                            <div fxFlex="55">
+                                No.of Pipes
+                            </div>
+                            <div fxFlex class="bold">{{ pipe.count }}</div>
+                        </div>
+                        <div fxLayout fxLayoutGap="10px">
+                            <div fxFlex="55">
+                                Total Feet
+                            </div>
+                            <div fxFlex class="bold">{{ pipe.length }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div fxFlex fxLayout fxLayoutAlign="center center" (click)="assignVehicle(pipe, $event)" class="pipe-card-btn">
+                    <div fxLayout="column">
+                        <div class="pipe-card-btn-title">Assign Vehicle</div>
+                        <div fxLayout fxLayoutAlign="center center">
+                            <mat-icon>directions_car</mat-icon>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- </div> -->
 
 <!-- <ng-template #loader>

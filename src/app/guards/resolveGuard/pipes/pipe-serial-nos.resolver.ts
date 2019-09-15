@@ -20,10 +20,11 @@ export class PipeSerialNosResolver implements Resolve<any>{
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         const pipeSize = route.paramMap.get('pipeSize');
-        const pipeName = route.paramMap.get('pipeName');
+        const godownId = route.paramMap.get('godown_id');
+
         let params = new HttpParams().set('user_id', this.auth.userid);
         params = params.append('pipe_size', pipeSize);
-        params = params.append('gudown_id', this.app.selectedGodownId.toString());
+        params = params.append('gudown_id', godownId);
         return this.http.get(this.url, { params })
     }
 }

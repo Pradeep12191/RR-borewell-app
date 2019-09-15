@@ -132,7 +132,7 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
             }
         }
 
-        this.dialog.open(AssignVehicleConfirmDialogComponent, {
+        const dialogRef = this.dialog.open(AssignVehicleConfirmDialogComponent, {
             disableClose: true,
             width: '40vw',
             position: { top: '25px' },
@@ -146,6 +146,17 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
                 godownId: this.godownId
             }
         });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if(result){
+                this.pipeSerialNos = result;
+                this.pipeSerialNos.forEach(pipe => pipe['isSelected'] = false);
+                this.selectAllChecked = false;
+                this.searchTerm = ''
+                this.selectedPipes = [];
+            }
+            
+        })
 
 
     }

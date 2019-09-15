@@ -10,19 +10,19 @@ export class LoaderInterceptorService implements HttpInterceptor {
 
     }
     intercept(req: HttpRequest<any>, next: HttpHandler) {
-        if (req.method === 'POST') {
+        if (req.method === 'POST' || req.method === 'PUT') {
             this.loader.showSaveLoader()
         }
         return next.handle(req).pipe(
             tap((res) => {
                 if (res instanceof HttpResponse) {
-                    if (req.method === 'POST') {
+                    if (req.method === 'POST' || req.method === 'PUT') {
                         this.loader.hideSaveLoader()
                     }
                 }
 
                 if (res instanceof HttpErrorResponse) {
-                    if (req.method === 'POST') {
+                    if (req.method === 'POST' || req.method === 'PUT') {
                         this.loader.hideSaveLoader();
                     }
                 }

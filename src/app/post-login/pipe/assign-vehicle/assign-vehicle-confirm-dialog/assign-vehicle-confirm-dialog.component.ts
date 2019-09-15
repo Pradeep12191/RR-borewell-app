@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Vehicle } from '../../../../models/Vehicle';
 import { AuthService } from '../../../../services/auth.service';
 import { HttpClient } from '@angular/common/http';
@@ -20,6 +20,7 @@ export class AssignVehicleConfirmDialogComponent {
     updateUrl;
     constructor(
         @Inject(MAT_DIALOG_DATA) private data,
+        private dialofRef: MatDialogRef<AssignVehicleConfirmDialogComponent>,
         private auth: AuthService,
         private http: HttpClient,
         private toastr: ToastrService,
@@ -48,8 +49,9 @@ export class AssignVehicleConfirmDialogComponent {
             return data;
         });
         console.log(JSON.stringify({ assignedPipes: payload }, null, 2));
-        this.http.put(this.updateUrl, { assignedPipes: payload }).subscribe(() => {
-            this.toastr.success(`Pipes assigned to vehicle - ${this.vehicle.regNo} successfully`, null, { timeOut: 2000 })
+        this.http.put(this.updateUrl, { assignedPipes: payload }).subscribe((response) => {
+            this.toastr.success(`Pipes assigned to vehicle - ${this.vehicle.regNo} successfully`, null, { timeOut: 2000 });
+            this.dialofRef.close(response)
         }, (err) => {
             if (err) {
                 this.toastr.error(`Error while assigning pipes to vehicle - ${this.vehicle.regNo}`, null, { timeOut: 2000 })

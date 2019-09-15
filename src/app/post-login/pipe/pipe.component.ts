@@ -3,13 +3,16 @@ import { Column } from '../../expand-table/Column';
 import { MatTableDataSource, MatDialog, MatSelectChange } from '@angular/material';
 import { AddPipeDialogComponent } from './add-pipe-dialog/add-pipe-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, finalize } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { ConfigService } from '../../services/config.service';
 import { FADE_IN_ANIMATION } from '../../animations';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { AppService } from '../../services/app.service';
+import { Pipe } from '../../models/Pipe';
+
+const PIPE_LENGTH = 20;
 
 @Component({
     templateUrl: './pipe.component.html',
@@ -21,7 +24,7 @@ export class PipeComponent {
     pipeDataSource: MatTableDataSource<any>;
     public columns: Column[] = [
         { id: 'S.No.', name: 'COLUMN.SERIAL_NO', type: 'index', width: '10' },
-        { id: 'type', name: 'Type', type: 'string', width: '15', isCenter: true },
+        { id: 'pipe_type', name: 'Type', type: 'string', width: '15', isCenter: true },
         { id: 'count', name: 'No. of Pipe Length', type: 'string', width: '30', isCenter: true },
         { id: 'length', name: 'Feet', type: 'string', width: '25', isCenter: true },
         { id: 'assignVehicle', name: 'Assign Vehicle', type: 'iconButton', width: '15', isCenter: true, action: 'ASSIGN_VEHICLE', iconName: 'directions_car' },
@@ -31,17 +34,7 @@ export class PipeComponent {
     public selectedGodown;
     public godownSelectDisabled;
     loading;
-
-    pipes = [
-        { type: '4\'\'4 kg', key: 'p_4Inch4Kg1', count: '0', length: '0' },
-        { type: '4\'\'6 kg', key: 'p_4Inch6Kg1', count: '0', length: '0' },
-        { type: '5\'\'6 kg', key: 'p_5Inch6Kg1', count: '0', length: '0' },
-        { type: '5\'\'8 kg', key: 'p_5Inch8Kg1', count: '0', length: '0' },
-        { type: '7\'\'6 kg', key: 'p_7Inch6Kg1', count: '0', length: '0' },
-        { type: '7\'\'8 kg', key: 'p_7Inch8Kg1', count: '0', length: '0' },
-        { type: '8\'\'4 kg', key: 'p_8Inch4Kg1', count: '0', length: '0' },
-        { type: '11\'\'4 kg', key: 'p_11Inch4Kg1', count: '0', length: '0' },
-    ]
+    pipes: Pipe[];
     appearance;
     pipeUrl;
 
@@ -56,16 +49,11 @@ export class PipeComponent {
         private app: AppService
     ) {
         this.appearance = this.config.getConfig('formAppearance')
-        this.pipeUrl = this.config.getAbsoluteUrl('pipeCount') + '/' + this.auth.userid;
+        this.pipeUrl = this.config.getAbsoluteUrl('pipeCount');
         this.route.data.subscribe((data) => {
             this.godownTypes = data.pipeData.goDowns;
             this.selectedGodown = data.pipeData.godownId;
-            const pipes = data.pipeData.pipes;
-            this.pipes.forEach(pipeObj => {
-                pipeObj.count = pipes[pipeObj.key] ? pipes[pipeObj.key].toString() : '0';
-                pipeObj.length = pipes[pipeObj.key] ? (pipes[pipeObj.key] * 20).toString() : '0';
-            });
-            this.pipeDataSource = new MatTableDataSource(this.pipes)
+            this.updatePipes(data.pipeData.pipes);
         })
     }
 
@@ -80,17 +68,13 @@ export class PipeComponent {
     public godownChange($event: MatSelectChange) {
         this.loading = true;
         this.godownSelectDisabled = true;
-        const pipeUrl = this.pipeUrl + '/' + $event.value;
         this.app.selectedGodownId = $event.value;
-        this.http.get(pipeUrl).pipe(finalize(() => {
+        const params = new HttpParams().set('user_id', this.auth.userid).append('gudown_id', $event.value)
+        this.http.get(this.pipeUrl, { params }).pipe(finalize(() => {
             this.loading = false;
             this.godownSelectDisabled = false;
         })).subscribe(pipes => {
-            this.pipes.forEach(pipeObj => {
-                pipeObj.count = pipes[pipeObj.key] ? pipes[pipeObj.key].toString() : '0';
-                pipeObj.length = pipes[pipeObj.key] ? (pipes[pipeObj.key] * 20).toString() : '0';
-            });
-            this.pipeDataSource = new MatTableDataSource(this.pipes);
+            this.updatePipes(pipes);
         }, (err) => {
             if (err) {
                 this.toastr.error('Error while Fetching Pipe Information', null, { timeOut: 2000 })
@@ -110,11 +94,7 @@ export class PipeComponent {
         });
         dialogRef.afterClosed().subscribe((pipes) => {
             if (pipes) {
-                this.pipes.forEach(pipeObj => {
-                    pipeObj.count = pipes[pipeObj.key] ? pipes[pipeObj.key].toString() : '0';
-                    pipeObj.length = pipes[pipeObj.key] ? (pipes[pipeObj.key] * 20).toString() : '0';
-                });
-                this.pipeDataSource = new MatTableDataSource(this.pipes);
+                this.updatePipes(pipes);
                 if (pipes.godown_id) {
                     this.selectedGodown = pipes.godown_id
                     this.app.selectedGodownId = this.selectedGodown;
@@ -123,8 +103,16 @@ export class PipeComponent {
         })
     }
 
-
     navigateToViewBill() {
         this.router.navigate(['postlogin', 'viewBills'])
+    }
+
+    updatePipes(pipes) {
+        this.pipes = pipes;
+
+        this.pipes.forEach(pipe => {
+            pipe['length'] = pipe.count ? (+pipe.count * PIPE_LENGTH).toString() : '0';
+        });
+        this.pipeDataSource = new MatTableDataSource(this.pipes)
     }
 }

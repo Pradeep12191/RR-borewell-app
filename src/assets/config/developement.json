@@ -31,7 +31,7 @@
         },
         {
             "name": "pipeCount",
-            "url": "get_pipecount"
+            "url": "get_pipes_count"
         },
         {
             "name": "addPipe",
@@ -59,7 +59,7 @@
         },
         {
             "name": "AssignPipeToVehicle",
-            "url": ""
+            "url": "assignvehicle"
         }
     ]
 }

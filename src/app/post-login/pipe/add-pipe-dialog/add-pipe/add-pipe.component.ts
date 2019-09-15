@@ -1,11 +1,12 @@
 import { Component, Input, ElementRef, QueryList, ViewChildren } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { MatSelect, MatInput, MatSelectChange } from '@angular/material';
 import { ConfigService } from '../../../../services/config.service';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { LoaderService } from '../../../../services/loader-service';
 import { AuthService } from '../../../../services/auth.service';
+import { Pipe } from '../../../../models/Pipe';
 
 @Component({
     selector: 'add-pipe',
@@ -14,11 +15,11 @@ import { AuthService } from '../../../../services/auth.service';
 })
 export class AddPipeComponent {
     @Input() godownTypes;
-    @Input() pipes;
+    @Input() pipes: Pipe[];
     @Input() form: FormGroup;
-    
+
     appearance;
-    
+
     checkUniqueBillNoUrl;
     billNoValidationPending;
     previousBillNo = '';
@@ -29,6 +30,11 @@ export class AddPipeComponent {
         }, 100);
     }
     getPipeUrl;
+
+    get pipeFormArray() {
+        return this.form.get('pipes') as FormArray
+    }
+
     constructor(
         private config: ConfigService,
         private fb: FormBuilder,
@@ -38,7 +44,7 @@ export class AddPipeComponent {
         private auth: AuthService
     ) {
         this.appearance = this.config.getConfig('formAppearance');
-        this.getPipeUrl = this.config.getAbsoluteUrl('pipeCount') + '/' + this.auth.userid;
+        this.getPipeUrl = this.config.getAbsoluteUrl('pipeCount');
         this.checkUniqueBillNoUrl = this.config.getAbsoluteUrl('billNoExists');
     }
 
@@ -124,23 +130,23 @@ export class AddPipeComponent {
 
     godownChange(event: MatSelectChange) {
         this.loader.showSaveLoader('Loading ...');
-        const pipeUrl = this.getPipeUrl + '/' + event.value.godown_id;
-        this.http.get(pipeUrl).subscribe((pipes: any[]) => {
+        let params = new HttpParams().set('user_id', this.auth.userid).append('gudown_id', event.value.godown_id)
+        this.http.get(this.getPipeUrl, { params }).subscribe((pipes: any[]) => {
             this.loader.hideSaveLoader();
-            this.pipes.forEach(pipe => {
-                pipe.count = pipes[pipe.key] ? pipes[pipe.key] : 0;
-                const ctrl = this.form.get(pipe.groupName);
-                if (ctrl) {
-                    ctrl.get('start').setValue(pipe.count);
-                    this.caclPipeAdded(ctrl as FormGroup, pipe.groupName);
-                }
+            this.pipes = pipes;
+            while (this.pipeFormArray.controls.length) {
+                this.pipeFormArray.removeAt(this.pipeFormArray.controls.length - 1)
+            }
+            this.pipes.forEach((pipe) => {
+                this.pipeFormArray.push(this.buildPipeForm(pipe.count, pipe.pipe_size, pipe.pipe_type))
             });
             (this._inputElems.toArray()[1] as MatInput).focus();
+
         })
     }
 
-    caclPipeAdded(pipeCtrl: FormGroup, grpName) {
-        let start: any = this.pipes.find(pipe => pipe.groupName === grpName).count;
+    calcPipeAdded(pipeCtrl: FormGroup) {
+        let start: any = this.pipes.find(pipe => pipe.pipe_size === pipeCtrl.get('size').value).count;
         start = start ? +start : 0;
         let intialStart = start;
         const count = pipeCtrl.get('count').value ? +pipeCtrl.get('count').value : 0;
@@ -163,8 +169,8 @@ export class AddPipeComponent {
         return `(${start} - ${end})`;
     }
 
-    private buildPipeForm(start) {
+    private buildPipeForm(start, size, type) {
         // console.log(start)
-        return this.fb.group({ count: '', start, end: start })
+        return this.fb.group({ count: '', start, end: start, size, type })
     }
 }

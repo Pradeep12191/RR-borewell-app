@@ -2,8 +2,8 @@
     <div fxLayout fxLayoutAlign="center center" fxLayoutGap="25px" class="m-b-15">
         <mat-form-field [appearance]="appearance" fxFlex="40">
             <mat-label>Godown Type</mat-label>
-            <mat-select cdkFocusInitial (keyup.enter)="onEnter($event, 0)" (selectionChange)="godownChange($event)" formControlName="godownType"
-                #inputFocus focusIndex="1">
+            <mat-select cdkFocusInitial (keyup.enter)="onEnter($event, 0)" (selectionChange)="godownChange($event)"
+                formControlName="godownType" #inputFocus focusIndex="1">
                 <mat-option [value]="godownType" *ngFor="let godownType of godownTypes">{{ godownType.godownType |
                     uppercase }}</mat-option>
             </mat-select>
@@ -27,18 +27,20 @@
             <div fxFlex="33" class="bold font-12 text-center">PIPES SERIAL NO.</div>
         </div>
         <div fxLayout="column" fxLayoutGap="10px">
-            <div fxLayout *ngFor="let pipe of pipes; let i = index" [formGroupName]="pipe.groupName">
-                <div fxLayout fxLayoutAlign="center center" fxFlex="33" class="text-center">{{ pipe.type }}</div>
-                <div class="input-wrapper" fxFlex="33">
-                    <input type="text" (keyup.enter)="onEnter($event, 2 + i)" (input)="caclPipeAdded(form.get(pipe.groupName), pipe.groupName)"
-                        formControlName="count" placeholder="Count" positiveNumber #inputFocus>
-                    <!-- <label>Count</label> -->
-                    <span class="focus-border">
-                        <i></i>
-                    </span>
-                </div>
-                <div fxLayout fxLayoutAlign="center center" class="text-center" fxFlex="33">{{
-                    pipeAddedDisplay(form.get(pipe.groupName)) }}</div>
+            <div fxLayout formArrayName="pipes" *ngFor="let pipeCtrl of pipeFormArray.controls; let i = index">
+                <ng-container [formGroup]="pipeCtrl">
+                    <div fxLayout fxLayoutAlign="center center" fxFlex="33" class="text-center">{{ pipeCtrl.get('type').value }}</div>
+                    <div class="input-wrapper" fxFlex="33">
+                        <input type="text" (keyup.enter)="onEnter($event, 2 + i)" (input)="calcPipeAdded(pipeCtrl)"
+                            formControlName="count" placeholder="Count" positiveNumber #inputFocus>
+                        <!-- <label>Count</label> -->
+                        <span class="focus-border">
+                            <i></i>
+                        </span>
+                    </div>
+                    <div fxLayout fxLayoutAlign="center center" class="text-center" fxFlex="33">{{
+                        pipeAddedDisplay(pipeCtrl) }}</div>
+                </ng-container>
             </div>
         </div>
     </div>

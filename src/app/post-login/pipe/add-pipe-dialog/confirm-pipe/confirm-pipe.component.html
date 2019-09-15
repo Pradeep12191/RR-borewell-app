@@ -27,10 +27,10 @@
                 PIPES SERIAL NO.
             </div>
         </div>
-        <div fxLayout *ngFor="let pipe of pipes">
+        <div fxLayout *ngFor="let pipe of pipeData.pipes">
             <div fxFlex class="text-center">{{ pipe.type }}</div>
-            <div fxFlex class="bold text-center">{{ pipeData[pipe.groupName].count || 0  }}</div>
-            <div fxFlex class="bold text-center">{{ pipeAddedDisplay(pipeData[pipe.groupName]) }}</div>
+            <div fxFlex class="bold text-center">{{ pipe.count || 0  }}</div>
+            <div fxFlex class="bold text-center">{{ pipeAddedDisplay(pipe) }}</div>
         </div>
     </div>
 </div>

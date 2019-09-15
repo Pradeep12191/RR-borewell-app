@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ConfigService } from '../../../services/config.service';
 import { mergeMap, switchMap, map } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -25,7 +25,8 @@ export class PipesResolver implements Resolve<any> {
         return this.http.get(this.url).pipe(mergeMap(response => {
             const goDowns = response;
             this.app.selectedGodownId = response[1].godown_id;
-            return this.http.get(this.pipesUrl + '/' + this.auth.userid + '/' + response[1].godown_id).pipe(map((pipes) => {
+            let params = new HttpParams().set('user_id', this.auth.userid).append('gudown_id', this.app.selectedGodownId.toString())
+            return this.http.get(this.pipesUrl, {params}).pipe(map((pipes) => {
                 return {goDowns, pipes, godownId: response[1].godown_id}
             }))
             // return of(response);

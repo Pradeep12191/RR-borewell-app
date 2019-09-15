@@ -79,7 +79,8 @@ export class PipeComponent {
     }
 
     public viewPipeData(pipe: Pipe) {
-        this.router.navigate(['postlogin/viewPipeData'])
+        const selectedGodwn = this.godownTypes.find(godown => godown.godown_id === this.selectedGodown)
+        this.router.navigate(['postlogin/viewPipeData', pipe.pipe_size, pipe.pipe_type, selectedGodwn])
     }
 
     public godownChange($event: MatSelectChange) {

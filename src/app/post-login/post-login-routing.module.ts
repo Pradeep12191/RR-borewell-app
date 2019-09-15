@@ -19,7 +19,7 @@ const routes: Routes = [
             { path: 'rpmDetails', loadChildren: () => import('./point-details/rpm-entry/rpm-entry.module').then(mod => mod.RpmEntryModule) },
             { path: 'viewBills', loadChildren: () => import('./view-bill/view-bill.module').then(mod => mod.ViewBillModule) },
             { path: 'assignVehicle/:pipeSize/:pipeType', loadChildren: () => import('./pipe/assign-vehicle/assign-vehicle.module').then(mod => mod.AssignVehicleModule) },
-            { path: 'viewPipeData', loadChildren: () => import('./pipe/pipe-data/pipe-data.module').then(mod => mod.PipeDataModule) },
+            { path: 'viewPipeData/:pipeSize/:pipeType', loadChildren: () => import('./pipe/pipe-data/pipe-data.module').then(mod => mod.PipeDataModule) },
             { path: '**', component: S404Component }
         ],
         resolve: {

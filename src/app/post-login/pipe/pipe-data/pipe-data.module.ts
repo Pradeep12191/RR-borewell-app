@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { PipesModule } from '../../../pipes/pipes.module';
 import { PipeDataComponent } from './pipe-data.component';
 import { PipeDataRoutingModule } from './pipe-data-routing.module';
+import { PipeDataResolver } from '../../../guards/resolveGuard/pipes/pipe-data.resolver';
+import { ExpandTableModule } from '../../../expand-table/expand-table.module';
 
 @NgModule({
     imports: [
@@ -14,11 +16,15 @@ import { PipeDataRoutingModule } from './pipe-data-routing.module';
         SharedModule,
         FlexLayoutModule,
         PipesModule,
+        ExpandTableModule,
         PipeDataRoutingModule
     ],
     declarations: [
         PipeDataComponent
     ],
+    providers: [
+        PipeDataResolver
+    ]
 
 })
 export class PipeDataModule {

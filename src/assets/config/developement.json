@@ -60,6 +60,10 @@
         {
             "name": "AssignPipeToVehicle",
             "url": "assignvehicle"
+        },
+        {
+            "name": "PipeData",
+            "url": "get_view_pipe_list"
         }
     ]
 }

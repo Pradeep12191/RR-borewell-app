@@ -1,1 +1,3 @@
-pipe data
+<expand-table [data]="pipes" *ngIf="pipes?.length;"
+    fxFlex [columns]="columns" [dataSource]="pipeDataSource">
+</expand-table>

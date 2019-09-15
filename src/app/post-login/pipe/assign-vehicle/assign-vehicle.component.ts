@@ -14,17 +14,7 @@ import { AssignVehicleConfirmDialogComponent } from './assign-vehicle-confirm-di
     styleUrls: ['./assign-vehicle.component.scss']
 })
 export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
-    pipes = [
-        { type: '4\'\'4 kg', key: 'p_4Inch4Kg1', postParam: '44' },
-        { type: '4\'\'6 kg', key: 'p_4Inch6Kg1', postParam: '46' },
-        { type: '5\'\'6 kg', key: 'p_5Inch6Kg1', postParam: '56' },
-        { type: '5\'\'8 kg', key: 'p_5Inch8Kg1', postParam: '58' },
-        { type: '7\'\'6 kg', key: 'p_7Inch6Kg1', postParam: '76' },
-        { type: '7\'\'8 kg', key: 'p_7Inch8Kg1', postParam: '78' },
-        { type: '8\'\'4 kg', key: 'p_8Inch4Kg1', postParam: '84' },
-        { type: '11\'\'4 kg', key: 'p_11Inch4Kg1', postParam: '114' },
-    ];
-    pipeName;
+    pipeType;
     selectedPipes: { serial_no: string, billno: string, isSelected: boolean }[] = [];
     searchTerm = '';
     pipeSerialNos: { serial_no: string, billno: string, isSelected: boolean }[];
@@ -40,25 +30,23 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
     otherRemarks;
     godownId;
     godownType;
-    pipeKey;
+    pipeSize;
 
     constructor(
         private route: ActivatedRoute,
         private config: ConfigService,
         private router: Router,
-        private http: HttpClient,
-        private auth: AuthService,
         private toastr: ToastrService,
         private dialog: MatDialog
     ) {
-        this.route.paramMap.subscribe(paramMap => {
-            this.pipeKey = paramMap.get('pipeKey');
+        this.routeParamSubscription = this.route.paramMap.subscribe(paramMap => {
+            this.pipeSize = paramMap.get('pipeSize');
             this.godownType = paramMap.get('godownType');
             this.godownId = paramMap.get('godown_id');
-            this.pipeName = this.pipes.find(pipe => pipe.key === this.pipeKey).type;
+            this.pipeType = paramMap.get('pipeType')
         });
 
-        this.route.data.subscribe(data => {
+        this.routeDataSubscription = this.route.data.subscribe(data => {
             console.log(data);
             this.vehicles = data.vehicles;
             this.pipeSerialNos = data.pipeSerialNos;
@@ -135,10 +123,6 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
     }
 
     openConfirm() {
-        const selectedPipe = this.pipes.find(pipe => pipe.key === this.pipeKey)
-        const pipePostParam = selectedPipe.postParam;
-        const pipeType = selectedPipe.type;
-
         if (!this.selectedVehicle || !this.selectedPipes.length) {
             if (!this.selectedVehicle) {
                 return this.toastr.error('Please Select a Vehicle', null, { timeOut: 2000 })
@@ -157,8 +141,8 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
                 pipes: this.selectedPipes,
                 vehicle: this.selectedVehicle,
                 godownType: this.godownType,
-                pipeSize: pipeType,
-                pipePostParam,
+                pipeType: this.pipeType,
+                pipeSize: this.pipeSize,
                 godownId: this.godownId
             }
         });

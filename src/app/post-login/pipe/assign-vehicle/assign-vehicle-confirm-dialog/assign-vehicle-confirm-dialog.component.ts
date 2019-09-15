@@ -16,7 +16,7 @@ export class AssignVehicleConfirmDialogComponent {
     pipes;
     vehicle: Vehicle;
     godownType;
-    pipeSize;
+    pipeType;
     updateUrl;
     constructor(
         @Inject(MAT_DIALOG_DATA) private data,
@@ -28,8 +28,7 @@ export class AssignVehicleConfirmDialogComponent {
         this.pipes = data.pipes;
         this.vehicle = data.vehicle;
         this.godownType = data.godownType;
-        this.pipeSize = data.pipeSize;
-
+        this.pipeType = data.pipeType;
         this.updateUrl = this.config.getAbsoluteUrl('AssignPipeToVehicle');
     }
 
@@ -43,7 +42,7 @@ export class AssignVehicleConfirmDialogComponent {
             data['vehicle_id'] = this.vehicle.vehicle_id;
             data['serial_no'] = pipe.serial_no;
             data['serial_no_id'] = pipe.serial_no;
-            data['pipe_size'] = this.data.pipePostParam;
+            data['pipe_size'] = this.data.pipeSize;
             data['billno'] = pipe.billno;
             data['remarks'] = '';
             return data;

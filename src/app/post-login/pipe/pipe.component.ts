@@ -60,9 +60,11 @@ export class PipeComponent {
     public onButtonClick($event) {
         const selectedGodwn = this.godownTypes.find(godown => godown.godown_id === this.selectedGodown)
         if ($event.action === 'ASSIGN_VEHICLE') {
-            this.router.navigate(['postlogin/assignVehicle', $event.rowData.key, selectedGodwn]);
+            this.router.navigate(['postlogin/assignVehicle', $event.rowData.pipe_size, $event.rowData.pipe_type, selectedGodwn]);
         }
-
+        if ($event.action === 'VIEW_PIPE_DATA') {
+            this.router.navigate(['postlogin/viewPipeData'])
+        }
     }
 
     public godownChange($event: MatSelectChange) {

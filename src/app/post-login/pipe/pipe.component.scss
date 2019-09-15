@@ -15,7 +15,7 @@
 }
 
 .pipe-card{
-    width: 250px;
+    width: 200px;
     box-shadow: 1px 2px 2px 1px #ccc;
     cursor: pointer;
     transition: all ease-in-out 300ms;
@@ -35,7 +35,7 @@
     .pipe-title{
         padding: 16px 25px;
         transition: all ease-in-out 0.3s 300ms;
-        font-size: 44px;
+        font-size: 36px;
         border-bottom: 1px solid #ccc;
         background: white;
         // background: #ffb347;  /* fallback for old browsers */
@@ -52,8 +52,8 @@
 
     .pipe-arrow-button{
         position: absolute;
-        top: 10px;
-        right: 10px;
+        top: 0;
+        right: 0;
     }
 
     .pipe-card-btn{

@@ -46,7 +46,7 @@
 <!-- <div class="m-t-16"></div>  -->
 
 <div fxLayout="row wrap" *ngIf="pipes?.length; else emptyTpl" [@listState]="pipes?.length">
-    <div fxFlex="33" fxLayout fxLayoutAlign="center center" class="m-b-32" *ngFor="let pipe of pipes">
+    <div fxFlex="25" fxLayout fxLayoutAlign="center center" class="m-b-32" *ngFor="let pipe of pipes">
         <div class="pipe-card" (click)="viewPipeData(pipe)">
             <div fxLayout class="pipe-title" fxLayout fxLayoutAlign="center center">
                 {{ pipe.pipe_type}}
@@ -58,14 +58,14 @@
                 <div fxFlex="75" class="pipe-info">
                     <div fxLayout="column" fxLayoutGap="10px">
                         <div fxLayout fxLayoutGap="10px">
-                            <div fxFlex="55">
-                                No.of Pipes
+                            <div fxFlex="50">
+                                Length
                             </div>
                             <div fxFlex class="bold">{{ pipe.count }}</div>
                         </div>
                         <div fxLayout fxLayoutGap="10px">
-                            <div fxFlex="55">
-                                Total Feet
+                            <div fxFlex="50">
+                                Feet
                             </div>
                             <div fxFlex class="bold">{{ pipe.length }}</div>
                         </div>

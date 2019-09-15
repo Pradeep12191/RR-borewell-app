@@ -47,8 +47,8 @@ export class AssignVehicleConfirmDialogComponent {
             data['remarks'] = '';
             return data;
         });
-        console.log(JSON.stringify(payload, null, 2));
-        this.http.put(this.updateUrl, { pipes: payload }).subscribe(() => {
+        console.log(JSON.stringify({ assignedPipes: payload }, null, 2));
+        this.http.put(this.updateUrl, { assignedPipes: payload }).subscribe(() => {
             this.toastr.success(`Pipes assigned to vehicle - ${this.vehicle.regNo} successfully`, null, { timeOut: 2000 })
         }, (err) => {
             if (err) {

@@ -60,6 +60,10 @@
         // margin-top: -10px;
         // margin-right: -10px;
         // margin-bottom: -10px;
+        &:hover{
+            transform: scale(1.1);
+        }
+        transition: all linear 0.3s;
         color: white;
         background: #614385;  /* fallback for old browsers */
         background: -webkit-linear-gradient(to right, #516395, #614385);  /* Chrome 10-25, Safari 5.1-6 */

@@ -1,0 +1,23 @@
+.bill-table{
+    ::ng-deep{
+        mat-row{
+                border-bottom: 1px solid black;
+            min-height: 32px;
+        }
+        mat-row:nth-child(2n +1){
+            border-bottom: 0px;
+        }    
+        mat-cell{
+            border-right: 1px solid;
+            &:first-child{
+                border-left: 1px solid black;
+            }
+        }
+    }
+    
+}
+
+.table-container{
+    height: 530px;
+    overflow: auto;
+}

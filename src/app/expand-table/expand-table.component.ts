@@ -27,6 +27,7 @@ export class ExpandTableComponent implements OnInit, OnDestroy {
     @Output() iconButtonClick = new EventEmitter();
     @Input() accordionEffect = true;
     @Input() dataChanges: Subject<any>;
+    @Input() isHeaderSticky = false;
     @ContentChild(ExpandDetailsDirective, { read: TemplateRef, static: false }) detailsTpl: TemplateRef<ExpandDetailsDirective>;
     displayedColumns = [];
     expandedRow;

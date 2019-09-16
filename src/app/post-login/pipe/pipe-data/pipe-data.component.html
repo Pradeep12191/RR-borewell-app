@@ -1,3 +1,8 @@
-<expand-table [data]="pipes" *ngIf="pipes?.length;"
-    fxFlex [columns]="columns" [dataSource]="pipeDataSource">
-</expand-table>
+<div fxLayout fxLayout="center center">
+    <div fxFlex></div>
+    <div fxFlex="35" class="table-container mat-elevation-z8">
+        <expand-table class="bill-table" [isHeaderSticky]="true" [data]="pipes" *ngIf="pipes?.length;" fxFlex [columns]="columns" [dataSource]="pipeDataSource">
+        </expand-table>
+    </div>
+    <div fxFlex></div>
+</div>

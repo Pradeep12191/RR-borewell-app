@@ -12,10 +12,9 @@ export class PipeDataComponent {
     pipes: PipeData[];
     pipeDataSource: MatTableDataSource<any>;
     public columns: Column[] = [
-        { id: 'S.No.', name: 'COLUMN.SERIAL_NO', type: 'index', width: '10' },
-        { id: 'billno', name: 'Bill No', type: 'string', width: '15', isCenter: true },
+        { id: 'billno', name: 'Bill No', type: 'string', width: '25', isCenter: true },
         { id: 'serial_no', name: 'Serial No', type: 'string', width: '30', isCenter: true },
-        { id: 'vehicle_no', name: 'Vehicle No', type: 'string', width: '25', isCenter: true }
+        { id: 'vehicle_no', name: 'Vehicle No', type: 'string', width: '45', isCenter: true }
     ]
     constructor(
         private route: ActivatedRoute

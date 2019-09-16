@@ -55,7 +55,9 @@
     </ng-container>
 
 
-    <mat-header-row *matHeaderRowDef="displayedColumns" fxLayoutGap="10px"></mat-header-row>
+    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: isHeaderSticky" fxLayoutGap="10px"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;" fxLayoutGap="10px"></mat-row>
     <mat-row [@expand]="row.expand ? 'expanded' : 'collapsed'" class="detail-row" *matRowDef="let row; columns: ['expandedDetail']"></mat-row>
+    <!-- <ng-container *ngIf="detailsTpl">
+    </ng-container> -->
 </mat-table>

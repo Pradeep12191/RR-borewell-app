@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { LoaderService } from '../../../../services/loader-service';
 import { AuthService } from '../../../../services/auth.service';
 import { Pipe } from '../../../../models/Pipe';
+import { AppService } from '../../../../services/app.service';
 
 @Component({
     selector: 'add-pipe',
@@ -41,7 +42,8 @@ export class AddPipeComponent {
         private http: HttpClient,
         private tostr: ToastrService,
         private loader: LoaderService,
-        private auth: AuthService
+        private auth: AuthService,
+        private app: AppService
     ) {
         this.appearance = this.config.getConfig('formAppearance');
         this.getPipeUrl = this.config.getAbsoluteUrl('pipeCount');
@@ -130,6 +132,7 @@ export class AddPipeComponent {
 
     godownChange(event: MatSelectChange) {
         this.loader.showSaveLoader('Loading ...');
+        this.app.selectedGodownId = event.value.godown_id;
         let params = new HttpParams().set('user_id', this.auth.userid).append('gudown_id', event.value.godown_id)
         this.http.get(this.getPipeUrl, { params }).subscribe((pipes: any[]) => {
             this.loader.hideSaveLoader();
@@ -141,6 +144,7 @@ export class AddPipeComponent {
                 this.pipeFormArray.push(this.buildPipeForm(pipe.count, pipe.pipe_size, pipe.pipe_type))
             });
             (this._inputElems.toArray()[1] as MatInput).focus();
+        }, (err) => {
 
         })
     }

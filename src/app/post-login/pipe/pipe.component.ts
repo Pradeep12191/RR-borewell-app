@@ -113,10 +113,7 @@ export class PipeComponent {
         dialogRef.afterClosed().subscribe((pipes) => {
             if (pipes) {
                 this.updatePipes(pipes);
-                if (pipes.godown_id) {
-                    this.selectedGodown = pipes.godown_id
-                    this.app.selectedGodownId = this.selectedGodown;
-                }
+                this.selectedGodown = this.app.selectedGodownId
             }
         })
     }

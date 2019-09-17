@@ -11,6 +11,8 @@ import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { AppService } from '../../services/app.service';
 import { Pipe } from '../../models/Pipe';
+import { LastSerialNo } from './LastSerialNo';
+import { LoaderService } from '../../services/loader-service';
 
 const PIPE_LENGTH = 20;
 
@@ -31,12 +33,13 @@ export class PipeComponent {
         { id: 'viewPipeData', name: 'View Pipe Data', type: 'iconButton', isCenter: true, width: '15', action: 'VIEW_PIPE_DATA', iconName: 'arrow_forward' },
     ]
     public godownTypes: { godownType: string, godown_id: string }[] = [];
-    public selectedGodown;
+    public selectedGodownId;
     public godownSelectDisabled;
     loading;
     pipes: Pipe[];
     appearance;
     pipeUrl;
+    pipeCountUrl;
 
     constructor(
         private dialog: MatDialog,
@@ -46,13 +49,15 @@ export class PipeComponent {
         private auth: AuthService,
         private toastr: ToastrService,
         private router: Router,
-        private app: AppService
+        private app: AppService,
+        private loader: LoaderService
     ) {
         this.appearance = this.config.getConfig('formAppearance')
         this.pipeUrl = this.config.getAbsoluteUrl('pipeCount');
+        this.pipeCountUrl = this.config.getAbsoluteUrl('totalPipeCount');
         this.route.data.subscribe((data) => {
             this.godownTypes = data.pipeData.goDowns;
-            this.selectedGodown = data.pipeData.godownId;
+            this.selectedGodownId = data.pipeData.godownId;
 
             setTimeout(() => {
                 // this.items = [1, 2, 3, 4, 5, 6, 7, 8]
@@ -63,7 +68,7 @@ export class PipeComponent {
     }
 
     public onButtonClick($event) {
-        const selectedGodwn = this.godownTypes.find(godown => godown.godown_id === this.selectedGodown)
+        const selectedGodwn = this.godownTypes.find(godown => godown.godown_id === this.selectedGodownId)
         if ($event.action === 'ASSIGN_VEHICLE') {
             this.router.navigate(['postlogin/assignVehicle', $event.rowData.pipe_size, $event.rowData.pipe_type, selectedGodwn]);
         }
@@ -73,13 +78,13 @@ export class PipeComponent {
     }
 
     public assignVehicle(pipe: Pipe, event: MouseEvent) {
-        const selectedGodwn = this.godownTypes.find(godown => godown.godown_id === this.selectedGodown)
+        const selectedGodwn = this.godownTypes.find(godown => godown.godown_id === this.selectedGodownId)
         this.router.navigate(['postlogin/assignVehicle', pipe.pipe_size, pipe.pipe_type, selectedGodwn]);
         event.stopPropagation();
     }
 
     public viewPipeData(pipe: Pipe) {
-        const selectedGodwn = this.godownTypes.find(godown => godown.godown_id === this.selectedGodown)
+        const selectedGodwn = this.godownTypes.find(godown => godown.godown_id === this.selectedGodownId)
         this.router.navigate(['postlogin/viewPipeData', pipe.pipe_size, pipe.pipe_type, selectedGodwn])
     }
 
@@ -101,21 +106,34 @@ export class PipeComponent {
     }
 
     addPipe() {
-        const dialogRef = this.dialog.open(AddPipeDialogComponent, {
-            width: '60vw',
-            data: {
-                selectedGodownId: this.selectedGodown,
-                godownTypes: this.godownTypes,
-                pipes: this.pipes
-            },
-            disableClose: true
-        });
-        dialogRef.afterClosed().subscribe((pipes) => {
-            if (pipes) {
-                this.updatePipes(pipes);
-                this.selectedGodown = this.app.selectedGodownId
+        const params = new HttpParams().set('user_id', this.auth.userid).append('gudown_id', this.selectedGodownId);
+        let lastSerialNo: LastSerialNo[];
+        this.loader.showSaveLoader('Loading ...');
+        this.http.get<LastSerialNo[]>(this.pipeCountUrl, { params }).subscribe(lastSerialNo => {
+            const dialogRef = this.dialog.open(AddPipeDialogComponent, {
+                width: '60vw',
+                data: {
+                    selectedGodownId: this.selectedGodownId,
+                    godownTypes: this.godownTypes,
+                    lastSerialNo
+                },
+                disableClose: true
+            });
+            dialogRef.afterClosed().subscribe((pipes) => {
+                if (pipes) {
+                    this.updatePipes(pipes);
+                    this.selectedGodownId = this.app.selectedGodownId
+                }
+            });
+            this.loader.hideSaveLoader();
+        }, (err) => {
+            this.loader.hideSaveLoader();
+            if (err) {
+                this.toastr.error('Unable to fetch Last Bill Data', null, { timeOut: 2000 })
             }
         })
+
+
     }
 
     navigateToViewBill() {

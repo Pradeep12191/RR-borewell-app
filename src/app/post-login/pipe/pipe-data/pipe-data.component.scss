@@ -17,7 +17,17 @@
     
 }
 
+h4{
+    margin: 0;
+}
+
+.back-btn{
+    position: absolute;
+    top: 25px;
+    left: 35px;
+}
+
 .table-container{
-    height: 530px;
+    max-height: 530px;
     overflow: auto;
 }

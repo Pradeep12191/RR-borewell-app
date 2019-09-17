@@ -64,6 +64,10 @@
         {
             "name": "PipeData",
             "url": "get_view_pipe_list"
+        },
+        {
+            "name": "totalPipeCount",
+            "url": "get_last_serial"
         }
     ]
 }

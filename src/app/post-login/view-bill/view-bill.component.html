@@ -70,7 +70,7 @@
             Pipe Information
         </div>
         <div fxLayout="column" fxLayoutGap="10px">
-            <div class="p-b-5 line" fxLayout fxLayoutGap="5px">
+            <div class="p-b-5 line" fxLayout fxLayoutAlign="start center" fxLayoutGap="5px">
                 <div fxFlex class="text-center bold">
                     PIPE SIZE
                 </div>
@@ -81,10 +81,10 @@
                     PIPES SERIAL NO.
                 </div>
             </div>
-            <div fxLayout *ngFor="let pipe of pipes">
+            <div fxLayout *ngFor="let pipe of bill.pipes">
                 <div fxFlex class="text-center">{{ pipe.type }}</div>
-                <div fxFlex class="bold text-center">{{ bill[pipe.key].count || 0 }}</div>
-                <div fxFlex class="bold text-center">{{ pipeAddedDisplay(bill[pipe.key]) }}</div>
+                <div fxFlex class="bold text-center">{{ pipe.count || 0 }}</div>
+                <div fxFlex class="bold text-center">{{ pipeAddedDisplay(pipe) }}</div>
             </div>
         </div>
     </div>

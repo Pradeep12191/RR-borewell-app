@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Godown } from '../../Godown';
 
 @Component({
     selector: 'confirm-pipe',
@@ -7,6 +8,7 @@ import { Component, Input } from '@angular/core';
 })
 export class ConfirmPipeComponent{
     @Input('formValue') pipeData;
+    @Input('godown') godown: Godown;
     @Input() pipes;
 
     pipeAddedDisplay(pipe) {

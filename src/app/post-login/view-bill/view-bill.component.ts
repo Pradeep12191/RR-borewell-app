@@ -20,16 +20,6 @@ export class ViewBillComponent implements OnDestroy {
     billDataSource: MatTableDataSource<any>;
     appearance;
     dataChanges = new Subject<any>();
-    pipes = [
-        { type: '4\'\'4 kg', key: 'p_4Inch4Kg', count: '0', length: '0' },
-        { type: '4\'\'6 kg', key: 'p_4Inch6Kg', count: '0', length: '0' },
-        { type: '5\'\'6 kg', key: 'p_5Inch6Kg', count: '0', length: '0' },
-        { type: '5\'\'8 kg', key: 'p_5Inch8Kg', count: '0', length: '0' },
-        { type: '7\'\'6 kg', key: 'p_7Inch6Kg', count: '0', length: '0' },
-        { type: '7\'\'8 kg', key: 'p_7Inch8Kg', count: '0', length: '0' },
-        { type: '8\'\'4 kg', key: 'p_8Inch4Kg', count: '0', length: '0' },
-        { type: '11\'\'4 kg', key: 'p_11Inch4Kg', count: '0', length: '0' },
-    ]
     public columns: Column[] = [
         { id: 'serialNo', name: 'COLUMN.SERIAL_NO', type: 'index', width: '15' },
         { id: 'billNo', name: 'Bill Number', type: 'string', width: '55', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold'} },

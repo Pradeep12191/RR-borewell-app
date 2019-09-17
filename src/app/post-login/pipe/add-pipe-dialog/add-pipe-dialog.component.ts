@@ -8,6 +8,8 @@ import { AuthService } from '../../../services/auth.service';
 import { LoaderService } from '../../../services/loader-service';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Pipe } from '../../../models/Pipe';
+import { LastSerialNo } from '../LastSerialNo';
+import { Godown } from '../Godown';
 
 @Component({
     templateUrl: './add-pipe-dialog.component.html',
@@ -15,10 +17,13 @@ import { Pipe } from '../../../models/Pipe';
 })
 export class AddPipeDialogComponent {
     appearance;
-    godownTypes = [];
+    godownTypes: Godown[] = [];
+    selectedGodown: Godown;
     form: FormGroup;
     stepIndex = 0;
-    pipes: Pipe[];
+    pipes: LastSerialNo[];
+    lastBillNo = 0;
+    selected
     get pipesFormArray() {
         return this.form.get('pipes') as FormArray;
     }
@@ -35,10 +40,13 @@ export class AddPipeDialogComponent {
         this.appearance = this.config.getConfig('formAppearance');
         this.postUrl = this.config.getAbsoluteUrl('addPipe');
         this.godownTypes = data.godownTypes;
-        this.pipes = data.pipes;
+        this.selectedGodown = this.godownTypes.find(godown => godown.godown_id === data.selectedGodownId)
+        this.pipes = data.lastSerialNo;
+        if (this.pipes && this.pipes.length) {
+            this.lastBillNo = +this.pipes[0].billno;
+        }
         this.form = this.fb.group({
             billNo: ['', Validators.required],
-            godownType: '',
             remarks: '',
             pipes: this.fb.array([])
         })
@@ -57,8 +65,8 @@ export class AddPipeDialogComponent {
         formValue.pipes.forEach(pipe => {
             pipe.count === '' ? pipe.count = '0' : ''
         })
-        console.log(JSON.stringify(formValue, null, 2));
-        this.http.post(this.postUrl, formValue).subscribe((response) => {
+        console.log(JSON.stringify({...formValue, godownType: this.selectedGodown }, null, 2));
+        this.http.post(this.postUrl, {...formValue, godownType: this.selectedGodown }).subscribe((response) => {
             this.tostr.success('Pipe Information added successfully', null, { timeOut: 2000 });
             this.dialogRef.close(response);
         }, (err) => {

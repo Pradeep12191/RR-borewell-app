@@ -1,7 +1,7 @@
 <!-- <h1 mat-dialog-title class="text-center">Add Pipe</h1> -->
 <mat-toolbar color="primary">
     <div fxFlex fxLayoutAlign="center center">
-        <div>Add Pipe</div>
+        <div>Add Pipe - {{ selectedGodown.godownType | uppercase }}</div>
     </div>
     <button mat-icon-button mat-dialog-close>
         <mat-icon>clear</mat-icon>
@@ -12,10 +12,10 @@
     <mat-horizontal-stepper (selectionChange)="stepIndex = $event.selectedIndex" [linear]="true" labelPosition="bottom"
         #stepper>
         <mat-step label="Add Pipe" [stepControl]="form">
-            <add-pipe [form]="form" [pipes]="pipes" [godownTypes]="godownTypes"></add-pipe>
+            <add-pipe [form]="form" [lastBillNo]="lastBillNo" [pipes]="pipes" [godownTypes]="godownTypes"></add-pipe>
         </mat-step>
         <mat-step label="Confirm Pipe">
-            <confirm-pipe [formValue]="form.value" [pipes]="pipes"></confirm-pipe>
+            <confirm-pipe [formValue]="form.value" [godown]="selectedGodown" [pipes]="pipes"></confirm-pipe>
         </mat-step>
     </mat-horizontal-stepper>
 </div>

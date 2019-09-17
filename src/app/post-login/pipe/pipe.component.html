@@ -19,7 +19,7 @@
 
     <div fxLayout class="m-t-16" fxLayoutGap="25px">
         <mat-form-field fxFlex="25" [appearance]="appearance">
-            <mat-select [disabled]="godownSelectDisabled" [(ngModel)]="selectedGodown" (selectionChange)="godownChange($event)">
+            <mat-select [disabled]="godownSelectDisabled" [(ngModel)]="selectedGodownId" (selectionChange)="godownChange($event)">
                 <mat-option [value]="godown.godown_id" *ngFor="let godown of godownTypes">{{ godown.godownType |
                     uppercase }}</mat-option>
             </mat-select>

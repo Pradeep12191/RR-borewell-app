@@ -24,10 +24,12 @@ export class PipesResolver implements Resolve<any> {
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         return this.http.get(this.url).pipe(mergeMap(response => {
             const goDowns = response;
-            this.app.selectedGodownId = response[1].godown_id;
+            if (!this.app.selectedGodownId) {
+                this.app.selectedGodownId = response[1].godown_id;
+            }
             let params = new HttpParams().set('user_id', this.auth.userid).append('gudown_id', this.app.selectedGodownId.toString())
-            return this.http.get(this.pipesUrl, {params}).pipe(map((pipes) => {
-                return {goDowns, pipes, godownId: response[1].godown_id}
+            return this.http.get(this.pipesUrl, { params }).pipe(map((pipes) => {
+                return { goDowns, pipes, godownId: this.app.selectedGodownId }
             }))
             // return of(response);
         }));

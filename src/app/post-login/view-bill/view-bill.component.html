@@ -10,7 +10,7 @@
             <mat-form-field [appearance]="appearance">
                 <mat-label>Godown Type</mat-label>
                 <mat-select (selectionChange)="onBillNoChange('godownType')" [disabled]="godownTypeDisabled"
-                    [(ngModel)]="selectedGodown">
+                    [(ngModel)]="selectedGodownId">
                     <mat-option [value]="godown.godown_id" *ngFor="let godown of godowns">{{ godown.godownType |
                         uppercase
                         }}</mat-option>

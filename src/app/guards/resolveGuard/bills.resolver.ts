@@ -20,8 +20,9 @@ export class BillsResolver implements Resolve<any> {
     resolve() {
         const start = 0;
         const end = 200;
+        const godownId = this.app.selectedGodownId ? this.app.selectedGodownId : 1;
         let params = new HttpParams().set('user_id', this.auth.userid);
-        params = params.append('gudown_id', this.app.selectedGodownId.toString());
+        params = params.append('gudown_id', godownId.toString());
         params = params.append('start', '0');
         params = params.append('end', '100');
         return this.http.get(this.billsUrl, {params});

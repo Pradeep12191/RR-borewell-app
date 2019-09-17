@@ -25,7 +25,7 @@ export class ViewBillComponent implements OnDestroy {
         { id: 'billNo', name: 'Bill Number', type: 'string', width: '55', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold'} },
         { id: 'more_details', name: 'Collapse All', type: 'toggle', width: '30', isCenter: true }
     ];
-    selectedGodown;
+    selectedGodownId;
     godowns;
     billNo;
     billNoLoading;
@@ -44,7 +44,7 @@ export class ViewBillComponent implements OnDestroy {
         private router: Router
     ) {
         console.log(this.app.selectedGodownId);
-        this.selectedGodown = this.app.selectedGodownId.toString();
+        this.selectedGodownId = this.app.selectedGodownId.toString();
         this.appearance = this.config.getConfig('formAppearance');
         this.route.data.subscribe(data => {
             this.bills = data.bills;
@@ -83,15 +83,15 @@ export class ViewBillComponent implements OnDestroy {
         } else {
             this.godownTypeLoading = true;
             this.godownTypeDisabled = true;
+            this.app.selectedGodownId = this.selectedGodownId;
         }
-        let url;
         let params = new HttpParams().append('user_id', this.auth.userid)
         params = params.append('start', '0');
         params = params.append('end', '100');
         if (this.billNo) {
             params = params.append('billno', this.billNo)
         }
-        params = params.append('gudown_id', this.selectedGodown)
+        params = params.append('gudown_id', this.selectedGodownId)
         this.http.get<any>(this.searchBillNoUrl, { params })
             .subscribe((bills) => {
                 if (bills && bills.length && bills.length > 1) {

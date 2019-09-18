@@ -22,7 +22,7 @@ export class ViewBillComponent implements OnDestroy {
     public columns: Column[] = [
         { id: 'serialNo', name: 'COLUMN.SERIAL_NO', type: 'index', width: '15' },
         { id: 'billNo', name: 'Bill Number', type: 'string', width: '25', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold'} },
-        { id: 'godownType', name: 'Godown Type', type: 'string', width: '30', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold', textTransform: 'uppercase'} },
+        { id: 'godowntype1', name: 'Godown Type', type: 'string', width: '30', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold', textTransform: 'uppercase'} },
         { id: 'more_details', name: 'Collapse All', type: 'toggle', width: '30', isCenter: true }
     ];
     selectedGodownId;

@@ -3,11 +3,25 @@
     PIPES
 </button>
 <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" class="m-b-16 shift-top-30">
-    <h4>{{ pipeType + ' - ' + (godownType | uppercase)}}</h4>
+    <h4>{{ pipeType }}</h4>
 </div>
 <div fxLayout fxLayout="center center">
     <div fxFlex></div>
-    <div fxFlex="35" class="table-container mat-elevation-z8">
+    <div fxFlex="45" class="table-container mat-elevation-z8">
+        <!-- <div fxLayout="column" class="table">
+            <div fxLayout class="header">
+                <div fxFlex>Bill No</div>
+                <div fxFlex>Serial No</div>
+                <div fxFlex>Vehicle No</div>
+            </div>
+            <div fxLayout="column" class="body">
+                <div *ngFor="let pipe of pipes" fxLayout class="row">
+                    <div fxFlex>{{ pipe.billNo }}</div>
+                    <div fxFlex>{{ pipe.serial_no }}</div>
+                    <div fxFlex>{{ pipe.vehicle_no }}</div>
+                </div>
+            </div>
+        </div> -->
         <expand-table class="bill-table" [isHeaderSticky]="true" [data]="pipes" *ngIf="pipes?.length; else emptyTpl" fxFlex [columns]="columns"
             [dataSource]="pipeDataSource">
         </expand-table>

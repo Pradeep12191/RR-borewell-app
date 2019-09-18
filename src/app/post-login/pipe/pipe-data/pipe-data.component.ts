@@ -17,9 +17,10 @@ export class PipeDataComponent implements OnDestroy {
     pipeType;
     godownType;
     public columns: Column[] = [
-        { id: 'billno', name: 'Bill No', type: 'string', width: '25', isCenter: true },
-        { id: 'serial_no', name: 'Serial No', type: 'string', width: '30', isCenter: true },
-        { id: 'vehicle_no', name: 'Vehicle No', type: 'string', width: '45', isCenter: true }
+        { id: 'billno', name: 'Bill No', type: 'string', width: '20', isCenter: true },
+        { id: 'gudown_type', name: 'Godown Type', type: 'string', width: '20', isCenter: true, style: { textTransform: 'uppercase' } },
+        { id: 'serial_no', name: 'Serial No', type: 'string', width: '25', isCenter: true },
+        { id: 'vehicle_no', name: 'Vehicle No', type: 'string', width: '35', isCenter: true }
     ]
     constructor(
         private route: ActivatedRoute,

@@ -30,4 +30,7 @@ h4{
 .table-container{
     max-height: 530px;
     overflow: auto;
+    .table{
+        width: 100%;
+    }
 }

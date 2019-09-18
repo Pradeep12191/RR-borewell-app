@@ -6,8 +6,8 @@ import { GodownTypesResolver } from '../../guards/resolveGuard/select-option/god
 
 const routes: Routes = [
     { path: '', component: ViewBillComponent, resolve: {
-        bills: BillsResolver,
-        godownTypes: GodownTypesResolver
+        godownTypes: GodownTypesResolver,
+        bills: BillsResolver
     }}
 ]
 

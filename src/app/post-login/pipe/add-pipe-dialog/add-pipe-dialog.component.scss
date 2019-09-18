@@ -12,3 +12,13 @@ mat-toolbar{
         justify-self: flex-start
     }
 }
+
+.mat-dialog-content[mat-dialog-content]{
+    &.add-pipe-step{
+        max-height: calc(100vh - 106px);
+    }
+    &.confirm-pipe-step{
+        max-height: calc(100vh - 150px)
+    }
+    
+}

@@ -16,13 +16,13 @@ import { ToastrService } from 'ngx-toastr';
 export class ViewBillComponent implements OnDestroy {
     routeSubcsription: Subscription;
     bills;
-    singleBill;
     billDataSource: MatTableDataSource<any>;
     appearance;
     dataChanges = new Subject<any>();
     public columns: Column[] = [
         { id: 'serialNo', name: 'COLUMN.SERIAL_NO', type: 'index', width: '15' },
-        { id: 'billNo', name: 'Bill Number', type: 'string', width: '55', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold'} },
+        { id: 'billNo', name: 'Bill Number', type: 'string', width: '25', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold'} },
+        { id: 'godownType', name: 'Godown Type', type: 'string', width: '30', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold', textTransform: 'uppercase'} },
         { id: 'more_details', name: 'Collapse All', type: 'toggle', width: '30', isCenter: true }
     ];
     selectedGodownId;
@@ -43,8 +43,7 @@ export class ViewBillComponent implements OnDestroy {
         private toastr: ToastrService,
         private router: Router
     ) {
-        console.log(this.app.selectedGodownId);
-        this.selectedGodownId = this.app.selectedGodownId.toString();
+        this.selectedGodownId = this.app.selectedGodownId ? this.app.selectedGodownId.toString() : '1';
         this.appearance = this.config.getConfig('formAppearance');
         this.route.data.subscribe(data => {
             this.bills = data.bills;
@@ -94,18 +93,7 @@ export class ViewBillComponent implements OnDestroy {
         params = params.append('gudown_id', this.selectedGodownId)
         this.http.get<any>(this.searchBillNoUrl, { params })
             .subscribe((bills) => {
-                if (bills && bills.length && bills.length > 1) {
-                    // bill list
-                    this.bills = bills;
-                    this.singleBill = null;
-                } else if (bills && bills.length && bills.length === 1) {
-                    // single bill
-                    this.bills = [];
-                    this.singleBill = bills[0];
-                } else {
-                    this.bills = [];
-                    this.singleBill = null;
-                }
+                this.bills = bills;
                 this.billDataSource = new MatTableDataSource(this.bills);
                 this.dataChanges.next();
                 this.billNoDisabled = false;

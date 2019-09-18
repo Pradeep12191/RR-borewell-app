@@ -8,11 +8,14 @@
     </button>
 </mat-toolbar>
 
-<div mat-dialog-content>
+<div mat-dialog-content [ngClass]="{'add-pipe-step': stepIndex === 0, 'confirm-pipe-step': stepIndex === 1}">
     <mat-horizontal-stepper (selectionChange)="stepIndex = $event.selectedIndex" [linear]="true" labelPosition="bottom"
         #stepper>
         <mat-step label="Add Pipe" [stepControl]="form">
             <add-pipe [form]="form" [lastBillNo]="lastBillNo" [pipes]="pipes" [godownTypes]="godownTypes"></add-pipe>
+            <div fxLayout fxLayoutAlign="end">
+                <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="stepper.next()">CONFIRM</button>
+            </div>
         </mat-step>
         <mat-step label="Confirm Pipe">
             <confirm-pipe [formValue]="form.value" [godown]="selectedGodown" [pipes]="pipes"></confirm-pipe>
@@ -20,14 +23,9 @@
     </mat-horizontal-stepper>
 </div>
 
-<div mat-dialog-actions>
-    <ng-container *ngIf="stepIndex === 0">
-        <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="stepper.next()">CONFIRM</button>
-    </ng-container>
-    <ng-container *ngIf="stepIndex === 1">
-        <div fxFlex fxLayout fxLayoutAlign="space-between">
-            <button mat-raised-button color="primary" (click)="stepper.previous()">EDIT</button>
-            <button mat-raised-button color="primary" (click)="savePipe()">SAVE</button>
-        </div>
-    </ng-container>
+<div mat-dialog-actions *ngIf="stepIndex === 1">
+    <div fxFlex fxLayout fxLayoutAlign="space-between">
+        <button mat-raised-button color="primary" (click)="stepper.previous()">EDIT</button>
+        <button mat-raised-button color="primary" (click)="savePipe()">SAVE</button>
+    </div>
 </div>

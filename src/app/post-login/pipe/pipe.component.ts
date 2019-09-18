@@ -58,7 +58,6 @@ export class PipeComponent {
         this.route.data.subscribe((data) => {
             this.godownTypes = data.pipeData.goDowns;
             this.selectedGodownId = data.pipeData.godownId;
-
             setTimeout(() => {
                 // this.items = [1, 2, 3, 4, 5, 6, 7, 8]
                 this.updatePipes(data.pipeData.pipes);
@@ -112,6 +111,9 @@ export class PipeComponent {
         this.http.get<LastSerialNo[]>(this.pipeCountUrl, { params }).subscribe(lastSerialNo => {
             const dialogRef = this.dialog.open(AddPipeDialogComponent, {
                 width: '60vw',
+                position: { top: '0px' },
+                maxHeight: '100vh',
+                height: '100vh',
                 data: {
                     selectedGodownId: this.selectedGodownId,
                     godownTypes: this.godownTypes,
@@ -147,5 +149,9 @@ export class PipeComponent {
             pipe['length'] = pipe.count ? (+pipe.count * PIPE_LENGTH).toString() : '0';
         });
         this.pipeDataSource = new MatTableDataSource(this.pipes)
+    }
+
+    displayGodown(godownId) {
+        return this.godownTypes.find(godown => godown.godown_id === godownId).godownType
     }
 }

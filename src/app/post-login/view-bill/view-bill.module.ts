@@ -9,6 +9,7 @@ import { ViewBillComponent } from './view-bill.component';
 import { ViewBillRoutingModule } from './view-bill-routing.module';
 import { BillsResolver } from '../../guards/resolveGuard/bills.resolver';
 import { PipesModule } from '../../pipes/pipes.module';
+import { DirectiveModule } from '../../directives/directive.module';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { PipesModule } from '../../pipes/pipes.module';
         FlexLayoutModule,
         ExpandTableModule,
         ViewBillRoutingModule,
-        PipesModule
+        PipesModule,
+        DirectiveModule
     ],
     declarations: [
         ViewBillComponent,

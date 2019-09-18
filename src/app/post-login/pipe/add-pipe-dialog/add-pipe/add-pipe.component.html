@@ -1,5 +1,5 @@
 <form [formGroup]="form">
-    <div fxLayout fxLayoutAlign="start center" fxLayoutGap="25px" class="m-b-15">
+    <div fxLayout fxLayoutAlign="start start" fxLayoutGap="25px" class="m-b-15">
         <mat-form-field [appearance]="appearance" fxFlex="30">
             <mat-label>Bill No</mat-label>
             <input cdkFocusInitial positiveNumber type="text" (change)="onBillNoChange()" (keyup.enter)="onBillEnter()" matInput formControlName="billNo"
@@ -9,6 +9,10 @@
         </mat-form-field>
         <div class="m-l-10">
             <mat-spinner diameter="25" strokeWidth="2" *ngIf="billNoValidationPending"></mat-spinner>
+        </div>
+        <div class="m-l-16" fxLayout="column" fxLayoutGap="10px">
+            <div class="font-12">Previous Bill No</div>
+            <div class="bold font-20">{{ lastBillNo }}</div>
         </div>
     </div>
     <div fxLayout="column" fxLayoutGap="20px" class="m-b-16 field-set">

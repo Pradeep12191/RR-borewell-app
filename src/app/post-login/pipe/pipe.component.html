@@ -7,7 +7,7 @@
             </button>
         </div>
         <div fxFlex fxLayoutAlign="center center" class="header">
-            <h2>Pipe Information</h2>
+            <h2>{{ displayGodown(selectedGodownId) | uppercase }} Godown Pipe Stock</h2>
         </div>
         <div>
             <button (click)="navigateToViewBill()" mat-raised-button color="primary">

@@ -20,6 +20,8 @@ const routes: Routes = [
             { path: 'viewBills', loadChildren: () => import('./view-bill/view-bill.module').then(mod => mod.ViewBillModule) },
             { path: 'assignVehicle/:pipeSize/:pipeType', loadChildren: () => import('./pipe/assign-vehicle/assign-vehicle.module').then(mod => mod.AssignVehicleModule) },
             { path: 'viewPipeData/:pipeSize/:pipeType', loadChildren: () => import('./pipe/pipe-data/pipe-data.module').then(mod => mod.PipeDataModule) },
+            { path: 'bits', loadChildren: () => import('./bits/bits.module').then(mod => mod.BitsModule) },
+            { path: 'bits/addBit', loadChildren: () => import('./bits/add-bit/add-bit.module').then(mod => mod.AddBitModule) },
             { path: '**', component: S404Component }
         ],
         resolve: {

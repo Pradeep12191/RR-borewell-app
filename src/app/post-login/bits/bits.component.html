@@ -1,0 +1,32 @@
+<div class="shift-top-30">
+    <div fxLayout fxLayoutAlign="space-between">
+        <div>
+            <button routerLink="./addBit" mat-raised-button color="primary">
+                <mat-icon class="m-r-5">add</mat-icon> BIT
+            </button>
+        </div>
+
+        <div fxFlex fxLayoutAlign="center center" class="header">
+            <h2>{{ selectedGodown?.godownType | uppercase }} Godown Pipe Stock</h2>
+        </div>
+        <div>
+            <button (click)="navigateToViewBill()" mat-raised-button color="primary">
+                <mat-icon class="m-r-5">visibility</mat-icon>
+                VIEW
+            </button>
+        </div>
+    </div>
+
+    <div fxLayout class="m-t-16" fxLayoutGap="25px">
+        <mat-form-field fxFlex="25" [appearance]="appearance">
+            <mat-select [disabled]="godownSelectDisabled" [(ngModel)]="selectedGodown" (selectionChange)="godownChange($event)">
+                <mat-option [value]="godown" *ngFor="let godown of godowns">{{ godown.godownType |
+                    uppercase }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div fxLayout="column" fxLayoutAlign="center center" *ngIf="loading">
+            <mat-spinner diameter="25" strokeWidth="2"></mat-spinner>
+        </div>
+    </div>
+
+</div>

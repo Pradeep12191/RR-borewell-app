@@ -37,7 +37,7 @@ export const SIDE_NAV_ITEMS: NavItem[] = [
             {
                 name: 'Bit',
                 isLastChild: true,
-                path: 'bit',
+                path: 'bits',
                 level: 1,
                 paddingLeft: LEVEL_1_PADDING,
             }

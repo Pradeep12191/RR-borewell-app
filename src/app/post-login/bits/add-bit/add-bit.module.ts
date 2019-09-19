@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { DirectiveModule } from '../../../directives/directive.module';
 import { AddBitComponent } from './add-bit.component';
 import { AddBitRoutingModule } from './add-bit-routing.module';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
     imports: [
@@ -19,7 +20,8 @@ import { AddBitRoutingModule } from './add-bit-routing.module';
         FlexLayoutModule,
         ExpandTableModule,
         DirectiveModule,
-        AddBitRoutingModule
+        AddBitRoutingModule,
+        ScrollingModule
     ],
     declarations: [
         AddBitComponent

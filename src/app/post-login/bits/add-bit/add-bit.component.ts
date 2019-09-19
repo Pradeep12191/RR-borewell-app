@@ -1,14 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ConfigService } from '../../../services/config.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
 @Component({
     templateUrl: './add-bit.component.html',
-    styleUrls: ['./add-bit.component.scss']
+    styleUrls: ['./add-bit.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddBitComponent implements OnInit {
     form: FormGroup;
     appearance;
+
+    get serialNosFormArray() {
+        return this.form.get('serialNos') as FormArray;
+    }
+
     constructor(
         private config: ConfigService,
         private fb: FormBuilder
@@ -18,7 +24,17 @@ export class AddBitComponent implements OnInit {
 
     ngOnInit() {
         this.form = this.fb.group({
-            billNo: ''
+            billNo: '',
+            serialNos: this.fb.array([])
         })
+
+        const serialNos = Array.from({ length: 250 }).forEach((_, i) => {
+            this.serialNosFormArray.push(this.buildBitSerialNoForm(i));
+        })
+    }
+
+
+    private buildBitSerialNoForm(serialNo) {
+        return this.fb.group({ serialNo, bitNo: '', bitSize: '' })
     }
 }

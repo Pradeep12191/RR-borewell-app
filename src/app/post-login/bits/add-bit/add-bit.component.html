@@ -3,17 +3,69 @@
         <h2>Add Bit</h2>
     </div>
     <form [formGroup]="form">
-        <div fxLayout class="m-t-10">
+        <div fxLayout fxLayoutAlign="space-between center" class="m-t-16">
             <div>
                 <mat-form-field [appearance]="appearance">
                     <mat-label>Bill No</mat-label>
                     <input positiveNumber matInput>
                 </mat-form-field>
             </div>
-            <div fxLayout="column" fxLayoutGap="10px">
+            <div fxFlexAlign="start" class="m-t-10" fxLayout="column" fxLayoutGap="10px">
                 <div class="font-12">Previous Bill No</div>
                 <div class="bold font-20">{{ lastBillNo || '0' }}</div>
             </div>
+            <div>
+                <mat-form-field [appearance]="appearance">
+                    <mat-label>Date</mat-label>
+                    <input matInput [matDatepicker]="picker">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div>
+                <button mat-raised-button color="primary">
+                    <mat-icon class="m-r-5">add</mat-icon>
+                    ADD NEW SIZE
+                </button>
+            </div>
+        </div>
+        <div fxLayout class="m-t-5">
+            <mat-form-field [appearance]="appearance">
+                <mat-label>Number of Bits</mat-label>
+                <input positiveNumber matInput>
+            </mat-form-field>
+        </div>
+        <div fxLayout fxLayoutAlign="center center">
+            <mat-card fxFlex="50">
+                <mat-card-content>
+                    <cdk-virtual-scroll-viewport itemSize="57" fxLayout="column" class="input-container">
+                        <div fxLayout="column" class="p-t-10">
+                            <div class="serial-no-row" formArrayName="serialNos" fxLayout fxLayoutGap="25px"
+                                fxLayoutAlign="start center" *cdkVirtualFor="let serialNoCtrl of serialNosFormArray.controls">
+                                <ng-container [formGroup]="serialNoCtrl">
+                                    <div fxFlex="10" class="bold">{{ serialNoCtrl.get('serialNo').value }}</div>
+                                    <div class="input-wrapper" fxFlex="33">
+                                        <input type="text" placeholder="Bit No" autocomplete="off">
+                                        <span class="focus-border">
+                                            <i></i>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <mat-form-field>
+                                            <mat-label>Bit Size</mat-label>
+                                            <mat-select>
+                                                <mat-option [value]="i" *ngFor="let i of [1, 2, 3]">{{ i }}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+
+                    </cdk-virtual-scroll-viewport>
+                </mat-card-content>
+            </mat-card>
+
         </div>
     </form>
 

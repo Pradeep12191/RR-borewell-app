@@ -78,10 +78,7 @@ export class AddPipeComponent {
             } else {
                 let nextCtrl = this._inputElems.toArray()[1];
                 if (nextCtrl) {
-                    setTimeout(() => {
-                        ((nextCtrl as ElementRef).nativeElement as HTMLInputElement).focus()
-                        
-                    }, 200)
+                    ((nextCtrl as ElementRef).nativeElement as HTMLInputElement).focus();
                 };
                 return;
             }

@@ -27,7 +27,7 @@
                 <ng-container [formGroup]="pipeCtrl">
                     <div fxLayout fxLayoutAlign="center center" fxFlex="33" class="text-center">{{ pipeCtrl.get('type').value }}</div>
                     <div class="input-wrapper" fxFlex="33">
-                        <input type="text" (keyup.enter)="onEnter($event, 1 + i)" (input)="calcPipeAdded(pipeCtrl)"
+                        <input type="text" (keydown.enter)="onEnter($event, 1 + i)" (input)="calcPipeAdded(pipeCtrl)"
                             formControlName="count" placeholder="Count" positiveNumber #inputFocus>
                         <!-- <label>Count</label> -->
                         <span class="focus-border">

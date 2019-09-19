@@ -45,7 +45,7 @@
                                 <ng-container [formGroup]="serialNoCtrl">
                                     <div fxFlex="10" class="bold">{{ serialNoCtrl.get('serialNo').value }}</div>
                                     <div class="input-wrapper" fxFlex="33">
-                                        <input type="text" placeholder="Bit No" autocomplete="off">
+                                        <input formControlName="bitNo" type="text" placeholder="Bit No" autocomplete="off">
                                         <span class="focus-border">
                                             <i></i>
                                         </span>
@@ -66,6 +66,11 @@
                 </mat-card-content>
             </mat-card>
 
+        </div>
+        <div fxLayout fxLayoutAlign="center" class="m-t-16">
+            <div fxFlex="50" fxLayout fxLayoutAlign="end">
+                    <button color="primary" (click)="addPipe()" mat-raised-button>CONFIRM</button>
+            </div>
         </div>
     </form>
 

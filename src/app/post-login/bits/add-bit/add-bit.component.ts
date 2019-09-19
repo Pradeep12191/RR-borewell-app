@@ -33,6 +33,10 @@ export class AddBitComponent implements OnInit {
         })
     }
 
+    addPipe() {
+        console.log(this.form.value.serialNos)
+    }
+
 
     private buildBitSerialNoForm(serialNo) {
         return this.fb.group({ serialNo, bitNo: '', bitSize: '' })

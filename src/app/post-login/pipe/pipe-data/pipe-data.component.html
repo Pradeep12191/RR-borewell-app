@@ -7,29 +7,43 @@
 </div>
 <div fxLayout fxLayout="center center">
     <div fxFlex></div>
-    <div fxFlex="50" class="table-container mat-elevation-z8">
-        <!-- <div fxLayout="column" class="table">
-            <div fxLayout class="header">
-                <div fxFlex>Bill No</div>
-                <div fxFlex>Serial No</div>
-                <div fxFlex>Vehicle No</div>
+    <div fxLayout fxLayoutGap="25px" fxFlex="75">
+        <div class="mat-elevation-z8 table-container">
+            <div fxLayout class="header-row" fxLayoutGap="10px">
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Bill No</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Godown Type</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Serial No</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Vehicle No</div>
             </div>
-            <div fxLayout="column" class="body">
-                <div *ngFor="let pipe of pipes" fxLayout class="row">
-                    <div fxFlex>{{ pipe.billNo }}</div>
-                    <div fxFlex>{{ pipe.serial_no }}</div>
-                    <div fxFlex>{{ pipe.vehicle_no }}</div>
+            <ng-container *ngIf="infinite | async as pipes; else initialLoader">
+                <cdk-virtual-scroll-viewport @fadeIn (scrolledIndexChange)="nextBatch($event, pipes.length)" itemSize="31"
+                    fxLayout="column" class="table">
+                    <div class="row" *cdkVirtualFor="let pipe of pipes; let i = index; trackBy: trackByFn" fxLayout
+                        fxLayoutGap="10px">
+                        <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.billno }}</div>
+                        <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.gudown_type | uppercase }}</div>
+                        <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.serial_no }}</div>
+                        <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.vehicle_no }}</div>
+                    </div>
+                    <div *ngIf="loading" class="batch-spinner">
+                        <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
+                    </div>
+                </cdk-virtual-scroll-viewport>
+            </ng-container>
+            <ng-template #initialLoader>
+                <div class="spinner-container">
+                    <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
                 </div>
-            </div>
+
+            </ng-template>
+        </div>
+
+        <!-- <div class="table-container mat-elevation-z8">
+            <expand-table class="bill-table" [isHeaderSticky]="true" [data]="pipes" *ngIf="pipes?.length; else emptyTpl"
+                fxFlex [columns]="columns" [dataSource]="pipeDataSource">
+            </expand-table>
         </div> -->
-        <expand-table class="bill-table" [isHeaderSticky]="true" [data]="pipes" *ngIf="pipes?.length; else emptyTpl" fxFlex [columns]="columns"
-            [dataSource]="pipeDataSource">
-        </expand-table>
-        <ng-template #emptyTpl>
-            <mat-card>
-                <mat-card-content>No Records found.</mat-card-content>
-            </mat-card>
-        </ng-template>
     </div>
+
     <div fxFlex></div>
 </div>

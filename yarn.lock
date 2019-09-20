@@ -5245,6 +5245,13 @@ ngx-cookie-service@^2.2.0:
   resolved "https://registry.yarnpkg.com/ngx-cookie-service/-/ngx-cookie-service-2.2.0.tgz#79fe67863b3b93ee226c9ea8d60e1542c7115a58"
   integrity sha512-2kaC1itlEMxiMAPJ320hOpcwU9vhvjbKQCZ1Go6bGhYjJtqG7eYvhNP7mM9IhFz1/afG2tBryJPySWmFUGhRpA==
 
+ngx-infinite-scroll@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-infinite-scroll/-/ngx-infinite-scroll-8.0.0.tgz#4fc1e1d1bb50baedc4793c28115faec656a8d027"
+  integrity sha512-9KRCFAszLttd735CY1GbqtiVRdEvAGWUL8FQqD+iBGitbhgws4OZS+qdKIV+lrJzYXh+Y2XnOOSiUFADOo4+fQ==
+  dependencies:
+    opencollective-postinstall "^2.0.2"
+
 ngx-toastr@^10.0.4:
   version "10.2.0"
   resolved "https://registry.yarnpkg.com/ngx-toastr/-/ngx-toastr-10.2.0.tgz#8a79008de0b1c013f90120a53e0355af5762e969"
@@ -5780,6 +5787,11 @@ open@6.2.0:
   integrity sha512-Vxf6HJkwrqmvh9UAID3MnMYXntbTxKLOSfOnO7LJdzPf3NE3KQYFNV0/Lcz2VAndbRFil58XVCyh8tiX11fiYw==
   dependencies:
     is-wsl "^1.1.0"
+
+opencollective-postinstall@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.2.tgz#5657f1bede69b6e33a45939b061eb53d3c6c3a89"
+  integrity sha512-pVOEP16TrAO2/fjej1IdOyupJY8KDUM1CvsaScRbw6oddvpQoOfGk4ywha0HKKVAD6RkW4x6Q+tNBwhf3Bgpuw==
 
 opener@^1.5.1:
   version "1.5.1"

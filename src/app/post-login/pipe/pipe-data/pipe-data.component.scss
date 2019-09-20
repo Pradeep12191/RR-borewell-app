@@ -1,7 +1,7 @@
 .bill-table{
     ::ng-deep{
         mat-row{
-                border-bottom: 1px solid black;
+            border-bottom: 1px solid black;
             min-height: 32px;
         }
         mat-row:nth-child(2n +1){
@@ -28,9 +28,64 @@ h4{
 }
 
 .table-container{
-    max-height: 530px;
-    overflow: auto;
+    width: 100%;
+    min-height: 300px;
+    position: relative;
     .table{
+        overflow: auto;
+        font-size: 14px;
+        height: 480px;
         width: 100%;
     }
+}
+.spinner-container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: 6px;
+    margin-left: -20px;
+}
+
+.batch-spinner{
+    height: 125px;
+    position: relative;
+    mat-spinner{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -20px;
+        margin-left: -20px;
+    }
+}
+
+
+.header-row{
+    min-height: 56px;
+    background-color: #006064;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid black;
+}
+
+.row{
+    min-height: 32px;
+    border-bottom: 1px solid black;
+}
+
+.header-cell, .cell{
+    &:first-of-type{
+        padding-left: 24px;
+    }
+    &:last-of-type{
+        padding-right: 24px;
+    }
+    text-align: center;
+}
+
+.cell{
+    &:first-child{
+        border-left: 1px solid black;
+    }
+    border-right: 1px solid black;
 }

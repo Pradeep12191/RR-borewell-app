@@ -20,12 +20,14 @@ export class PipeDataResolver implements Resolve<any>{
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         const pipeSize = route.paramMap.get('pipeSize');
-        const godownId = route.paramMap.get('godown_id');
+        const start = '0';
+        const end = '100';
 
         const params = new HttpParams()
             .set('user_id', this.auth.userid)
             .append('pipe_size', pipeSize)
-            .append('gudown_id', godownId);
+            .append('start', start)
+            .append('end', end);
         return this.http.get(this.url, { params })
     }
 }

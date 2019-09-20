@@ -8,6 +8,8 @@ import { PipeDataComponent } from './pipe-data.component';
 import { PipeDataRoutingModule } from './pipe-data-routing.module';
 import { PipeDataResolver } from '../../../guards/resolveGuard/pipes/pipe-data.resolver';
 import { ExpandTableModule } from '../../../expand-table/expand-table.module';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
     imports: [
@@ -17,7 +19,9 @@ import { ExpandTableModule } from '../../../expand-table/expand-table.module';
         FlexLayoutModule,
         PipesModule,
         ExpandTableModule,
-        PipeDataRoutingModule
+        PipeDataRoutingModule,
+        ScrollingModule,
+        InfiniteScrollModule
     ],
     declarations: [
         PipeDataComponent

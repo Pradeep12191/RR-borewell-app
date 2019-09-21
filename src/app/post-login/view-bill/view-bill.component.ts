@@ -21,9 +21,9 @@ export class ViewBillComponent implements OnDestroy {
     dataChanges = new Subject<any>();
     public columns: Column[] = [
         { id: 'serialNo', name: 'COLUMN.SERIAL_NO', type: 'index', width: '10' },
-        { id: 'billNo', name: 'Bill Number', type: 'string', width: '20', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold'} },
-        { id: 'godowntype1', name: 'Godown', type: 'string', width: '30', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold', textTransform: 'uppercase'} },
-        { id: 'date', name: 'Date', type: 'string', width: '20',  style: {fontSize: '20px', fontWeight: 'bold'}},
+        { id: 'billNo', name: 'Bill Number', type: 'string', width: '25', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold'} },
+        { id: 'godowntype1', name: 'Godown', type: 'string', width: '20', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold', textTransform: 'uppercase'} },
+        { id: 'date', name: 'Date', type: 'string', width: '25',  style: {fontSize: '20px', fontWeight: 'bold'}},
         { id: 'more_details', name: 'Collapse All', type: 'toggle', width: '20', isCenter: true }
     ];
     selectedGodownId;

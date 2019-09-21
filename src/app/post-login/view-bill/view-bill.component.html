@@ -40,7 +40,7 @@
 
 <div fxLayout fxLayoutAlign="center center">
     <expand-table [expandAll]="expandAll" [dataChanges]="dataChanges" [accordionEffect]="false" *ngIf="bills?.length;  else emptyTpl"
-        fxFlex="75" [data]="bills" [columns]="columns" [dataSource]="billDataSource">
+        fxFlex="70" [data]="bills" [columns]="columns" [dataSource]="billDataSource">
         <ng-container *expandDetails="let bill">
             <div fxLayout="column" class="m-b-16" fxFlex>
                 <ng-container *ngTemplateOutlet="billDetailsTpl; context: { $implicit: bill }"> </ng-container>

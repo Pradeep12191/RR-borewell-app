@@ -1,27 +1,25 @@
-import { Component, Input, ElementRef, QueryList, ViewChildren } from '@angular/core';
+import { Component, Input, ElementRef, QueryList, ViewChildren, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
-import { MatSelect, MatInput, MatSelectChange } from '@angular/material';
+import { MatSelect, MatInput, MatDatepicker } from '@angular/material';
 import { ConfigService } from '../../../../services/config.service';
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { ToastrService } from 'ngx-toastr';
-import { LoaderService } from '../../../../services/loader-service';
-import { AuthService } from '../../../../services/auth.service';
 import { Pipe } from '../../../../models/Pipe';
-import { AppService } from '../../../../services/app.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'add-pipe',
     templateUrl: './add-pipe.component.html',
     styleUrls: ['./add-pipe.component.scss']
 })
-export class AddPipeComponent {
+export class AddPipeComponent implements AfterViewInit, OnDestroy {
     @Input() godownTypes;
     @Input() pipes: Pipe[];
     @Input() form: FormGroup;
     @Input() lastBillNo: number; // by default the value is 0 from parent component
+    @ViewChild('picker', { static: false }) picker: MatDatepicker<any>;
+    @ViewChild('dateInput', { static: false }) dateInput: ElementRef
 
     appearance;
-
+    pickerClosedSubscription: Subscription;
     checkUniqueBillNoUrl;
     billNoValidationPending;
     previousBillNo = '';
@@ -39,25 +37,25 @@ export class AddPipeComponent {
 
     constructor(
         private config: ConfigService,
-        private fb: FormBuilder,
-        // private http: HttpClient,
-        // private tostr: ToastrService,
-        // private loader: LoaderService,
-        // private auth: AuthService,
-        // private app: AppService
+        private fb: FormBuilder
     ) {
         this.appearance = this.config.getConfig('formAppearance');
         this.getPipeUrl = this.config.getAbsoluteUrl('totalPipeCount');
         this.checkUniqueBillNoUrl = this.config.getAbsoluteUrl('billNoExists');
+
+    }
+
+    ngOnDestroy() {
+        if (this.pickerClosedSubscription) { this.pickerClosedSubscription.unsubscribe() }
     }
 
     ngAfterViewInit() {
-        // setTimeout(() => {
-        //     const godownTypeSelect = this._inputElems.toArray()[0] as MatSelect;
-        //     if (godownTypeSelect) {
-        //         godownTypeSelect.open();
-        //     }
-        // }, 500)
+        this.pickerClosedSubscription = this.picker.closedStream.subscribe((res) => {
+            let nextCtrl = this._inputElems.toArray()[1];
+            if (nextCtrl) {
+                ((nextCtrl as ElementRef).nativeElement as HTMLInputElement).focus();
+            };
+        })
 
     }
 
@@ -76,75 +74,30 @@ export class AddPipeComponent {
                 billNoCtrl.setErrors({ lesserBillNo: true });
                 // (this._inputElems.toArray()[0] as MatInput).focus();
             } else {
-                let nextCtrl = this._inputElems.toArray()[1];
-                if (nextCtrl) {
-                    ((nextCtrl as ElementRef).nativeElement as HTMLInputElement).focus();
-                };
+
+                if (this.picker) {
+                    (this.dateInput.nativeElement as HTMLInputElement).focus();
+                    this.picker.open();
+                }
                 return;
             }
         }
-        // return console.log(billNoCtrl.value)
-        // if (godownTypeCtrl.value) {
-        //     const url = this.checkUniqueBillNoUrl + '/' + this.auth.userid + '/' + godownTypeCtrl.value.godown_id + '/' + billNoCtrl.value;
-        //     if (billNoCtrl.hasError('required')) {
-        //         billNoCtrl.markAllAsTouched();
-        //         return;
-        //     } else {
-        //         billNoCtrl.disable();
-        //         this.billNoValidationPending = true;
-        //         this.http.get(url).subscribe(() => {
-        //             let nextCtrl = this._inputElems.toArray()[2];
-        //             if (nextCtrl) {
-        //                 ((nextCtrl as ElementRef).nativeElement as HTMLInputElement).focus()
-        //             };
-        //             billNoCtrl.enable();
-        //             this.billNoValidationPending = false;
-        //         }, (err: HttpErrorResponse) => {
-        //             if (err) {
-        //                 if (err.status === 409) {
-        //                     billNoCtrl.markAllAsTouched();
-        //                     billNoCtrl.enable();
-        //                     this.billNoValidationPending = false;
-        //                     billNoCtrl.setErrors({ notUnique: true });
-        //                     (this._inputElems.toArray()[1] as MatInput).focus();
-        //                 } else {
-        //                     this.tostr.error('Cannot check Bill no at this moment', null, {
-        //                         timeOut: 2000
-        //                     });
-        //                     billNoCtrl.enable();
-        //                     this.billNoValidationPending = false;
-        //                 }
-        //             }
-
-        //         })
-        //     }
-        // } else {
-        //     billNoCtrl.markAsTouched();
-        //     (event.target as HTMLInputElement).value = '';
-        //     this.tostr.error('Please Select Gododown Type', null, { timeOut: 1500 });
-        //     setTimeout(() => {
-        //         const godownTypeSelect = this._inputElems.toArray()[0] as MatSelect;
-        //         if (godownTypeSelect) {
-        //             godownTypeSelect.focus();
-        //             godownTypeSelect.open();
-        //         }
-        //     }, 300)
-        // }
 
     }
 
     onBillEnter() {
-        console.log('enter')
         // either enter key up or change will be called, both are not called same time
         this.onBillNoChange();
     }
 
     onEnter(event: KeyboardEvent, currentIndex) {
-        console.log('count enter', event);
         const nextCtrl = this._inputElems.toArray()[currentIndex + 1];
         if (nextCtrl) {
             if (nextCtrl instanceof MatInput) {
-                return nextCtrl.focus();
+                return setTimeout(() => {
+                    nextCtrl.focus();
+                }, 100)
+                 
             }
             if (nextCtrl instanceof ElementRef) {
                 (nextCtrl.nativeElement as HTMLInputElement).focus();
@@ -174,10 +127,5 @@ export class AddPipeComponent {
             return start;
         }
         return `(${start} - ${end})`;
-    }
-
-    private buildPipeForm(start, size, type) {
-        // console.log(start)
-        return this.fb.group({ count: '', start, end: start, size, type })
     }
 }

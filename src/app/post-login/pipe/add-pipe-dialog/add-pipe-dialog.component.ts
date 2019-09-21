@@ -10,6 +10,7 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Pipe } from '../../../models/Pipe';
 import { LastSerialNo } from '../LastSerialNo';
 import { Godown } from '../Godown';
+import { Moment } from 'moment';
 
 @Component({
     templateUrl: './add-pipe-dialog.component.html',
@@ -48,6 +49,7 @@ export class AddPipeDialogComponent {
         this.form = this.fb.group({
             billNo: ['', Validators.required],
             remarks: '',
+            date: '',
             pipes: this.fb.array([])
         })
         this.pipes.forEach(pipe => {
@@ -65,6 +67,8 @@ export class AddPipeDialogComponent {
         formValue.pipes.forEach(pipe => {
             pipe.count === '' ? pipe.count = '0' : ''
         })
+        formValue.date = formValue.date ? (formValue.date as Moment).format('DD-MM-YYYY') : null,
+
         console.log(JSON.stringify({...formValue, godownType: this.selectedGodown }, null, 2));
         this.http.post(this.postUrl, {...formValue, godownType: this.selectedGodown }).subscribe((response) => {
             this.tostr.success('Pipe Information added successfully', null, { timeOut: 2000 });

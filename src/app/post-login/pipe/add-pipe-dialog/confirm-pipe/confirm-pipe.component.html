@@ -9,6 +9,11 @@
         <div class="bold">:</div>
         <div>{{ godown?.godownType | uppercase }}</div>
     </div>
+    <div fxLayout fxLayoutGap="10px">
+        <div class="bold">Date</div>
+        <div class="bold">:</div>
+        <div>{{ pipeData.date | date: 'dd/MM/yyyy' }}</div>
+    </div>
 </div>
 
 <div class="card m-b-16">
@@ -29,7 +34,7 @@
         </div>
         <div fxLayout *ngFor="let pipe of pipeData.pipes">
             <div fxFlex class="text-center">{{ pipe.type }}</div>
-            <div fxFlex class="bold text-center">{{ pipe.count || 0  }}</div>
+            <div fxFlex class="bold text-center">{{ pipe.count || 0 }}</div>
             <div fxFlex class="bold text-center">{{ pipeAddedDisplay(pipe) }}</div>
         </div>
     </div>

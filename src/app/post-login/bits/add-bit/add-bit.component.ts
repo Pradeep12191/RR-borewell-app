@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 export class AddBitComponent implements OnInit {
     form: FormGroup;
     appearance;
+    lastBillNo;
 
     get serialNosFormArray() {
         return this.form.get('serialNos') as FormArray;
@@ -35,6 +36,10 @@ export class AddBitComponent implements OnInit {
 
     addPipe() {
         console.log(this.form.value.serialNos)
+    }
+
+    godownChange(){
+
     }
 
 

@@ -25,4 +25,12 @@ export class BitsComponent {
             this.selectedGodown = this.godowns[1];
         })
     }
+
+    navigateToViewBill(){
+
+    }
+
+    godownChange(){
+        
+    }
 }

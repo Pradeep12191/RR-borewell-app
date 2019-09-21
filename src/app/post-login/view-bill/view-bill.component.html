@@ -40,7 +40,7 @@
 
 <div fxLayout fxLayoutAlign="center center">
     <expand-table [expandAll]="expandAll" [dataChanges]="dataChanges" [accordionEffect]="false" *ngIf="bills?.length;  else emptyTpl"
-        fxFlex="60" [data]="bills" [columns]="columns" [dataSource]="billDataSource">
+        fxFlex="75" [data]="bills" [columns]="columns" [dataSource]="billDataSource">
         <ng-container *expandDetails="let bill">
             <div fxLayout="column" class="m-b-16" fxFlex>
                 <ng-container *ngTemplateOutlet="billDetailsTpl; context: { $implicit: bill }"> </ng-container>
@@ -57,7 +57,7 @@
 <ng-template let-bill #billDetailsTpl>
     <div class="card m-b-16 m-t-16 white" fxFlex>
         <div class="section-title m-b-16 contact-title">
-            <div fxLayout fxLayoutGap="50px">
+            <div fxLayout fxLayoutAlign="space-between">
                 <div fxLayout fxLayoutGap="10px">
                     <div>
                         Bill No
@@ -67,10 +67,17 @@
                 </div>
                 <div fxLayout fxLayoutGap="10px">
                     <div>
-                        Godown Type
+                        Godown
                     </div>
                     <div>:</div>
                     <div>{{ bill?.godowntype1 | uppercase }}</div>
+                </div>
+                <div fxLayout fxLayoutGap="10px">
+                    <div>
+                        Date
+                    </div>
+                    <div>:</div>
+                    <div>{{ bill?.date }}</div>
                 </div>
             </div>
 

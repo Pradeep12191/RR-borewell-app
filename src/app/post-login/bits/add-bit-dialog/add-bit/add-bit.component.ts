@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, ViewChild, QueryList, ViewChildren, OnDestroy } from '@angular/core';
+import { Component, Input, ElementRef, ViewChild, QueryList, ViewChildren, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { Bit } from '../../Bit';
 import { Godown } from '../../../pipe/Godown';
@@ -14,7 +14,7 @@ import { CardOverlayref } from '../../../../services/card-overlay-ref';
     templateUrl: './add-bit.component.html',
     styleUrls: ['./add-bit.component.scss']
 })
-export class AddBitComponent implements OnDestroy {
+export class AddBitComponent implements OnDestroy, AfterViewInit {
     @Input() form: FormGroup;
     @Input() lastBillNo;
     @Input() bits: Bit[];
@@ -50,9 +50,17 @@ export class AddBitComponent implements OnDestroy {
     }
 
     ngOnDestroy() {
-        if (this.companyPopupref) {
-            this.companyPopupref.close()
-        }
+        if (this.companyPopupref) { this.companyPopupref.close() }
+        if (this.pickerClosedSubscription) { this.pickerClosedSubscription.unsubscribe() }
+    }
+
+    ngAfterViewInit() {
+        this.pickerClosedSubscription = this.picker.closedStream.subscribe((res) => {
+            let nextCtrl = this._inputElems.toArray()[1];
+            if (nextCtrl) {
+                ((nextCtrl as ElementRef).nativeElement as HTMLInputElement).focus();
+            };
+        })
     }
 
     // bill no should be greater than last entered bill no
@@ -83,6 +91,21 @@ export class AddBitComponent implements OnDestroy {
     onBillEnter() {
         // either enter key up or change will be called, both are not called same time
         this.onBillNoChange();
+    }
+
+    onEnter(event: KeyboardEvent, currentIndex) {
+        const nextCtrl = this._inputElems.toArray()[currentIndex + 1];
+        if (nextCtrl) {
+            if (nextCtrl instanceof MatInput) {
+                return setTimeout(() => {
+                    nextCtrl.focus();
+                }, 100)
+
+            }
+            if (nextCtrl instanceof ElementRef) {
+                (nextCtrl.nativeElement as HTMLInputElement).focus();
+            }
+        }
     }
 
     calcBitAdded(bitCtrl: FormGroup) {

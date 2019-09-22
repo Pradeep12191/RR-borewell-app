@@ -26,6 +26,7 @@ import { CustomPreloadingStrategy } from './services/pre-load.service';
 import { CommonService } from './services/common.service';
 import { LoaderInterceptorService } from './interceptors/loader.interceptor.service';
 import { AppService } from './services/app.service';
+import { OverlayModule } from '@angular/cdk/overlay';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json?t=' + new Date().getTime());
 }
@@ -44,6 +45,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     BrowserAnimationsModule,
     HttpClientModule,
     FlexLayoutModule,
+    OverlayModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

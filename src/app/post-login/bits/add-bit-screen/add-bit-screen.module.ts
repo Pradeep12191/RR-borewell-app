@@ -6,8 +6,8 @@ import { MaterialModule } from '../../../material.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DirectiveModule } from '../../../directives/directive.module';
-import { AddBitComponent } from './add-bit.component';
-import { AddBitRoutingModule } from './add-bit-routing.module';
+import { AddBitScreenComponent } from './add-bit-screen.component';
+import { AddBitScreenRoutingModule } from './add-bit-screen-routing.module';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
@@ -20,13 +20,13 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
         FlexLayoutModule,
         ExpandTableModule,
         DirectiveModule,
-        AddBitRoutingModule,
+        AddBitScreenRoutingModule,
         ScrollingModule
     ],
     declarations: [
-        AddBitComponent
+        AddBitScreenComponent
     ]
 })
-export class AddBitModule {
+export class AddBitScreenModule {
 
 }

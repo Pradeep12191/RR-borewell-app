@@ -3,11 +3,11 @@ import { ConfigService } from '../../../services/config.service';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
 @Component({
-    templateUrl: './add-bit.component.html',
-    styleUrls: ['./add-bit.component.scss'],
+    templateUrl: './add-bit-screen.component.html',
+    styleUrls: ['./add-bit-screen.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddBitComponent implements OnInit {
+export class AddBitScreenComponent implements OnInit {
     form: FormGroup;
     appearance;
     lastBillNo;

@@ -1,0 +1,30 @@
+<mat-toolbar color="primary">
+    <div fxFlex fxLayoutAlign="center center">
+        <div>Add Bit - {{ selectedGodown?.godownType | uppercase }}</div>
+    </div>
+    <button mat-icon-button mat-dialog-close>
+        <mat-icon>clear</mat-icon>
+    </button>
+</mat-toolbar>
+
+<div mat-dialog-content cdkScrollable [ngClass]="{'add-bit-step': stepIndex === 0, 'confirm-bit-step': stepIndex === 1}">
+    <mat-horizontal-stepper (selectionChange)="stepIndex = $event.selectedIndex" [linear]="true" labelPosition="bottom"
+        #stepper>
+        <mat-step label="Add Bit" [stepControl]="form">
+            <add-bit [form]="form" [lastBillNo]="lastBillNo" [bits]="bits"></add-bit>
+            <div fxLayout fxLayoutAlign="end">
+                <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="stepper.next()">CONFIRM</button>
+            </div>
+        </mat-step>
+        <mat-step label="Confirm Bit">
+            <confirm-bit [formValue]="form.value" [godown]="selectedGodown" [bits]="bits"></confirm-bit>
+        </mat-step>
+    </mat-horizontal-stepper>
+</div>
+
+<div mat-dialog-actions *ngIf="stepIndex === 1">
+    <div fxFlex fxLayout fxLayoutAlign="space-between">
+        <button mat-raised-button color="primary" (click)="stepper.previous()">EDIT</button>
+        <button mat-raised-button color="primary" (click)="saveBit()">SAVE</button>
+    </div>
+</div>

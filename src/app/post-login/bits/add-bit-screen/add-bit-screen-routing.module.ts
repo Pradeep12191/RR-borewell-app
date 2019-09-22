@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AddBitComponent } from './add-bit.component';
+import { AddBitScreenComponent } from './add-bit-screen.component';
 
 const routes: Routes = [
     {
-        path: '', component: AddBitComponent
+        path: '', component: AddBitScreenComponent
     }
 ]
 
@@ -12,6 +12,6 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class AddBitRoutingModule {
+export class AddBitScreenRoutingModule {
 
 }

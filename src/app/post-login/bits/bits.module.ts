@@ -8,6 +8,13 @@ import { CommonModule } from '@angular/common';
 import { DirectiveModule } from '../../directives/directive.module';
 import { BitsComponent } from './bits.component';
 import { BitsRoutingModule } from './bits-routing.module';
+import { AddBitDialogComponent } from './add-bit-dialog/add-bit-dialog.component';
+import { AddBitComponent } from './add-bit-dialog/add-bit/add-bit.component';
+import { ConfirmBitComponent } from './add-bit-dialog/confirm-bit/confirm-bit.component';
+import { AddCompanyPopup } from './add-bit-dialog/add-bit/add-company-popup/add-company-popup.compoent';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { BitListResolver } from '../../guards/resolveGuard/bit/bit-list.resolver';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -19,11 +26,22 @@ import { BitsRoutingModule } from './bits-routing.module';
         FlexLayoutModule,
         ExpandTableModule,
         DirectiveModule,
-        BitsRoutingModule
+        ScrollingModule,
+        BitsRoutingModule,
+        PipesModule
     ],
     declarations: [
-        BitsComponent
-    ]
+        BitsComponent,
+        AddBitDialogComponent,
+        AddBitComponent,
+        ConfirmBitComponent,
+        // AddCompanyPopup
+    ],
+    entryComponents: [
+        AddBitDialogComponent,
+        // AddCompanyPopup
+    ],
+    providers: [BitListResolver]
 })
 export class BitsModule {
 

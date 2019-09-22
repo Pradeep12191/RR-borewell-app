@@ -15,6 +15,8 @@ import { UserInfoResolver } from '../guards/resolveGuard/user-info.resolver';
 import { VehicleTypeResolver } from '../guards/resolveGuard/vehicle/vehicle-type.resolver';
 import { VehicleListResolver } from '../guards/resolveGuard/vehicle/vehicle-list.resolver';
 import { GodownTypesResolver } from '../guards/resolveGuard/select-option/godown-types.resolver';
+import { OverlayCardService } from '../services/overlay-card.service';
+import { AddCompanyPopup } from './bits/add-bit-dialog/add-bit/add-company-popup/add-company-popup.compoent';
 
 
 
@@ -33,14 +35,19 @@ import { GodownTypesResolver } from '../guards/resolveGuard/select-option/godown
         HeaderComponent,
         S404Component,
         MobileSidenavComponent,
+        AddCompanyPopup
     ],
     providers: [
         StateResolver,
         UserInfoResolver,
         VehicleListResolver,
         VehicleTypeResolver,
-        GodownTypesResolver
+        GodownTypesResolver,
+        OverlayCardService
     ],
+    entryComponents: [
+        AddCompanyPopup
+    ]
 })
 export class PostLoginModule {
 

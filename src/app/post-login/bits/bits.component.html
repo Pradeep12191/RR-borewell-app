@@ -1,7 +1,7 @@
 <div class="shift-top-30">
     <div fxLayout fxLayoutAlign="space-between">
         <div>
-            <button routerLink="./addBit" mat-raised-button color="primary">
+            <button (click)="openAddBit()" mat-raised-button color="primary">
                 <mat-icon class="m-r-5">add</mat-icon> BIT
             </button>
         </div>
@@ -27,6 +27,54 @@
         <div fxLayout="column" fxLayoutAlign="center center" *ngIf="loading">
             <mat-spinner diameter="25" strokeWidth="2"></mat-spinner>
         </div>
+    </div>
+
+    <div fxLayout="row wrap" *ngIf="bits?.length; else emptyTpl" [@listState]="bits?.length">
+        <div fxFlex="25" fxLayout fxLayoutAlign="center center" class="m-b-32" *ngFor="let bit of bits">
+            <div class="pipe-card" (click)="viewPipeData(pipe)">
+                <div fxLayout class="pipe-title" fxLayout fxLayoutAlign="center center">
+                    {{ bit.type}}
+                    <button mat-icon-button class="pipe-arrow-button">
+                        <mat-icon>arrow_forward</mat-icon>
+                    </button>
+                </div>
+                <div fxLayout class="bottom-info" fxLayoutGap="10">
+                    <div fxFlex="75" class="pipe-info">
+                        <div fxLayout="column" fxLayoutGap="10px">
+                            <div fxLayout fxLayoutGap="10px">
+                                <div fxFlex="50">
+                                    Length
+                                </div>
+                                <div fxFlex class="bold">{{ bit.count }}</div>
+                            </div>
+                            <div fxLayout fxLayoutGap="10px">
+                                <div fxFlex="50">
+                                    Feet
+                                </div>
+                                <div fxFlex class="bold">{{ bit.length }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div fxFlex fxLayout fxLayoutAlign="center center" (click)="assignVehicle(bit, $event)" class="pipe-card-btn">
+                        <div fxLayout="column">
+                            <div class="pipe-card-btn-title">Assign Vehicle</div>
+                            <div fxLayout fxLayoutAlign="center center">
+                                <mat-icon>directions_car</mat-icon>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <ng-template #emptyTpl>
+            <mat-card>
+                <mat-card-content>No Bits Found.</mat-card-content>
+            </mat-card>
+        </ng-template>
     </div>
 
 </div>

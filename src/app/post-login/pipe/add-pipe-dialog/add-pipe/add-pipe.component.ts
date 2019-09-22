@@ -37,7 +37,6 @@ export class AddPipeComponent implements AfterViewInit, OnDestroy {
 
     constructor(
         private config: ConfigService,
-        private fb: FormBuilder
     ) {
         this.appearance = this.config.getConfig('formAppearance');
         this.getPipeUrl = this.config.getAbsoluteUrl('totalPipeCount');

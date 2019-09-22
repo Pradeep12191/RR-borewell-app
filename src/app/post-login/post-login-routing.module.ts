@@ -21,7 +21,7 @@ const routes: Routes = [
             { path: 'assignVehicle/:pipeSize/:pipeType', loadChildren: () => import('./pipe/assign-vehicle/assign-vehicle.module').then(mod => mod.AssignVehicleModule) },
             { path: 'viewPipeData/:pipeSize/:pipeType', loadChildren: () => import('./pipe/pipe-data/pipe-data.module').then(mod => mod.PipeDataModule) },
             { path: 'bits', loadChildren: () => import('./bits/bits.module').then(mod => mod.BitsModule) },
-            { path: 'bits/addBit', loadChildren: () => import('./bits/add-bit/add-bit.module').then(mod => mod.AddBitModule) },
+            { path: 'bits/addBit', loadChildren: () => import('./bits/add-bit-screen/add-bit-screen.module').then(mod => mod.AddBitScreenModule) },
             { path: '**', component: S404Component }
         ],
         resolve: {

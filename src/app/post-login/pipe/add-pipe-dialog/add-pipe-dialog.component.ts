@@ -67,9 +67,9 @@ export class AddPipeDialogComponent {
         formValue.pipes.forEach(pipe => {
             pipe.count === '' ? pipe.count = '0' : ''
         })
-        formValue.date = formValue.date ? (formValue.date as Moment).format('DD-MM-YYYY') : null,
+        const date  = formValue.date ? (formValue.date as Moment).format('DD-MM-YYYY') : null;
 
-        console.log(JSON.stringify({...formValue, godownType: this.selectedGodown }, null, 2));
+        console.log(JSON.stringify({...formValue, godownType: this.selectedGodown, date }, null, 2));
         this.http.post(this.postUrl, {...formValue, godownType: this.selectedGodown }).subscribe((response) => {
             this.tostr.success('Pipe Information added successfully', null, { timeOut: 2000 });
             this.dialogRef.close(response);
@@ -78,10 +78,6 @@ export class AddPipeDialogComponent {
                 this.tostr.error('Error while saving Pipe Information', null, { timeOut: 1500 });
             }
         })
-    }
-
-    stepChange(event: StepperSelectionEvent) {
-        console.log(event)
     }
 
     private buildPipeForm(start, size, type) {

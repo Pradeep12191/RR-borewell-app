@@ -68,6 +68,18 @@
         {
             "name": "totalPipeCount",
             "url": "get_last_serial"
+        },
+        {
+            "name": "BitList",
+            "url": "bits_count"
+        },
+        {
+            "name": "LastBitBill",
+            "url": "bit_last_serial_no"
+        },
+        {
+            "name": "addBit",
+            "url": "addbit"
         }
     ]
 }

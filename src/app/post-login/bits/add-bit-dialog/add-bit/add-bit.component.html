@@ -1,0 +1,65 @@
+<form [formGroup]="form">
+    <div fxLayout fxLayoutAlign="end" class="m-b-16">
+        <button type="button" #addCompanyBtn (click)="addCompany()" mat-raised-button color="primary"><mat-icon class="m-r-5">add</mat-icon> COMPANY</button>
+    </div>
+    <div fxLayout fxLayoutAlign="space-between" fxLayoutGap="15px" class="m-b-15">
+        <mat-form-field class="calc-field" [appearance]="appearance" fxFlex="20">
+            <mat-label>Bill No</mat-label>
+            <input cdkFocusInitial positiveNumber type="text" (change)="onBillNoChange()" (keyup.enter)="onBillEnter()"
+                matInput formControlName="billNo" #inputFocus="matInput">
+            <mat-error *ngIf="form.get('billNo').hasError('required')">Bill No is required</mat-error>
+            <mat-error *ngIf="form.get('billNo').hasError('lesserBillNo')">Bill No should be greater than {{ lastBillNo
+                }}</mat-error>
+        </mat-form-field>
+        <!-- <div class="m-l-10">
+            <mat-spinner diameter="25" strokeWidth="2" *ngIf="billNoValidationPending"></mat-spinner>
+        </div> -->
+        <div class="m-l-16" fxLayout="column" fxLayoutGap="10px">
+            <div class="font-12">Previous Bill No</div>
+            <div class="bold font-20">{{ lastBillNo }}</div>
+        </div>
+        <mat-form-field class="calc-field" fxFlex="25" (click)="picker.open()" [appearance]="appearance">
+            <mat-label>Date</mat-label>
+            <input formControlName="date" #dateInput readonly matInput [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <div>
+            <mat-form-field [appearance]="appearance">
+                <mat-label>Company Name</mat-label>
+                <mat-select>
+                    <mat-option [value]="company" *ngFor="let company of companies">{{ company }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <div fxLayout="column" fxLayoutGap="20px" class="m-b-16 field-set">
+        <div class="field-set-label" style="margin: 0 !important">Bit Details</div>
+        <div fxLayout>
+            <div fxFlex="33" class="bold font-12 text-center">BIT SIZE</div>
+            <div fxFlex="33" class="bold font-12 text-center">NO. OF. BITS</div>
+            <div fxFlex="33" class="bold font-12 text-center">BITS SERIAL NO.</div>
+        </div>
+        <div fxLayout="column" fxLayoutGap="10px">
+            <div fxLayout formArrayName="bits" *ngFor="let bitCtrl of bitFormArray.controls; let i = index">
+                <ng-container [formGroup]="bitCtrl">
+                    <div fxLayout fxLayoutAlign="center center" fxFlex="33" class="text-center">{{
+                        bitCtrl.get('type').value }}</div>
+                    <div class="input-wrapper" fxFlex="33">
+                        <input type="text" (keydown.enter)="onEnter($event, 1 + i)" (input)="calcBitAdded(bitCtrl)"
+                            formControlName="count" placeholder="Count" positiveNumber #inputFocus>
+                        <span class="focus-border">
+                            <i></i>
+                        </span>
+                    </div>
+                    <div fxLayout fxLayoutAlign="center center" class="text-center" fxFlex="33">{{
+                        bitAddedDisplay(bitCtrl) }}</div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+    <mat-form-field [appearance]="appearance" style="width: 100%">
+        <mat-label>Remarks</mat-label>
+        <textarea #inputFocus="matInput" focusIndex="10" name="" id="" cols="30" rows="3" matInput formControlName="remarks"></textarea>
+    </mat-form-field>
+</form>

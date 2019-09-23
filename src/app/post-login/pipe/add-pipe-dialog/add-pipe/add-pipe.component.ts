@@ -17,13 +17,14 @@ export class AddPipeComponent implements AfterViewInit, OnDestroy {
     @Input() lastBillNo: number; // by default the value is 0 from parent component
     @ViewChild('picker', { static: false }) picker: MatDatepicker<any>;
     @ViewChild('dateInput', { static: false }) dateInput: ElementRef
-
+    companies = [{ name: 'A' }, { name: 'B' }, { name: 'C' }, { name: 'D' }, { name: 'E' }, { name: 'F' }]
     appearance;
     pickerClosedSubscription: Subscription;
     checkUniqueBillNoUrl;
     billNoValidationPending;
     previousBillNo = '';
-    _inputElems: QueryList<ElementRef | MatSelect | MatInput>
+    _inputElems: QueryList<ElementRef | MatSelect | MatInput>;
+    @ViewChild('companySelect', { static: false }) companySelect: MatSelect;
     @ViewChildren('inputFocus') set inputElems(elems: QueryList<ElementRef | MatInput>) {
         setTimeout(() => {
             this._inputElems = elems;
@@ -50,12 +51,19 @@ export class AddPipeComponent implements AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
         this.pickerClosedSubscription = this.picker.closedStream.subscribe((res) => {
-            let nextCtrl = this._inputElems.toArray()[1];
-            if (nextCtrl) {
-                ((nextCtrl as ElementRef).nativeElement as HTMLInputElement).focus();
-            };
+            this.companySelect.focus();
+            this.companySelect.open();
         })
 
+    }
+
+    companyChange() {
+        let nextCtrl = this._inputElems.toArray()[1];
+        if (nextCtrl) {
+            setTimeout(() => {
+                ((nextCtrl as ElementRef).nativeElement as HTMLInputElement).focus();
+            })
+        };
     }
 
     // bill no should be greater than last entered bill no
@@ -96,7 +104,7 @@ export class AddPipeComponent implements AfterViewInit, OnDestroy {
                 return setTimeout(() => {
                     nextCtrl.focus();
                 }, 100)
-                 
+
             }
             if (nextCtrl instanceof ElementRef) {
                 (nextCtrl.nativeElement as HTMLInputElement).focus();

@@ -50,6 +50,7 @@ export class AddPipeDialogComponent {
             billNo: ['', Validators.required],
             remarks: '',
             date: '',
+            company: '',
             pipes: this.fb.array([])
         })
         this.pipes.forEach(pipe => {

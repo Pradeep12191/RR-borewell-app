@@ -1,6 +1,6 @@
 <form [formGroup]="form">
     <div fxLayout fxLayoutAlign="space-between" fxLayoutGap="25px" class="m-b-15">
-        <mat-form-field [appearance]="appearance" fxFlex="30">
+        <mat-form-field class="calc-field" [appearance]="appearance" fxFlex="20">
             <mat-label>Bill No</mat-label>
             <input cdkFocusInitial positiveNumber type="text" (change)="onBillNoChange()" (keyup.enter)="onBillEnter()"
                 matInput formControlName="billNo" #inputFocus="matInput">
@@ -11,18 +11,22 @@
         <!-- <div class="m-l-10">
             <mat-spinner diameter="25" strokeWidth="2" *ngIf="billNoValidationPending"></mat-spinner>
         </div> -->
-        <div class="m-l-16" fxLayout="column" fxLayoutGap="10px">
+        <div fxFlex="15" class="m-l-16" fxLayout="column" fxLayoutGap="10px">
             <div class="font-12">Previous Bill No</div>
             <div class="bold font-20">{{ lastBillNo }}</div>
         </div>
-        <div>
-            <mat-form-field (click)="picker.open()" [appearance]="appearance">
-                <mat-label>Date</mat-label>
-                <input formControlName="date" #dateInput readonly matInput [matDatepicker]="picker">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-        </div>
+        <mat-form-field class="calc-field" fxFlex="40" (click)="picker.open()" [appearance]="appearance">
+            <mat-label>Date</mat-label>
+            <input formControlName="date" #dateInput readonly matInput [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field [appearance]="appearance" fxFlex="25" class="calc-field">
+            <mat-label>Company Name</mat-label>
+            <mat-select (selectionChange)="companyChange()" formControlName="company" #companySelect>
+                <mat-option [value]="company" *ngFor="let company of companies">{{ company.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
     <div fxLayout="column" fxLayoutGap="20px" class="m-b-16 field-set">
         <div class="field-set-label" style="margin: 0 !important">Pipe Details</div>
@@ -52,7 +56,6 @@
     </div>
     <mat-form-field [appearance]="appearance" style="width: 100%">
         <mat-label>Remarks</mat-label>
-        <textarea #inputFocus="matInput" focusIndex="10" name="" id="" cols="30" rows="3" matInput
-            formControlName="remarks"></textarea>
+        <textarea #inputFocus="matInput" focusIndex="10" name="" id="" cols="30" rows="3" matInput formControlName="remarks"></textarea>
     </mat-form-field>
 </form>

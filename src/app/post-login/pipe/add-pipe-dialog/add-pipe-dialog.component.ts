@@ -70,7 +70,7 @@ export class AddPipeDialogComponent {
         const date  = formValue.date ? (formValue.date as Moment).format('DD-MM-YYYY') : null;
 
         console.log(JSON.stringify({...formValue, godownType: this.selectedGodown, date }, null, 2));
-        this.http.post(this.postUrl, {...formValue, godownType: this.selectedGodown }).subscribe((response) => {
+        this.http.post(this.postUrl, {...formValue, godownType: this.selectedGodown, date }).subscribe((response) => {
             this.tostr.success('Pipe Information added successfully', null, { timeOut: 2000 });
             this.dialogRef.close(response);
         }, (err) => {

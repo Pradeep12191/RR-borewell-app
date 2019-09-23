@@ -176,14 +176,16 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
     }
 
     selectAllChange($event: MatCheckboxChange) {
-        if ($event.checked) {
-            this.selectList.selectAll();
-            this.pipeSerialNos.forEach(pipe => pipe.isSelected = true);
-            return this.selectedPipes = [...this.pipeSerialNos];
+        if(this.pipeSerialNos && this.pipeSerialNos.length){
+            if ($event.checked) {
+                this.selectList.selectAll();
+                this.pipeSerialNos.forEach(pipe => pipe.isSelected = true);
+                return this.selectedPipes = [...this.pipeSerialNos];
+            }
+            this.selectList.deselectAll();
+            this.selectedPipes = [];
+            this.pipeSerialNos.forEach(pipe => pipe.isSelected = false);
         }
-        this.selectList.deselectAll();
-        this.selectedPipes = [];
-        this.pipeSerialNos.forEach(pipe => pipe.isSelected = false);
     }
 
     onVehicleChange(event: MatSelectChange) {

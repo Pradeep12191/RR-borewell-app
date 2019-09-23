@@ -61,10 +61,11 @@ export class PipeDataComponent implements OnDestroy {
 
         const batchMap = this.offset.pipe(
             throttleTime(500),
+            tap(() => {
+                console.log('throttle')
+            }),
             mergeMap(n => this.getPipeData(n)),
             scan((acc, batch) => {
-                console.log('acc', acc)
-                console.log('batch', batch)
                 return [ ...acc, ...batch ]
             }, this.pipeData),
             tap(d => {

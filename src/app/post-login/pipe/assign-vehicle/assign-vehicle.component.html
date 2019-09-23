@@ -1,4 +1,4 @@
-<div fxLayout class="shift-top-30">
+<div fxLayout class="header">
     <div fxLayout fxLayoutAlign="start center">
         <button (click)="backToPipes()" color="primary" mat-raised-button>
             <mat-icon>arrow_back</mat-icon>
@@ -7,15 +7,23 @@
     </div>
     <div fxLayout="column" fxFlex="80" fxLayoutAlign="center center" fxLayoutGap="10px">
         <h2>Give Pipe To Vehicle</h2>
-        <h4>{{ pipeType  + ' - ' + (godownType | uppercase)}}</h4>
+        <h4 class="header-display">{{ displayHeader() }}</h4>
     </div>
+    <mat-form-field class="godown-type" [appearance]="appearance">
+        <mat-label>Godown</mat-label>
+        <mat-select [disabled]="godownSelectDisabled" #godownSelect (selectionChange)="onChange('godown')" required
+            [(ngModel)]="selectedGodown" placeholder="Select Godown">
+            <mat-option [value]="godown" *ngFor="let godown of godowns">{{ godown.godownType |
+                uppercase }}</mat-option>
+        </mat-select>
+    </mat-form-field>
 </div>
 
 <div fxLayout fxLayoutGap="16px" class="m-t-10" fxLayoutAlign="center center">
     <mat-card fxFlex="75" class="transfer-items-card" fxLayout="column">
         <mat-card-content fxLayout="column" fxFlex>
             <div fxLayout fxFlex>
-                <div fxFlex class="transfer-items-left ">
+                <div fxFlex="50" class="transfer-items-left ">
                     <div fxLayout class="header-shadow">
                         <div class="m-l-16" fxLayout fxLayoutAlign="center center">
                             <mat-checkbox [(ngModel)]="selectAllChecked" (change)="selectAllChange($event)" color="primary"
@@ -41,24 +49,54 @@
                                 <mat-checkbox>{{ pipeSerialNo }}</mat-checkbox>
                             </div>
                         </div> -->
-                        <mat-selection-list color="primary" (selectionChange)="onSelect($event)">
-                            <mat-list-option class="custom-list-option" [selected]="pipeSerialNo.isSelected" [value]="pipeSerialNo"
-                                *ngFor="let pipeSerialNo of pipeSerialNos | startsWithFilter:searchTerm:'serial_no'"
-                                checkboxPosition="before">
-                                {{pipeSerialNo.serial_no}}
-                            </mat-list-option>
-                        </mat-selection-list>
+                        <div class="msg" *ngIf="!selectedGodown || !selectedPipe; else selectionTpl">
+                            Please Select Godown and Pipe
+                        </div>
+                        <ng-template #selectionTpl>
+                            <div class="spinner" *ngIf="serialLoading; else dataTpl">
+                                <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
+                            </div>
+                            <ng-template #dataTpl>
+                                    <mat-selection-list @fadeOpactiy *ngIf="pipeSerialNos?.length; else emptyTpl" color="primary"
+                                    (selectionChange)="onSelect($event)">
+                                    <mat-list-option class="custom-list-option" [selected]="pipeSerialNo.isSelected"
+                                        [value]="pipeSerialNo" *ngFor="let pipeSerialNo of pipeSerialNos | startsWithFilter:searchTerm:'serial_no'"
+                                        checkboxPosition="before">
+                                        {{pipeSerialNo.serial_no}}
+                                    </mat-list-option>
+                                </mat-selection-list>
+                                <ng-template #emptyTpl>
+                                    <div class="empty-msg">
+                                        No records found.
+                                    </div>
+                                </ng-template>
+                            </ng-template>
+                        </ng-template>
                     </div>
                 </div>
-                <div fxFlex class="transfer-items-right">
-                    <div fxLayout class="left-header header-shadow" fxLayoutAlign="center center">
-                        <mat-form-field class="m-t-10" [floatLabel]="'always'">
+                <div fxFlex="50" class="transfer-items-right">
+                    <div fxLayout fxLayoutGap="15px" fxLayoutAlign="center center" class="left-header header-shadow">
+                        <mat-form-field class="calc-field" fxFlex="45" class="m-t-10" [floatLabel]="'always'">
                             <mat-label>Vehicle</mat-label>
-                            <mat-select #vehiclesSelect (selectionChange)="onVehicleChange($event)" required [(ngModel)]="selectedVehicle"
-                                placeholder="Select Vehicle">
+                            <mat-select [disabled]="vehicleSelectDisabled" #vehiclesSelect (selectionChange)="onVehicleChange($event)"
+                                required [(ngModel)]="selectedVehicle" placeholder="Select Vehicle">
                                 <mat-option [value]="vehicle" *ngFor="let vehicle of vehicles">{{ vehicle.regNo }}</mat-option>
                             </mat-select>
                         </mat-form-field>
+                        <mat-form-field class="calc-field" fxFlex="45" class="m-t-10" [floatLabel]="'always'">
+                            <mat-label>Pipe Size</mat-label>
+                            <mat-select [disabled]="pipeSelectDisabled" #pipeSelect (selectionChange)="onChange('pipe')"
+                                required [(ngModel)]="selectedPipe" placeholder="Select Pipe">
+                                <mat-option [value]="pipeSz" *ngFor="let pipeSz of pipeSizes">{{ pipeSz.type }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <!-- <mat-form-field class="m-t-10" [floatLabel]="'always'">
+                            <mat-label>Vehicle</mat-label>
+                            <mat-select #vehiclesSelect (selectionChange)="onVehicleChange($event)" required
+                                [(ngModel)]="selectedVehicle" placeholder="Select Vehicle">
+                                <mat-option [value]="vehicle" *ngFor="let vehicle of vehicles">{{ vehicle.regNo }}</mat-option>
+                            </mat-select>
+                        </mat-form-field> -->
                     </div>
                     <div class="chk-box-container" *ngIf="selectedPipes?.length; else emptyTpl">
                         <mat-list>
@@ -90,6 +128,6 @@
 </div>
 <div fxLayout fxLayoutAlign="center center" class="m-t-16">
     <div fxFlex="75" fxLayoutAlign="end end">
-        <button (click)="openConfirm()" mat-raised-button color="primary">CONFIRM</button>
+        <button (click)="openConfirm()" [disabled]="confirmBtnDisabled || !selectedPipes?.length" mat-raised-button color="primary">CONFIRM</button>
     </div>
 </div>

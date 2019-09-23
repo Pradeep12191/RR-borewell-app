@@ -11,13 +11,12 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./add-pipe.component.scss']
 })
 export class AddPipeComponent implements AfterViewInit, OnDestroy {
-    @Input() godownTypes;
     @Input() pipes: Pipe[];
     @Input() form: FormGroup;
     @Input() lastBillNo: number; // by default the value is 0 from parent component
     @ViewChild('picker', { static: false }) picker: MatDatepicker<any>;
     @ViewChild('dateInput', { static: false }) dateInput: ElementRef
-    companies = [{ name: 'A' }, { name: 'B' }, { name: 'C' }, { name: 'D' }, { name: 'E' }, { name: 'F' }]
+    @Input() companies;
     appearance;
     pickerClosedSubscription: Subscription;
     checkUniqueBillNoUrl;

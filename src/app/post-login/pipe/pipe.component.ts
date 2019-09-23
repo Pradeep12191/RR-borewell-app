@@ -4,6 +4,7 @@ import { MatTableDataSource, MatDialog, MatSelectChange } from '@angular/materia
 import { AddPipeDialogComponent } from './add-pipe-dialog/add-pipe-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
+import { zip } from 'rxjs';
 import { ConfigService } from '../../services/config.service';
 import { FADE_IN_ANIMATION, listStateTrigger } from '../../animations';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -40,6 +41,7 @@ export class PipeComponent {
     appearance;
     pipeUrl;
     pipeCountUrl;
+    companiesUrl;
 
     constructor(
         private dialog: MatDialog,
@@ -55,6 +57,7 @@ export class PipeComponent {
         this.appearance = this.config.getConfig('formAppearance')
         this.pipeUrl = this.config.getAbsoluteUrl('pipeCount');
         this.pipeCountUrl = this.config.getAbsoluteUrl('totalPipeCount');
+        this.companiesUrl = this.config.getAbsoluteUrl('companies');
         this.route.data.subscribe((data) => {
             this.godownTypes = data.pipeData.goDowns;
             this.selectedGodownId = data.pipeData.godownId;
@@ -106,9 +109,12 @@ export class PipeComponent {
 
     addPipe() {
         const params = new HttpParams().set('user_id', this.auth.userid).append('gudown_id', this.selectedGodownId);
-        let lastSerialNo: LastSerialNo[];
+
+        const pipeCount$ = this.http.get<LastSerialNo[]>(this.pipeCountUrl, { params });
+        const companies$ = this.http.get<any[]>(this.companiesUrl, { params });
         this.loader.showSaveLoader('Loading ...');
-        this.http.get<LastSerialNo[]>(this.pipeCountUrl, { params }).subscribe(lastSerialNo => {
+        zip(pipeCount$, companies$)
+        .subscribe(([lastSerialNo, companies]) => {
             const dialogRef = this.dialog.open(AddPipeDialogComponent, {
                 width: '60vw',
                 position: { top: '0px' },
@@ -117,7 +123,8 @@ export class PipeComponent {
                 data: {
                     selectedGodownId: this.selectedGodownId,
                     godownTypes: this.godownTypes,
-                    lastSerialNo
+                    lastSerialNo,
+                    companies
                 },
                 disableClose: true
             });

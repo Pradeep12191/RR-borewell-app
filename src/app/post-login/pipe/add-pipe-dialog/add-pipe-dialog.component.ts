@@ -24,7 +24,8 @@ export class AddPipeDialogComponent {
     stepIndex = 0;
     pipes: LastSerialNo[];
     lastBillNo = 0;
-    selected
+    selected;
+    companies;
     get pipesFormArray() {
         return this.form.get('pipes') as FormArray;
     }
@@ -43,6 +44,7 @@ export class AddPipeDialogComponent {
         this.godownTypes = data.godownTypes;
         this.selectedGodown = this.godownTypes.find(godown => godown.godown_id === data.selectedGodownId)
         this.pipes = data.lastSerialNo;
+        this.companies = data.companies;
         if (this.pipes && this.pipes.length) {
             this.lastBillNo = +this.pipes[0].billno;
         }

@@ -17,6 +17,8 @@ import { VehicleListResolver } from '../guards/resolveGuard/vehicle/vehicle-list
 import { GodownTypesResolver } from '../guards/resolveGuard/select-option/godown-types.resolver';
 import { OverlayCardService } from '../services/overlay-card.service';
 import { AddCompanyPopup } from './bits/add-bit-dialog/add-bit/add-company-popup/add-company-popup.compoent';
+import { CompanyiesResolver } from '../guards/resolveGuard/select-option/companies.resolver';
+import { PipeSizesResolver } from '../guards/resolveGuard/select-option/pipe-sizes.resolver';
 
 
 
@@ -43,7 +45,9 @@ import { AddCompanyPopup } from './bits/add-bit-dialog/add-bit/add-company-popup
         VehicleListResolver,
         VehicleTypeResolver,
         GodownTypesResolver,
-        OverlayCardService
+        OverlayCardService,
+        CompanyiesResolver,
+        PipeSizesResolver
     ],
     entryComponents: [
         AddCompanyPopup

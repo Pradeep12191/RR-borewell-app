@@ -80,6 +80,14 @@
         {
             "name": "addBit",
             "url": "addbit"
+        },
+        {
+            "name": "companies",
+            "url": "company_names_list"
+        },
+        {
+            "name": "pipeSizes",
+            "url": "pipe_size_list"
         }
     ]
 }

@@ -12,7 +12,7 @@
     <mat-horizontal-stepper (selectionChange)="stepIndex = $event.selectedIndex" [linear]="true" labelPosition="bottom"
         #stepper>
         <mat-step label="Add Pipe" [stepControl]="form">
-            <add-pipe [form]="form" [lastBillNo]="lastBillNo" [pipes]="pipes" [godownTypes]="godownTypes"></add-pipe>
+            <add-pipe [form]="form" [lastBillNo]="lastBillNo" [pipes]="pipes" [companies]="companies"></add-pipe>
             <div fxLayout fxLayoutAlign="end">
                 <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="stepper.next()">CONFIRM</button>
             </div>

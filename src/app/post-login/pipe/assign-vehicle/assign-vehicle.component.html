@@ -18,7 +18,13 @@
         </mat-select>
     </mat-form-field>
 </div>
-
+<div fxLayout fxLayoutAlign="center center">
+    <div fxFlex="75" fxLayout fxLayoutGap="10px">
+        <div>Pipes Selected</div>
+        <div>:</div>
+        <div class="bold">{{ selectedPipes?.length || '0' }}</div>
+    </div>
+</div>
 <div fxLayout fxLayoutGap="16px" class="m-t-10" fxLayoutAlign="center center">
     <mat-card fxFlex="75" class="transfer-items-card" fxLayout="column">
         <mat-card-content fxLayout="column" fxFlex>
@@ -27,7 +33,7 @@
                     <div fxLayout class="header-shadow left-header">
                         <div class="m-l-16" fxLayout fxLayoutAlign="center center">
                             <mat-checkbox [(ngModel)]="selectAllChecked" (change)="selectAllChange($event)" color="primary"
-                                matTooltip="select all pipe">{{selectedPipes.length || ''}}</mat-checkbox>
+                                matTooltip="select all pipe"></mat-checkbox>
                         </div>
 
                         <div fxFlex="30" class="m-t-16 m-l-10 m-r-10 m-b-16 input-wrapper" fxLayout>
@@ -43,9 +49,10 @@
                             </span>
                         </div>
                         <div class="m-r-16 m-l-5" fxFlex fxLayout fxLayoutAlign="center end">
-                            <mat-form-field  floatLabel="always" fxFlex class="calc-field" (click)="picker.open()">
+                            <mat-form-field floatLabel="always" fxFlex class="calc-field" (click)="picker.open()">
                                 <mat-label>Date</mat-label>
-                                <input [disabled]="dateDisabled" [(ngModel)]="date" #dateInput placeholder="Select Date" readonly matInput [matDatepicker]="picker">
+                                <input [disabled]="dateDisabled" [(ngModel)]="date" #dateInput placeholder="Select Date"
+                                    readonly matInput [matDatepicker]="picker">
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
                             </mat-form-field>

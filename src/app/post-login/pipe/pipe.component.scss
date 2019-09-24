@@ -12,19 +12,23 @@
     @include spinner-position
 }
 
+.widget-container{
+    margin-right: -40px;
+}
+
+.pipe:last-child{
+    margin-right: 40px;
+}
+
 .pipe-card{
-    width: 200px;
+    width: 100%;
     box-shadow: 1px 2px 2px 1px #ccc;
     cursor: pointer;
     transition: all ease-in-out 300ms;
     transform: translateY(0px);
     position: relative;
-    &:hover .pipe-title{
-        // background: #ffb347;  /* fallback for old browsers */
-        // background: -webkit-linear-gradient(to right, darken(#ffcc33, 5%), darken(#ffb347, 10%));  /* Chrome 10-25, Safari 5.1-6 */
-        // background: linear-gradient(to right, darken(#ffcc33, 5%), darken(#ffb347, 10%)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-        // background: white;
-        
+    &:last-of-type{
+        margin-right: 35px;
     }
     &:hover{
         transform: translateY(-8px);

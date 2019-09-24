@@ -14,6 +14,7 @@
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Godown Type</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Serial No</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Vehicle No</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Assigned Date</div>
             </div>
             <ng-container *ngIf="infinite | async as pipes; else initialLoader">
                 <cdk-virtual-scroll-viewport @fadeIn (scrolledIndexChange)="nextBatch($event, pipes.length)" itemSize="31"
@@ -24,6 +25,7 @@
                         <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.gudown_type | uppercase }}</div>
                         <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.serial_no }}</div>
                         <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.vehicle_no }}</div>
+                        <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.assigned_date }}</div>
                     </div>
                     <div *ngIf="loading" class="batch-spinner">
                         <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>

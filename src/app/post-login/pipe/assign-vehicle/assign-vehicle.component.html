@@ -24,15 +24,15 @@
         <mat-card-content fxLayout="column" fxFlex>
             <div fxLayout fxFlex>
                 <div fxFlex="50" class="transfer-items-left ">
-                    <div fxLayout class="header-shadow">
+                    <div fxLayout class="header-shadow left-header">
                         <div class="m-l-16" fxLayout fxLayoutAlign="center center">
                             <mat-checkbox [(ngModel)]="selectAllChecked" (change)="selectAllChange($event)" color="primary"
-                                matTooltip="select all pipe"></mat-checkbox>
+                                matTooltip="select all pipe">{{selectedPipes.length || ''}}</mat-checkbox>
                         </div>
 
-                        <div fxFlex class="m-t-16 m-l-10 m-r-10 m-b-16 input-wrapper" fxLayout>
+                        <div fxFlex="30" class="m-t-16 m-l-10 m-r-10 m-b-16 input-wrapper" fxLayout>
                             <input #searchInput type="text" [value]="searchTerm" (input)="searchTerm = $event.target.value"
-                                placeholder="Search Pipe Number" positiveNumber>
+                                placeholder="Search" positiveNumber>
                             <!-- <label>Count</label> -->
                             <div (click)="searchTerm = ''; searchInput.focus()" *ngIf="searchTerm?.length" fxLayout
                                 fxLayoutAlign="center center" class="input-clear">
@@ -41,6 +41,14 @@
                             <span class="focus-border">
                                 <i></i>
                             </span>
+                        </div>
+                        <div class="m-r-16 m-l-5" fxFlex fxLayout fxLayoutAlign="center end">
+                            <mat-form-field  floatLabel="always" fxFlex class="calc-field" (click)="picker.open()">
+                                <mat-label>Date</mat-label>
+                                <input [disabled]="dateDisabled" [(ngModel)]="date" #dateInput placeholder="Select Date" readonly matInput [matDatepicker]="picker">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
                         </div>
                     </div>
                     <div class="chk-box-container">
@@ -57,7 +65,7 @@
                                 <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
                             </div>
                             <ng-template #dataTpl>
-                                    <mat-selection-list @fadeOpactiy *ngIf="pipeSerialNos?.length; else emptyTpl" color="primary"
+                                <mat-selection-list @fadeOpactiy *ngIf="pipeSerialNos?.length; else emptyTpl" color="primary"
                                     (selectionChange)="onSelect($event)">
                                     <mat-list-option class="custom-list-option" [selected]="pipeSerialNo.isSelected"
                                         [value]="pipeSerialNo" *ngFor="let pipeSerialNo of pipeSerialNos | startsWithFilter:searchTerm:'serial_no'"
@@ -75,7 +83,7 @@
                     </div>
                 </div>
                 <div fxFlex="50" class="transfer-items-right">
-                    <div fxLayout fxLayoutGap="15px" fxLayoutAlign="center center" class="left-header header-shadow">
+                    <div fxLayout fxLayoutGap="15px" fxLayoutAlign="center center" class="right-header header-shadow">
                         <mat-form-field class="calc-field" fxFlex="45" class="m-t-10" [floatLabel]="'always'">
                             <mat-label>Vehicle</mat-label>
                             <mat-select [disabled]="vehicleSelectDisabled" #vehiclesSelect (selectionChange)="onVehicleChange($event)"
@@ -128,6 +136,7 @@
 </div>
 <div fxLayout fxLayoutAlign="center center" class="m-t-16">
     <div fxFlex="75" fxLayoutAlign="end end">
-        <button (click)="openConfirm()" [disabled]="confirmBtnDisabled || !selectedPipes?.length" mat-raised-button color="primary">CONFIRM</button>
+        <button (click)="openConfirm()" [disabled]="confirmBtnDisabled || !selectedPipes?.length" mat-raised-button
+            color="primary">CONFIRM</button>
     </div>
 </div>

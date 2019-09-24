@@ -1,6 +1,6 @@
-import { Component, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, OnDestroy, AfterViewInit, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatSelectionListChange, MatCheckboxChange, MatSelectionList, MatSelectChange, MatSelect, MatDialog } from '@angular/material';
+import { MatSelectionListChange, MatCheckboxChange, MatSelectionList, MatSelectChange, MatSelect, MatDialog, MatDatepicker } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { Vehicle } from '../../../models/Vehicle';
 import { ConfigService } from '../../../services/config.service';
@@ -35,6 +35,8 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
     @ViewChild('vehiclesSelect', { static: false }) vehiclesSelect: MatSelect;
     @ViewChild('godownSelect', { static: false }) godownSelect: MatSelect;
     @ViewChild('pipeSelect', { static: false }) pipeSelect: MatSelect;
+    @ViewChild('dateInput', { static: false }) dateInput: ElementRef<any>;
+    @ViewChild('picker', { static: false }) datePicker: MatDatepicker<any>;
     routeParamSubscription: Subscription;
     routeDataSubscription: Subscription;
     vehicles: Vehicle[];
@@ -44,6 +46,7 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
     vehicleSelectDisabled;
     pipeSelectDisabled;
     godownSelectDisabled;
+    dateDisabled;
     appearance;
     othersSelected;
     otherRemarks;
@@ -54,7 +57,8 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
     godowns;
     getUrl;
     serialLoading;
-    confirmBtnDisabled
+    confirmBtnDisabled;
+    date;
 
 
     constructor(
@@ -121,10 +125,15 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
                     this.selectAllChecked = false;
                     this.searchTerm = ''
                     this.selectedPipes = [];
-                    if (type === 'godown') {
-                        if(!this.selectedVehicle){
-                            return this.jumpTo(Select.vehicle);
-                        }
+                    if (type === 'godown' && !this.selectedVehicle) {
+                        return this.jumpTo(Select.vehicle);
+                    }
+                    if (!this.date) {
+                        setTimeout(() => {
+                            this.datePicker.open();
+                            (this.dateInput.nativeElement as HTMLElement).focus()
+                        })
+                        
                     }
                 }, (err) => {
                     if (err) {
@@ -134,6 +143,12 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
         } else {
             if (type === 'godown' && !this.selectedVehicle) {
                 return this.jumpTo(Select.vehicle);
+            }
+            if (!this.date) {
+                setTimeout(() => {
+                    this.datePicker.open();
+                    (this.dateInput.nativeElement as HTMLElement).focus()
+                })
             }
         }
 
@@ -145,6 +160,7 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
         this.pipeSelectDisabled = flag;
         this.godownSelectDisabled = flag;
         this.confirmBtnDisabled = flag;
+        this.dateDisabled = flag;
     }
 
     onSelect($event: MatSelectionListChange) {
@@ -176,7 +192,7 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
     }
 
     selectAllChange($event: MatCheckboxChange) {
-        if(this.pipeSerialNos && this.pipeSerialNos.length){
+        if (this.pipeSerialNos && this.pipeSerialNos.length) {
             if ($event.checked) {
                 this.selectList.selectAll();
                 this.pipeSerialNos.forEach(pipe => pipe.isSelected = true);
@@ -229,7 +245,8 @@ export class AssignVehicleComponent implements OnDestroy, AfterViewInit {
                 godownType: this.selectedGodown.godownType,
                 pipeType: this.selectedPipe.type,
                 pipeSize: this.selectedPipe.size,
-                godownId: this.selectedGodown.godown_id
+                godownId: this.selectedGodown.godown_id,
+                date: this.date
             }
         });
 

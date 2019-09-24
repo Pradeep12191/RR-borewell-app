@@ -5,6 +5,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { ConfigService } from '../../../../services/config.service';
+import { Moment } from 'moment';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class AssignVehicleConfirmDialogComponent {
     godownType;
     pipeType;
     updateUrl;
+    date;
     constructor(
         @Inject(MAT_DIALOG_DATA) private data,
         private dialofRef: MatDialogRef<AssignVehicleConfirmDialogComponent>,
@@ -30,6 +32,7 @@ export class AssignVehicleConfirmDialogComponent {
         this.vehicle = data.vehicle;
         this.godownType = data.godownType;
         this.pipeType = data.pipeType;
+        this.date = data.date;
         this.updateUrl = this.config.getAbsoluteUrl('AssignPipeToVehicle');
     }
 
@@ -45,6 +48,7 @@ export class AssignVehicleConfirmDialogComponent {
             data['serial_no_id'] = pipe.serial_no;
             data['pipe_size'] = this.data.pipeSize;
             data['billno'] = pipe.billno;
+            data['date'] = this.date ? (this.date as Moment).format('DD-MM-YYYY') : '';
             data['remarks'] = '';
             return data;
         });

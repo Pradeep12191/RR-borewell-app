@@ -162,6 +162,12 @@ body{
     }
 }
 
+@for $i from 1 through 100{
+    .shift-top-#{$i} {
+        margin-top: -#{$i} + 'px'
+    }
+}
+
 .shift-top-30{
     margin-top: -30px;
 }

@@ -2,9 +2,20 @@
     <mat-icon>arrow_back</mat-icon>
     PIPES
 </button>
-<div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" class="m-b-16 shift-top-30">
-    <h4>{{ pipeType }}</h4>
+<div fxLayoutAlign="center center">
+    <div fxFlex="75" fxLayoutAlign="center center" class="m-b-16 header shift-top-10">
+        <h4>{{ pipeType }}</h4>
+        <div class="vehicle-select">
+            <mat-form-field>
+                <mat-label>Vehicle No.</mat-label>
+                <mat-select [disabled]="vehicleDisabled" (selectionChange)="vehicleChange()" [(ngModel)]="selectedVehicleId" placeholder="Select Vehicle">
+                    <mat-option [value]="vehicle.vehicle_id" *ngFor="let vehicle of vehicles">{{ vehicle.regNo }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
 </div>
+
 <div fxLayout fxLayout="center center">
     <div fxFlex></div>
     <div fxLayout fxLayoutGap="25px" fxFlex="75">
@@ -33,9 +44,18 @@
                 </cdk-virtual-scroll-viewport>
             </ng-container>
             <ng-template #initialLoader>
-                <div class="spinner-container">
+                <div *ngIf="!errorOccured; else errorTpl" class="spinner-container">
                     <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
                 </div>
+                <ng-template #errorTpl>
+                    <div class="error-content" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+                        <div>Error - Click Below button to retry</div>
+                        <button (click)="retry()" mat-fab color="primary" aria-label="Retry Button">
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </div>
+
+                </ng-template>
 
             </ng-template>
         </div>

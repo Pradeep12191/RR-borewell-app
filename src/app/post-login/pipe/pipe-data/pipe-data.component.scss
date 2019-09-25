@@ -29,12 +29,12 @@ h4{
 
 .table-container{
     width: 100%;
-    min-height: 300px;
+    min-height: calc(100vh - 154px);
     position: relative;
     .table{
         overflow: auto;
         font-size: 14px;
-        height: 480px;
+        height: calc(100% - 56px);
         width: 100%;
     }
 }
@@ -44,6 +44,14 @@ h4{
     left: 50%;
     margin-top: 6px;
     margin-left: -20px;
+}
+
+.error-content{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -33px;
+    margin-left: -115px;
 }
 
 .batch-spinner{
@@ -57,6 +65,15 @@ h4{
         margin-left: -20px;
     }
 }
+
+.header{
+    position: relative;
+    .vehicle-select {
+        position: absolute;
+        right: 0;
+    }
+}
+
 
 
 .header-row{

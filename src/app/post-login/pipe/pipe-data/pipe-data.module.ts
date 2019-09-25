@@ -10,6 +10,7 @@ import { PipeDataResolver } from '../../../guards/resolveGuard/pipes/pipe-data.r
 import { ExpandTableModule } from '../../../expand-table/expand-table.module';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     imports: [
@@ -21,6 +22,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
         ExpandTableModule,
         PipeDataRoutingModule,
         ScrollingModule,
+        FormsModule,
         InfiniteScrollModule
     ],
     declarations: [

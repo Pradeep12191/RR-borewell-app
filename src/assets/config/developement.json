@@ -4,6 +4,7 @@
     "reportBaseUrl": "http://localhost:3001/",
     "reportDownloadUrl": "http://localhost:3001/get-report",
     "mobileNav": false,
+    "test": "will bve reomve",
     "classicSidenav": true,
     "errorMessageTimeout": 2000,
     "urls": [

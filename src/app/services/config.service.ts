@@ -44,9 +44,22 @@ export class ConfigService {
         return ''
     }
 
+    getReportUrl(name) {
+        const urlObj = (this.config['reportGenerateUrls'] as url[]).find(url => url.name === name)
+        if (urlObj) {
+            return urlObj.url;
+        }
+        return ''
+    }
+
     getAbsoluteUrl(name) {
         const baseUrl = this.config['apiUrl'];
         return baseUrl + this.getUrl(name);
+    }
+
+    getReportDownloadUrl(name) {
+        const baseUrl = this.config['reportBaseUrl'];
+        return baseUrl + this.getReportUrl(name);
     }
 
     getAbsoluteUrlWithUser(name) {

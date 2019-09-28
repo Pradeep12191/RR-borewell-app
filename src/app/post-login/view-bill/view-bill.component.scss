@@ -11,6 +11,26 @@
     margin-left: -38px;
     margin-top: -20px;
 }
+.shift-top-30{
+    position: relative;
+}
+
+.bill-header{
+    position: relative;
+    .bill-download, .bill-search{
+        position: absolute;
+    }
+
+    .bill-download{
+        left: 0;
+    }
+    
+    .bill-search{
+        right: 0;
+    }
+}
+
+
 
 .m-l-140{
     margin-left: 140px;

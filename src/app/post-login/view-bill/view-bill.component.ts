@@ -8,10 +8,12 @@ import { AppService } from '../../services/app.service';
 import { AuthService } from '../../services/auth.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { map, finalize } from 'rxjs/operators';
+import { LoaderService } from '../../services/loader-service';
 
 @Component({
     templateUrl: 'view-bill.component.html',
-    styleUrls: ['view-bill.component.scss']
+    styleUrls: ['view-bill.component.scss'],
 })
 export class ViewBillComponent implements OnDestroy {
     routeSubcsription: Subscription;
@@ -21,10 +23,10 @@ export class ViewBillComponent implements OnDestroy {
     dataChanges = new Subject<any>();
     public columns: Column[] = [
         { id: 'serialNo', name: 'COLUMN.SERIAL_NO', type: 'index', width: '10' },
-        { id: 'billNo', name: 'Bill Number', type: 'string', width: '15', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold'} },
-        { id: 'godowntype1', name: 'Godown', type: 'string', width: '15', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold', textTransform: 'uppercase'} },
-        { id: 'company1', name: 'Company', type: 'string', width: '15', isCenter: true, style: {fontSize: '20px', fontWeight: 'bold', textTransform: 'uppercase'} },
-        { id: 'date', name: 'Date', type: 'string', width: '25',  style: {fontSize: '20px', fontWeight: 'bold'}},
+        { id: 'billNo', name: 'Bill Number', type: 'string', width: '15', isCenter: true, style: { fontSize: '20px', fontWeight: 'bold' } },
+        { id: 'godowntype1', name: 'Godown', type: 'string', width: '15', isCenter: true, style: { fontSize: '20px', fontWeight: 'bold', textTransform: 'uppercase' } },
+        { id: 'company1', name: 'Company', type: 'string', width: '15', isCenter: true, style: { fontSize: '20px', fontWeight: 'bold', textTransform: 'uppercase' } },
+        { id: 'date', name: 'Date', type: 'string', width: '25', style: { fontSize: '20px', fontWeight: 'bold' } },
         { id: 'more_details', name: 'Collapse All', type: 'toggle', width: '20', isCenter: true }
     ];
     selectedGodownId;
@@ -43,7 +45,8 @@ export class ViewBillComponent implements OnDestroy {
         private auth: AuthService,
         private http: HttpClient,
         private toastr: ToastrService,
-        private router: Router
+        private router: Router,
+        private loader: LoaderService
     ) {
         this.selectedGodownId = this.app.selectedGodownId ? this.app.selectedGodownId.toString() : '1';
         this.appearance = this.config.getConfig('formAppearance');
@@ -75,6 +78,57 @@ export class ViewBillComponent implements OnDestroy {
 
     displayGodownLabel(id) {
         return this.godowns.find(godown => godown.godown_id == id).godownType
+    }
+
+    downloadPdf() {
+
+        const billReportUrl = this.config.getReportDownloadUrl('bills');
+        const reportDownloadUrl = this.config.getConfig('reportDownloadUrl');
+        const params = new HttpParams()
+            .set('user_id', this.auth.userid)
+            .append('godown_id', this.selectedGodownId)
+            .append('start', '0')
+            .append('end', '200')
+        this.loader.showSaveLoader('Generating report ...')
+        this.http.get<{ filename: string }>(billReportUrl, { params: params }).pipe(finalize(() => {
+            this.loader.hideSaveLoader()
+        })).subscribe(({ filename }) => {
+            this.toastr.success('Report generated successfully', null, { timeOut: 2000 });
+            console.log(filename);
+            window.open(reportDownloadUrl + '/' + filename, '_blank');
+        }, (err) => {
+            this.toastr.error('Error while generating report', null, { timeOut: 2000 });
+        })
+
+        // const options = { responseType:  };
+        // return this.http.get('http://localhost:3001/bills-report', { responseType: 'arraybuffer' })
+        // .pipe(map((res) => {
+        //     // return res;
+        //     return new Blob([res], { type: 'application/pdf' });
+        // })).subscribe((res) => {
+        //     // const fileURL = URL.createObjectURL(res);
+        //     // window.open(fileURL, '_blank');
+        //     const a = document.createElement('a');
+        //     a.hidden = true;
+        //     a.href =  URL.createObjectURL(res);
+        //     a.click();
+        //     // const reader = new FileReader();
+        //     // reader.readAsArrayBuffer(res as Blob);
+        //     // reader.onloadend = () => {
+        //     //     const a = document.createElement('a');
+        //     //     a.hidden = true;
+        //     //     a.href =  URL.createObjectURL(reader.result);
+        //     //     a.click();
+        //     // }
+        // }, (err) => {
+        //     console.log(err)
+        // })
+        // window.open('http://localhost:3001/bills-report');
+        // this.http.get('').subscribe(() => {
+
+        // }, (err) => {
+        //     console.log(err)
+        // })
     }
 
     onBillNoChange(name) {

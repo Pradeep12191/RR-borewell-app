@@ -8,7 +8,8 @@
         <div class="vehicle-select">
             <mat-form-field>
                 <mat-label>Vehicle No.</mat-label>
-                <mat-select [disabled]="vehicleDisabled" (selectionChange)="vehicleChange()" [(ngModel)]="selectedVehicleId" placeholder="Select Vehicle">
+                <mat-select [disabled]="vehicleDisabled" (selectionChange)="vehicleChange()" [(ngModel)]="selectedVehicleId"
+                    placeholder="Select Vehicle">
                     <mat-option [value]="vehicle.vehicle_id" *ngFor="let vehicle of vehicles">{{ vehicle.regNo }}</mat-option>
                 </mat-select>
             </mat-form-field>
@@ -27,21 +28,24 @@
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Vehicle No</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Assigned Date</div>
             </div>
-            <ng-container *ngIf="infinite | async as pipes; else initialLoader">
-                <cdk-virtual-scroll-viewport @fadeIn (scrolledIndexChange)="nextBatch($event, pipes.length)" itemSize="31"
-                    fxLayout="column" class="table">
-                    <div class="row" *cdkVirtualFor="let pipe of pipes; let i = index; trackBy: trackByFn" fxLayout
-                        fxLayoutGap="10px">
-                        <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.billno }}</div>
-                        <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.gudown_type | uppercase }}</div>
-                        <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.serial_no }}</div>
-                        <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.vehicle_no }}</div>
-                        <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.assigned_date }}</div>
-                    </div>
-                    <div *ngIf="loading" class="batch-spinner">
-                        <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
-                    </div>
-                </cdk-virtual-scroll-viewport>
+            <ng-container *ngIf="infinite | async as pipes">
+                <ng-container *ngIf="pipes.length; else initialLoader">
+                    <cdk-virtual-scroll-viewport @fadeIn (scrolledIndexChange)="nextBatch($event, pipes.length)"
+                        itemSize="31" fxLayout="column" class="table">
+                        <div class="row" *cdkVirtualFor="let pipe of pipes; let i = index; trackBy: trackByFn" fxLayout
+                            fxLayoutGap="10px">
+                            <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.billno }}</div>
+                            <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.gudown_type | uppercase }}</div>
+                            <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.serial_no }}</div>
+                            <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.vehicle_no }}</div>
+                            <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.assigned_date }}</div>
+                        </div>
+                        <div *ngIf="loading" class="batch-spinner">
+                            <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
+                        </div>
+                    </cdk-virtual-scroll-viewport>
+                </ng-container>
+
             </ng-container>
             <ng-template #initialLoader>
                 <div *ngIf="!errorOccured; else errorTpl" class="spinner-container">

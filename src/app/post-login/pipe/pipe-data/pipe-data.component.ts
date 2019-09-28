@@ -75,22 +75,24 @@ export class PipeDataComponent implements OnDestroy {
 
 
         const batchMap = this.offset.pipe(
+            
             throttleTime(500),
             tap(() => {
                 console.log('throttle')
             }),
-            mergeMap(n => this.getPipeData(n)),
-            catchError((err) => {
-                if (err) {
+            mergeMap(n => this.getPipeData(n).pipe(materialize())),
+            tap((next) => {
+                if (next.error) {
                     this.errorOccured = true;
                     this.loading = false;
                     this.toastr.error('Error While Fetching Data...', null, { timeOut: 2000 })
                 }
-                return throwError(err);
             }),
             map((batch) => {
-                console.log(this.pipeData)
-                return [...this.pipeData, ...batch]
+                if(batch.error || !batch.hasValue){
+                    return [...this.pipeData];
+                }
+                return [...this.pipeData, ...batch.value]
             }),
             tap(d => {
                 this.pipeData = d;

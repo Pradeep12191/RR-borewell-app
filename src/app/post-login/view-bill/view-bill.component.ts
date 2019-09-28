@@ -97,6 +97,7 @@ export class ViewBillComponent implements OnDestroy {
             console.log(filename);
             window.open(reportDownloadUrl + '/' + filename, '_blank');
         }, (err) => {
+            
             this.toastr.error('Error while generating report', null, { timeOut: 2000 });
         })
 

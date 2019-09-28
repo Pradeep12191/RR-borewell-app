@@ -2,6 +2,7 @@
     "formAppearance": "outline",
   "apiUrl": "http://localhost:8081/RR_borewell_api1/webapi/resource/",
     "mobileNav": false,
+    "test": "will bve reomve",
     "classicSidenav": true,
     "errorMessageTimeout": 2000,
     "urls": [

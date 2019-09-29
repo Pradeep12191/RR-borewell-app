@@ -8,10 +8,11 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ConfigService } from '../../../services/config.service';
 import { AuthService } from '../../../services/auth.service';
-import { tap, throttleTime, mergeMap, scan, map, catchError, materialize, reduce } from 'rxjs/operators';
+import { tap, throttleTime, mergeMap, scan, map, catchError, materialize, reduce, finalize } from 'rxjs/operators';
 import { FADE_IN_ANIMATION } from '../../../animations';
 import { ToastrService } from 'ngx-toastr';
 import { Vehicle } from '../../../models/Vehicle';
+import { LoaderService } from '../../../services/loader-service';
 
 const ALL_VEHICLE_OPTION: Vehicle = { regNo: 'All Vehicle', type: '', vehicle_id: 'all' }
 const UNASSIGNED_PIPES_OPTION: Vehicle = { regNo: 'Pipes in Stock', type: '', vehicle_id: 'unassigned' }
@@ -41,6 +42,7 @@ export class PipeDataComponent implements OnDestroy {
     vehicles: Vehicle[];
     errorOccured;
     vehicleDisabled;
+    selectedGodownId = 'all'
     public columns: Column[] = [
         { id: 'billno', name: 'Bill No', type: 'string', width: '20', isCenter: true },
         { id: 'gudown_type', name: 'Godown Type', type: 'string', width: '20', isCenter: true, style: { textTransform: 'uppercase' } },
@@ -53,7 +55,8 @@ export class PipeDataComponent implements OnDestroy {
         private config: ConfigService,
         private auth: AuthService,
         private http: HttpClient,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private loader: LoaderService
     ) {
         this.routeDataSubscription = this.route.data.subscribe((data) => {
             console.log(data.vehicles);
@@ -75,7 +78,7 @@ export class PipeDataComponent implements OnDestroy {
 
 
         const batchMap = this.offset.pipe(
-            
+
             throttleTime(500),
             tap(() => {
                 console.log('throttle')
@@ -89,7 +92,7 @@ export class PipeDataComponent implements OnDestroy {
                 }
             }),
             map((batch) => {
-                if(batch.error || !batch.hasValue){
+                if (batch.error || !batch.hasValue) {
                     return [...this.pipeData];
                 }
                 return [...this.pipeData, ...batch.value]
@@ -115,6 +118,29 @@ export class PipeDataComponent implements OnDestroy {
 
     vehicleChange() {
         this.offset.next(null);
+    }
+
+    downloadPdf() {
+        const pipeDataurl = this.config.getReportGenerateUrl('pipeData');
+        const reportDownloadUrl = this.config.getReportDownloadUrl();
+        const params = new HttpParams()
+            .set('user_id', this.auth.userid)
+            .append('godown_id', this.selectedGodownId)
+            .append('vehicle_id', this.selectedVehicleId)
+            .append('pipe_size', this.pipeSize)
+            .append('pipe_type', this.pipeType)
+            .append('start', '0')
+            .append('end', '100')
+        this.loader.showSaveLoader('Generating report ...')
+        this.http.get<{ filename: string }>(pipeDataurl, { params: params }).pipe(finalize(() => {
+            this.loader.hideSaveLoader()
+        })).subscribe(({ filename }) => {
+            this.toastr.success('Report generated successfully', null, { timeOut: 2000 });
+            console.log(filename);
+            window.open(reportDownloadUrl + '/' + filename, '_blank');
+        }, (err) => {
+            this.toastr.error('Error while generating report', null, { timeOut: 2000 });
+        })
     }
 
     backToPipes() {

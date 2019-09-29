@@ -68,9 +68,14 @@ h4{
 
 .header{
     position: relative;
-    .vehicle-select {
+    .vehicle-select, .download-btn {
         position: absolute;
+    }
+    .vehicle-select{
         right: 0;
+    }
+    .download-btn{
+        left: 0;
     }
 }
 

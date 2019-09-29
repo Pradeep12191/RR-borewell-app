@@ -82,8 +82,8 @@ export class ViewBillComponent implements OnDestroy {
 
     downloadPdf() {
 
-        const billReportUrl = this.config.getReportDownloadUrl('bills');
-        const reportDownloadUrl = this.config.getConfig('reportDownloadUrl');
+        const billReportUrl = this.config.getReportGenerateUrl('bills');
+        const reportDownloadUrl = this.config.getReportDownloadUrl();
         const params = new HttpParams()
             .set('user_id', this.auth.userid)
             .append('godown_id', this.selectedGodownId)

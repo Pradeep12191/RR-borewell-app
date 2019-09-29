@@ -131,7 +131,7 @@ export class PipeDataComponent implements OnDestroy {
             .append('pipe_size', this.pipeSize)
             .append('pipe_type', this.pipeType)
             .append('start', '0')
-            .append('end', '100')
+            .append('end', '10000')
         this.loader.showSaveLoader('Generating report ...')
         this.http.get<{ filename: string }>(pipeDataurl, { params: params }).pipe(finalize(() => {
             this.loader.hideSaveLoader()

@@ -15,13 +15,12 @@ const routes: Routes = [
             { path: 'dashboard', component: DashboardComponent },
             { path: 'vehicles', loadChildren: () => import('./vehicle/vehicle.module').then(mod => mod.VehicleModule) },
             { path: 'pipes', loadChildren: () => import('./pipe/pipe.module').then(mod => mod.PipeModule) },
-            { path: 'pointDetails', loadChildren: () => import('./point-details/point-entry/point-entry.module').then(mod => mod.PointEntryModule) },
-            { path: 'rpmDetails', loadChildren: () => import('./point-details/rpm-entry/rpm-entry.module').then(mod => mod.RpmEntryModule) },
             { path: 'viewBills', loadChildren: () => import('./view-bill/view-bill.module').then(mod => mod.ViewBillModule) },
             { path: 'assignVehicle', loadChildren: () => import('./pipe/assign-vehicle/assign-vehicle.module').then(mod => mod.AssignVehicleModule) },
             { path: 'viewPipeData/:pipeSize/:pipeType', loadChildren: () => import('./pipe/pipe-data/pipe-data.module').then(mod => mod.PipeDataModule) },
             { path: 'bits', loadChildren: () => import('./bits/bits.module').then(mod => mod.BitsModule) },
             { path: 'bits/addBit', loadChildren: () => import('./bits/add-bit-screen/add-bit-screen.module').then(mod => mod.AddBitScreenModule) },
+            { path: 'rpmEntry', loadChildren: () => import('./rpm-entry/rpm-entry.module').then(mod => mod.RpmEntryModule) },
             { path: '**', component: S404Component }
         ],
         resolve: {

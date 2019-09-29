@@ -1,0 +1,69 @@
+<form [formGroup]="form">
+    <mat-card>
+        <mat-card-content>
+            <div class="pipe-header" fxLayout>
+                <div fxFlex="20"></div>
+                <div [fxFlex]="pipeFlex" fxLayoutAlign="center center" class="header-cell bold" *ngFor="let pipe of pipes">{{
+                    pipe.type }}</div>
+            </div>
+            <div class="table" fxLayout="column">
+                <div class="row" fxLayout>
+                    <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 bold bg-grey">Previous Stock
+                        FT</div>
+                    <div [fxFlex]="pipeFlex" *ngFor="let previousStock of rpmEntry.previousStockFT; let last = last"
+                        class="cell" [class.b-r-0]="!last"></div>
+                </div>
+                <div class="row" fxLayout>
+                    <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 b-t-0 p-l-10 b-b-0 bold bg-grey">RR
+                        Income</div>
+                    <div [fxFlex]="pipeFlex" *ngFor="let rrIncome of rpmEntry.rrIncome; let last = last" class="cell b-t-0 b-b-0"
+                        [class.b-r-0]="!last"></div>
+                </div>
+                <div class="row" fxLayout>
+                    <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">MM
+                        Income</div>
+                    <div [fxFlex]="pipeFlex" *ngFor="let mmIncome of rpmEntry.mmIncome; let last = last" class="cell b-b-0"
+                        [class.b-r-0]="!last"></div>
+                </div>
+                <div class="row" fxLayout>
+                    <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Available
+                        Stock</div>
+                    <div [fxFlex]="pipeFlex" *ngFor="let availableStock of rpmEntry.availableStock; let last = last"
+                        class="cell b-b-0" [class.b-r-0]="!last"></div>
+                </div>
+                <div class="row" fxLayout>
+                    <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Point
+                        Expense Feet</div>
+                    <div [fxFlex]="pipeFlex" fxLayoutAlign="center center" formArrayName="pointExpenseFeet" *ngFor="let ctrl of pointExpenseFeetFormArray.controls; let last = last"
+                        class="cell b-b-0" [class.b-r-0]="!last">
+                        <ng-container [formGroup]="ctrl">
+                            <div class="input-wrapper h-100" fxFlex>
+                                <input type="text" class="h-100" formControlName="value" placeholder="Count" positiveNumber>
+                                <mat-icon class="input-edit-icon">edit</mat-icon>
+                                <!-- <label>Count</label> -->
+                                <span class="focus-border">
+                                    <i></i>
+                                </span>
+                            </div>
+                        </ng-container>
+
+                    </div>
+                </div>
+                <div class="row" fxLayout>
+                    <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 bold bg-grey">Balance Stock
+                        Feet</div>
+                    <div [fxFlex]="pipeFlex" *ngFor="let balanceStockFeet of rpmEntry.balanceStockFeet; let last = last"
+                        class="cell" [class.b-r-0]="!last"></div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <div fxLayoutAlign="space-between" class="m-t-25">
+        <div>
+            <button type="button" mat-raised-button color="warn">RESET</button>
+        </div>
+        <div>
+            <button (click)="save()" mat-raised-button color="primary" type="button">SAVE</button>
+        </div>
+    </div>
+</form>

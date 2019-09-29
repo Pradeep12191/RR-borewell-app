@@ -52,12 +52,17 @@ export class ConfigService {
         return ''
     }
 
+    getReportDownloadUrl(){
+        const baseUrl = this.config['reportBaseUrl'];
+        return baseUrl + 'get-report'
+    }
+
     getAbsoluteUrl(name) {
         const baseUrl = this.config['apiUrl'];
         return baseUrl + this.getUrl(name);
     }
 
-    getReportDownloadUrl(name) {
+    getReportGenerateUrl(name) {
         const baseUrl = this.config['reportBaseUrl'];
         return baseUrl + this.getReportUrl(name);
     }

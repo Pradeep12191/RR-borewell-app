@@ -1,8 +1,8 @@
 {
     "formAppearance": "outline",
-  "apiUrl": "http://localhost:8081/RR_borewell_api1/webapi/resource/",
+    "apiUrl": "http://103.207.4.72:18082/RR_borewell_api1/webapi/resource/",
+    "reportBaseUrl": "http://localhost:3001/",
     "mobileNav": false,
-    "test": "will bve reomve",
     "classicSidenav": true,
     "errorMessageTimeout": 2000,
     "urls": [
@@ -89,6 +89,16 @@
         {
             "name": "pipeSizes",
             "url": "pipe_size_list"
+        }
+    ],
+    "reportGenerateUrls": [
+        {
+            "name": "bills",
+            "url": "bills-report"
+        },
+        {
+            "name": "pipeData",
+            "url":"pipe-data-report"
         }
     ]
 }

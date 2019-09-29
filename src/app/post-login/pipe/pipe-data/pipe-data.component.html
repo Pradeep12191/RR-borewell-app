@@ -11,9 +11,9 @@
         <div class="vehicle-select">
             <mat-form-field>
                 <mat-label>Vehicle No.</mat-label>
-                <mat-select [disabled]="vehicleDisabled" (selectionChange)="vehicleChange()" [(ngModel)]="selectedVehicleId"
+                <mat-select [disabled]="vehicleDisabled" (selectionChange)="vehicleChange()" [(ngModel)]="selectedVehicle"
                     placeholder="Select Vehicle">
-                    <mat-option [value]="vehicle.vehicle_id" *ngFor="let vehicle of vehicles">{{ vehicle.regNo }}</mat-option>
+                    <mat-option [value]="vehicle" *ngFor="let vehicle of vehicles">{{ vehicle.regNo }}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>

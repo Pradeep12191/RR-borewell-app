@@ -38,7 +38,7 @@ export class PipeDataComponent implements OnDestroy {
     pipeData = [];
     loading = true;
     @ViewChild(CdkVirtualScrollViewport, { static: false }) viewport: CdkVirtualScrollViewport;
-    selectedVehicleId;
+    selectedVehicle: Vehicle;
     vehicles: Vehicle[];
     errorOccured;
     vehicleDisabled;
@@ -63,7 +63,7 @@ export class PipeDataComponent implements OnDestroy {
             this.vehicles = data.vehicles;
             this.vehicles.unshift(UNASSIGNED_PIPES_OPTION);
             this.vehicles.unshift(ALL_VEHICLE_OPTION);
-            this.selectedVehicleId = this.vehicles[0].vehicle_id;
+            this.selectedVehicle = this.vehicles[0];
             // this.pipes = data.pipes;
             // this.pipeDataSource = new MatTableDataSource(this.pipes)
         })
@@ -126,7 +126,8 @@ export class PipeDataComponent implements OnDestroy {
         const params = new HttpParams()
             .set('user_id', this.auth.userid)
             .append('godown_id', this.selectedGodownId)
-            .append('vehicle_id', this.selectedVehicleId)
+            .append('vehicle_id', this.selectedVehicle.vehicle_id)
+            .append('vehicle_no', this.selectedVehicle.regNo)
             .append('pipe_size', this.pipeSize)
             .append('pipe_type', this.pipeType)
             .append('start', '0')
@@ -187,7 +188,7 @@ export class PipeDataComponent implements OnDestroy {
             .set('user_id', this.auth.userid)
             .append('pipe_size', this.pipeSize)
             .append('start', start)
-            .append('vehicle_id', this.selectedVehicleId)
+            .append('vehicle_id', this.selectedVehicle.vehicle_id)
             .append('end', this.batch.toString());
         return this.http.get<any[]>(this.pipeDataBatchUrl, { params }).pipe(
             tap(arr => {

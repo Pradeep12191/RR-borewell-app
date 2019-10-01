@@ -25,7 +25,7 @@ export class PipesResolver implements Resolve<any> {
         return this.http.get(this.url).pipe(mergeMap(response => {
             const goDowns = response;
             if (!this.app.selectedGodownId) {
-                this.app.selectedGodownId = response[1].godown_id;
+                this.app.selectedGodownId = 'all'
             }
             let params = new HttpParams().set('user_id', this.auth.userid).append('gudown_id', this.app.selectedGodownId.toString())
             return this.http.get(this.pipesUrl, { params }).pipe(map((pipes) => {

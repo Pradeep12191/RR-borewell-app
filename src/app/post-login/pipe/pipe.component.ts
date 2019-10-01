@@ -14,9 +14,10 @@ import { AppService } from '../../services/app.service';
 import { Pipe } from '../../models/Pipe';
 import { LastSerialNo } from './LastSerialNo';
 import { LoaderService } from '../../services/loader-service';
+import { Godown } from './Godown';
 
 const PIPE_LENGTH = 20;
-
+const AllGodownOption: Godown = { godown_id: 'all', godownType: 'All' }
 @Component({
     templateUrl: './pipe.component.html',
     styleUrls: ['./pipe.component.scss'],
@@ -34,7 +35,7 @@ export class PipeComponent {
         { id: 'viewPipeData', name: 'View Pipe Data', type: 'iconButton', isCenter: true, width: '15', action: 'VIEW_PIPE_DATA', iconName: 'arrow_forward' },
     ]
     public godownTypes: { godownType: string, godown_id: string }[] = [];
-    public selectedGodownId;
+    public selectedGodownId = 'all';
     public godownSelectDisabled;
     loading;
     pipes: Pipe[];
@@ -60,6 +61,7 @@ export class PipeComponent {
         this.companiesUrl = this.config.getAbsoluteUrl('companies');
         this.route.data.subscribe((data) => {
             this.godownTypes = data.pipeData.goDowns;
+            this.godownTypes.unshift(AllGodownOption);
             this.selectedGodownId = data.pipeData.godownId;
             setTimeout(() => {
                 // this.items = [1, 2, 3, 4, 5, 6, 7, 8]
@@ -114,33 +116,33 @@ export class PipeComponent {
         const companies$ = this.http.get<any[]>(this.companiesUrl, { params });
         this.loader.showSaveLoader('Loading ...');
         zip(pipeCount$, companies$)
-        .subscribe(([lastSerialNo, companies]) => {
-            const dialogRef = this.dialog.open(AddPipeDialogComponent, {
-                width: '60vw',
-                position: { top: '0px' },
-                maxHeight: '100vh',
-                height: '100vh',
-                data: {
-                    selectedGodownId: this.selectedGodownId,
-                    godownTypes: this.godownTypes,
-                    lastSerialNo,
-                    companies
-                },
-                disableClose: true
-            });
-            dialogRef.afterClosed().subscribe((pipes) => {
-                if (pipes) {
-                    this.updatePipes(pipes);
-                    this.selectedGodownId = this.app.selectedGodownId
+            .subscribe(([lastSerialNo, companies]) => {
+                const dialogRef = this.dialog.open(AddPipeDialogComponent, {
+                    width: '60vw',
+                    position: { top: '0px' },
+                    maxHeight: '100vh',
+                    height: '100vh',
+                    data: {
+                        selectedGodownId: this.selectedGodownId,
+                        godownTypes: this.godownTypes,
+                        lastSerialNo,
+                        companies
+                    },
+                    disableClose: true
+                });
+                dialogRef.afterClosed().subscribe((pipes) => {
+                    if (pipes) {
+                        this.updatePipes(pipes);
+                        this.selectedGodownId = this.app.selectedGodownId
+                    }
+                });
+                this.loader.hideSaveLoader();
+            }, (err) => {
+                this.loader.hideSaveLoader();
+                if (err) {
+                    this.toastr.error('Unable to fetch Last Bill Data', null, { timeOut: 2000 })
                 }
-            });
-            this.loader.hideSaveLoader();
-        }, (err) => {
-            this.loader.hideSaveLoader();
-            if (err) {
-                this.toastr.error('Unable to fetch Last Bill Data', null, { timeOut: 2000 })
-            }
-        })
+            })
 
 
     }

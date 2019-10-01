@@ -21,6 +21,7 @@ const routes: Routes = [
             { path: 'bits', loadChildren: () => import('./bits/bits.module').then(mod => mod.BitsModule) },
             { path: 'bits/addBit', loadChildren: () => import('./bits/add-bit-screen/add-bit-screen.module').then(mod => mod.AddBitScreenModule) },
             { path: 'rpmEntry', loadChildren: () => import('./rpm-entry/rpm-entry.module').then(mod => mod.RpmEntryModule) },
+            { path: 'godownExchange', loadChildren: () => import('./godown-exchange/godown-exchange.module').then(mod => mod.GodownExchangeModule) },
             { path: '**', component: S404Component }
         ],
         resolve: {

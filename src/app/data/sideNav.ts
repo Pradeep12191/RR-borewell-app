@@ -34,9 +34,15 @@ export const SIDE_NAV_ITEMS: NavItem[] = [
                 level: 1,
                 paddingLeft: LEVEL_1_PADDING,
             },
+            // {
+            //     name: 'Assign Vehicle (Pipe)',
+            //     path: 'assignVehicle',
+            //     level: 1,
+            //     paddingLeft: LEVEL_1_PADDING,
+            // },
             {
-                name: 'Assign Vehicle (Pipe)',
-                path: 'assignVehicle',
+                name: 'Godown Exchange',
+                path: 'godownExchange',
                 level: 1,
                 paddingLeft: LEVEL_1_PADDING,
             },

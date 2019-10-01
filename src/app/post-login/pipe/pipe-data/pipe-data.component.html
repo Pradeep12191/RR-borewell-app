@@ -35,6 +35,7 @@
     <div fxLayout fxLayoutGap="25px" fxFlex="80">
         <div class="mat-elevation-z8 table-container">
             <div fxLayout class="header-row">
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>S.No.</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Bill No</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Godown Type</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Pipe Size</div>
@@ -47,6 +48,7 @@
                     <cdk-virtual-scroll-viewport @fadeIn (scrolledIndexChange)="nextBatch($event, pipes.length)"
                         itemSize="31" fxLayout="column" class="table">
                         <div class="row" *cdkVirtualFor="let pipe of pipes; let i = index; trackBy: trackByFn" fxLayout>
+                            <div fxFlex fxLayoutAlign="center center" class="cell">{{ i + 1 }}</div>
                             <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.billno }}</div>
                             <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.gudown_type | uppercase }}</div>
                             <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.pipe_size }}</div>

@@ -89,6 +89,10 @@
         {
             "name": "pipeSizes",
             "url": "pipe_size_list"
+        },
+        {
+            "name": "pipeDataCount",
+            "url": "pipe_data_count"
         }
     ],
     "reportGenerateUrls": [

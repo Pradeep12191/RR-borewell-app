@@ -1,3 +1,6 @@
+@import '~src/mixins.scss';
+
+
 .bill-table{
     ::ng-deep{
         mat-row{
@@ -38,6 +41,9 @@ h4{
         width: 100%;
     }
 }
+.container{
+    margin-right: -30px;
+}
 .spinner-container{
     position: absolute;
     top: 50%;
@@ -63,6 +69,16 @@ h4{
         left: 50%;
         margin-top: -20px;
         margin-left: -20px;
+    }
+}
+
+.pipe-summary{
+    position: relative;
+    mat-spinner{
+       @include spinner-position;
+    }
+    mat-card-content{
+        height: 100px;
     }
 }
 
@@ -96,11 +112,11 @@ h4{
 }
 
 .header-cell, .cell{
-    &:first-of-type{
-        padding-left: 24px;
-    }
+    // &:first-of-type{
+    //     padding-left: 24px;
+    // }
     &:last-of-type{
-        padding-right: 24px;
+        padding-right: 16px;
     }
     text-align: center;
 }

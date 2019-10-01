@@ -13,9 +13,12 @@ import { FADE_IN_ANIMATION } from '../../../animations';
 import { ToastrService } from 'ngx-toastr';
 import { Vehicle } from '../../../models/Vehicle';
 import { LoaderService } from '../../../services/loader-service';
+import { PipeSize } from '../../../models/PipeSize';
+import { Godown } from '../Godown';
 
 const ALL_VEHICLE_OPTION: Vehicle = { regNo: 'All Vehicle', type: '', vehicle_id: 'all' }
 const UNASSIGNED_PIPES_OPTION: Vehicle = { regNo: 'Pipes in Stock', type: '', vehicle_id: 'unassigned' }
+const ALL_GODOWN_OPTION: Godown = { godownType: 'All', godown_id: 'all' };
 
 @Component({
     templateUrl: './pipe-data.component.html',
@@ -35,14 +38,20 @@ export class PipeDataComponent implements OnDestroy {
     offset = new BehaviorSubject(null);
     infinite: Observable<any>;
     pipeDataBatchUrl;
+    pipeDataCountUrl;
     pipeData = [];
     loading = true;
     @ViewChild(CdkVirtualScrollViewport, { static: false }) viewport: CdkVirtualScrollViewport;
     selectedVehicle: Vehicle;
+    selectedPipe: PipeSize;
+    selectedGodown: Godown;
     vehicles: Vehicle[];
+    pipes: PipeSize[];
+    godowns: Godown[];
     errorOccured;
     vehicleDisabled;
-    selectedGodownId = 'all'
+    countLoading;
+    count;
     public columns: Column[] = [
         { id: 'billno', name: 'Bill No', type: 'string', width: '20', isCenter: true },
         { id: 'gudown_type', name: 'Godown Type', type: 'string', width: '20', isCenter: true, style: { textTransform: 'uppercase' } },
@@ -56,32 +65,39 @@ export class PipeDataComponent implements OnDestroy {
         private auth: AuthService,
         private http: HttpClient,
         private toastr: ToastrService,
-        private loader: LoaderService
+        private loader: LoaderService,
     ) {
-        this.routeDataSubscription = this.route.data.subscribe((data) => {
-            console.log(data.vehicles);
-            this.vehicles = data.vehicles;
-            this.vehicles.unshift(UNASSIGNED_PIPES_OPTION);
-            this.vehicles.unshift(ALL_VEHICLE_OPTION);
-            this.selectedVehicle = this.vehicles[0];
-            // this.pipes = data.pipes;
-            // this.pipeDataSource = new MatTableDataSource(this.pipes)
-        })
+        this.pipeDataBatchUrl = this.config.getAbsoluteUrl('PipeData');
+        this.pipeDataCountUrl = this.config.getAbsoluteUrl('pipeDataCount');
 
         this.routeParamsSubscription = this.route.paramMap.subscribe((paramMap) => {
             this.pipeType = paramMap.get('pipeType');
             this.pipeSize = paramMap.get('pipeSize');
-            this.godownType = paramMap.get('godownType');
         });
 
-        this.pipeDataBatchUrl = this.config.getAbsoluteUrl('PipeData');
+        this.routeDataSubscription = this.route.data.subscribe((data) => {
+            this.vehicles = data.vehicles;
+            this.godowns = data.godowns;
+            this.pipes = data.pipes;
+            this.vehicles.unshift(UNASSIGNED_PIPES_OPTION);
+            this.vehicles.unshift(ALL_VEHICLE_OPTION);
+            this.godowns.unshift(ALL_GODOWN_OPTION);
+            this.selectedVehicle = this.vehicles[0];
+            this.selectedGodown = this.godowns[0];
+            this.selectedPipe = this.pipes.find(pipe => pipe.size == this.pipeSize);
+            this.getPipeDataCount().subscribe((count) => {
+                this.count = count
+            })
+        })
+
+        
 
 
         const batchMap = this.offset.pipe(
 
             throttleTime(500),
             tap(() => {
-                console.log('throttle')
+                // console.log('throttle')
             }),
             mergeMap(n => this.getPipeData(n).pipe(materialize())),
             tap((next) => {
@@ -100,7 +116,7 @@ export class PipeDataComponent implements OnDestroy {
             tap(d => {
                 this.pipeData = d;
                 this.loading = false;
-                console.log('source', d)
+                // console.log('source', d)
             })
         )
 
@@ -116,8 +132,12 @@ export class PipeDataComponent implements OnDestroy {
         this.offset.next(null);
     }
 
-    vehicleChange() {
+    change() {
         this.offset.next(null);
+        this.countLoading = true;
+        this.getPipeDataCount().subscribe((count) => {
+            this.count = count
+        })
     }
 
     downloadPdf() {
@@ -125,7 +145,7 @@ export class PipeDataComponent implements OnDestroy {
         const reportDownloadUrl = this.config.getReportDownloadUrl();
         const params = new HttpParams()
             .set('user_id', this.auth.userid)
-            .append('godown_id', this.selectedGodownId)
+            .append('godown_id', this.selectedGodown.godownType)
             .append('vehicle_id', this.selectedVehicle.vehicle_id)
             .append('vehicle_no', this.selectedVehicle.regNo)
             .append('pipe_size', this.pipeSize)
@@ -171,6 +191,18 @@ export class PipeDataComponent implements OnDestroy {
         return i
     }
 
+    getPipeDataCount() {
+        const params = new HttpParams()
+            .set('user_id', this.auth.userid)
+            .append('pipe_size', this.selectedPipe.size)
+            .append('vehicle_id', this.selectedVehicle.vehicle_id)
+        return this.http.get<any[]>(this.pipeDataCountUrl, { params }).pipe(
+            finalize(() => {
+                this.countLoading = false;
+            })
+        )        
+    }
+
     getPipeData(next) {
         let end = '100';
         let start = '0'
@@ -186,7 +218,8 @@ export class PipeDataComponent implements OnDestroy {
 
         const params = new HttpParams()
             .set('user_id', this.auth.userid)
-            .append('pipe_size', this.pipeSize)
+            .append('pipe_size', this.selectedPipe.size)
+            .append('godown_id', this.selectedGodown.godown_id)
             .append('start', start)
             .append('vehicle_id', this.selectedVehicle.vehicle_id)
             .append('end', this.batch.toString());

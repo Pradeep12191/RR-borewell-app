@@ -1,13 +1,13 @@
 <div class="shift-top-30">
     <div fxLayout fxLayoutGap="10px">
         <div>
-            <button mat-raised-button color="primary" (click)="addPipe()">
+            <button [disabled]="selectedGodownId === 'all'" mat-raised-button color="primary" (click)="addPipe()">
                 <mat-icon class="m-r-5">add</mat-icon>
                 PIPE
             </button>
         </div>
         <div fxFlex fxLayoutAlign="center center" class="header">
-            <h2>{{ displayGodown(selectedGodownId) | uppercase }} Godown Pipe Stock</h2>
+            <h2>{{ displayGodown(selectedGodownId) === 'All' ? displayGodown(selectedGodownId) : (displayGodown(selectedGodownId)  | uppercase) }} Godown Pipe Stock</h2>
         </div>
         <div>
             <button (click)="navigateToViewBill()" mat-raised-button color="primary">
@@ -20,8 +20,8 @@
     <div fxLayout class="m-t-16" fxLayoutGap="25px">
         <mat-form-field fxFlex="25" [appearance]="appearance">
             <mat-select [disabled]="godownSelectDisabled" [(ngModel)]="selectedGodownId" (selectionChange)="godownChange($event)">
-                <mat-option [value]="godown.godown_id" *ngFor="let godown of godownTypes">{{ godown.godownType |
-                    uppercase }}</mat-option>
+                <mat-option [value]="godown.godown_id" *ngFor="let godown of godownTypes">
+                    {{ godown.godownType === 'All' ? godown.godownType : (godown.godownType | uppercase) }}</mat-option>
             </mat-select>
         </mat-form-field>
         <div fxLayout="column" fxLayoutAlign="center center" *ngIf="loading">

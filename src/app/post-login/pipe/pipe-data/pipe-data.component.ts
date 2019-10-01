@@ -145,7 +145,8 @@ export class PipeDataComponent implements OnDestroy {
         const reportDownloadUrl = this.config.getReportDownloadUrl();
         const params = new HttpParams()
             .set('user_id', this.auth.userid)
-            .append('godown_id', this.selectedGodown.godownType)
+            .append('godown_type', this.selectedGodown.godownType)
+            .append('godown_id', this.selectedGodown.godown_id)
             .append('vehicle_id', this.selectedVehicle.vehicle_id)
             .append('vehicle_no', this.selectedVehicle.regNo)
             .append('pipe_size', this.pipeSize)

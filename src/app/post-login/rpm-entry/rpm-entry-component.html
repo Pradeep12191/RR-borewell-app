@@ -8,7 +8,7 @@
                 </mat-select>
             </mat-form-field>
             <div fxLayout="column" fxLayoutGap="5px">
-                <div class="font-italic font-14">Godown Delivery Pipe</div>
+                <div class="font-italic font-14 sub-title">Godown Delivery Pipe</div>
                 <button (click)="assignVehicle()" mat-raised-button color="primary">
                     <mat-icon class="m-r-5">local_shipping</mat-icon>
                     Assign Vehicle
@@ -27,7 +27,7 @@
                 <div fxFlex class="bold">100</div>
             </div>
         </div>
-        <div fxLayout fxFlex fxLayoutAlign="end center" fxFlex="40" fxLayoutGap="16px">
+        <div fxLayout fxLayoutAlign="end center" fxLayoutGap="16px">
             <div>
                 <button #addBookBtn (click)="addBook()" mat-raised-button color="primary">Add New Book</button>
             </div>
@@ -38,7 +38,7 @@
     </div>
     <div fxLayout fxLayoutAlign="space-between center">
         <div fxFlex="30"></div>
-        <div fxlayout fxLayoutGap="25px"  fxFlex="40" fxLayoutAlign="center center">
+        <div fxlayout fxLayoutGap="25px" fxFlex="40" fxLayoutAlign="center center">
             <div fxLayout fxLayoutGap="5px" fxFlex>
                 <div>RPM Entry no</div>
                 <div>:</div>
@@ -52,7 +52,9 @@
             </mat-form-field>
         </div>
         <div fxFlex="30" fxLayoutAlign="end">
-            <button mat-raised-button color="primary"><mat-icon class="m-r-5">library_books</mat-icon>Report</button>
+            <button mat-raised-button color="primary">
+                <mat-icon class="m-r-5">library_books</mat-icon>Report
+            </button>
         </div>
 
     </div>
@@ -82,6 +84,19 @@
                         <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">MM
                             Income</div>
                         <div [fxFlex]="pipeFlex" *ngFor="let mmIncome of rpmEntry.mmIncome; let last = last" class="cell b-b-0"
+                            [class.b-r-0]="!last"></div>
+                    </div>
+                    <div class="row" fxLayout>
+                        <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Vehicle
+                            In Out
+                        </div>
+                        <div [fxFlex]="pipeFlex" *ngFor="let vehicleInOut of rpmEntry.vehicleInOut; let last = last"
+                            class="cell b-b-0" [class.b-r-0]="!last"></div>
+                    </div>
+                    <div class="row" fxLayout>
+                        <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">DamageFeet
+                        </div>
+                        <div [fxFlex]="pipeFlex" *ngFor="let damageFeet of rpmEntry.damageFeet; let last = last" class="cell b-b-0"
                             [class.b-r-0]="!last"></div>
                     </div>
                     <div class="row" fxLayout>
@@ -118,6 +133,12 @@
                     </div>
                 </div>
             </form>
+            <div [formGroup]="form" fxLayout class="m-t-10">
+                <mat-form-field [appearance]="appearance" fxFlex>
+                    <mat-label>Remarks</mat-label>
+                    <textarea formControlName="remarks" matInput cols="30" rows="6"></textarea>
+                </mat-form-field>
+            </div>
         </mat-card-content>
     </mat-card>
     <div fxLayoutAlign="end" class="m-t-25">

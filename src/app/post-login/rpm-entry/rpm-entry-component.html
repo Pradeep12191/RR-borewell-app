@@ -7,7 +7,7 @@
                     <mat-option [value]="vehicle" *ngFor="let vehicle of vehicles">{{ vehicle.regNo }}</mat-option>
                 </mat-select>
             </mat-form-field>
-            <div fxFlexAlign="center" fxLayout="column" fxLayoutGap="5px">
+            <div fxLayout="column" fxLayoutGap="5px">
                 <div class="font-italic font-14">Godown Delivery Pipe</div>
                 <button (click)="assignVehicle()" mat-raised-button color="primary">
                     <mat-icon class="m-r-5">local_shipping</mat-icon>

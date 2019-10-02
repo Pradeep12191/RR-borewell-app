@@ -1,0 +1,22 @@
+<div class="popup-card mat-elevation-z4" @scaleUp>
+    <mat-toolbar class="custom" color="primary">
+        <span>ADD BOOK</span>
+        <span class="space"></span>
+        <button mat-icon-button (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </mat-toolbar>
+    <div class="content">
+        <div fxLayout>
+            <mat-form-field [appearance]="appearance">
+                <mat-label>Count</mat-label>
+                <input type="text" cdkFocusInitial autocomplete="off" [(ngModel)]="bookCount" matInput>
+            </mat-form-field>
+        </div>
+        <div fxLayout fxLayoutGap="25px">
+            <button (click)="close()" mat-raised-button>CANCEL</button>
+            <button mat-raised-button color="primary">SAVE</button>
+        </div>
+    </div>
+
+</div>

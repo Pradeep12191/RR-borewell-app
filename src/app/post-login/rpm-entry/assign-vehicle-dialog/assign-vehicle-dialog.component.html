@@ -1,0 +1,54 @@
+<!-- <h1 mat-dialog-title class="text-center">Add Pipe</h1> -->
+<mat-toolbar color="primary">
+    <div fxFlex fxLayoutAlign="center center">
+        <div>Assign Vehicle</div>
+    </div>
+    <button mat-icon-button mat-dialog-close>
+        <mat-icon>clear</mat-icon>
+    </button>
+</mat-toolbar>
+
+<div mat-dialog-content>
+    <div fxFlex fxLayoutAlign="start">
+        <div fxFlex="5"></div>
+        <transfer-items fxFlex="75" [leftWidth]="60" (selectionUpdate)="onTransferSelection($event)" selectAllToolTipMsg="select all pipe"
+            [loaderStatus$]="loaderStatus$" [data]="pipeSerialNos" displayPropName="serial_no" noDataSelectedMsg="No Pipes Assigned">
+            <ng-container *ngIf="!selectedGodown || !selectedPipe">
+                <ng-container *transferItemIntialMsg>
+                    Please select Godown Type and Pipe Size
+                </ng-container>
+            </ng-container>
+            <transfer-item-left-header-content fxFlex>
+                <div fxLayout class="m-t-10 m-r-10" fxLayoutGap="10px">
+                    <mat-form-field class="calc-field" fxFlex="calc(50% - 10px)">
+                        <mat-select #godownSelect (selectionChange)="onChange('godown')" required [(ngModel)]="selectedGodown"
+                            placeholder="Godown">
+                            <mat-option [value]="godown" *ngFor="let godown of godowns">{{ godown.godownType |
+                                uppercase }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="calc-field" fxFlex="50">
+                        <mat-select #pipeSelect (selectionChange)="onChange('pipe')" required [(ngModel)]="selectedPipe"
+                            placeholder="Pipe">
+                            <mat-option [value]="pipe" *ngFor="let pipe of pipes">{{ pipe.type }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </transfer-item-left-header-content>
+            <transfer-item-right-header-content style="min-height: inherit">
+                <div fxFlex fxLayoutAlign="center center" style="min-height: inherit">
+                    {{vehicle.regNo}}
+                </div>
+            </transfer-item-right-header-content>
+        </transfer-items>
+        <div fxFlex fxFlexAlign="end" fxLayoutAlign="end" class="assign-btn">
+            <button mat-raised-button color="primary">Assign Vehicle</button>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-actions>
+    <div fxFlex fxLayout fxLayoutAlign="end center">
+        <button mat-raised-button color="primary">DONE</button>
+    </div>
+</div>

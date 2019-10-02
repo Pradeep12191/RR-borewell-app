@@ -25,6 +25,7 @@ export class TransferItemComponent {
         }
 
     };
+    @Input() leftWidth = 50;
     @Input() displayPropName;
     @Input() noDataSelectedMsg;
     @Output() selectionUpdate = new EventEmitter<any[]>();

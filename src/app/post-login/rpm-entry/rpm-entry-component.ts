@@ -1,14 +1,27 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { PipeSize } from '../../models/PipeSize';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { Vehicle } from '../../models/Vehicle';
+import * as moment from 'moment';
+import { OverlayCardService } from '../../services/overlay-card.service';
+import { CardOverlayref } from '../../services/card-overlay-ref';
+import { AddBookPopupComponent } from './add-book-popup/add-book-popup.component';
+import { MatDialog, MatSelect } from '@angular/material';
+import { AssignVehicleDialogComponent } from './assign-vehicle-dialog/assign-vehicle-dialog.component';
+import { HttpClient } from '@angular/common/http';
+import { Godown } from '../pipe/Godown';
+import { ConfigService } from '../../services/config.service';
+import { zip } from 'rxjs';
+import { LoaderService } from '../../services/loader-service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
     templateUrl: './rpm-entry-component.html',
     styleUrls: ['./rpm-entry-component.scss']
 })
-export class RpmEntryComponent implements OnInit, OnDestroy {
+export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     rpmEntry = {
         previousStockFT: [],
         rrIncome: [],
@@ -22,7 +35,13 @@ export class RpmEntryComponent implements OnInit, OnDestroy {
     pipeFlex = 10;
     pipes: PipeSize[];
     form: FormGroup;
-
+    vehicles: Vehicle[];
+    selectedVehicle: Vehicle;
+    bookPopupRef: CardOverlayref
+    date = moment();
+    godowns: Godown[];
+    @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
+    @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
 
     get pointExpenseFeetFormArray() {
         return this.form.get('pointExpenseFeet') as FormArray
@@ -31,6 +50,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private fb: FormBuilder,
+        private cardOverlay: OverlayCardService,
+        private dialog: MatDialog,
+        private http: HttpClient,
+        private config: ConfigService,
+        private loader: LoaderService
     ) {
         this.form = this.fb.group({
             pointExpenseFeet: this.fb.array([])
@@ -40,7 +64,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.routeDataSubscription = this.route.data.subscribe((data) => {
-            this.pipes = data.pipes
+            this.pipes = data.pipes;
+            this.vehicles = data.vehicles;
+            this.godowns = data.godowns;
             this.pipeFlex = this.pipeTotalFlex / this.pipes.length;
             this.pipeFlex = Math.round(this.pipeFlex * 100) / 100;
 
@@ -56,12 +82,48 @@ export class RpmEntryComponent implements OnInit, OnDestroy {
         })
     }
 
+    ngAfterViewInit() {
+        setTimeout(() => {
+            this.vehicleSelect.open();
+            this.vehicleSelect.focus();
+        })
+    }
+
     ngOnDestroy() {
         if (this.routeDataSubscription) { this.routeDataSubscription.unsubscribe() }
     }
 
     private buildPointExpenseForm(pipeType) {
         return this.fb.group({ pipeType, value: '' })
+    }
+
+    addBook() {
+        if (this.bookPopupRef) {
+            this.bookPopupRef.close();
+        }
+        this.bookPopupRef = this.cardOverlay.open(AddBookPopupComponent, this.addBookBtn, {}, [{
+            originX: 'start',
+            originY: 'top',
+            overlayX: 'start',
+            overlayY: 'top',
+            offsetX: -250,
+            offsetY: -85
+        }]);
+    }
+
+    assignVehicle() {
+        this.dialog.open(AssignVehicleDialogComponent, {
+            data: {
+                godowns: this.godowns,
+                pipes: this.pipes,
+                vehicle: this.selectedVehicle
+            },
+            width: '1000px',
+            position: { top: '0px' },
+            maxHeight: '100vh',
+            height: '100vh',
+            disableClose: true
+        })
     }
 
     save() {

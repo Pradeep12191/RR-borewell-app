@@ -1,7 +1,7 @@
 <mat-card class="transfer-items-card" fxLayout="column">
     <mat-card-content fxLayout="column" fxFlex>
         <div fxLayout fxFlex>
-            <div fxFlex="50" class="transfer-items-left ">
+            <div [fxFlex]="leftWidth" class="transfer-items-left ">
                 <div fxLayout class="header-shadow left-header">
                     <div class="m-l-16" fxLayout fxLayoutAlign="center center">
                         <mat-checkbox [(ngModel)]="selectAllChecked" (change)="selectAllChange($event)" color="primary"
@@ -53,7 +53,7 @@
                     </ng-template>
                 </div>
             </div>
-            <div fxFlex="50" class="transfer-items-right">
+            <div [fxFlex]="100 - leftWidth" class="transfer-items-right">
                 <div class="right-header header-shadow">
                     <ng-content select="transfer-item-right-header-content"></ng-content>
                 </div>

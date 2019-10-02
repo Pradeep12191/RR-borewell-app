@@ -7,6 +7,9 @@ import { CommonModule } from '@angular/common';
 import { DirectiveModule } from '../../directives/directive.module';
 import { RpmEntryComponent } from './rpm-entry-component';
 import { RpmEntryRoutingModule } from './rpm-entry-routing.module';
+import { AddBookPopupComponent } from './add-book-popup/add-book-popup.component';
+import { AssignVehicleDialogComponent } from './assign-vehicle-dialog/assign-vehicle-dialog.component';
+import { TransferItemsModule } from '../../transfer-items/transfer-items.module';
 
 @NgModule({
     imports: [
@@ -17,12 +20,17 @@ import { RpmEntryRoutingModule } from './rpm-entry-routing.module';
         SharedModule,
         FlexLayoutModule,
         RpmEntryRoutingModule,
+        TransferItemsModule,
         DirectiveModule
     ],
     declarations: [
         RpmEntryComponent,
+        AssignVehicleDialogComponent
+        // AddBookPopupComponent
     ],
     entryComponents: [
+        AssignVehicleDialogComponent
+        // AddBookPopupComponent
     ],
     providers: [
     ]

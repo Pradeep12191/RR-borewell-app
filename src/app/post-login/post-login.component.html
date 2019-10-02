@@ -92,7 +92,7 @@
         </mat-sidenav>
     </ng-template>
 
-    <mat-sidenav-content #sidenavContent>
+    <mat-sidenav-content #sidenavContent [style.overflow]="scrollBlocked ? 'hidden': 'auto'">
         <!-- <app-header *ngIf="isMobile" (toggleSidenav)="sidenav.toggle()"></app-header> -->
         <router-outlet *ngIf="isMobile" name="header"></router-outlet>
         <div class="spinner-container" *ngIf="loading; else contentTpl">

@@ -7,10 +7,11 @@
                     <mat-option [value]="vehicle" *ngFor="let vehicle of vehicles">{{ vehicle.regNo }}</mat-option>
                 </mat-select>
             </mat-form-field>
-            <div fxFlexAlign="center">
+            <div fxFlexAlign="center" fxLayout="column" fxLayoutGap="5px">
+                <div class="font-italic font-14">Godown Delivery Pipe</div>
                 <button (click)="assignVehicle()" mat-raised-button color="primary">
                     <mat-icon class="m-r-5">local_shipping</mat-icon>
-                    Assing Vehicle
+                    Assign Vehicle
                 </button>
             </div>
         </div>
@@ -28,26 +29,32 @@
         </div>
         <div fxLayout fxFlex fxLayoutAlign="end center" fxFlex="40" fxLayoutGap="16px">
             <div>
-                <button #addBookBtn (click)="addBook()" mat-raised-button color="primary">Add Book</button>
+                <button #addBookBtn (click)="addBook()" mat-raised-button color="primary">Add New Book</button>
             </div>
             <div>
                 <mat-checkbox color="primary" labelPosition="before">Rebore</mat-checkbox>
             </div>
         </div>
     </div>
-    <div fxLayout fxLayoutAlign="center center" fxLayoutGap="25px">
-        <div fxLayout fxLayoutGap="5px">
-            <div>RPM Entry no</div>
-            <div>:</div>
-            <div class="bold">1</div>
+    <div fxLayout fxLayoutAlign="space-between center">
+        <div fxFlex="30"></div>
+        <div fxlayout fxLayoutGap="25px"  fxFlex="40" fxLayoutAlign="center center">
+            <div fxLayout fxLayoutGap="5px" fxFlex>
+                <div>RPM Entry no</div>
+                <div>:</div>
+                <div class="bold">1</div>
+            </div>
+            <mat-form-field floatLabel="always" (click)="picker.open()" class="calc-field" fxFlex>
+                <mat-label>Date</mat-label>
+                <input [(ngModel)]="date" #dateInput placeholder="Select Date" readonly matInput [matDatepicker]="picker">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
         </div>
-        <mat-form-field floatLabel="always" (click)="picker.open()" class="calc-field" fxFlex="15">
-            <mat-label>Date</mat-label>
-            <input [(ngModel)]="date" #dateInput placeholder="Select Date" readonly matInput
-                [matDatepicker]="picker">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+        <div fxFlex="30" fxLayoutAlign="end">
+            <button mat-raised-button color="primary"><mat-icon class="m-r-5">library_books</mat-icon>Report</button>
+        </div>
+
     </div>
     <mat-card>
         <mat-card-content>
@@ -61,7 +68,7 @@
                     <div class="row" fxLayout>
                         <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 bold bg-grey">Previous
                             Stock
-                            FT</div>
+                            Feet</div>
                         <div [fxFlex]="pipeFlex" *ngFor="let previousStock of rpmEntry.previousStockFT; let last = last"
                             class="cell" [class.b-r-0]="!last"></div>
                     </div>
@@ -113,12 +120,9 @@
             </form>
         </mat-card-content>
     </mat-card>
-    <div fxLayoutAlign="space-between" class="m-t-25">
+    <div fxLayoutAlign="end" class="m-t-25">
         <div>
-            <button type="button" mat-raised-button color="warn">RESET</button>
-        </div>
-        <div>
-            <button (click)="save()" mat-raised-button color="primary" type="button">SAVE</button>
+            <button (click)="save()" mat-raised-button color="primary" type="button">SUBMIT</button>
         </div>
     </div>
 </div>

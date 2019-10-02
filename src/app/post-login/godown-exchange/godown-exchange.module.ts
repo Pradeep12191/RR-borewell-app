@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { DirectiveModule } from '../../directives/directive.module';
 import { GodownExchangeRoutingModule } from './godown-exchange-routing.module';
 import { GodownExchangeComponent } from './godown-exchange.component';
+import { TransferItemsModule } from '../../transfer-items/transfer-items.module';
+import { ConfirmGodownExchangeComponent } from './confirm-godown-exchange-dialog/confirm-godown-exchange-dialog.component';
 
 
 @NgModule({
@@ -18,12 +20,15 @@ import { GodownExchangeComponent } from './godown-exchange.component';
         SharedModule,
         FlexLayoutModule,
         GodownExchangeRoutingModule,
-        DirectiveModule
+        DirectiveModule,
+        TransferItemsModule
     ],
     declarations: [
         GodownExchangeComponent,
+        ConfirmGodownExchangeComponent
     ],
     entryComponents: [
+        ConfirmGodownExchangeComponent
     ],
     providers: [
     ]

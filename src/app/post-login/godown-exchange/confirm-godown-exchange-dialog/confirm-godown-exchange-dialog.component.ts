@@ -20,6 +20,7 @@ export class ConfirmGodownExchangeComponent {
     date;
     pipes;
     updateUrl;
+    remarks: string;
     constructor(
         @Inject(MAT_DIALOG_DATA) data,
         private dialogRef: MatDialogRef<ConfirmGodownExchangeComponent>,
@@ -33,6 +34,7 @@ export class ConfirmGodownExchangeComponent {
         this.toGodown = data.toGodown;
         this.date = data.date;
         this.pipes = data.pipes;
+        this.remarks = data.remarks;
         this.updateUrl = this.config.getAbsoluteUrl('godownExchange');
     }
 
@@ -50,7 +52,7 @@ export class ConfirmGodownExchangeComponent {
             data['pipe_type'] = this.pipe.type;
             data['bill_no'] = pipe.billno;
             data['date'] = this.date ? (this.date as Moment).format('DD-MM-YYYY') : '';
-            data['remarks'] = '';
+            data['remarks'] = this.remarks;
             return data;
         });
         console.log(JSON.stringify({ assignedPipes: payload }, null, 2));

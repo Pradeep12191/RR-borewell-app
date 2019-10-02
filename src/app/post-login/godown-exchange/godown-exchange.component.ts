@@ -25,6 +25,8 @@ export class GodownExchangeComponent implements OnDestroy, AfterViewInit {
     selectedGodown: Godown;
     routeDataSubscription: Subscription;
     loaderStatus$ = new BehaviorSubject(false);
+    appearance;
+    remarks;
 
     @ViewChild('dateInput', { static: false }) dateInput: ElementRef<any>;
     @ViewChild('picker', { static: false }) datePicker: MatDatepicker<any>;
@@ -45,6 +47,7 @@ export class GodownExchangeComponent implements OnDestroy, AfterViewInit {
             this.godowns = data.godowns;
         })
         this.getUrl = this.config.getAbsoluteUrl('pipeSerialNos');
+        this.appearance = this.config.getConfig('formAppearance');
     }
 
     ngAfterViewInit() {
@@ -77,7 +80,7 @@ export class GodownExchangeComponent implements OnDestroy, AfterViewInit {
                     this.godownSelect.open();
                     return this.godownSelect.focus();
                 })
-                
+
             }
         }
         if (this.selectedGodown && this.selectedPipe) {
@@ -106,7 +109,7 @@ export class GodownExchangeComponent implements OnDestroy, AfterViewInit {
 
     confirm() {
         const toGodown = this.godowns.filter(g => g !== this.selectedGodown)[0];
-        this.dialog.open(ConfirmGodownExchangeComponent, {
+        const dialogRef = this.dialog.open(ConfirmGodownExchangeComponent, {
             disableClose: true,
             width: '40vw',
             position: { top: '25px' },
@@ -116,7 +119,14 @@ export class GodownExchangeComponent implements OnDestroy, AfterViewInit {
                 pipe: this.selectedPipe,
                 fromGodown: this.selectedGodown,
                 date: this.date,
-                toGodown
+                toGodown,
+                remarks: this.remarks
+            }
+        });
+
+        dialogRef.afterClosed().subscribe((res) => {
+            if (res) {
+                this.pipeSerialNos = res;
             }
         })
     }

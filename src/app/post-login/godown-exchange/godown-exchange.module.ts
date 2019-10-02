@@ -9,6 +9,7 @@ import { GodownExchangeRoutingModule } from './godown-exchange-routing.module';
 import { GodownExchangeComponent } from './godown-exchange.component';
 import { TransferItemsModule } from '../../transfer-items/transfer-items.module';
 import { ConfirmGodownExchangeComponent } from './confirm-godown-exchange-dialog/confirm-godown-exchange-dialog.component';
+import { PipesModule } from '../../pipes/pipes.module';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { ConfirmGodownExchangeComponent } from './confirm-godown-exchange-dialog
         FlexLayoutModule,
         GodownExchangeRoutingModule,
         DirectiveModule,
-        TransferItemsModule
+        TransferItemsModule,
+        PipesModule
     ],
     declarations: [
         GodownExchangeComponent,

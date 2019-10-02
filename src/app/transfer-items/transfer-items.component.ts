@@ -45,7 +45,8 @@ export class TransferItemComponent {
             if ($event.checked) {
                 this.selectList.selectAll();
                 this._data.forEach(d => d.isSelected = true);
-                return this.selectedData = [...this._data];
+                this.selectedData = [...this._data];
+                return this.selectionUpdate.emit(this.selectedData);
             }
             this.selectList.deselectAll();
             this.selectedData = [];

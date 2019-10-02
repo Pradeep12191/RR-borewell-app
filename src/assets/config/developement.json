@@ -93,7 +93,12 @@
         {
             "name": "pipeDataCount",
             "url": "pipe_data_count"
+        },
+        {
+            "name": "godownExchange",
+            "url": ""
         }
+        
     ],
     "reportGenerateUrls": [
         {

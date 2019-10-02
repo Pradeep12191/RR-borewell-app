@@ -1,0 +1,80 @@
+<mat-card class="transfer-items-card" fxLayout="column">
+    <mat-card-content fxLayout="column" fxFlex>
+        <div fxLayout fxFlex>
+            <div fxFlex="50" class="transfer-items-left ">
+                <div fxLayout class="header-shadow left-header">
+                    <div class="m-l-16" fxLayout fxLayoutAlign="center center">
+                        <mat-checkbox [(ngModel)]="selectAllChecked" (change)="selectAllChange($event)" color="primary"
+                            [matTooltip]="selectAllToolTipMsg"></mat-checkbox>
+                    </div>
+
+                    <div fxFlex="30" class="m-t-16 m-l-10 m-r-10 m-b-16 input-wrapper" fxLayout>
+                        <input #searchInput type="text" [value]="searchTerm" (input)="searchTerm = $event.target.value"
+                            placeholder="Search" positiveNumber>
+                        <!-- <label>Count</label> -->
+                        <div (click)="searchTerm = ''; searchInput.focus()" *ngIf="searchTerm?.length" fxLayout
+                            fxLayoutAlign="center center" class="input-clear">
+                            <mat-icon class="clear-icon">clear</mat-icon>
+                        </div>
+                        <span class="focus-border">
+                            <i></i>
+                        </span>
+                    </div>
+                    <ng-content select="transfer-item-left-header-content">
+                        <!-- left input -->
+                    </ng-content>
+                </div>
+                <div class="chk-box-container">
+                    <div class="msg" *ngIf="intialMsg; else selectionTpl">
+                        <ng-container *ngTemplateOutlet="intialMsg"></ng-container>
+                    </div>
+                    <!-- <div class="msg" *ngIf="!selectedGodown || !selectedPipe; else selectionTpl"> -->
+                        <!-- Please Select Godown and Pipe - intial message if no selected content exists show that else sleetiontpl -->
+                    <!-- </div> -->
+                    <ng-template #selectionTpl>
+                        <div class="spinner" *ngIf="(loaderStatus$ | async); else dataTpl">
+                            <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
+                        </div>
+                        <ng-template #dataTpl>
+                            <mat-selection-list @fadeOpactiy *ngIf="_data?.length; else emptyTpl" color="primary"
+                                (selectionChange)="onSelect($event)">
+                                <mat-list-option class="custom-list-option" [selected]="d.isSelected"
+                                    [value]="d" *ngFor="let d of _data | startsWithFilter:searchTerm:displayPropName"
+                                    checkboxPosition="before">
+                                    {{ d[displayPropName] }} 
+                                </mat-list-option>
+                            </mat-selection-list>
+                            <ng-template #emptyTpl>
+                                <div class="empty-msg">
+                                    No records found.
+                                </div>
+                            </ng-template>
+                        </ng-template>
+                    </ng-template>
+                </div>
+            </div>
+            <div fxFlex="50" class="transfer-items-right">
+                <div class="right-header header-shadow">
+                    <ng-content select="transfer-item-right-header-content"></ng-content>
+                </div>
+                <div class="chk-box-container" *ngIf="selectedData?.length; else emptyTpl">
+                    <mat-list>
+                        <mat-list-item fxLayout="row" class="custom-list-option" *ngFor="let d of selectedData">
+                            <div>{{ d[displayPropName] }}</div>
+                            <button (click)="removeItem(d)" mat-icon-button color="primary" fxFlexAlign="end">
+                                <mat-icon class="clear-btn">clear</mat-icon>
+                            </button>
+                        </mat-list-item>
+                    </mat-list>
+                </div>
+                <ng-template #emptyTpl>
+                    <div class="empty-msg-container" fxLayout="column" fxLayoutAlign="center center">
+                        <mat-card class="m-l-16 m-r-16" class="empty-stamp">
+                            <mat-card-content>{{ noDataSelectedMsg }}</mat-card-content>
+                        </mat-card>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

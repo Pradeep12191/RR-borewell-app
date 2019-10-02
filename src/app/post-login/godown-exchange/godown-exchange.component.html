@@ -1,1 +1,55 @@
-Godown Exxchange works
+<div fxlayout fxLayoutAlign="center center">
+    <div fxFlex="75" fxLayoutGap="25px">
+        <mat-form-field floatLabel="always" fxFlex="30" class="calc-field" (click)="picker.open()">
+            <mat-label>Date</mat-label>
+            <input [disabled]="dateDisabled" [(ngModel)]="date" #dateInput placeholder="Select Date" readonly matInput
+                [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-select #pipeSelect (selectionChange)="onChange('pipe')" required [(ngModel)]="selectedPipe"
+                placeholder="Select Pipe">
+                <mat-option [value]="pipe" *ngFor="let pipe of pipes">{{ pipe.type }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>
+
+<div fxLayout fxLayoutAlign="center center">
+    <transfer-items fxFlex="75" (selectionUpdate)="onTransferSelection($event)" selectAllToolTipMsg="select all pipe" [loaderStatus$]="loaderStatus$" [data]="pipeSerialNos"
+        displayPropName="serial_no" noDataSelectedMsg="No Pipes Assigned">
+        <ng-container *ngIf="!selectedGodown || !selectedPipe">
+            <ng-container *transferItemIntialMsg>
+                Please select Godown Type and Pipe Size
+            </ng-container>
+        </ng-container>
+        <transfer-item-left-header-content fxFlex>
+            <div fxLayout class="m-t-10">
+                <mat-form-field class="calc-field" fxFlex="95">
+                    <mat-select #godownSelect (selectionChange)="onChange('godown')" required [(ngModel)]="selectedGodown"
+                        placeholder="From Godown">
+                        <mat-option [value]="godown" *ngFor="let godown of godowns">{{ godown.godownType | uppercase }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </transfer-item-left-header-content>
+        <transfer-item-right-header-content style="min-height: inherit">
+            <div fxFlex fxLayoutAlign="center center" style="min-height: inherit">
+                <ng-container *ngIf="selectedGodown && selectedPipe; else noExchangeTpl">
+                    Exchange {{ selectedPipe.type }} Pipes from {{ selectedGodown.godownType | uppercase }}
+                    to {{ alternateGodown(selectedGodown) | uppercase }}
+                </ng-container>
+                <ng-template #noExchangeTpl>
+                    No Pipe Exchange
+                </ng-template>
+            </div>
+        </transfer-item-right-header-content>
+    </transfer-items>
+</div>
+<div fxLayout class="m-t-16" fxLayoutAlign="center center">
+    <div fxFlex="75" fxLayoutAlign="end end">
+        <button [disabled]="!selectedPipes.length" mat-raised-button color="primary" (click)="confirm()">CONFIRM</button>
+    </div>
+
+</div>

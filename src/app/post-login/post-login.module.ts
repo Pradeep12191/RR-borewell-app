@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MaterialModule } from '../material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { PostLoginRoutingModule } from './post-login-routing.module';
 import { PostLoginComponent } from './post-login.component';
 import { SharedModule } from '../shared/shared.module';
@@ -19,6 +19,7 @@ import { OverlayCardService } from '../services/overlay-card.service';
 import { AddCompanyPopup } from './bits/add-bit-dialog/add-bit/add-company-popup/add-company-popup.compoent';
 import { CompanyiesResolver } from '../guards/resolveGuard/select-option/companies.resolver';
 import { PipeSizesResolver } from '../guards/resolveGuard/select-option/pipe-sizes.resolver';
+import { AddBookPopupComponent } from './rpm-entry/add-book-popup/add-book-popup.component';
 
 
 
@@ -28,6 +29,7 @@ import { PipeSizesResolver } from '../guards/resolveGuard/select-option/pipe-siz
         MaterialModule,
         FlexLayoutModule,
         ReactiveFormsModule,
+        FormsModule,
         PostLoginRoutingModule,
         SharedModule,
     ],
@@ -37,7 +39,8 @@ import { PipeSizesResolver } from '../guards/resolveGuard/select-option/pipe-siz
         HeaderComponent,
         S404Component,
         MobileSidenavComponent,
-        AddCompanyPopup
+        AddCompanyPopup,
+        AddBookPopupComponent
     ],
     providers: [
         StateResolver,
@@ -50,7 +53,8 @@ import { PipeSizesResolver } from '../guards/resolveGuard/select-option/pipe-siz
         PipeSizesResolver
     ],
     entryComponents: [
-        AddCompanyPopup
+        AddCompanyPopup,
+        AddBookPopupComponent
     ]
 })
 export class PostLoginModule {

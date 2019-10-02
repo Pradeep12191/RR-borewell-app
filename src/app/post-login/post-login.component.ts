@@ -30,6 +30,7 @@ export class PostLoginComponent implements OnInit, OnDestroy {
   sidenavSubcription: Subscription;
   scrollTopSubscription: Subscription;
   saveLoaderSubscription: Subscription;
+  blockScrollSubscription: Subscription;
 
   @ViewChild('sidenav', { static: false }) sidenav: MatSidenav;
   @ViewChild('sidenavContent', { static: false, read: ElementRef }) sidenavContent: ElementRef
@@ -40,6 +41,7 @@ export class PostLoginComponent implements OnInit, OnDestroy {
   activeMainNode;
   activeSubNode;
   classicSidenav;
+  scrollBlocked;
   loadingText = 'Saving...'
 
   get isMobile() {
@@ -98,6 +100,10 @@ export class PostLoginComponent implements OnInit, OnDestroy {
     this.scrollTopSubscription = this.common.scrollTopObs().subscribe(() => {
       console.log(this.sidenavContent);
       (this.sidenavContent.nativeElement as HTMLElement).scrollTop = 0
+    });
+
+    this.blockScrollSubscription = this.common.blockScrollObs().subscribe((value) => {
+      this.scrollBlocked = value
     })
   }
 

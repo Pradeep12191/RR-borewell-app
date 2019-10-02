@@ -136,6 +136,6 @@ export class AddBitComponent implements OnDestroy, AfterViewInit {
         if (this.companyPopupref) {
             this.companyPopupref.close()
         }
-        this.companyPopupref = this.cardOverlay.open(AddCompanyPopup, this.addCompanyBtn);
+        this.companyPopupref = this.cardOverlay.open(AddCompanyPopup, this.addCompanyBtn, {}, []);
     }
 }

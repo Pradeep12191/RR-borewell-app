@@ -1,0 +1,23 @@
+mat-toolbar{
+    margin-top: -25px;
+    margin-left: -25px;
+    margin-bottom: 19px;
+    width: calc(100% + 49px);
+}
+.mat-dialog-actions[mat-dialog-actions]{
+    justify-content: flex-end;
+    min-height: 68px;
+    box-sizing: border-box;
+    .edit-btn{
+        justify-self: flex-start
+    }
+}
+
+.mat-dialog-content[mat-dialog-content]{
+    height: 74vh;
+    max-height: 74vh;
+}
+
+.assign-btn{
+    margin-bottom: 16px;
+}

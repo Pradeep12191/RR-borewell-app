@@ -2,7 +2,7 @@
     <div fxFlex="75" fxLayoutGap="25px">
         <mat-form-field floatLabel="always" fxFlex="30" class="calc-field" (click)="picker.open()">
             <mat-label>Date</mat-label>
-            <input [disabled]="dateDisabled" [(ngModel)]="date" #dateInput placeholder="Select Date" readonly matInput
+            <input [(ngModel)]="date" #dateInput placeholder="Select Date" readonly matInput
                 [matDatepicker]="picker">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>

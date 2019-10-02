@@ -28,7 +28,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         mmIncome: [],
         availableStock: [],
         pointExpenseFeet: [],
-        balanceStockFeet: []
+        balanceStockFeet: [],
+        vehicleInOut: [],
+        damageFeet: []
     }
     routeDataSubscription: Subscription;
     pipeTotalFlex = 80;
@@ -37,7 +39,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     form: FormGroup;
     vehicles: Vehicle[];
     selectedVehicle: Vehicle;
-    bookPopupRef: CardOverlayref
+    bookPopupRef: CardOverlayref;
+    appearance;
     date = moment();
     godowns: Godown[];
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
@@ -57,8 +60,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         private loader: LoaderService
     ) {
         this.form = this.fb.group({
-            pointExpenseFeet: this.fb.array([])
+            pointExpenseFeet: this.fb.array([]),
+            remarks: ''
         })
+        this.appearance = this.config.getConfig('formAppearance');
     }
 
 
@@ -77,6 +82,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.rpmEntry.mmIncome.push(pipeData);
                 this.rpmEntry.balanceStockFeet.push(pipeData);
                 this.rpmEntry.availableStock.push(pipeData);
+                this.rpmEntry.vehicleInOut.push(pipeData);
+                this.rpmEntry.damageFeet.push(pipeData);
                 this.pointExpenseFeetFormArray.push(this.buildPointExpenseForm(pipe.type))
             })
         })

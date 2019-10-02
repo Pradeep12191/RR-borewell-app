@@ -10,6 +10,7 @@ import { ConfigService } from '../../../services/config.service';
 })
 export class AddBookPopupComponent {
     appearance;
+    bookCount;
     constructor(
         private overlayRef: CardOverlayref,
         private config: ConfigService

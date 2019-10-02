@@ -43,7 +43,7 @@ export class ConfirmGodownExchangeComponent {
             data['from_gudown_type'] = this.fromGodown.godownType;
             data['from_gudown_id'] = this.fromGodown.godown_id;
             data['to_gudown_type'] = this.toGodown.godownType;
-            data['to_gudown_type'] = this.toGodown.godown_id;
+            data['to_gudown_id'] = this.toGodown.godown_id;
             data['serial_no'] = pipe.serial_no;
             data['serial_no_id'] = pipe.serial_no;
             data['pipe_size'] = this.pipe.size;

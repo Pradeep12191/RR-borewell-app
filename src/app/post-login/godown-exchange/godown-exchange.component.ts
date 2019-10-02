@@ -10,13 +10,13 @@ import { AuthService } from '../../services/auth.service';
 import { finalize } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmGodownExchangeComponent } from './confirm-godown-exchange-dialog/confirm-godown-exchange-dialog.component';
-
+import * as moment from 'moment';
 @Component({
     templateUrl: './godown-exchange.component.html',
     styleUrls: ['./godown-exchange.component.scss']
 })
 export class GodownExchangeComponent implements OnDestroy, AfterViewInit {
-    date = new Date();
+    date = moment();
     getUrl;
     pipes: PipeSize[];
     godowns: Godown[];

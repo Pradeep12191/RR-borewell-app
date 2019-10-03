@@ -53,7 +53,7 @@ export class RpmEntryService {
         }))
     }
 
-    postAssignVehicle(payload: any[], vehicle: Vehicle) {
+    postAssignVehicle(payload: any, vehicle: Vehicle) {
         console.log(JSON.stringify(payload, null, 2));
         return this.http.post<{serial_no: string; billno: string}[]>(this.postAssignVehicleUrl, payload).pipe(
             map((pipes) => {

@@ -19,12 +19,12 @@
             <div fxLayout fxLayoutGap="10px">
                 <div fxFlex>Start</div>
                 <div fxFlex>:</div>
-                <div fxFlex class="bold">1</div>
+                <div fxFlex class="bold">{{ (bookStartNo || bookStartNo == '0') ? bookStartNo : '-' }}</div>
             </div>
             <div fxLayout fxLayoutGap="10px">
                 <div fxFlex>End</div>
                 <div fxFlex>:</div>
-                <div fxFlex class="bold">100</div>
+                <div fxFlex class="bold">{{ (bookEndNo || bookEndNo == 0) ? bookEndNo : '-' }}</div>
             </div>
         </div>
         <div fxLayout fxLayoutAlign="end center" fxLayoutGap="16px">

@@ -97,6 +97,10 @@
         {
             "name": "godownExchange",
             "url": "godown_exchange"
+        },
+        {
+            "name": "addBook",
+            "url": "add_new_book"
         }
         
     ],

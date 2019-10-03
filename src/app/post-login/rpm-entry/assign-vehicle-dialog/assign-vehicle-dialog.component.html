@@ -11,38 +11,54 @@
 <div mat-dialog-content>
     <div fxFlex fxLayoutAlign="start">
         <div fxFlex="5"></div>
-        <transfer-items fxFlex="75" [leftWidth]="60" (selectionUpdate)="onTransferSelection($event)" selectAllToolTipMsg="select all pipe"
-            [loaderStatus$]="loaderStatus$" [data]="pipeSerialNos" displayPropName="serial_no" noDataSelectedMsg="No Pipes Assigned">
-            <ng-container *ngIf="!selectedGodown || !selectedPipe">
-                <ng-container *transferItemIntialMsg>
-                    Please select Godown Type and Pipe Size
+        <div fxFlex="75" fxLayout="column" fxLayoutGap="10px">
+            <div fxLayout fxLayoutGap="25px">
+                <div fxLayout fxLayoutGap="10px">
+                    <div>RPM Entry No</div>
+                    <div>:</div>
+                    <div class="bold">{{ rpmEntryNo }}</div>
+                </div>
+                <div fxLayout fxLayoutGap="10px">
+                    <div>Pipe Quantity</div>
+                    <div>:</div>
+                    <div class="bold">{{ selectedPipes?.length || 0 }}</div>
+                </div>
+            </div>
+
+            <transfer-items fxFlex [leftWidth]="60" (selectionUpdate)="onTransferSelection($event)" selectAllToolTipMsg="select all pipe"
+                [loaderStatus$]="loaderStatus$" [data]="pipeSerialNos" displayPropName="serial_no" noDataSelectedMsg="No Pipes Assigned">
+                <ng-container *ngIf="!selectedGodown || !selectedPipe">
+                    <ng-container *transferItemIntialMsg>
+                        Please select Godown Type and Pipe Size
+                    </ng-container>
                 </ng-container>
-            </ng-container>
-            <transfer-item-left-header-content fxFlex>
-                <div fxLayout class="m-t-10 m-r-10" fxLayoutGap="10px">
-                    <mat-form-field class="calc-field" fxFlex="calc(50% - 10px)">
-                        <mat-select #godownSelect (selectionChange)="onChange('godown')" required [(ngModel)]="selectedGodown"
-                            placeholder="Godown">
-                            <mat-option [value]="godown" *ngFor="let godown of godowns">{{ godown.godownType |
-                                uppercase }}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field class="calc-field" fxFlex="50">
-                        <mat-select #pipeSelect (selectionChange)="onChange('pipe')" required [(ngModel)]="selectedPipe"
-                            placeholder="Pipe">
-                            <mat-option [value]="pipe" *ngFor="let pipe of pipes">{{ pipe.type }}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </transfer-item-left-header-content>
-            <transfer-item-right-header-content style="min-height: inherit">
-                <div fxFlex fxLayoutAlign="center center" style="min-height: inherit">
-                    {{vehicle.regNo}}
-                </div>
-            </transfer-item-right-header-content>
-        </transfer-items>
+                <transfer-item-left-header-content fxFlex>
+                    <div fxLayout class="m-t-10 m-r-10" fxLayoutGap="10px">
+                        <mat-form-field class="calc-field" fxFlex="calc(50% - 10px)">
+                            <mat-select #godownSelect (selectionChange)="onChange('godown')" required [(ngModel)]="selectedGodown"
+                                placeholder="Godown">
+                                <mat-option [value]="godown" *ngFor="let godown of godowns">{{ godown.godownType |
+                                    uppercase }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="calc-field" fxFlex="50">
+                            <mat-select #pipeSelect (selectionChange)="onChange('pipe')" required [(ngModel)]="selectedPipe"
+                                placeholder="Pipe">
+                                <mat-option [value]="pipe" *ngFor="let pipe of pipes">{{ pipe.type }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </transfer-item-left-header-content>
+                <transfer-item-right-header-content style="min-height: inherit">
+                    <div fxFlex fxLayoutAlign="center center" style="min-height: inherit">
+                        {{vehicle.regNo}}
+                    </div>
+                </transfer-item-right-header-content>
+            </transfer-items>
+        </div>
+
         <div fxFlex fxFlexAlign="end" fxLayoutAlign="end" class="assign-btn">
-            <button mat-raised-button color="primary">Assign Vehicle</button>
+            <button [disabled]="!selectedPipes?.length" (click)="saveAssign()" mat-raised-button color="primary">Assign Vehicle</button>
         </div>
     </div>
 </div>

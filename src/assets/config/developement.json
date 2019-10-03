@@ -101,6 +101,10 @@
         {
             "name": "addBook",
             "url": "add_new_book"
+        },
+        {
+            "name": "vehicleLastRpmEntry",
+            "url": "last_rpm_sheet_data"
         }
         
     ],

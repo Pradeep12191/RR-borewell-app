@@ -16,6 +16,7 @@ import { ConfigService } from '../../services/config.service';
 import { zip } from 'rxjs';
 import { LoaderService } from '../../services/loader-service';
 import { finalize } from 'rxjs/operators';
+import { RpmEntryService } from './rpm-entry.service';
 
 @Component({
     templateUrl: './rpm-entry-component.html',
@@ -43,6 +44,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     appearance;
     date = moment();
     godowns: Godown[];
+    bookStartNo;
+    bookEndNo;
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
 
@@ -57,6 +60,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         private dialog: MatDialog,
         private http: HttpClient,
         private config: ConfigService,
+        private rpmEntryService: RpmEntryService,
         private loader: LoaderService
     ) {
         this.form = this.fb.group({
@@ -108,7 +112,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.bookPopupRef) {
             this.bookPopupRef.close();
         }
-        this.bookPopupRef = this.cardOverlay.open(AddBookPopupComponent, this.addBookBtn, {}, [{
+        this.bookPopupRef = this.cardOverlay.open(AddBookPopupComponent, this.addBookBtn, {
+            data:{
+                vehicle: this.selectedVehicle
+            }
+        }, [{
             originX: 'start',
             originY: 'top',
             overlayX: 'start',
@@ -116,6 +124,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             offsetX: -250,
             offsetY: -85
         }]);
+        this.bookPopupRef.afterClosed$.subscribe((data) => {
+
+        })
     }
 
     assignVehicle() {

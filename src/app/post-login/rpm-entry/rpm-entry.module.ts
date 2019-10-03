@@ -10,6 +10,7 @@ import { RpmEntryRoutingModule } from './rpm-entry-routing.module';
 import { AddBookPopupComponent } from './add-book-popup/add-book-popup.component';
 import { AssignVehicleDialogComponent } from './assign-vehicle-dialog/assign-vehicle-dialog.component';
 import { TransferItemsModule } from '../../transfer-items/transfer-items.module';
+import { RpmEntryService } from './rpm-entry.service';
 
 @NgModule({
     imports: [
@@ -33,6 +34,7 @@ import { TransferItemsModule } from '../../transfer-items/transfer-items.module'
         // AddBookPopupComponent
     ],
     providers: [
+        
     ]
 })
 export class RpmEntryModule {

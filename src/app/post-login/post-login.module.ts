@@ -20,6 +20,7 @@ import { AddCompanyPopup } from './bits/add-bit-dialog/add-bit/add-company-popup
 import { CompanyiesResolver } from '../guards/resolveGuard/select-option/companies.resolver';
 import { PipeSizesResolver } from '../guards/resolveGuard/select-option/pipe-sizes.resolver';
 import { AddBookPopupComponent } from './rpm-entry/add-book-popup/add-book-popup.component';
+import { RpmEntryService } from './rpm-entry/rpm-entry.service';
 
 
 
@@ -50,7 +51,8 @@ import { AddBookPopupComponent } from './rpm-entry/add-book-popup/add-book-popup
         GodownTypesResolver,
         OverlayCardService,
         CompanyiesResolver,
-        PipeSizesResolver
+        PipeSizesResolver,
+        RpmEntryService
     ],
     entryComponents: [
         AddCompanyPopup,

@@ -18,6 +18,7 @@ export class RpmEntryService {
     }
 
     postBook(book: Book) {
+        console.log(JSON.stringify(book, null, 2))
         return this.http.post<Book>(this.bookPostUrl, book).pipe(
             map((book) => {
                 this.toastr.success('New Book created Successfully', null, { timeOut: 2000 })

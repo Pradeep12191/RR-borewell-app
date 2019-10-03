@@ -96,7 +96,7 @@ export class AssignVehicleDialogComponent {
             return data;
         });
 
-        this.rpmEntryService.postAssignVehicle({ assignedPipes: payload }, this.vehicle)
+        this.rpmEntryService.updateAssignVehicle({ assignedPipes: payload }, this.vehicle)
             .subscribe((pipes) => {
                 this.pipeSerialNos = pipes;
             })

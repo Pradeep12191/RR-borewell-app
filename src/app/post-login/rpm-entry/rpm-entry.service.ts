@@ -53,9 +53,9 @@ export class RpmEntryService {
         }))
     }
 
-    postAssignVehicle(payload: any, vehicle: Vehicle) {
+    updateAssignVehicle(payload: any, vehicle: Vehicle) {
         console.log(JSON.stringify(payload, null, 2));
-        return this.http.post<{serial_no: string; billno: string}[]>(this.postAssignVehicleUrl, payload).pipe(
+        return this.http.put<{serial_no: string; billno: string}[]>(this.postAssignVehicleUrl, payload).pipe(
             map((pipes) => {
                 this.toastr.success('Pipes assigned to vehicle ' + vehicle.regNo + ' successfully')
                 return pipes

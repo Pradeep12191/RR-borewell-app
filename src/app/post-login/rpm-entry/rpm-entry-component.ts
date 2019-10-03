@@ -46,6 +46,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     godowns: Godown[];
     bookStartNo;
     bookEndNo;
+    rpmEntryNo;
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
 
@@ -113,7 +114,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.bookPopupRef.close();
         }
         this.bookPopupRef = this.cardOverlay.open(AddBookPopupComponent, this.addBookBtn, {
-            data:{
+            data: {
                 vehicle: this.selectedVehicle
             }
         }, [{
@@ -134,13 +135,24 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             data: {
                 godowns: this.godowns,
                 pipes: this.pipes,
-                vehicle: this.selectedVehicle
+                vehicle: this.selectedVehicle,
+                date: this.date,
+                rpmEntryNo: this.rpmEntryNo
             },
             width: '1000px',
             position: { top: '0px' },
             maxHeight: '100vh',
             height: '100vh',
             disableClose: true
+        })
+    };
+
+    onVehicleChange() {
+        this.rpmEntryService.getLastRpmEntrySheet(this.selectedVehicle).subscribe((lastRpmEntrySheet) => {
+            console.log(lastRpmEntrySheet)
+            this.rpmEntryNo = lastRpmEntrySheet.rpm_sheet_no;
+        }, (err) => {
+
         })
     }
 

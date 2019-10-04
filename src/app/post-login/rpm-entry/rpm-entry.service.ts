@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Book } from '../../models/Book';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { ConfigService } from '../../services/config.service';
 import { ToastrService } from 'ngx-toastr';
 import { map, catchError } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import { throwError } from 'rxjs';
 import { Vehicle } from '../../models/Vehicle';
 import { AuthService } from '../../services/auth.service';
 import { Pipe } from '../../models/Pipe';
+import { RpmEntrySheet } from '../../models/RpmEntrySheet';
 
 @Injectable()
 export class RpmEntryService {
@@ -32,9 +33,14 @@ export class RpmEntryService {
                 this.toastr.success('New Book created Successfully', null, { timeOut: 2000 })
                 return book;
             }),
-            catchError((err) => {
+            catchError((err: HttpErrorResponse) => {
                 if (err) {
-                    this.toastr.error('Network Error while creating Book', null, { timeOut: 2000 })
+                    if (err.status === 422) {
+                        this.toastr.error('Duplicate book error', null, { timeOut: 2000 })
+                    } else {
+                        this.toastr.error('Network Error while creating Book', null, { timeOut: 2000 })
+                    }
+
                 }
                 return throwError(err);
             }),
@@ -45,7 +51,7 @@ export class RpmEntryService {
         const params = new HttpParams()
             .set('user_id', this.auth.userid)
             .append('vehicle_id', vehicle.vehicle_id)
-        return this.http.get<any>(this.getLastRpmEntrySheetUrl, { params }).pipe(catchError((err) => {
+        return this.http.get<RpmEntrySheet>(this.getLastRpmEntrySheetUrl, { params }).pipe(catchError((err) => {
             if (err) {
                 this.toastr.error('Network Error While fetching last Rpm Entry for Vehicle ' + vehicle.regNo, null, { timeOut: 2000 })
             }
@@ -55,7 +61,7 @@ export class RpmEntryService {
 
     updateAssignVehicle(payload: any, vehicle: Vehicle) {
         console.log(JSON.stringify(payload, null, 2));
-        return this.http.put<{serial_no: string; billno: string}[]>(this.postAssignVehicleUrl, payload).pipe(
+        return this.http.put<{ serial_no: string; billno: string }[]>(this.postAssignVehicleUrl, payload).pipe(
             map((pipes) => {
                 this.toastr.success('Pipes assigned to vehicle ' + vehicle.regNo + ' successfully')
                 return pipes

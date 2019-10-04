@@ -17,6 +17,8 @@ import { zip } from 'rxjs';
 import { LoaderService } from '../../services/loader-service';
 import { finalize } from 'rxjs/operators';
 import { RpmEntryService } from './rpm-entry.service';
+import { Book } from '../../models/Book';
+import { RpmEntrySheet } from '../../models/RpmEntrySheet';
 
 @Component({
     templateUrl: './rpm-entry-component.html',
@@ -125,8 +127,13 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             offsetX: -250,
             offsetY: -85
         }]);
-        this.bookPopupRef.afterClosed$.subscribe((data) => {
-
+        this.bookPopupRef.afterClosed$.subscribe((data: RpmEntrySheet) => {
+            if (data) {
+                this.bookStartNo = data.start
+                this.bookEndNo = data.end;
+                this.rpmEntryNo = data.rpm_sheet_no;
+            }
+            
         })
     }
 
@@ -151,6 +158,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.rpmEntryService.getLastRpmEntrySheet(this.selectedVehicle).subscribe((lastRpmEntrySheet) => {
             console.log(lastRpmEntrySheet)
             this.rpmEntryNo = lastRpmEntrySheet.rpm_sheet_no;
+            this.bookEndNo = lastRpmEntrySheet.end;
+            this.bookStartNo = lastRpmEntrySheet.start;
         }, (err) => {
 
         })

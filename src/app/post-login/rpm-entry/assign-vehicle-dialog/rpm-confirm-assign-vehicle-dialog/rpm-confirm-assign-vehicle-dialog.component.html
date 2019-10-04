@@ -1,0 +1,93 @@
+<mat-toolbar color="primary">
+    <div fxFlex fxLayoutAlign="center center">
+        <div>Confirmation</div>
+    </div>
+    <button mat-icon-button mat-dialog-close>
+        <mat-icon>clear</mat-icon>
+    </button>
+</mat-toolbar>
+
+<div mat-dialog-content>
+    <div class="card m-b-16">
+        <div fxLayoutAlign="space-between" class="section-title m-b-16 contact-title">
+            <div>
+                Assign Pipes to Vehicle
+            </div>
+            <div fxLayout fxLayoutGap="5px">
+                <div fxFlex>Date</div>
+                <div fxFlex>:</div>
+                <div fxFlex>{{ date | date: 'dd/MM/yyyy' }}</div>
+            </div>
+        </div>
+        <div fxLayout class="m-b-16" fxLayoutGap="10px">
+            <div fxFlex fxLayoutGap="15px" fxLayout="column">
+                <div fxLayout fxLayoutGap="10px">
+                    <div fxFlex="50" class="text-transform-upper bold font-12" fxLayout fxLayoutAlign="start center">
+                        <div>
+                            Rpm Entry No
+                        </div>
+                    </div>
+                    <div>{{ rpmEntryNo }}</div>
+                </div>
+                <div fxLayout fxLayoutGap="10px">
+                    <div fxFlex="50" class="text-transform-upper bold font-12" fxLayout fxLayoutAlign="start center">
+                        <div>
+                            Vehicle Reg No
+                        </div>
+                    </div>
+                    <div>{{ vehicle?.regNo }}</div>
+                </div>
+                <div fxLayout fxLayoutGap="10px">
+                    <div fxFlex="50" class="text-transform-upper bold font-12" fxLayout fxLayoutAlign="start center">
+                        <div>
+                            Godown Type
+                        </div>
+                    </div>
+                    <div>{{ godown.godownType | uppercase }}</div>
+                </div>
+            </div>
+            <div fxFlex fxLayoutGap="15px" fxLayout="column">
+                <div fxLayout fxLayoutGap="10px">
+                    <div fxFlex="50" class="text-transform-upper bold font-12" fxLayout fxLayoutAlign="start center">
+                        <div>
+                            Pipe Type
+                        </div>
+                    </div>
+                    <div>{{ pipe?.type }}</div>
+                </div>
+                <div fxLayout fxLayoutGap="10px">
+                    <div fxFlex="50" class="text-transform-upper bold font-12" fxLayout fxLayoutAlign="start center">
+                        <div>
+                            Pipe Quantity
+                        </div>
+                    </div>
+                    <div>{{ pipes?.length || 0 }}</div>
+                </div>
+            </div>
+
+
+        </div>
+        <div fxLayout="column" class="container">
+            <div fxLayout class="font-14 bold text-center bgc-primary header">
+                <div fxFlex>S.No.</div>
+                <div fxFlex>Bill No</div>
+                <div fxFlex>Pipe Serial No</div>
+            </div>
+            <div fxLayout="column" fxLayoutGap="10px" class="text-center table-content">
+                <div fxLayout *ngFor="let pipe of pipes; let index = index">
+                    <div fxFlex>{{ index + 1 }}</div>
+                    <div fxFlex>{{ pipe.billno }}</div>
+                    <div fxFlex>{{ pipe.serial_no }}</div>
+                </div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-actions>
+    <div fxFlex fxLayout fxLayoutAlign="space-between">
+        <button mat-raised-button color="primary" mat-dialog-close>CANCEL</button>
+        <button mat-raised-button color="primary" (click)="saveAssign()">SAVE</button>
+    </div>
+</div>

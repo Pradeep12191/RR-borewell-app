@@ -1,6 +1,6 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { Godown } from '../../pipe/Godown';
-import { MAT_DIALOG_DATA, MatSelect } from '@angular/material';
+import { MAT_DIALOG_DATA, MatSelect, MatDialog } from '@angular/material';
 import { Vehicle } from '../../../models/Vehicle';
 import { PipeSize } from '../../../models/PipeSize';
 import { BehaviorSubject } from 'rxjs';
@@ -11,6 +11,7 @@ import { ConfigService } from '../../../services/config.service';
 import { ToastrService } from 'ngx-toastr';
 import { Moment } from 'moment';
 import { RpmEntryService } from '../rpm-entry.service';
+import { RpmConfirmAssignVehicleDialogComponent } from './rpm-confirm-assign-vehicle-dialog/rpm-confirm-assign-vehicle-dialog.component';
 
 
 @Component({
@@ -30,14 +31,15 @@ export class AssignVehicleDialogComponent {
     @ViewChild('pipeSelect', { static: false }) pipeSelect: MatSelect;
     getUrl;
     pipeSerialNos: { serial_no: string; billno: string }[];
-    selectedPipes:{ serial_no: string; billno: string }[]= [];
+    selectedPipes: { serial_no: string; billno: string }[] = [];
     constructor(
         @Inject(MAT_DIALOG_DATA) data,
         private auth: AuthService,
         private config: ConfigService,
         private http: HttpClient,
         private toastr: ToastrService,
-        private rpmEntryService: RpmEntryService
+        private rpmEntryService: RpmEntryService,
+        private dialog: MatDialog
     ) {
         this.godowns = data.godowns;
         this.pipes = data.pipes;
@@ -78,27 +80,27 @@ export class AssignVehicleDialogComponent {
         this.selectedPipes = data;
     }
 
-    saveAssign() {
-        const payload = this.selectedPipes.map(pipe => {
-            const data = {}
-            data['user_id'] = this.auth.userid;
-            data['gudown_type'] = this.selectedGodown.godownType;
-            data['gudown_id'] = this.selectedGodown.godown_id;
-            data['vehicle_no'] = this.vehicle.regNo;
-            data['vehicle_id'] = this.vehicle.vehicle_id;
-            data['serial_no'] = pipe.serial_no;
-            data['serial_no_id'] = pipe.serial_no;
-            data['pipe_size'] = this.selectedPipe.size;
-            data['billno'] = pipe.billno;
-            data['date'] = this.date ? (this.date as Moment).format('DD-MM-YYYY') : '';
-            data['remarks'] = '';
-            data['rpm_sheet_no'] = this.rpmEntryNo
-            return data;
+
+    confirmAssign() {
+        const dialogRef = this.dialog.open(RpmConfirmAssignVehicleDialogComponent, {
+            disableClose: true,
+            width: '50vw',
+            position: { top: '25px' },
+            maxHeight: '95vh',
+            data: {
+                pipes: this.selectedPipes,
+                rpmNo: this.rpmEntryNo,
+                godown: this.selectedGodown,
+                pipe: this.selectedPipe,
+                vehicle: this.vehicle,
+                date: this.date
+            }
         });
 
-        this.rpmEntryService.updateAssignVehicle({ assignedPipes: payload }, this.vehicle)
-            .subscribe((pipes) => {
-                this.pipeSerialNos = pipes;
-            })
+        dialogRef.afterClosed().subscribe((res) => {
+            if (res) {
+                this.pipeSerialNos = res;
+            }
+        })
     }
 }

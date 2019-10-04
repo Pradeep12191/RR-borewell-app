@@ -11,6 +11,7 @@ import { AddBookPopupComponent } from './add-book-popup/add-book-popup.component
 import { AssignVehicleDialogComponent } from './assign-vehicle-dialog/assign-vehicle-dialog.component';
 import { TransferItemsModule } from '../../transfer-items/transfer-items.module';
 import { RpmEntryService } from './rpm-entry.service';
+import { RpmConfirmAssignVehicleDialogComponent } from './assign-vehicle-dialog/rpm-confirm-assign-vehicle-dialog/rpm-confirm-assign-vehicle-dialog.component';
 
 @NgModule({
     imports: [
@@ -26,11 +27,13 @@ import { RpmEntryService } from './rpm-entry.service';
     ],
     declarations: [
         RpmEntryComponent,
-        AssignVehicleDialogComponent
+        AssignVehicleDialogComponent,
+        RpmConfirmAssignVehicleDialogComponent
         // AddBookPopupComponent
     ],
     entryComponents: [
-        AssignVehicleDialogComponent
+        AssignVehicleDialogComponent,
+        RpmConfirmAssignVehicleDialogComponent
         // AddBookPopupComponent
     ],
     providers: [

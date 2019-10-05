@@ -8,7 +8,7 @@ import * as moment from 'moment';
 import { OverlayCardService } from '../../services/overlay-card.service';
 import { CardOverlayref } from '../../services/card-overlay-ref';
 import { AddBookPopupComponent } from './add-book-popup/add-book-popup.component';
-import { MatDialog, MatSelect, MatSnackBar, MatDatepicker, MatInput } from '@angular/material';
+import { MatDialog, MatSelect, MatSnackBar, MatDatepicker, MatInput, MatCheckboxChange } from '@angular/material';
 import { AssignVehicleDialogComponent } from './assign-vehicle-dialog/assign-vehicle-dialog.component';
 import { HttpClient } from '@angular/common/http';
 import { Godown } from '../pipe/Godown';
@@ -56,6 +56,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     bookEndNo;
     rpmEntryNo;
     book: Book;
+    isInVehicle: boolean;
+    isOutVehicle: boolean;
+    isDamageFeet: boolean;
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
     @ViewChild('inVehicleSelect', { static: false }) inVehicleSelect: MatSelect;
@@ -136,9 +139,47 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.vehicleSelect.focus();
         })
         this.picker.closedStream.subscribe(() => {
-            this.inVehicleSelect.open();
-            this.inVehicleSelect.focus();
+            // this.inVehicleSelect.open();
+            // this.inVehicleSelect.focus();
         })
+    }
+
+    onCheckChange(event: MatCheckboxChange, type: 'in' | 'out' | 'damage') {
+        if (type === 'in') {
+            this.isInVehicle = event.checked;
+            if (event.checked) {
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+            } else {
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').setValue(''));
+                this.form.get('inVehicle').setValue('')
+                this.form.get('inRpmNo').setValue('')
+            }
+        }
+
+        if (type === 'out') {
+            this.isOutVehicle = event.checked;
+            if (event.checked) {
+                this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+            } else {
+                this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
+                this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').setValue(''));
+                this.form.get('outVehicle').setValue('')
+                this.form.get('outRpmNo').setValue('')
+            }
+
+        }
+
+        if (type === 'damage') {
+            this.isDamageFeet = event.checked;
+            if (event.checked) {
+                this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+            } else {
+                this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').setValue(''));
+                this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
+            }
+
+        }
     }
 
     onExVehicleChange(type: 'in' | 'out') {
@@ -148,7 +189,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }, 100)
         }
         return this.outRpmNoInput.focus();
-        
+
     }
 
     ngOnDestroy() {
@@ -228,9 +269,18 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.bookId = lastRpmEntrySheet.book_id;
             this.picker.open();
             this.dateInput.nativeElement.focus();
+            // once vehicle is selected enable all controls
+            this.pointExpenseFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
         }, (err) => {
 
         })
+    }
+
+    enableAllControls() {
+        this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+        this.pointExpenseFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+        this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+        this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
     }
 
     save() {

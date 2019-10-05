@@ -9,21 +9,31 @@ import { Vehicle } from '../../models/Vehicle';
 import { AuthService } from '../../services/auth.service';
 import { Pipe } from '../../models/Pipe';
 import { RpmEntrySheet } from '../../models/RpmEntrySheet';
+import { RpmEntry } from '../../models/RpmEntry';
+import { RpmTableData } from '../../models/RpmTableData';
+import { PipeSize } from '../../models/PipeSize';
+import { RpmValue } from '../../models/RpmValue';
+import { FormBuilder } from '@angular/forms';
 
 @Injectable()
 export class RpmEntryService {
     private bookPostUrl: string;
     private getLastRpmEntrySheetUrl: string;
     private postAssignVehicleUrl: string;
+    private rpmTableDataurl: string;
+    private submitRpmUrl: string;
     constructor(
         private http: HttpClient,
         private config: ConfigService,
         private toastr: ToastrService,
-        private auth: AuthService
+        private auth: AuthService,
+        private fb: FormBuilder
     ) {
         this.bookPostUrl = this.config.getAbsoluteUrl('addBook');
         this.getLastRpmEntrySheetUrl = this.config.getAbsoluteUrl('vehicleLastRpmEntry');
         this.postAssignVehicleUrl = this.config.getAbsoluteUrl('AssignPipeToVehicle');
+        this.rpmTableDataurl = this.config.getAbsoluteUrl('rpmTableData');
+        this.submitRpmUrl = this.config.getAbsoluteUrl('submitRpmEntry');
     }
 
     postBook(book: Book) {
@@ -73,5 +83,87 @@ export class RpmEntryService {
                 return throwError(err);
             })
         )
+    }
+
+    getRpmTableData(vehicle: Vehicle, rpmEntryNo) {
+        const params = new HttpParams()
+            .set('user_id', this.auth.userid)
+            .append('vehicle_id', vehicle.vehicle_id)
+            .append('rpm_sheet_no', rpmEntryNo)
+        return this.http.get<RpmEntrySheet>(this.rpmTableDataurl, { params }).pipe(map((data) => {
+            const rpmData: RpmTableData = {
+                availableStock: [], balanceStockFeet: [], damageFeet: [],
+                mmIncome: [], rrIncome: [], pointExpenseFeet: [],
+                previousStockFT: [], vehicleInOut: []
+            }
+            for (const rpm of data.f_rpm_table_data) {
+                rpmData.previousStockFT.push({
+                    pipeId: rpm.pipe_id,
+                    pipeSize: rpm.pipe_size,
+                    pipeType: rpm.pipe_type,
+                    length: rpm.previous_stock_feet,
+                    feet: rpm.previous_stock_feet ? rpm.previous_stock_feet * 20 : 0
+                });
+                rpmData.damageFeet.push({
+                    pipeId: rpm.pipe_id,
+                    pipeSize: rpm.pipe_size,
+                    pipeType: rpm.pipe_type,
+                    length: rpm.damage_feet,
+                    feet: rpm.damage_feet ? rpm.damage_feet * 20 : 0
+                });
+                rpmData.mmIncome.push({
+                    pipeId: rpm.pipe_id,
+                    pipeSize: rpm.pipe_size,
+                    pipeType: rpm.pipe_type,
+                    length: rpm.mm_income,
+                    feet: rpm.mm_income ? rpm.mm_income * 20 : 0
+                });
+                rpmData.rrIncome.push({
+                    pipeId: rpm.pipe_id,
+                    pipeSize: rpm.pipe_size,
+                    pipeType: rpm.pipe_type,
+                    length: rpm.rr_income,
+                    feet: rpm.rr_income ? rpm.rr_income * 20 : 0
+                })
+                rpmData.availableStock.push({
+                    pipeId: rpm.pipe_id,
+                    pipeSize: rpm.pipe_size,
+                    pipeType: rpm.pipe_type,
+                    length: rpm.balance_stock_feet,
+                    feet: rpm.balance_stock_feet ? rpm.balance_stock_feet * 20 : 0
+                })
+                rpmData.balanceStockFeet.push({
+                    pipeId: rpm.pipe_id,
+                    pipeSize: rpm.pipe_size,
+                    pipeType: rpm.pipe_type,
+                    length: rpm.balance_stock_feet,
+                    feet: rpm.balance_stock_feet ? rpm.balance_stock_feet * 20 : 0
+                }),
+                    rpmData.vehicleInOut.push({
+                        pipeId: rpm.pipe_id,
+                        pipeSize: rpm.pipe_size,
+                        pipeType: rpm.pipe_type,
+                        length: rpm.vehicle_ex_out,
+                        feet: rpm.vehicle_ex_out ? rpm.vehicle_ex_out * 20 : 0
+                    })
+            }
+            return rpmData
+        }), catchError((err) => {
+            this.toastr.error('Error while Fetching RPM Entry')
+            return throwError(err)
+        }))
+    }
+
+    submitRpm(payload: RpmEntrySheet) {
+        console.log(JSON.stringify(payload, null, 2))
+        return this.http.put<RpmEntry>(this.submitRpmUrl, payload).pipe(map(() => {
+            this.toastr.success('Rpm Saved Successfully', null, { timeOut: 3000 });
+        }), catchError((err) => {
+            return throwError(err)
+        }))
+    }
+
+    buildPointExpenseForm(pipeType) {
+        return this.fb.group({ pipeType, value: '' })
     }
 }

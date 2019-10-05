@@ -3,6 +3,13 @@
     min-height: 42px;
 }
 
+.shift-top-30{
+    margin-left: -6%;
+    margin-right: -6%;
+}
+
+
+
 .cell{
     border: 1px solid;
     &.bg-grey{
@@ -33,6 +40,11 @@
 .input-wrapper{
     input{
         border-radius: 0px;
+        font-size: 14px;
+        text-align: center;
+        &[disabled], &:disabled{
+            cursor: not-allowed;
+        }
     }
 }
 
@@ -44,12 +56,6 @@
     font-size: 16px;
     height: 16px;
     width: 16px;
-}
-
-.input-wrapper{
-    input{
-        font-size: 14px;
-    }
 }
 
 .header-cell{

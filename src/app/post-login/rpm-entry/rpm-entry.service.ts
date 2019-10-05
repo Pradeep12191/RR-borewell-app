@@ -92,12 +92,12 @@ export class RpmEntryService {
             .append('rpm_sheet_no', rpmEntryNo)
         return this.http.get<RpmEntrySheet>(this.rpmTableDataurl, { params }).pipe(map((data) => {
             const rpmData: RpmTableData = {
-                availableStock: [], balanceStockFeet: [], damageFeet: [],
+                availableStockFeet: [], balanceStockFeet: [], damageFeet: [],
                 mmIncome: [], rrIncome: [], pointExpenseFeet: [],
-                previousStockFT: [], vehicleInOut: []
+                previousStockFeeT: [], vehicleExIn: [], vehicleExOut: []
             }
             for (const rpm of data.f_rpm_table_data) {
-                rpmData.previousStockFT.push({
+                rpmData.previousStockFeeT.push({
                     pipeId: rpm.pipe_id,
                     pipeSize: rpm.pipe_size,
                     pipeType: rpm.pipe_type,
@@ -125,7 +125,7 @@ export class RpmEntryService {
                     length: rpm.rr_income,
                     feet: rpm.rr_income ? rpm.rr_income * 20 : 0
                 })
-                rpmData.availableStock.push({
+                rpmData.availableStockFeet.push({
                     pipeId: rpm.pipe_id,
                     pipeSize: rpm.pipe_size,
                     pipeType: rpm.pipe_type,
@@ -138,14 +138,21 @@ export class RpmEntryService {
                     pipeType: rpm.pipe_type,
                     length: rpm.balance_stock_feet,
                     feet: rpm.balance_stock_feet ? rpm.balance_stock_feet * 20 : 0
-                }),
-                    rpmData.vehicleInOut.push({
-                        pipeId: rpm.pipe_id,
-                        pipeSize: rpm.pipe_size,
-                        pipeType: rpm.pipe_type,
-                        length: rpm.vehicle_ex_out,
-                        feet: rpm.vehicle_ex_out ? rpm.vehicle_ex_out * 20 : 0
-                    })
+                });
+                rpmData.vehicleExOut.push({
+                    pipeId: rpm.pipe_id,
+                    pipeSize: rpm.pipe_size,
+                    pipeType: rpm.pipe_type,
+                    length: rpm.vehicle_ex_out,
+                    feet: rpm.vehicle_ex_out ? rpm.vehicle_ex_out * 20 : 0
+                });
+                rpmData.vehicleExIn.push({
+                    pipeId: rpm.pipe_id,
+                    pipeSize: rpm.pipe_size,
+                    pipeType: rpm.pipe_type,
+                    length: rpm.vehicle_ex_in,
+                    feet: rpm.vehicle_ex_in ? rpm.vehicle_ex_in * 20 : 0
+                })
             }
             return rpmData
         }), catchError((err) => {

@@ -8,7 +8,7 @@ import * as moment from 'moment';
 import { OverlayCardService } from '../../services/overlay-card.service';
 import { CardOverlayref } from '../../services/card-overlay-ref';
 import { AddBookPopupComponent } from './add-book-popup/add-book-popup.component';
-import { MatDialog, MatSelect } from '@angular/material';
+import { MatDialog, MatSelect, MatSnackBar, MatDatepicker, MatInput } from '@angular/material';
 import { AssignVehicleDialogComponent } from './assign-vehicle-dialog/assign-vehicle-dialog.component';
 import { HttpClient } from '@angular/common/http';
 import { Godown } from '../pipe/Godown';
@@ -30,17 +30,18 @@ import { RpmEntry } from '../../models/RpmEntry';
 })
 export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     rpmEntry: RpmTableData = {
-        previousStockFT: [],
+        previousStockFeeT: [],
         rrIncome: [],
         mmIncome: [],
-        availableStock: [],
+        availableStockFeet: [],
         pointExpenseFeet: [],
         balanceStockFeet: [],
-        vehicleInOut: [],
+        vehicleExIn: [],
+        vehicleExOut: [],
         damageFeet: []
     }
     routeDataSubscription: Subscription;
-    pipeTotalFlex = 80;
+    pipeTotalFlex = 72;
     pipeFlex = 10;
     pipes: PipeSize[];
     form: FormGroup;
@@ -57,9 +58,27 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     book: Book;
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
+    @ViewChild('inVehicleSelect', { static: false }) inVehicleSelect: MatSelect;
+    @ViewChild('outVehicleSelect', { static: false }) outVehicleSelect: MatSelect;
+    @ViewChild('inRpmInput', { static: false }) inRpmNoInput: MatInput;
+    @ViewChild('outRpmInput', { static: false }) outRpmNoInput: MatInput;
+    @ViewChild('picker', { static: false }) picker: MatDatepicker<any>;
+    @ViewChild('dateInput', { static: false }) dateInput: ElementRef;
 
     get pointExpenseFeetFormArray() {
         return this.form.get('pointExpenseFeet') as FormArray
+    }
+
+    get veicleExInFormArray() {
+        return this.form.get('vehicleExIn') as FormArray;
+    }
+
+    get veicleExOutFormArray() {
+        return this.form.get('vehicleExOut') as FormArray;
+    }
+
+    get damageFeetFormArray() {
+        return this.form.get('damageFeet') as FormArray;
     }
 
     constructor(
@@ -69,10 +88,19 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         private dialog: MatDialog,
         private config: ConfigService,
         private rpmEntryService: RpmEntryService,
+        private snackBar: MatSnackBar,
+        private loader: LoaderService
     ) {
         this.form = this.fb.group({
             pointExpenseFeet: this.fb.array([]),
-            remarks: ''
+            vehicleExIn: this.fb.array([]),
+            vehicleExOut: this.fb.array([]),
+            damageFeet: this.fb.array([]),
+            remarks: '',
+            inVehicle: '',
+            inRpmNo: '',
+            outVehicle: '',
+            outRpmNo: ''
         })
         this.appearance = this.config.getConfig('formAppearance');
     }
@@ -88,14 +116,16 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
             this.pipes.forEach(pipe => {
                 const pipeData: RpmValue = { pipeType: pipe.type, feet: 0, pipeId: +pipe.id, pipeSize: +pipe.size, length: 0 }
-                this.rpmEntry.previousStockFT.push(pipeData);
+                this.rpmEntry.previousStockFeeT.push(pipeData);
                 this.rpmEntry.rrIncome.push(pipeData);
                 this.rpmEntry.mmIncome.push(pipeData);
                 this.rpmEntry.balanceStockFeet.push(pipeData);
-                this.rpmEntry.availableStock.push(pipeData);
-                this.rpmEntry.vehicleInOut.push(pipeData);
+                this.rpmEntry.availableStockFeet.push(pipeData);
                 this.rpmEntry.damageFeet.push(pipeData);
                 this.pointExpenseFeetFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
+                this.veicleExOutFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
+                this.veicleExInFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
+                this.damageFeetFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
             })
         })
     }
@@ -105,6 +135,20 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.vehicleSelect.open();
             this.vehicleSelect.focus();
         })
+        this.picker.closedStream.subscribe(() => {
+            this.inVehicleSelect.open();
+            this.inVehicleSelect.focus();
+        })
+    }
+
+    onExVehicleChange(type: 'in' | 'out') {
+        if (type === 'in') {
+            return setTimeout(() => {
+                this.inRpmNoInput.focus();
+            }, 100)
+        }
+        return this.outRpmNoInput.focus();
+        
     }
 
     ngOnDestroy() {
@@ -174,12 +218,16 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onVehicleChange() {
-        this.rpmEntryService.getLastRpmEntrySheet(this.selectedVehicle).subscribe((lastRpmEntrySheet) => {
-            console.log(lastRpmEntrySheet)
+        this.loader.showSaveLoader('Loading ...')
+        this.rpmEntryService.getLastRpmEntrySheet(this.selectedVehicle).pipe(finalize(() => {
+            this.loader.hideSaveLoader();
+        })).subscribe((lastRpmEntrySheet) => {
             this.rpmEntryNo = lastRpmEntrySheet.rpm_sheet_no;
             this.bookEndNo = lastRpmEntrySheet.end;
             this.bookStartNo = lastRpmEntrySheet.start;
             this.bookId = lastRpmEntrySheet.book_id;
+            this.picker.open();
+            this.dateInput.nativeElement.focus();
         }, (err) => {
 
         })
@@ -194,33 +242,44 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             start: this.bookStartNo,
             rpm_sheet_no: this.rpmEntryNo,
             vehicle_id: +this.selectedVehicle.vehicle_id,
+            vehicle_in_id: this.form.value.inVehicle ? +this.form.value.inVehicle.vehicle_id : 0,
+            vehicle_out_id: this.form.value.outVehicle ? +this.form.value.outVehicle.vehicle_id : 0,
+            vehicle_in_rpm_sheet_no: this.form.value.inRpmNo || 0,
+            vehicle_out_rpm_sheet_no: this.form.value.outRpmNo || 0,
             f_rpm_table_data: []
         }
 
         for (const pipe of this.pipes) {
             const rpmEntry: RpmEntry = {
-                balance_stock_feet: this.rpmEntry.balanceStockFeet.find((p) => p.pipeId === +pipe.id ).feet,
-                previous_stock_feet: this.rpmEntry.previousStockFT.find((p) => p.pipeId === +pipe.id ).feet,
-                rr_income: this.rpmEntry.rrIncome.find((p) => p.pipeId === +pipe.id ).length,
-                rr_income_feet: this.rpmEntry.rrIncome.find((p) => p.pipeId === +pipe.id ).feet,
-                mm_income: this.rpmEntry.mmIncome.find((p) => p.pipeId === +pipe.id ).length,
-                mm_income_feet: this.rpmEntry.mmIncome.find((p) => p.pipeId === +pipe.id ).feet,
+                balance_stock_feet: this.rpmEntry.balanceStockFeet.find((p) => p.pipeId === +pipe.id).feet,
+                previous_stock_feet: this.rpmEntry.previousStockFeeT.find((p) => p.pipeId === +pipe.id).feet,
+                available_stock_feet: this.rpmEntry.availableStockFeet.find((p) => p.pipeId === +pipe.id).feet,
+                rr_income: this.rpmEntry.rrIncome.find((p) => p.pipeId === +pipe.id).length,
+                rr_income_feet: this.rpmEntry.rrIncome.find((p) => p.pipeId === +pipe.id).feet,
+                mm_income: this.rpmEntry.mmIncome.find((p) => p.pipeId === +pipe.id).length,
+                mm_income_feet: this.rpmEntry.mmIncome.find((p) => p.pipeId === +pipe.id).feet,
                 pipe_id: +pipe.id,
                 pipe_size: +pipe.size,
                 pipe_type: pipe.type,
-                damage_feet: this.rpmEntry.damageFeet.find((p) => p.pipeId === +pipe.id ).feet,
-                vehicle_ex_in: this.rpmEntry.vehicleInOut.find((p) => p.pipeId === +pipe.id ).length,
-                vehicle_ex_out: this.rpmEntry.vehicleInOut.find((p) => p.pipeId === +pipe.id ).length,
-                point_expenses_feet: +this.form.value.pointExpenseFeet.find(p => +p.pipeId === +pipe.id).value
+                damage_feet: +this.form.value.damageFeet.find(p => +p.pipeId === +pipe.id).value || 0,
+                vehicle_ex_out: +this.form.value.vehicleExOut.find(p => +p.pipeId === +pipe.id).value || 0,
+                vehicle_ex_in: +this.form.value.vehicleExIn.find(p => +p.pipeId === +pipe.id).value || 0,
+                point_expenses_feet: +this.form.value.pointExpenseFeet.find(p => +p.pipeId === +pipe.id).value || 0
             }
             payload.f_rpm_table_data.push(rpmEntry);
         }
         this.rpmEntryService.submitRpm(payload).subscribe(() => {
             console.log('next sheet')
-        }, () => {})
+        }, () => { })
     }
 
     private buildPointExpenseForm(pipeType, pipeId, pipeSize) {
-        return this.fb.group({ pipeType, pipeId, pipeSize, value: '' })
+        return this.fb.group({ pipeType, pipeId, pipeSize, value: { value: '', disabled: true } })
+    }
+    tableClick($event: MouseEvent) {
+        const trigger = $event.target as HTMLElement;
+        if (trigger.tagName === 'INPUT' && trigger.attributes.getNamedItem('disabled')) {
+            return this.snackBar.open('Please Select a Vehicle', null, { duration: 4000 });
+        }
     }
 }

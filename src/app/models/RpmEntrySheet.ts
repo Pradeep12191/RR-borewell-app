@@ -1,9 +1,10 @@
+import { RpmEntry } from './RpmEntry';
 
 export interface RpmEntrySheet {
     book_id: number;
     end: number;
     rpm_sheet_no: number;
+    f_rpm_table_data: RpmEntry[],
     start: number;
-    user_id: number;
-    vehicle_id: 0;
+    vehicle_id: number;
 }

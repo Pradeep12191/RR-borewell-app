@@ -3,7 +3,8 @@
         <div fxLayout fxFlex fxLayoutGap="16px" fxFlex="40">
             <mat-form-field class="calc-field" fxFlex="40">
                 <mat-label>Vehicle</mat-label>
-                <mat-select #vehicleSelect (selectionChange)="onVehicleChange()" [(ngModel)]="selectedVehicle" placeholder="Vehicle">
+                <mat-select #vehicleSelect (selectionChange)="onVehicleChange()" [(ngModel)]="selectedVehicle"
+                    placeholder="Vehicle">
                     <mat-option [value]="vehicle" *ngFor="let vehicle of vehicles">{{ vehicle.regNo }}</mat-option>
                 </mat-select>
             </mat-form-field>
@@ -71,44 +72,45 @@
                         <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 bold bg-grey">Previous
                             Stock
                             Feet</div>
-                        <div [fxFlex]="pipeFlex" *ngFor="let previousStock of rpmEntry.previousStockFT; let last = last"
-                            class="cell" [class.b-r-0]="!last"></div>
+                        <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let previousStock of rpmEntry.previousStockFT; let last = last"
+                            class="cell" [class.b-r-0]="!last">{{ previousStock.feet || '' }}</div>
                     </div>
                     <div class="row" fxLayout>
                         <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 b-t-0 p-l-10 b-b-0 bold bg-grey">RR
                             Income</div>
-                        <div [fxFlex]="pipeFlex" *ngFor="let rrIncome of rpmEntry.rrIncome; let last = last" class="cell b-t-0 b-b-0"
-                            [class.b-r-0]="!last"></div>
+                        <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let rrIncome of rpmEntry.rrIncome; let last = last" class="cell b-t-0 b-b-0"
+                            [class.b-r-0]="!last">{{ rrIncome.feet || '' }}</div>
                     </div>
                     <div class="row" fxLayout>
                         <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">MM
                             Income</div>
-                        <div [fxFlex]="pipeFlex" *ngFor="let mmIncome of rpmEntry.mmIncome; let last = last" class="cell b-b-0"
-                            [class.b-r-0]="!last"></div>
+                        <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let mmIncome of rpmEntry.mmIncome; let last = last" class="cell b-b-0"
+                            [class.b-r-0]="!last">{{ mmIncome.feet || '' }}</div>
                     </div>
                     <div class="row" fxLayout>
                         <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Vehicle
                             In Out
                         </div>
-                        <div [fxFlex]="pipeFlex" *ngFor="let vehicleInOut of rpmEntry.vehicleInOut; let last = last"
-                            class="cell b-b-0" [class.b-r-0]="!last"></div>
+                        <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let vehicleInOut of rpmEntry.vehicleInOut; let last = last"
+                            class="cell b-b-0" [class.b-r-0]="!last">{{ vehicleInOut.feet || '' }}</div>
                     </div>
                     <div class="row" fxLayout>
-                        <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Damage Feet
+                        <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Damage
+                            Feet
                         </div>
-                        <div [fxFlex]="pipeFlex" *ngFor="let damageFeet of rpmEntry.damageFeet; let last = last" class="cell b-b-0"
-                            [class.b-r-0]="!last"></div>
+                        <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let damageFeet of rpmEntry.damageFeet; let last = last" class="cell b-b-0"
+                            [class.b-r-0]="!last">{{ damageFeet.feet || '' }}</div>
                     </div>
                     <div class="row" fxLayout>
                         <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Available
                             Stock</div>
-                        <div [fxFlex]="pipeFlex" *ngFor="let availableStock of rpmEntry.availableStock; let last = last"
-                            class="cell b-b-0" [class.b-r-0]="!last"></div>
+                        <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let availableStock of rpmEntry.availableStock; let last = last"
+                            class="cell b-b-0" [class.b-r-0]="!last">{{ availableStock.feet || '' }}</div>
                     </div>
                     <div class="row" fxLayout>
                         <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Point
                             Expense Feet</div>
-                        <div [fxFlex]="pipeFlex" fxLayoutAlign="center center" formArrayName="pointExpenseFeet" *ngFor="let ctrl of pointExpenseFeetFormArray.controls; let last = last"
+                        <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" fxLayoutAlign="center center" formArrayName="pointExpenseFeet" *ngFor="let ctrl of pointExpenseFeetFormArray.controls; let last = last"
                             class="cell b-b-0" [class.b-r-0]="!last">
                             <ng-container [formGroup]="ctrl">
                                 <div class="input-wrapper h-100" fxFlex>
@@ -128,8 +130,8 @@
                         <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 bold bg-grey">Balance
                             Stock
                             Feet</div>
-                        <div [fxFlex]="pipeFlex" *ngFor="let balanceStockFeet of rpmEntry.balanceStockFeet; let last = last"
-                            class="cell" [class.b-r-0]="!last"></div>
+                        <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let balanceStockFeet of rpmEntry.balanceStockFeet; let last = last"
+                            class="cell" [class.b-r-0]="!last">{{ balanceStockFeet.feet || '' }}</div>
                     </div>
                 </div>
             </form>

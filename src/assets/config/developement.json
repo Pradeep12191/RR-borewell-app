@@ -105,6 +105,14 @@
         {
             "name": "vehicleLastRpmEntry",
             "url": "last_rpm_sheet_data"
+        },
+        {
+            "name": "rpmTableData",
+            "url": "rr_mm_income_data"
+        },
+        {
+            "name": "submitRpmEntry",
+            "url": ""
         }
         
     ],

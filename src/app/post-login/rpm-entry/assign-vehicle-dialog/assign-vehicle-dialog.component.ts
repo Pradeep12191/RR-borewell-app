@@ -1,6 +1,6 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { Godown } from '../../pipe/Godown';
-import { MAT_DIALOG_DATA, MatSelect, MatDialog } from '@angular/material';
+import { MAT_DIALOG_DATA, MatSelect, MatDialog, MatDialogRef } from '@angular/material';
 import { Vehicle } from '../../../models/Vehicle';
 import { PipeSize } from '../../../models/PipeSize';
 import { BehaviorSubject } from 'rxjs';
@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Moment } from 'moment';
 import { RpmEntryService } from '../rpm-entry.service';
 import { RpmConfirmAssignVehicleDialogComponent } from './rpm-confirm-assign-vehicle-dialog/rpm-confirm-assign-vehicle-dialog.component';
+import { LoaderService } from '../../../services/loader-service';
 
 
 @Component({
@@ -39,7 +40,9 @@ export class AssignVehicleDialogComponent {
         private http: HttpClient,
         private toastr: ToastrService,
         private rpmEntryService: RpmEntryService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private loader: LoaderService,
+        private dialogRef: MatDialogRef<AssignVehicleDialogComponent>
     ) {
         this.godowns = data.godowns;
         this.pipes = data.pipes;
@@ -101,6 +104,14 @@ export class AssignVehicleDialogComponent {
             if (res) {
                 this.pipeSerialNos = res;
             }
+        })
+    }
+
+    onDoneClick() {
+        this.loader.showSaveLoader('Fetching Rpm, please wait ...')
+        this.rpmEntryService.getRpmTableData(this.vehicle, this.rpmEntryNo).subscribe((data) => {
+            this.loader.hideSaveLoader();
+            this.dialogRef.close(data)
         })
     }
 }

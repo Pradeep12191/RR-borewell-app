@@ -1,12 +1,13 @@
 import { RpmValue } from './RpmValue';
 
 export interface RpmTableData {
-    previousStockFT?: RpmValue[],
+    previousStockFeeT?: RpmValue[],
     rrIncome?: RpmValue[],
     mmIncome?: RpmValue[],
-    availableStock?: RpmValue[],
+    availableStockFeet?: RpmValue[],
     pointExpenseFeet?: RpmValue[],
     balanceStockFeet?: RpmValue[],
-    vehicleInOut?: RpmValue[],
-    damageFeet?: RpmValue[]
+    vehicleExIn? : RpmValue[],
+    vehicleExOut?: RpmValue[],
+    damageFeet?: RpmValue[],
 }

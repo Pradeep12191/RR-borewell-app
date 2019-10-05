@@ -44,6 +44,7 @@
         text-align: center;
         &[disabled], &:disabled{
             cursor: not-allowed;
+            background-color: #eee;
         }
     }
 }

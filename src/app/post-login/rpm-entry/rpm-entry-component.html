@@ -30,10 +30,11 @@
         </div>
         <div fxLayout fxLayoutAlign="end center" fxLayoutGap="16px">
             <div>
-                <button #addBookBtn [disabled]="!selectedVehicle" (click)="addBook()" mat-raised-button color="primary">Add New Book</button>
+                <button #addBookBtn [disabled]="!selectedVehicle" (click)="addBook()" mat-raised-button color="primary">Add
+                    New Book</button>
             </div>
             <div>
-                <mat-checkbox color="primary" labelPosition="before">Rebore</mat-checkbox>
+                <mat-checkbox color="primary" [disabled]="!selectedVehicle" labelPosition="before">Rebore</mat-checkbox>
             </div>
         </div>
     </div>
@@ -47,7 +48,8 @@
             </div>
             <mat-form-field floatLabel="always" (click)="picker.open()" class="calc-field" fxFlex>
                 <mat-label>Date</mat-label>
-                <input [disabled]="!selectedVehicle" [(ngModel)]="date" #dateInput placeholder="Select Date" readonly matInput [matDatepicker]="picker">
+                <input [disabled]="!selectedVehicle" [(ngModel)]="date" #dateInput placeholder="Select Date" readonly
+                    matInput [matDatepicker]="picker">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
@@ -90,13 +92,16 @@
                     <div class="row" fxLayout>
                         <div fxFlex="28" fxLayoutAlign="start center" fxLayoutGap="10px" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">
                             <div fxLayout="column" fxFlex>
-                                <div class="m-t-10" fxFlex="40">
-                                    Vehicle Exchange In
+                                <div [class.m-t-10]="isInVehicle" fxFlex="40">
+                                    <mat-checkbox color="primary" (change)="onCheckChange($event, 'in')" [disabled]="!selectedVehicle">
+                                        Vehicle Exchange In
+                                    </mat-checkbox>
                                 </div>
-                                <div fxLayout fxLayoutGap="10px" fxFlex class="m-r-16">
+                                <div *ngIf="isInVehicle" fxLayout fxLayoutGap="10px" fxFlex class="m-r-16">
                                     <mat-form-field class="calc-field" fxFlex="70">
                                         <mat-label>Select Vehicle</mat-label>
-                                        <mat-select (selectionChange)="onExVehicleChange('in')" formControlName="inVehicle" #inVehicleSelect>
+                                        <mat-select (selectionChange)="onExVehicleChange('in')" formControlName="inVehicle"
+                                            #inVehicleSelect>
                                             <mat-option [value]="vehicle" *ngFor="let vehicle of vehicles">{{
                                                 vehicle.regNo }}</mat-option>
                                         </mat-select>
@@ -129,10 +134,12 @@
                     <div class="row" fxLayout>
                         <div fxFlex="28" fxLayoutAlign="start center" fxLayoutGap="10px" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">
                             <div fxLayout="column" fxFlex>
-                                <div class="m-t-10" fxFlex="40">
-                                    Vehicle Exchange Out
+                                <div [class.m-t-10]="isOutVehicle" fxFlex="40">
+                                    <mat-checkbox color="primary" (change)="onCheckChange($event, 'out')" [disabled]="!selectedVehicle">
+                                        Vehicle Exchange Out
+                                    </mat-checkbox>
                                 </div>
-                                <div fxLayout fxLayoutGap="10px" fxFlex class="m-r-16">
+                                <div *ngIf="isOutVehicle" fxLayout fxLayoutGap="10px" fxFlex class="m-r-16">
                                     <mat-form-field class="calc-field" fxFlex="70">
                                         <mat-label>Select Vehicle</mat-label>
                                         <mat-select (selectionChange)="onExVehicleChange('out')" formControlName="outVehicle">
@@ -166,8 +173,10 @@
                         </div>
                     </div>
                     <div class="row" fxLayout>
-                        <div fxFlex="28" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Damage
-                            Feet
+                        <div fxFlex="28" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">
+                            <mat-checkbox color="primary" (change)="onCheckChange($event, 'damage')" [disabled]=!selectedVehicle>
+                                    Damage Feet
+                            </mat-checkbox>
                         </div>
                         <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" fxLayoutAlign="center center"
                             formArrayName="damageFeet" *ngFor="let ctrl of damageFeetFormArray.controls; let last = last"
@@ -224,14 +233,14 @@
             <div [formGroup]="form" fxLayout class="m-t-10">
                 <mat-form-field [appearance]="appearance" fxFlex>
                     <mat-label>Remarks</mat-label>
-                    <textarea formControlName="remarks" matInput cols="30" rows="6"></textarea>
+                    <textarea formControlName="remarks" [disabled]="!selectedVehicle" matInput cols="30" rows="6"></textarea>
                 </mat-form-field>
             </div>
         </mat-card-content>
     </mat-card>
     <div fxLayoutAlign="end" class="m-t-25">
         <div>
-            <button (click)="save()" mat-raised-button color="primary" type="button">SUBMIT</button>
+            <button [disabled]="!selectedVehicle" (click)="save()" mat-raised-button color="primary" type="button">SUBMIT</button>
         </div>
     </div>
 </div>

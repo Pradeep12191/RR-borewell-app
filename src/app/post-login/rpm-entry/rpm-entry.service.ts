@@ -163,8 +163,9 @@ export class RpmEntryService {
 
     submitRpm(payload: RpmEntrySheet) {
         console.log(JSON.stringify(payload, null, 2))
-        return this.http.put<RpmEntry>(this.submitRpmUrl, payload).pipe(map(() => {
+        return this.http.put<RpmEntrySheet>(this.submitRpmUrl, payload).pipe(map((lastRpmEntrySheet) => {
             this.toastr.success('Rpm Saved Successfully', null, { timeOut: 3000 });
+            return lastRpmEntrySheet;
         }), catchError((err) => {
             return throwError(err)
         }))

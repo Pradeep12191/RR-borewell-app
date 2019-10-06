@@ -316,6 +316,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.form.get('isInVehicle').enable();
             this.form.get('isOutVehicle').enable();
             this.form.get('isDamage').enable();
+            this.updatePreviousStockFeet(lastRpmEntrySheet);
             this.pointExpenseFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
             this.resetStockFeets();
         }, (err) => {
@@ -323,28 +324,41 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         })
     };
 
+    updatePreviousStockFeet(lastRpmEntrySheet: RpmEntrySheet) {
+        const rpmData = lastRpmEntrySheet.f_rpm_table_data;
+        this.rpmEntryNo = lastRpmEntrySheet.rpm_sheet_no;
+        if (rpmData) {
+            rpmData.forEach(rd => {
+                const previousStock = this.rpmEntry.previousStockFeet.find(ps => ps.pipeId === rd.pipe_id);
+                const rrIncome = this.rpmEntry.rrIncome.find(ps => ps.pipeId === rd.pipe_id);
+                const mmIncome = this.rpmEntry.mmIncome.find(ps => ps.pipeId === rd.pipe_id);
+                const availableStock = this.rpmEntry.availableStockFeet.find(ps => ps.pipeId === rd.pipe_id);
+                const balanceStock = this.rpmEntry.balanceStockFeet.find(ps => ps.pipeId === rd.pipe_id);
+                previousStock.feet = rd.previous_stock_feet ? +rd.previous_stock_feet : 0;
+                rrIncome.feet = rd.rr_income_feet ? +rd.rr_income_feet : 0;
+                mmIncome.feet = rd.mm_income_feet ? +rd.mm_income_feet : 0;
+                rrIncome.length = rd.rr_income;
+                mmIncome.length = rd.mm_income;
+                availableStock.feet = rrIncome.feet + mmIncome.feet + previousStock.feet;
+                balanceStock.feet = availableStock.feet;
+            })
+        } else {
+            this.rpmEntry.availableStockFeet.forEach(as => {
+                as.feet = 0;
+                as.length = 0;
+            });
+            this.rpmEntry.previousStockFeet.forEach(ps => {
+                ps.feet = 0;
+                ps.length = 0;
+            });
+            this.rpmEntry.balanceStockFeet.forEach(bs => {
+                bs.length = 0;
+                bs.feet = 0;
+            })
+        }
+    }
+
     private resetStockFeets() {
-        // followning below 3 items needs to set from api call
-        this.rpmEntry.previousStockFeet.forEach(ps => {
-            ps.length = 0;
-            ps.feet = 0;
-        })
-        this.rpmEntry.rrIncome.forEach(rr => {
-            rr.length = 0;
-            rr.feet = 0;
-        });
-        this.rpmEntry.mmIncome.forEach(mm => {
-            mm.length = 0;
-            mm.feet = 0;
-        });
-        this.rpmEntry.availableStockFeet.forEach(as => {
-            as.length = 0;
-            as.feet = 0;
-        });
-        this.rpmEntry.balanceStockFeet.forEach(bs => {
-            bs.length = 0;
-            bs.feet = 0;
-        });
         this.form.get('inVehicle').reset();
         this.form.get('outVehicle').reset();
         this.form.get('inRpmNo').reset();
@@ -411,8 +425,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             payload.f_rpm_table_data.push(rpmEntry);
         }
-        this.rpmEntryService.submitRpm(payload).subscribe(() => {
-            console.log('next sheet')
+        this.rpmEntryService.submitRpm(payload).subscribe((lastRpmEntrySheet) => {
+            this.updatePreviousStockFeet(lastRpmEntrySheet);
+            this.resetStockFeets();
         }, () => { })
     }
 

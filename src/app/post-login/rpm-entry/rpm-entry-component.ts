@@ -5,15 +5,14 @@ import { PipeSize } from '../../models/PipeSize';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Vehicle } from '../../models/Vehicle';
 import * as moment from 'moment';
+import { Moment } from 'moment';
 import { OverlayCardService } from '../../services/overlay-card.service';
 import { CardOverlayref } from '../../services/card-overlay-ref';
 import { AddBookPopupComponent } from './add-book-popup/add-book-popup.component';
 import { MatDialog, MatSelect, MatSnackBar, MatDatepicker, MatInput, MatCheckboxChange } from '@angular/material';
 import { AssignVehicleDialogComponent } from './assign-vehicle-dialog/assign-vehicle-dialog.component';
-import { HttpClient } from '@angular/common/http';
 import { Godown } from '../pipe/Godown';
 import { ConfigService } from '../../services/config.service';
-import { zip } from 'rxjs';
 import { LoaderService } from '../../services/loader-service';
 import { finalize } from 'rxjs/operators';
 import { RpmEntryService } from './rpm-entry.service';
@@ -21,8 +20,8 @@ import { Book } from '../../models/Book';
 import { RpmEntrySheet } from '../../models/RpmEntrySheet';
 import { RpmTableData } from '../../models/RpmTableData';
 import { RpmValue } from '../../models/RpmValue';
-import { AuthService } from '../../services/auth.service';
 import { RpmEntry } from '../../models/RpmEntry';
+import { CommonService } from '../../services/common.service';
 
 @Component({
     templateUrl: './rpm-entry-component.html',
@@ -94,7 +93,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         private config: ConfigService,
         private rpmEntryService: RpmEntryService,
         private snackBar: MatSnackBar,
-        private loader: LoaderService
+        private loader: LoaderService,
+        private common: CommonService
     ) {
         this.form = this.fb.group({
             pointExpenseFeet: this.fb.array([]),
@@ -344,15 +344,17 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').enable())
             } else {
                 this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').disable())
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').reset(''));
             }
             return setTimeout(() => {
                 this.inRpmNoInput.focus();
             }, 100)
         }
         if (this.form.get('outVehicle').valid && this.form.get('outRpmNo').valid) {
-            this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable())
+            this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
         } else {
-            this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').disable())
+            this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
+            this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').reset(''));
         }
         setTimeout(() => {
             this.outRpmNoInput.focus();
@@ -365,6 +367,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').enable())
             } else {
                 this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').disable())
+
             }
         }
         if (this.form.get('outVehicle').valid && this.form.get('outRpmNo').valid) {
@@ -555,6 +558,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             vehicle_in_rpm_sheet_no: this.form.value.inRpmNo || 0,
             vehicle_out_rpm_sheet_no: this.form.value.outRpmNo || 0,
             remarks: this.form.value.remarks,
+            date: this.date ? (this.date as Moment).format('DD-MM-YYYY') : '',
             f_rpm_table_data: []
         }
 
@@ -580,6 +584,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.rpmEntryService.submitRpm(payload).subscribe((lastRpmEntrySheet) => {
             this.updatePreviousStockFeet(lastRpmEntrySheet);
             this.resetStockFeets();
+            this.common.scrollTop();
         }, () => { })
     }
 

@@ -4,7 +4,7 @@
             <div [fxFlex]="leftWidth" class="transfer-items-left ">
                 <div fxLayout class="header-shadow left-header">
                     <div class="m-l-16" fxLayout fxLayoutAlign="center center">
-                        <mat-checkbox [(ngModel)]="selectAllChecked" (change)="selectAllChange($event)" color="primary"
+                        <mat-checkbox [disabled]="!_data?.length" [(ngModel)]="selectAllChecked" (change)="selectAllChange($event)" color="primary"
                             [matTooltip]="selectAllToolTipMsg"></mat-checkbox>
                     </div>
 
@@ -24,7 +24,7 @@
                         <!-- left input -->
                     </ng-content>
                 </div>
-                <div class="chk-box-container">
+                <div class="chk-box-container" #leftContainer>
                     <div class="msg" *ngIf="intialMsg; else selectionTpl">
                         <ng-container *ngTemplateOutlet="intialMsg"></ng-container>
                     </div>
@@ -57,7 +57,7 @@
                 <div class="right-header header-shadow">
                     <ng-content select="transfer-item-right-header-content"></ng-content>
                 </div>
-                <div class="chk-box-container" *ngIf="selectedData?.length; else emptyTpl">
+                <div class="chk-box-container" *ngIf="selectedData?.length; else emptyTpl" #rightContainer>
                     <mat-list>
                         <mat-list-item fxLayout="row" class="custom-list-option" *ngFor="let d of selectedData">
                             <div>{{ d[displayPropName] }}</div>

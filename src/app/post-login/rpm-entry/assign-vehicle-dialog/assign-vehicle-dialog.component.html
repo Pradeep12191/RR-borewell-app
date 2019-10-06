@@ -3,7 +3,7 @@
     <div fxFlex fxLayoutAlign="center center">
         <div>Assign Vehicle - {{ vehicle.regNo }}</div>
     </div>
-    <button mat-icon-button mat-dialog-close>
+    <button mat-icon-button (click)="onDoneClick()">
         <mat-icon>clear</mat-icon>
     </button>
 </mat-toolbar>

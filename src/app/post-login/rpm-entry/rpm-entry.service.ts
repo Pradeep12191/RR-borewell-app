@@ -94,10 +94,10 @@ export class RpmEntryService {
             const rpmData: RpmTableData = {
                 availableStockFeet: [], balanceStockFeet: [], damageFeet: [],
                 mmIncome: [], rrIncome: [], pointExpenseFeet: [],
-                previousStockFeeT: [], vehicleExIn: [], vehicleExOut: []
+                previousStockFeet: [], vehicleExIn: [], vehicleExOut: []
             }
             for (const rpm of data.f_rpm_table_data) {
-                rpmData.previousStockFeeT.push({
+                rpmData.previousStockFeet.push({
                     pipeId: rpm.pipe_id,
                     pipeSize: rpm.pipe_size,
                     pipeType: rpm.pipe_type,

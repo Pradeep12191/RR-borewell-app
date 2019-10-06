@@ -30,7 +30,7 @@ import { RpmEntry } from '../../models/RpmEntry';
 })
 export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     rpmEntry: RpmTableData = {
-        previousStockFeeT: [],
+        previousStockFeet: [],
         rrIncome: [],
         mmIncome: [],
         availableStockFeet: [],
@@ -56,9 +56,6 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     bookEndNo;
     rpmEntryNo;
     book: Book;
-    isInVehicle: boolean;
-    isOutVehicle: boolean;
-    isDamageFeet: boolean;
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
     @ViewChild('inVehicleSelect', { static: false }) inVehicleSelect: MatSelect;
@@ -98,12 +95,15 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             pointExpenseFeet: this.fb.array([]),
             vehicleExIn: this.fb.array([]),
             vehicleExOut: this.fb.array([]),
+            isDamage: { value: false, disabled: true },
             damageFeet: this.fb.array([]),
-            remarks: '',
+            isInVehicle: { value: false, disabled: true },
             inVehicle: '',
             inRpmNo: '',
+            isOutVehicle: { value: false, disabled: true },
             outVehicle: '',
-            outRpmNo: ''
+            outRpmNo: '',
+            remarks: '',
         })
         this.appearance = this.config.getConfig('formAppearance');
     }
@@ -119,12 +119,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
             this.pipes.forEach(pipe => {
                 const pipeData: RpmValue = { pipeType: pipe.type, feet: 0, pipeId: +pipe.id, pipeSize: +pipe.size, length: 0 }
-                this.rpmEntry.previousStockFeeT.push(pipeData);
-                this.rpmEntry.rrIncome.push(pipeData);
-                this.rpmEntry.mmIncome.push(pipeData);
-                this.rpmEntry.balanceStockFeet.push(pipeData);
-                this.rpmEntry.availableStockFeet.push(pipeData);
-                this.rpmEntry.damageFeet.push(pipeData);
+                this.rpmEntry.previousStockFeet.push({ ...pipeData });
+                this.rpmEntry.rrIncome.push({ ...pipeData });
+                this.rpmEntry.mmIncome.push({ ...pipeData });
+                this.rpmEntry.balanceStockFeet.push({ ...pipeData });
+                this.rpmEntry.availableStockFeet.push({ ...pipeData });
+                this.rpmEntry.damageFeet.push({ ...pipeData });
                 this.pointExpenseFeetFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
                 this.veicleExOutFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
                 this.veicleExInFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
@@ -146,7 +146,6 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onCheckChange(event: MatCheckboxChange, type: 'in' | 'out' | 'damage') {
         if (type === 'in') {
-            this.isInVehicle = event.checked;
             if (event.checked) {
                 this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
             } else {
@@ -158,7 +157,6 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         if (type === 'out') {
-            this.isOutVehicle = event.checked;
             if (event.checked) {
                 this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
             } else {
@@ -171,7 +169,6 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         if (type === 'damage') {
-            this.isDamageFeet = event.checked;
             if (event.checked) {
                 this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
             } else {
@@ -181,6 +178,55 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         }
     }
+
+    /**
+     * rrIncome + mmIncome + previousStockFeet + vehicleExchangeIn - (vehicleExchangeOut + damageFeet)
+     */
+    updateAvailableStock(pipeId) {
+        const rrIncome = this.rpmEntry.rrIncome.find(rr => rr.pipeId === pipeId).feet;
+        const mmIncome = this.rpmEntry.mmIncome.find(mm => mm.pipeId === pipeId).feet;
+        const previousStockFeet = this.rpmEntry.previousStockFeet.find(ps => ps.pipeId === pipeId).feet;
+        const availableStock = this.rpmEntry.availableStockFeet.find(as => as.pipeId === pipeId);
+        let vehicleInExchange = this.veicleExInFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value').value;
+        let vehicleOutExchange = this.veicleExOutFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value').value;
+        let damageFeet = this.damageFeetFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value').value;
+        vehicleInExchange = vehicleInExchange ? +vehicleInExchange : 0;
+        vehicleOutExchange = vehicleOutExchange ? +vehicleOutExchange : 0;
+        damageFeet = damageFeet ? +damageFeet : 0;
+
+        const availableStockFeet = (rrIncome + mmIncome + previousStockFeet + vehicleInExchange) - (vehicleOutExchange + damageFeet);
+        if (availableStockFeet > 0) {
+            availableStock.feet = availableStockFeet;
+        } else {
+            availableStock.feet = 0;
+        }
+        this.updateBalanceStock(pipeId);
+
+    }
+
+    /**
+     * available 
+     */
+    updateBalanceStock(pipeId) {
+        let pointExpenseFeet = this.pointExpenseFeetFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value').value
+        pointExpenseFeet = pointExpenseFeet ? +pointExpenseFeet : 0;
+        const availableStockFeet = this.rpmEntry.availableStockFeet.find(as => as.pipeId === pipeId).feet;
+        const balanceStock = this.rpmEntry.balanceStockFeet.find(bs => bs.pipeId === pipeId);
+        const balanceStockFeet = availableStockFeet - pointExpenseFeet;
+        if (balanceStockFeet > 0) {
+            balanceStock.feet = balanceStockFeet
+        } else {
+            balanceStock.feet = 0;
+        }
+    }
+
+    updateAllPipeStockFeet() {
+        this.pipes.forEach(pipe => {
+            const pipeId = +pipe.id;
+            this.updateAvailableStock(pipeId);
+        })
+    }
+
 
     onExVehicleChange(type: 'in' | 'out') {
         if (type === 'in') {
@@ -242,12 +288,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         dialogRef.afterClosed().subscribe((data: RpmTableData) => {
             if (data) {
-                console.log(data)
-                this.rpmEntry = data;
-                // this.removePointExpenseFeetCtrls();
-                // data.pointExpenseFeet.forEach(rpm => {
-                //     this.pointExpenseFeetFormArray.push(this.buildPointExpenseForm(rpm.pipeType, rpm.pipeId, rpm.pipeSize))
-                // })
+                this.rpmEntry.rrIncome = [...data.rrIncome];
+                this.rpmEntry.mmIncome = [...data.mmIncome];
+                this.updateAllPipeStockFeet();
             }
         })
     };
@@ -270,9 +313,59 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.picker.open();
             this.dateInput.nativeElement.focus();
             // once vehicle is selected enable all controls
+            this.form.get('isInVehicle').enable();
+            this.form.get('isOutVehicle').enable();
+            this.form.get('isDamage').enable();
             this.pointExpenseFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+            this.resetStockFeets();
         }, (err) => {
 
+        })
+    };
+
+    private resetStockFeets() {
+        // followning below 3 items needs to set from api call
+        this.rpmEntry.previousStockFeet.forEach(ps => {
+            ps.length = 0;
+            ps.feet = 0;
+        })
+        this.rpmEntry.rrIncome.forEach(rr => {
+            rr.length = 0;
+            rr.feet = 0;
+        });
+        this.rpmEntry.mmIncome.forEach(mm => {
+            mm.length = 0;
+            mm.feet = 0;
+        });
+        this.rpmEntry.availableStockFeet.forEach(as => {
+            as.length = 0;
+            as.feet = 0;
+        });
+        this.rpmEntry.balanceStockFeet.forEach(bs => {
+            bs.length = 0;
+            bs.feet = 0;
+        });
+        this.form.get('inVehicle').reset();
+        this.form.get('outVehicle').reset();
+        this.form.get('inRpmNo').reset();
+        this.form.get('outRpmNo').reset();
+        this.form.get('isDamage').reset();
+        this.form.get('isInVehicle').reset();
+        this.form.get('isOutVehicle').reset();
+        this.veicleExInFormArray.controls.forEach(ctrl => {
+            ctrl.get('value').reset();
+            ctrl.get('value').disable();
+        })
+        this.veicleExOutFormArray.controls.forEach(ctrl => {
+            ctrl.get('value').reset();
+            ctrl.get('value').disable();
+        })
+        this.damageFeetFormArray.controls.forEach(ctrl => {
+            ctrl.get('value').reset();
+            ctrl.get('value').disable();
+        })
+        this.pointExpenseFeetFormArray.controls.forEach(ctrl => {
+            ctrl.get('value').reset();
         })
     }
 
@@ -302,7 +395,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         for (const pipe of this.pipes) {
             const rpmEntry: RpmEntry = {
                 balance_stock_feet: this.rpmEntry.balanceStockFeet.find((p) => p.pipeId === +pipe.id).feet,
-                previous_stock_feet: this.rpmEntry.previousStockFeeT.find((p) => p.pipeId === +pipe.id).feet,
+                previous_stock_feet: this.rpmEntry.previousStockFeet.find((p) => p.pipeId === +pipe.id).feet,
                 available_stock_feet: this.rpmEntry.availableStockFeet.find((p) => p.pipeId === +pipe.id).feet,
                 rr_income: this.rpmEntry.rrIncome.find((p) => p.pipeId === +pipe.id).length,
                 rr_income_feet: this.rpmEntry.rrIncome.find((p) => p.pipeId === +pipe.id).feet,
@@ -328,7 +421,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     tableClick($event: MouseEvent) {
         const trigger = $event.target as HTMLElement;
-        if (trigger.tagName === 'INPUT' && trigger.attributes.getNamedItem('disabled')) {
+        if (trigger.tagName === 'INPUT' && trigger.attributes.getNamedItem('disabled') && !this.selectedVehicle) {
             return this.snackBar.open('Please Select a Vehicle', null, { duration: 4000 });
         }
     }

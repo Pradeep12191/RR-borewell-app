@@ -74,7 +74,7 @@
                         <div fxFlex="28" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 bold bg-grey">Previous
                             Stock
                             Feet</div>
-                        <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let previousStock of rpmEntry.previousStockFeeT; let last = last"
+                        <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let previousStock of rpmEntry.previousStockFeet; let last = last"
                             class="cell" [class.b-r-0]="!last">{{ previousStock.feet || '' }}</div>
                     </div>
                     <div class="row" fxLayout>
@@ -92,12 +92,12 @@
                     <div class="row" fxLayout>
                         <div fxFlex="28" fxLayoutAlign="start center" fxLayoutGap="10px" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">
                             <div fxLayout="column" fxFlex>
-                                <div [class.m-t-10]="isInVehicle" fxFlex="40">
-                                    <mat-checkbox color="primary" (change)="onCheckChange($event, 'in')" [disabled]="!selectedVehicle">
+                                <div [class.m-t-10]="form.get('isInVehicle').value" fxFlex="40">
+                                    <mat-checkbox color="primary" formControlName="isInVehicle" (change)="onCheckChange($event, 'in')">
                                         Vehicle Exchange In
                                     </mat-checkbox>
                                 </div>
-                                <div *ngIf="isInVehicle" fxLayout fxLayoutGap="10px" fxFlex class="m-r-16">
+                                <div *ngIf="form.get('isInVehicle').value" fxLayout fxLayoutGap="10px" fxFlex class="m-r-16">
                                     <mat-form-field class="calc-field" fxFlex="70">
                                         <mat-label>Select Vehicle</mat-label>
                                         <mat-select (selectionChange)="onExVehicleChange('in')" formControlName="inVehicle"
@@ -119,7 +119,7 @@
                             class="cell b-b-0" [class.b-r-0]="!last">
                             <ng-container [formGroup]="ctrl">
                                 <div class="input-wrapper h-100" fxFlex>
-                                    <input type="text" class="h-100" formControlName="value" placeholder="Feet"
+                                    <input (input)="updateAvailableStock(+ctrl.get('pipeId').value)" type="text" class="h-100" formControlName="value" placeholder="Feet"
                                         positiveNumber>
                                     <mat-icon class="input-edit-icon">edit</mat-icon>
                                     <!-- <label>Count</label> -->
@@ -134,12 +134,12 @@
                     <div class="row" fxLayout>
                         <div fxFlex="28" fxLayoutAlign="start center" fxLayoutGap="10px" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">
                             <div fxLayout="column" fxFlex>
-                                <div [class.m-t-10]="isOutVehicle" fxFlex="40">
-                                    <mat-checkbox color="primary" (change)="onCheckChange($event, 'out')" [disabled]="!selectedVehicle">
+                                <div [class.m-t-10]="form.get('isOutVehicle').value" fxFlex="40">
+                                    <mat-checkbox color="primary" formControlName="isOutVehicle" (change)="onCheckChange($event, 'out')">
                                         Vehicle Exchange Out
                                     </mat-checkbox>
                                 </div>
-                                <div *ngIf="isOutVehicle" fxLayout fxLayoutGap="10px" fxFlex class="m-r-16">
+                                <div *ngIf="form.get('isOutVehicle').value" fxLayout fxLayoutGap="10px" fxFlex class="m-r-16">
                                     <mat-form-field class="calc-field" fxFlex="70">
                                         <mat-label>Select Vehicle</mat-label>
                                         <mat-select (selectionChange)="onExVehicleChange('out')" formControlName="outVehicle">
@@ -160,7 +160,7 @@
                             class="cell b-b-0" [class.b-r-0]="!last">
                             <ng-container [formGroup]="ctrl">
                                 <div class="input-wrapper h-100" fxFlex>
-                                    <input type="text" class="h-100" formControlName="value" placeholder="Feet"
+                                    <input type="text" class="h-100" (input)="updateAvailableStock(+ctrl.get('pipeId').value)" formControlName="value" placeholder="Feet"
                                         positiveNumber>
                                     <mat-icon class="input-edit-icon">edit</mat-icon>
                                     <!-- <label>Count</label> -->
@@ -174,7 +174,7 @@
                     </div>
                     <div class="row" fxLayout>
                         <div fxFlex="28" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">
-                            <mat-checkbox color="primary" (change)="onCheckChange($event, 'damage')" [disabled]=!selectedVehicle>
+                            <mat-checkbox color="primary" formControlName="isDamage" (change)="onCheckChange($event, 'damage')">
                                     Damage Feet
                             </mat-checkbox>
                         </div>
@@ -183,7 +183,7 @@
                             class="cell b-b-0" [class.b-r-0]="!last">
                             <ng-container [formGroup]="ctrl">
                                 <div class="input-wrapper h-100" fxFlex>
-                                    <input type="text" class="h-100" formControlName="value" placeholder="Feet"
+                                    <input type="text" (input)="updateAvailableStock(+ctrl.get('pipeId').value)" class="h-100" formControlName="value" placeholder="Feet"
                                         positiveNumber>
                                     <mat-icon class="input-edit-icon">edit</mat-icon>
                                     <!-- <label>Count</label> -->
@@ -209,7 +209,7 @@
                             class="cell b-b-0" [class.b-r-0]="!last">
                             <ng-container [formGroup]="ctrl">
                                 <div class="input-wrapper h-100" fxFlex>
-                                    <input type="text" class="h-100" formControlName="value" placeholder="Feet"
+                                    <input type="text" (input)="updateBalanceStock(+ctrl.get('pipeId').value)" class="h-100" formControlName="value" placeholder="Feet"
                                         positiveNumber>
                                     <mat-icon class="input-edit-icon">edit</mat-icon>
                                     <!-- <label>Count</label> -->

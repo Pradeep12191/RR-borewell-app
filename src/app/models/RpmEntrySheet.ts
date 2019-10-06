@@ -12,4 +12,5 @@ export interface RpmEntrySheet {
     vehicle_out_id: number;
     vehicle_out_rpm_sheet_no: number;
     remarks?: string;
+    date?: string;
 }

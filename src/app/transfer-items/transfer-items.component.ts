@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ContentChild, TemplateRef, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, ViewChild, ContentChild, TemplateRef, Output, EventEmitter, OnInit, ElementRef } from '@angular/core';
 import { MatCheckboxChange, MatSelectionList, MatSelectionListChange } from '@angular/material';
 import { TransferItemIntialMsgDirective } from './transfer-item-intial-msg/transfer-item-intial-msg.component';
 import { FADE_OPACTIY_ANIMATION } from '../animations/fade-opactiy.animation';
@@ -22,6 +22,12 @@ export class TransferItemComponent {
             this.selectedData = [];
             this.selectionUpdate.emit(this.selectedData);
             this._data.forEach(d => d.isSelected = false);
+            if (this.leftContainer) {
+                (this.leftContainer.nativeElement as HTMLElement).scrollTo(0, 0);
+            }
+            if (this.rightContainer) {
+                (this.rightContainer.nativeElement as HTMLElement).scrollTo(0, 0);
+            }
         }
 
     };
@@ -33,6 +39,8 @@ export class TransferItemComponent {
     @ViewChild(MatSelectionList, { static: false }) selectList: MatSelectionList;
     @ContentChild(TransferItemIntialMsgDirective, { static: false, read: TemplateRef })
     intialMsg: TemplateRef<TransferItemIntialMsgDirective>;
+    @ViewChild('leftContainer', { static: false }) leftContainer: ElementRef;
+    @ViewChild('rightContainer', { static: false }) rightContainer: ElementRef;
 
     loading;
     selectAllChecked;
@@ -81,7 +89,7 @@ export class TransferItemComponent {
                 obj.isSelected = false;
             }
         }
-        this.selectAllChecked = this.selectedData.every(d => d.isSelected);
+        this.selectAllChecked = this._data.every(d => d.isSelected);
         this.selectionUpdate.emit(this.selectedData);
     }
 }

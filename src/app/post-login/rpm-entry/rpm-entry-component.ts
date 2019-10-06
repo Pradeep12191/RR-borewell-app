@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { PipeSize } from '../../models/PipeSize';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Vehicle } from '../../models/Vehicle';
 import * as moment from 'moment';
 import { OverlayCardService } from '../../services/overlay-card.service';
@@ -64,6 +64,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('outRpmInput', { static: false }) outRpmNoInput: MatInput;
     @ViewChild('picker', { static: false }) picker: MatDatepicker<any>;
     @ViewChild('dateInput', { static: false }) dateInput: ElementRef;
+    @ViewChildren('inFeetInput') inFeetInputs: QueryList<ElementRef>;
+    @ViewChildren('outFeetInput') outFeetInputs: QueryList<ElementRef>;
+    @ViewChildren('damageFeetInput') damageFeetInputs: QueryList<ElementRef>;
+    @ViewChildren('expenseFeetInput') expenseFeetInputs: QueryList<ElementRef>;
+    allInputs: QueryList<ElementRef>[] = new Array(4);
 
     get pointExpenseFeetFormArray() {
         return this.form.get('pointExpenseFeet') as FormArray
@@ -98,12 +103,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             isDamage: { value: false, disabled: true },
             damageFeet: this.fb.array([]),
             isInVehicle: { value: false, disabled: true },
-            inVehicle: '',
-            inRpmNo: '',
+            inVehicle: ['', Validators.required],
+            inRpmNo: ['', Validators.required],
             isOutVehicle: { value: false, disabled: true },
-            outVehicle: '',
-            outRpmNo: '',
-            remarks: '',
+            outVehicle: ['', Validators.required],
+            outRpmNo: ['', Validators.required],
+            remarks: { value: '', disabled: false },
         })
         this.appearance = this.config.getConfig('formAppearance');
     }
@@ -141,29 +146,128 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.picker.closedStream.subscribe(() => {
             // this.inVehicleSelect.open();
             // this.inVehicleSelect.focus();
-        })
+        });
+        this.allInputs[0] = this.inFeetInputs;
+        this.allInputs[1] = this.outFeetInputs;
+        this.allInputs[2] = this.damageFeetInputs;
+        this.allInputs[3] = this.expenseFeetInputs;
+
+    }
+
+    onInputKeyUp(event: KeyboardEvent, rowIndex, colIndex) {
+        const validKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter']
+        if (validKeys.indexOf(event.key) !== -1) {
+            if (event.key === 'Enter' || event.key === 'ArrowRight') {
+                const queryList = this.allInputs[rowIndex];
+                const nextElRef = queryList.toArray()[colIndex + 1];
+                if (nextElRef) {
+                    const input = nextElRef.nativeElement as HTMLInputElement;
+                    input.focus();
+                } else {
+                    // focus currently at last input, try traversing to next enabled control
+                    let nextRow: QueryList<ElementRef> = null;
+                    for (let i = rowIndex + 1; i < this.allInputs.length; i++) {
+                        nextRow = this.allInputs[i];
+                        const firstInput = nextRow.toArray()[0].nativeElement as HTMLInputElement;
+                        if (firstInput && !firstInput.disabled) {
+                            break;
+                        }
+                    }
+                    if (nextRow) {
+                        const firstInput = nextRow.toArray()[0].nativeElement as HTMLInputElement;
+                        firstInput.focus();
+                    }
+                }
+            }
+            if (event.key === 'ArrowLeft') {
+                const queryList = this.allInputs[rowIndex];
+                const prevElRef = queryList.toArray()[colIndex - 1];
+                if (prevElRef) {
+                    const input = prevElRef.nativeElement as HTMLInputElement;
+                    input.focus();
+                } else {
+                    // focus currently at first input, try traversing to previous row enabled control
+                    let prevRow: QueryList<ElementRef> = null;
+                    for (let i = rowIndex - 1; i >= 0; i--) {
+                        prevRow = this.allInputs[i];
+                        const lastInput = prevRow.toArray()[prevRow.length - 1].nativeElement as HTMLInputElement;
+                        if (lastInput && !lastInput.disabled) {
+                            break;
+                        }
+                    }
+                    if (prevRow) {
+                        const lastInput = prevRow.toArray()[prevRow.length - 1].nativeElement as HTMLInputElement;
+                        lastInput.focus();
+                    }
+                }
+            }
+
+            if (event.key === 'ArrowUp') {
+                // go upto one level enabled row, and focus the input as same index of current row;
+                let prevRow: QueryList<ElementRef> = null;
+                for (let i = rowIndex - 1; i >= 0; i--) {
+                    prevRow = this.allInputs[i];
+                    const lastInput = prevRow.toArray()[prevRow.length - 1].nativeElement as HTMLInputElement;
+                    if (lastInput && !lastInput.disabled) {
+                        break;
+                    }
+                }
+                if (prevRow) {
+                    const sameLevelInput = prevRow.toArray()[colIndex].nativeElement as HTMLInputElement;
+                    sameLevelInput.focus();
+                }
+            }
+
+            if (event.key === 'ArrowDown') {
+                // go upto one level enabled row, and focus the input as same index of current row;
+                let nextRow: QueryList<ElementRef> = null;
+                for (let i = rowIndex + 1; i < this.allInputs.length; i++) {
+                    nextRow = this.allInputs[i];
+                    const firstInput = nextRow.toArray()[0].nativeElement as HTMLInputElement;
+                    if (firstInput && !firstInput.disabled) {
+                        break;
+                    }
+                }
+                if (nextRow) {
+                    const firstInput = nextRow.toArray()[colIndex].nativeElement as HTMLInputElement;
+                    firstInput.focus();
+                }
+            }
+
+        }
+
+
     }
 
     onCheckChange(event: MatCheckboxChange, type: 'in' | 'out' | 'damage') {
         if (type === 'in') {
             if (event.checked) {
-                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+                setTimeout(() => {
+                    this.inVehicleSelect.open();
+                    this.inVehicleSelect.focus();
+                }, 100);
+
+                // this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
             } else {
                 this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
-                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').setValue(''));
-                this.form.get('inVehicle').setValue('')
-                this.form.get('inRpmNo').setValue('')
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').reset(''));
+                this.form.get('inVehicle').reset('')
+                this.form.get('inRpmNo').reset('')
             }
         }
 
         if (type === 'out') {
             if (event.checked) {
-                this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+                setTimeout(() => {
+                    this.outVehicleSelect.open();
+                    this.outVehicleSelect.focus();
+                }, 100);
+                // this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
             } else {
                 this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
-                this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').setValue(''));
-                this.form.get('outVehicle').setValue('')
-                this.form.get('outRpmNo').setValue('')
+                this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').reset(''));
+                this.form.get('outVehicle').reset('');
+                this.form.get('outRpmNo').reset('');
             }
 
         }
@@ -171,6 +275,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (type === 'damage') {
             if (event.checked) {
                 this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+                setTimeout(() => {
+                    const firstDamageFeet = this.damageFeetInputs.toArray()[0].nativeElement as HTMLInputElement;
+                    if (firstDamageFeet && !firstDamageFeet.disabled) {
+                        firstDamageFeet.focus();
+                    }
+                }, 100)
             } else {
                 this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').setValue(''));
                 this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
@@ -230,12 +340,52 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onExVehicleChange(type: 'in' | 'out') {
         if (type === 'in') {
+            if (this.form.get('inVehicle').valid && this.form.get('inRpmNo').valid) {
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').enable())
+            } else {
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').disable())
+            }
             return setTimeout(() => {
                 this.inRpmNoInput.focus();
             }, 100)
         }
-        return this.outRpmNoInput.focus();
+        if (this.form.get('outVehicle').valid && this.form.get('outRpmNo').valid) {
+            this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable())
+        } else {
+            this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').disable())
+        }
+        setTimeout(() => {
+            this.outRpmNoInput.focus();
+        }, 100);
+    }
 
+    onExRpmNoInput(type: 'in' | 'out') {
+        if (type === 'in') {
+            if (this.form.get('inVehicle').valid && this.form.get('inRpmNo').valid) {
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').enable())
+            } else {
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').disable())
+            }
+        }
+        if (this.form.get('outVehicle').valid && this.form.get('outRpmNo').valid) {
+            this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable())
+        } else {
+            this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').disable())
+        }
+    }
+
+    onExRpmNoEnter(type: 'in' | 'out') {
+        if (type === 'in') {
+            const firstInFeetInput = this.inFeetInputs.toArray()[0].nativeElement as HTMLInputElement;
+            if (!firstInFeetInput.disabled) {
+                firstInFeetInput.focus();
+            }
+            return;
+        }
+        const firstOutFeetInput = this.outFeetInputs.toArray()[0].nativeElement as HTMLInputElement;
+        if (firstOutFeetInput && !firstOutFeetInput.disabled) {
+            firstOutFeetInput.focus();
+        }
     }
 
     ngOnDestroy() {
@@ -316,6 +466,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.form.get('isInVehicle').enable();
             this.form.get('isOutVehicle').enable();
             this.form.get('isDamage').enable();
+            this.form.get('remarks').enable();
             this.updatePreviousStockFeet(lastRpmEntrySheet);
             this.pointExpenseFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
             this.resetStockFeets();
@@ -403,6 +554,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             vehicle_out_id: this.form.value.outVehicle ? +this.form.value.outVehicle.vehicle_id : 0,
             vehicle_in_rpm_sheet_no: this.form.value.inRpmNo || 0,
             vehicle_out_rpm_sheet_no: this.form.value.outRpmNo || 0,
+            remarks: this.form.value.remarks,
             f_rpm_table_data: []
         }
 
@@ -421,7 +573,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 damage_feet: +this.form.value.damageFeet.find(p => +p.pipeId === +pipe.id).value || 0,
                 vehicle_ex_out: +this.form.value.vehicleExOut.find(p => +p.pipeId === +pipe.id).value || 0,
                 vehicle_ex_in: +this.form.value.vehicleExIn.find(p => +p.pipeId === +pipe.id).value || 0,
-                point_expenses_feet: +this.form.value.pointExpenseFeet.find(p => +p.pipeId === +pipe.id).value || 0
+                point_expenses_feet: +this.form.value.pointExpenseFeet.find(p => +p.pipeId === +pipe.id).value || 0,
             }
             payload.f_rpm_table_data.push(rpmEntry);
         }

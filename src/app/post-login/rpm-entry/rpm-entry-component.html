@@ -48,7 +48,7 @@
             </div>
             <mat-form-field floatLabel="always" (click)="picker.open()" class="calc-field" fxFlex>
                 <mat-label>Date</mat-label>
-                <input [disabled]="!selectedVehicle" [(ngModel)]="date" #dateInput placeholder="Select Date" readonly
+                <input [disabled]="!selectedVehicle" required [(ngModel)]="date" #dateInput placeholder="Select Date" readonly
                     matInput [matDatepicker]="picker">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
@@ -240,7 +240,7 @@
     </mat-card>
     <div fxLayoutAlign="end" class="m-t-25">
         <div>
-            <button [disabled]="!selectedVehicle" (click)="save()" mat-raised-button color="primary" type="button">SUBMIT</button>
+            <button [disabled]="!selectedVehicle" (click)="submit()" mat-raised-button color="primary" type="button">SUBMIT</button>
         </div>
     </div>
 </div>

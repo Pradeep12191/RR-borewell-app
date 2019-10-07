@@ -113,8 +113,11 @@
         {
             "name": "submitRpmEntry",
             "url": "update_and_add_new_rpm_sheet_entry"
+        },
+        {
+            "name": "rpmReport",
+            "url": "rpm_sheet_report"
         }
-        
     ],
     "reportGenerateUrls": [
         {
@@ -123,7 +126,7 @@
         },
         {
             "name": "pipeData",
-            "url":"pipe-data-report"
+            "url": "pipe-data-report"
         }
     ]
 }

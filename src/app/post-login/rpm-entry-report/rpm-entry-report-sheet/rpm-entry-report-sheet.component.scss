@@ -3,7 +3,15 @@
 }
 
 .cell{
-    border: 1px solid;
+    border: 1px solid black;
+    &.added{
+        background-color: rgba(green, 0.3);
+        color: green
+    }
+    &.removed{
+        background-color: rgba(red, 0.3);
+        color: red;
+    }
     &.bg-grey{
         background-color: rgba(0, 96, 100, 0.3);
     }

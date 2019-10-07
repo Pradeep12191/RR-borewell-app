@@ -15,29 +15,29 @@
         <div class="row" fxLayout>
             <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 b-t-0 p-l-10 b-b-0 bold bg-grey">RR Income</div>
             <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let rrIncome of rpmTableData.rrIncome; let last = last"
-                class="cell b-t-0 b-b-0" [class.b-r-0]="!last">{{ rrIncome.feet || '' }}</div>
+                class="cell b-t-0 b-b-0" [class.added]="rrIncome.feet" [class.b-r-0]="!last">{{ rrIncome.feet || '' }}</div>
         </div>
         <div class="row" fxLayout>
             <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">MM Income</div>
             <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let mmIncome of rpmTableData.mmIncome; let last = last"
-                class="cell b-b-0" [class.b-r-0]="!last">{{ mmIncome.feet || '' }}</div>
+                class="cell b-b-0" [class.added]="mmIncome.feet" [class.b-r-0]="!last">{{ mmIncome.feet || '' }}</div>
         </div>
         <div class="row" fxLayout>
             <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Vehicle Exchange
                 In</div>
             <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let vehicleExIn of rpmTableData.vehicleExIn; let last = last"
-                class="cell b-b-0" [class.b-r-0]="!last">{{ vehicleExIn.feet || '' }}</div>
+                class="cell b-b-0" [class.added]="vehicleExIn.feet" [class.b-r-0]="!last">{{ vehicleExIn.feet || '' }}</div>
         </div>
         <div class="row" fxLayout>
             <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Vehicle Exchange
                 Out</div>
             <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let vehicleExOut of rpmTableData.vehicleExOut; let last = last"
-                class="cell b-b-0" [class.b-r-0]="!last">{{ vehicleExOut.feet || '' }}</div>
+                class="cell b-b-0" [class.removed]="vehicleExOut.feet" [class.b-r-0]="!last">{{ vehicleExOut.feet || '' }}</div>
         </div>
         <div class="row" fxLayout>
             <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 bold b-b-0 bg-grey">Damage Feet</div>
             <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let damageFeet of rpmTableData.damageFeet; let last = last"
-                class="cell b-b-0" [class.b-r-0]="!last">{{ damageFeet.feet || '' }}</div>
+                class="cell b-b-0" [class.removed]="damageFeet.feet" [class.b-r-0]="!last">{{ damageFeet.feet || '' }}</div>
         </div>
         <div class="row" fxLayout>
             <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 bold b-b-0 bg-grey">Available Stock Feet</div>
@@ -47,7 +47,7 @@
         <div class="row" fxLayout>
             <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 bold b-b-0 bg-grey">Point Expense Feet</div>
             <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let pointExpenseFeet of rpmTableData.pointExpenseFeet; let last = last"
-                class="cell b-b-0" [class.b-r-0]="!last">{{ pointExpenseFeet.feet || '' }}</div>
+                class="cell b-b-0" [class.removed]="pointExpenseFeet.feet" [class.b-r-0]="!last">{{ pointExpenseFeet.feet || '' }}</div>
         </div>
         <div class="row" fxLayout>
             <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 bold bg-grey">Balance Stock Feet</div>

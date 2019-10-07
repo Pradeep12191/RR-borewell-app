@@ -1,0 +1,30 @@
+.header-cell{
+    min-height: 36px;
+}
+
+.cell{
+    border: 1px solid;
+    &.bg-grey{
+        background-color: rgba(0, 96, 100, 0.3);
+    }
+    
+    &.b-r-0{
+        border-right: 0;
+    }
+
+    &.b-l-0{
+        border-left: 0;
+    }
+
+    &.b-b-0{
+        border-bottom: 0;
+    }
+
+    &.b-t-0{
+        border-top: 0;
+    }
+}
+
+.row{
+    min-height: 42px;
+}

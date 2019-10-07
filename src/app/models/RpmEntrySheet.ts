@@ -1,4 +1,5 @@
 import { RpmEntry } from './RpmEntry';
+import { RpmTableData } from './RpmTableData';
 
 export interface RpmEntrySheet {
     book_id: number;
@@ -14,4 +15,5 @@ export interface RpmEntrySheet {
     vehicle_no?: string;
     remarks?: string;
     date?: string;
+    rpmTableData?: RpmTableData
 }

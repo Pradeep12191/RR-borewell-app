@@ -11,6 +11,7 @@ import { RpmEntryReportRoutingModule } from './rpm-entry-report-routing.module';
 import { RpmEntryReportResolver } from '../../guards/resolveGuard/rpmEntry/rpm-entry-report.resolve';
 import { RpmEntryReportService } from './rpm-entry-report.service';
 import { ExpandTableModule } from '../../expand-table/expand-table.module';
+import { RpmEntryReportSheetComponent } from './rpm-entry-report-sheet/rpm-entry-report-sheet.component';
 
 @NgModule({
     imports: [
@@ -26,7 +27,8 @@ import { ExpandTableModule } from '../../expand-table/expand-table.module';
         DirectiveModule
     ],
     declarations: [
-        RpmEntryReportComponent
+        RpmEntryReportComponent,
+        RpmEntryReportSheetComponent
     ],
     providers: [
         RpmEntryReportResolver,

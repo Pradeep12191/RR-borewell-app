@@ -20,7 +20,6 @@ export class ViewBillComponent implements OnDestroy {
     bills;
     billDataSource: MatTableDataSource<any>;
     appearance;
-    dataChanges = new Subject<any>();
     public columns: Column[] = [
         { id: 'serialNo', name: 'COLUMN.SERIAL_NO', type: 'index', width: '10' },
         { id: 'billNo', name: 'Bill Number', type: 'string', width: '15', isCenter: true, style: { fontSize: '20px', fontWeight: 'bold' } },
@@ -152,7 +151,6 @@ export class ViewBillComponent implements OnDestroy {
             .subscribe((bills) => {
                 this.bills = bills;
                 this.billDataSource = new MatTableDataSource(this.bills);
-                this.dataChanges.next();
                 this.billNoDisabled = false;
                 this.billNoLoading = false;
                 this.godownTypeDisabled = false;

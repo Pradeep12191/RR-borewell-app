@@ -26,7 +26,7 @@
 </div>
 
 <div fxLayout fxLayoutAlign="center center">
-    <expand-table [dataChanges]="dataChanges" [accordionEffect]="false" *ngIf="bills?.length;  else emptyTpl" fxFlex="75"
+    <expand-table [accordionEffect]="false" *ngIf="bills?.length;  else emptyTpl" fxFlex="75"
         [data]="bills" [columns]="columns" [dataSource]="billDataSource">
         <ng-container *expandDetails="let bill">
             <div fxLayout="column" class="m-b-16" fxFlex>

@@ -26,14 +26,12 @@ export class ExpandTableComponent implements OnInit, OnDestroy {
     @Input() expandFirstRow;
     @Output() iconButtonClick = new EventEmitter();
     @Input() accordionEffect = true;
-    @Input() dataChanges: Subject<any>;
     @Input() isHeaderSticky = false;
     @ContentChild(ExpandDetailsDirective, { read: TemplateRef, static: false }) detailsTpl: TemplateRef<ExpandDetailsDirective>;
     displayedColumns = [];
     expandedRow;
     _expandAll;
     _dataSource;
-    dataChangesSubcription: Subscription
 
     constructor(
         private mediaObs: MediaObserver
@@ -52,19 +50,9 @@ export class ExpandTableComponent implements OnInit, OnDestroy {
             }
         }
 
-        if (this.dataChanges) {
-            this.dataChanges.subscribe(() => {
-                setTimeout(() => {
-                    
-                })
-                
-            })
-        }
-
     }
 
     ngOnDestroy() {
-        if (this.dataChangesSubcription) { this.dataChangesSubcription.unsubscribe() }
     }
 
     expandRow(currentRow, expand) {

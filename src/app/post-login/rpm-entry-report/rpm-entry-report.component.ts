@@ -16,17 +16,17 @@ export class RpmEntryReportComponent implements OnDestroy {
     entriesDatasource: MatTableDataSource<RpmEntrySheet>;
     public columns: Column[] = [
         { id: 'serialNo', name: 'COLUMN.SERIAL_NO', type: 'index', width: '10' },
-        { id: 'billNo', name: 'Bill Number', type: 'string', width: '15', isCenter: true, style: { fontSize: '20px', fontWeight: 'bold' } },
-        { id: 'godowntype1', name: 'Godown', type: 'string', width: '15', isCenter: true, style: { fontSize: '20px', fontWeight: 'bold', textTransform: 'uppercase' } },
-        { id: 'company1', name: 'Company', type: 'string', width: '15', isCenter: true, style: { fontSize: '20px', fontWeight: 'bold', textTransform: 'uppercase' } },
+        { id: 'rpm_sheet_no', name: 'RPM Sheet No.', type: 'string', width: '15', isCenter: true, style: { fontSize: '20px', fontWeight: 'bold' } },
+        { id: 'vehicle_no', name: 'Vehicle No.', type: 'string', width: '20', isCenter: true, style: { fontSize: '20px', fontWeight: 'bold', textTransform: 'uppercase' } },
         { id: 'date', name: 'Date', type: 'string', width: '25', style: { fontSize: '20px', fontWeight: 'bold' } },
         { id: 'more_details', name: 'Collapse All', type: 'toggle', width: '20', isCenter: true }
     ];
     constructor(
         private route: ActivatedRoute
     ) {
-        this.routeDataSubcription = this.route.data.subscribe((entries: RpmEntrySheet[]) => {
-
+        this.routeDataSubcription = this.route.data.subscribe((data) => {
+            this.entries = data.entries;
+            this.entriesDatasource = new MatTableDataSource(this.entries);
         })
     }
 

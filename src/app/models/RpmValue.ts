@@ -3,5 +3,5 @@ export interface RpmValue {
     pipeSize: number;
     pipeId: number;
     feet: number;
-    length: number;
+    length?: number;
 }

@@ -1,10 +1,25 @@
 <div fxLayout="column" class="shift-top-30">
-    <expand-table [accordionEffect]="false" *ngIf="bills?.length;  else emptyTpl" fxFlex="75" [data]="bills" [columns]="columns"
-        [dataSource]="billDataSource">
-        <ng-container *expandDetails="let bill">
+    <div fxLayout class="m-b-16">
+        <h2>RPM Report Data</h2>
+    </div>
+    <expand-table [accordionEffect]="false" *ngIf="entries?.length;  else emptyTpl" fxFlex="75"
+        [data]="entries" [columns]="columns"
+        [dataSource]="entriesDatasource">
+        <ng-container *expandDetails="let rpmEntry">
             <div fxLayout="column" class="m-b-16" fxFlex>
-                <ng-container *ngTemplateOutlet="billDetailsTpl; context: { $implicit: bill }"> </ng-container>
+                <ng-container *ngTemplateOutlet="rpmSheetTpl; context: { $implicit: rpmEntry }">
+                </ng-container>
             </div>
         </ng-container>
     </expand-table>
 </div>
+
+<ng-template #emptyTpl>
+    <mat-card>
+        <mat-card-content>No Rpm Entry Found.</mat-card-content>
+    </mat-card>
+</ng-template>
+
+<ng-template #rpmSheetTpl let-rpmEntry>
+    <rpm-entry-report-sheet [rpmTableData]="rpmEntry.rpmTableData"></rpm-entry-report-sheet>
+</ng-template>

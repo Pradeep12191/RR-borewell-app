@@ -2,11 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router'; 
 import { RpmEntryReportComponent } from './rpm-entry-report.component';
 import { RpmEntryReportResolver } from '../../guards/resolveGuard/rpmEntry/rpm-entry-report.resolve';
+import { PipeSizesResolver } from '../../guards/resolveGuard/select-option/pipe-sizes.resolver';
 
 const routes: Routes = [
     {
         path: '', component: RpmEntryReportComponent, resolve: {
-            entries: RpmEntryReportResolver
+            entries: RpmEntryReportResolver,
+            pipes: PipeSizesResolver
         }
     }
 ]

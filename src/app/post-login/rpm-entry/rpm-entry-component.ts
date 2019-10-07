@@ -48,7 +48,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     selectedVehicle: Vehicle;
     bookPopupRef: CardOverlayref;
     appearance;
-    date = moment();
+    date = null;
     godowns: Godown[];
     bookStartNo;
     bookId;
@@ -519,6 +519,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('outRpmNo').reset();
         this.form.get('isDamage').reset();
         this.form.get('isInVehicle').reset();
+        this.form.get('remarks').reset();
+        this.date = null;
         this.form.get('isOutVehicle').reset();
         this.veicleExInFormArray.controls.forEach(ctrl => {
             ctrl.get('value').reset();
@@ -534,7 +536,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         })
         this.pointExpenseFeetFormArray.controls.forEach(ctrl => {
             ctrl.get('value').reset();
-        })
+        });
+
+        // this.picker.open();
+        // (this.dateInput.nativeElement as HTMLInputElement).focus()
+
     }
 
     enableAllControls() {
@@ -544,7 +550,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
     }
 
-    save() {
+    submit() {
+        if (!this.date) {
+            (this.dateInput.nativeElement as HTMLInputElement).focus();
+            return this.snackBar.open('Date is required', null, { duration: 2000 })
+        }
         const pointExpenseFeet = this.form.value.pointExpenseFeet
         this.rpmEntry.pointExpenseFeet = pointExpenseFeet;
         const payload: RpmEntrySheet = {
@@ -583,9 +593,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             payload.f_rpm_table_data.push(rpmEntry);
         }
         this.rpmEntryService.submitRpm(payload).subscribe((lastRpmEntrySheet) => {
+            this.common.scrollTop();
             this.updatePreviousStockFeet(lastRpmEntrySheet);
             this.resetStockFeets();
-            this.common.scrollTop();
         }, () => { })
     }
 

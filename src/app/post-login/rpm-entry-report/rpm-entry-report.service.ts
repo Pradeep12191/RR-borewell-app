@@ -38,7 +38,7 @@ export class RpmEntryReportService {
                     }
                     rpmData.previousStockFeet.push({ ...pipeData, feet: rpm.previous_stock_feet });
                     rpmData.damageFeet.push({ ...pipeData, feet: rpm.damage_feet });
-                    rpmData.availableStockFeet.push({ ...pipeData, feet: rpm.balance_stock_feet });
+                    rpmData.availableStockFeet.push({ ...pipeData, feet: rpm.available_stock_feet });
                     rpmData.balanceStockFeet.push({ ...pipeData, feet: rpm.balance_stock_feet });
                     rpmData.pointExpenseFeet.push({ ...pipeData, feet: rpm.point_expenses_feet });
                     rpmData.vehicleExOut.push({ ...pipeData, feet: rpm.vehicle_ex_out });

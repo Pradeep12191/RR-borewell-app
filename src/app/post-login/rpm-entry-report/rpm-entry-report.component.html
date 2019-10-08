@@ -1,7 +1,8 @@
 <div fxLayout="column" class="shift-top-30">
-    <div fxLayout class="m-b-16">
+    <div fxLayout class="m-b-16 header-container" fxLayoutAlign="center center">
         <h2>RPM Report Data</h2>
-    </div>
+        <button (click)="downloadReport()" mat-raised-button color="primary" class="pdf-btn">Download Pdf</button>
+    </div> 
     <expand-table [accordionEffect]="false" *ngIf="entries?.length;  else emptyTpl" fxFlex="75"
         [data]="entries" [columns]="columns"
         [dataSource]="entriesDatasource">

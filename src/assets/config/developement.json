@@ -127,6 +127,10 @@
         {
             "name": "pipeData",
             "url": "pipe-data-report"
+        },
+        {
+            "name": "rpmEntry",
+            "url": "rpm-entry-report"
         }
     ]
 }

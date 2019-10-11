@@ -2,21 +2,21 @@
     <mat-toolbar class="custom" color="primary">
         <span>ADD COMPANY</span>
         <span class="space"></span>
-        <button mat-icon-button>
+        <button mat-icon-button (click)="close()">
             <mat-icon>clear</mat-icon>
         </button>
     </mat-toolbar>
     <div class="content">
-        <form [formGroup]="form">
+        <form [formGroup]="form" (ngSubmit)="save()">
             <div fxLayout>
                 <mat-form-field [appearance]="appearance">
                     <mat-label>Name</mat-label>
-                    <input type="text" cdkFocusInitial autocomplete="off" formControlName="name" matInput>
+                    <input type="text" autocomplete="off" formControlName="name" matInput #nameInput="matInput">
                 </mat-form-field>
             </div>
             <div fxLayout fxLayoutGap="25px">
-                <button (click)="close()" mat-raised-button>CANCEL</button>
-                <button mat-raised-button color="primary">SAVE</button>
+                <button (click)="close()" type="button" mat-raised-button>CANCEL</button>
+                <button [disabled]="form.invalid" mat-raised-button color="primary">SAVE</button>
             </div>
         </form>
     </div>

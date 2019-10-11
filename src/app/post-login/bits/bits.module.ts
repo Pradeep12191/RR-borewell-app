@@ -15,6 +15,9 @@ import { AddCompanyPopup } from './add-bit-dialog/add-bit/add-company-popup/add-
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { BitListResolver } from '../../guards/resolveGuard/bit/bit-list.resolver';
 import { PipesModule } from '../../pipes/pipes.module';
+import { BitCompaniesResolver } from '../../guards/resolveGuard/bit/bit-companies.resolver';
+import { AddBitService } from './add-bit-dialog/add-bit.service';
+import { OverlayCardService } from '../../services/overlay-card.service';
 
 @NgModule({
     imports: [
@@ -35,13 +38,18 @@ import { PipesModule } from '../../pipes/pipes.module';
         AddBitDialogComponent,
         AddBitComponent,
         ConfirmBitComponent,
-        // AddCompanyPopup
+        AddCompanyPopup
     ],
     entryComponents: [
         AddBitDialogComponent,
-        // AddCompanyPopup
+        AddCompanyPopup
     ],
-    providers: [BitListResolver]
+    providers: [
+        BitListResolver,
+        BitCompaniesResolver,
+        AddBitService,
+        OverlayCardService
+    ]
 })
 export class BitsModule {
 

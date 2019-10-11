@@ -14,6 +14,7 @@ import { LoaderService } from '../../services/loader-service';
 import { ToastrService } from 'ngx-toastr';
 import { AppService } from '../../services/app.service';
 import { finalize } from 'rxjs/operators';
+import { Company } from './Company';
 
 const BIT_LENGTH = 20;
 
@@ -32,6 +33,7 @@ export class BitsComponent {
     bits: Bit[];
     lastBillUrl;
     bitUrl;
+    companies: Company[]
     constructor(
         private config: ConfigService,
         private route: ActivatedRoute,
@@ -48,6 +50,7 @@ export class BitsComponent {
         this.routeDataSubscription = this.route.data.subscribe((data) => {
             this.godowns = data.bitData.godowns;
             this.selectedGodown = this.godowns[1];
+            this.companies = data.companies
 
             setTimeout(() => {
                 // this.items = [1, 2, 3, 4, 5, 6, 7, 8]
@@ -59,9 +62,9 @@ export class BitsComponent {
     updateBits(bits) {
         this.bits = bits;
 
-        this.bits.forEach(bit => {
-            bit['length'] = bit.count ? (+bit.count * BIT_LENGTH).toString() : '0';
-        });
+        // this.bits.forEach(bit => {
+        //     bit['length'] = bit.count ? (+bit.count * BIT_LENGTH).toString() : '0';
+        // });
     }
 
     navigateToViewBill() {
@@ -98,7 +101,8 @@ export class BitsComponent {
                 height: '100vh',
                 data: {
                     selectedGodown: this.selectedGodown,
-                    lastBill
+                    lastBill,
+                    companies: this.companies
                 },
                 disableClose: true
             });

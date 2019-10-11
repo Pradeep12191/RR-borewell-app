@@ -1,62 +1,71 @@
 <form [formGroup]="form">
-    <div fxLayout fxLayoutAlign="end" class="m-b-16">
-        <button type="button" #addCompanyBtn (click)="addCompany()" mat-raised-button color="primary"><mat-icon class="m-r-5">add</mat-icon> COMPANY</button>
-    </div>
-    <div fxLayout fxLayoutAlign="space-between" fxLayoutGap="15px" class="m-b-15">
-        <mat-form-field class="calc-field" [appearance]="appearance" fxFlex="20">
-            <mat-label>Bill No</mat-label>
-            <input cdkFocusInitial positiveNumber type="text" (change)="onBillNoChange()" (keyup.enter)="onBillEnter()"
-                matInput formControlName="billNo" #inputFocus="matInput">
-            <mat-error *ngIf="form.get('billNo').hasError('required')">Bill No is required</mat-error>
-            <mat-error *ngIf="form.get('billNo').hasError('lesserBillNo')">Bill No should be greater than {{ lastBillNo
-                }}</mat-error>
-        </mat-form-field>
-        <!-- <div class="m-l-10">
-            <mat-spinner diameter="25" strokeWidth="2" *ngIf="billNoValidationPending"></mat-spinner>
-        </div> -->
-        <div class="m-l-16" fxLayout="column" fxLayoutGap="10px">
-            <div class="font-12">Previous Bill No</div>
-            <div class="bold font-20">{{ lastBillNo }}</div>
-        </div>
-        <mat-form-field class="calc-field" fxFlex="25" (click)="picker.open()" [appearance]="appearance">
+    <div fxLayout fxLayoutAlign="space-between" fxLayoutGap="25px">
+        <mat-form-field fxFlex (click)="picker.open()" [appearance]="appearance">
             <mat-label>Date</mat-label>
-            <input formControlName="date" #dateInput readonly matInput [matDatepicker]="picker">
+            <input (dateChange)="enableQuantity()" formControlName="date" #dateInput readonly matInput [matDatepicker]="picker">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
-        <div>
-            <mat-form-field [appearance]="appearance">
-                <mat-label>Company Name</mat-label>
-                <mat-select>
-                    <mat-option [value]="company" *ngFor="let company of companies">{{ company }}</mat-option>
-                </mat-select>
-            </mat-form-field>
+        <mat-form-field [appearance]="appearance">
+            <mat-label>Company Name</mat-label>
+            <mat-select (selectionChange)="onCompanyChange(); enableQuantity()" formControlName="company" #companySelect>
+                <mat-option [value]="company" *ngFor="let company of companies">{{ company.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div fxLayoutAlign="end center" class="shift-t-18">
+            <button type="button" #addCompanyBtn (click)="addCompany()" mat-raised-button color="primary">
+                <mat-icon class="m-r-5">add</mat-icon> COMPANY
+            </button>
+        </div>
+
+    </div>
+    <div fxLayout fxLayoutGap="15px" class="m-b-15">
+        <mat-form-field class="calc-field" fxFlex="30" [appearance]="appearance">
+            <mat-label>Select Bit</mat-label>
+            <mat-select (selectionChange)="onBitChange(); enableQuantity()" formControlName="bit" #bitSelect>
+                <mat-option [value]="bit" *ngFor="let bit of bits">{{ bit.type }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field (click)="showInfo()" class="calc-field" fxFlex="30" [appearance]="appearance">
+            <mat-label>
+                Enter Quantity
+            </mat-label>
+            <input positiveNumber formControlName="quantity" matInput (input)="quantityInput$.next($event.target.value)" #quantityInput="matInput">
+        </mat-form-field>
+        <div class="m-l-16" fxLayout="column" fxFlex fxLayoutGap="10px">
+            <div class="font-12">Previous No</div>
+            <div class="bold font-20">20</div>
         </div>
     </div>
     <div fxLayout="column" fxLayoutGap="20px" class="m-b-16 field-set">
         <div class="field-set-label" style="margin: 0 !important">Bit Details</div>
         <div fxLayout>
+            <div fxFlex="33" class="bold font-12 text-center">BIT SERIAL NO.</div>
             <div fxFlex="33" class="bold font-12 text-center">BIT SIZE</div>
-            <div fxFlex="33" class="bold font-12 text-center">NO. OF. BITS</div>
-            <div fxFlex="33" class="bold font-12 text-center">BITS SERIAL NO.</div>
+            <div fxFlex="33" class="bold font-12 text-center">COMPANY NAME</div>
+            <div fxFlex="33" class="bold font-12 text-center">BIT NO</div>
         </div>
-        <div fxLayout="column" fxLayoutGap="10px">
+        <div *ngIf="bitFormArray.controls.length; else emptyMsgTpl" fxLayout="column" fxLayoutGap="10px">
             <div fxLayout formArrayName="bits" *ngFor="let bitCtrl of bitFormArray.controls; let i = index">
                 <ng-container [formGroup]="bitCtrl">
-                    <div fxLayout fxLayoutAlign="center center" fxFlex="33" class="text-center">{{
-                        bitCtrl.get('type').value }}</div>
-                    <div class="input-wrapper" fxFlex="33">
-                        <input type="text" (keydown.enter)="onEnter($event, 1 + i)" (input)="calcBitAdded(bitCtrl)"
-                            formControlName="count" placeholder="Count" positiveNumber #inputFocus>
+                    <div fxLayout fxLayoutAlign="center center" fxFlex="25" class="text-center">{{
+                        bitCtrl.get('serialNo').value }}</div>
+                    <div fxLayout fxLayoutAlign="center center" fxFlex="25" class="text-center">{{
+                        bitCtrl.get('bit').value.type }}</div>
+                    <div fxLayout fxLayoutAlign="center center" fxFlex="25" class="text-center">{{
+                        bitCtrl.get('company').value.name }}</div>
+                    <div class="input-wrapper" fxFlex="25">
+                        <input (keydown)="onEnter($event, i)" formControlName="bitNo" placeholder="Bit No" autocomplete="off" #inputFocus>
                         <span class="focus-border">
                             <i></i>
                         </span>
                     </div>
-                    <div fxLayout fxLayoutAlign="center center" class="text-center" fxFlex="33">{{
-                        bitAddedDisplay(bitCtrl) }}</div>
                 </ng-container>
             </div>
         </div>
+        <ng-template #emptyMsgTpl>
+            <div class="empty-msg" fxLayout fxLayoutAlign="center center">Please Enter Quantity</div>
+        </ng-template>
     </div>
     <mat-form-field [appearance]="appearance" style="width: 100%">
         <mat-label>Remarks</mat-label>

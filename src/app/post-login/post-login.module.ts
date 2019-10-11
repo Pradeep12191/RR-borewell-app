@@ -40,7 +40,6 @@ import { RpmEntryService } from './rpm-entry/rpm-entry.service';
         HeaderComponent,
         S404Component,
         MobileSidenavComponent,
-        AddCompanyPopup,
         AddBookPopupComponent
     ],
     providers: [
@@ -55,7 +54,6 @@ import { RpmEntryService } from './rpm-entry/rpm-entry.service';
         RpmEntryService
     ],
     entryComponents: [
-        AddCompanyPopup,
         AddBookPopupComponent
     ]
 })

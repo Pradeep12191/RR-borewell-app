@@ -58,6 +58,11 @@ export class AddBitDialogComponent {
         const payload = {
             quantity: +this.form.value.quantity,
             remarks: this.form.value.remarks,
+            date: (this.form.value.date as Moment).format('DD-MM-YYYY'),
+            compnay_id: this.form.value.company.id,
+            compnay_name: this.form.value.company.name,
+            bit_size: this.form.value.bit.size,
+            bit_type: this.form.value.bit.type,
             bits: []
         }
 

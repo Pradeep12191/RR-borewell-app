@@ -55,7 +55,7 @@
                     <div fxLayout fxLayoutAlign="center center" fxFlex="25" class="text-center">{{
                         bitCtrl.get('company').value.name }}</div>
                     <div class="input-wrapper" fxFlex="25">
-                        <input (keydown)="onEnter($event, i)" formControlName="bitNo" placeholder="Bit No" autocomplete="off" #inputFocus>
+                        <input (keydown)="onEnter($event, i)" positiveNumber formControlName="bitNo" placeholder="Bit No" autocomplete="off" #inputFocus>
                         <span class="focus-border">
                             <i></i>
                         </span>

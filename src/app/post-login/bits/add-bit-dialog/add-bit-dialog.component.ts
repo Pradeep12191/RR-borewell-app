@@ -8,6 +8,7 @@ import { Moment } from 'moment';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from '../../../services/config.service';
 import { ToastrService } from 'ngx-toastr';
+import { Company } from '../Company';
 
 @Component({
     templateUrl: './add-bit-dialog.component.html',
@@ -19,7 +20,8 @@ export class AddBitDialogComponent {
     lastBillNo;
     selectedGodown: Godown;
     stepIndex = 0;
-    postUrl
+    postUrl;
+    companies: Company[];
 
     get bitssFormArray() {
         return this.form.get('bits') as FormArray;
@@ -35,48 +37,46 @@ export class AddBitDialogComponent {
     ) {
         this.bits = data.lastBill;
         this.selectedGodown = data.selectedGodown;
+        this.companies = data.companies;
         if (this.bits && this.bits.length) {
             this.lastBillNo = +this.bits[0].bill_no;
         }
         this.postUrl = this.config.getAbsoluteUrl('addBit');
         this.form = this.fb.group({
-            billNo: ['', Validators.required],
-            remarks: '',
-            date: '',
-            company: '',
-            bits: this.fb.array([])
+            date: ['', Validators.required],
+            company: ['', Validators.required],
+            bit: ['', Validators.required],
+            quantity: [{ value: '', disabled: true }, Validators.required],
+            bits: this.fb.array([]),
+            remarks: ''
         });
-
-        this.bits.forEach(bit => {
-            console.log(bit);
-            this.bitssFormArray.push(this.buildPipeForm(bit.count, bit.size, bit.type));
-        })
     }
 
     saveBit() {
-        const formValue = this.form.value;
-        // this.pipes.forEach(pipe => {
-        //     formValue[pipe.groupName].count === '' ? formValue[pipe.groupName].count = '0' : ''
-        // })
-        formValue.bits.forEach(bit => {
-            bit.count === '' ? bit.count = '0' : ''
-        })
-        const date = formValue.date ? (formValue.date as Moment).format('DD-MM-YYYY') : null;
 
-        console.log(JSON.stringify({...formValue, godownType: this.selectedGodown, date }, null, 2));
-        this.http.post(this.postUrl, {...formValue, godownType: this.selectedGodown }).subscribe((response) => {
-            this.toastr.success('Bit Information added successfully', null, { timeOut: 2000 });
-            this.dialogRef.close(response);
-        }, (err) => {
-            if (err) {
-                this.toastr.error('Error while saving Bit Information', null, { timeOut: 1500 });
+
+        const payload = {
+            quantity: +this.form.value.quantity,
+            remarks: this.form.value.remarks,
+            bits: []
+        }
+
+        this.form.value.bits.forEach(b => {
+            const bit = {
+                serial_no: b.serialNo,
+                no: b.bitNo ? +b.bitNo : 0,
+                size: b.bit.size,
+                type: b.bit.type,
+                compnay_id: this.form.value.company.id,
+                compnay_name: this.form.value.company.name,
+                date: (this.form.value.date as Moment).format('DD-MM-YYYY')
             }
-        })
+            payload.bits.push(bit);
+        });
+
+        console.log(JSON.stringify(payload, null, 2));
     }
 
 
-    private buildPipeForm(start, size, type) {
-        // console.log(start)
-        return this.fb.group({ count: '', start, end: start, size, type })
-    }
+
 }

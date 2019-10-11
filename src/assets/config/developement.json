@@ -117,6 +117,14 @@
         {
             "name": "rpmReport",
             "url": "rpm_sheet_report"
+        },
+        {
+            "name": "bitCompanies",
+            "url": "bits_company_list"
+        },
+        {
+            "name": "addBitCompany",
+            "url": "add_bit_company"
         }
     ],
     "reportGenerateUrls": [

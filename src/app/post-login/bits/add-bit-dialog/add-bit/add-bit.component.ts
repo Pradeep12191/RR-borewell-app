@@ -1,39 +1,43 @@
-import { Component, Input, ElementRef, ViewChild, QueryList, ViewChildren, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, Input, ElementRef, ViewChild, QueryList, ViewChildren, OnDestroy, AfterViewInit, OnInit } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { Bit } from '../../Bit';
 import { Godown } from '../../../pipe/Godown';
 import { ConfigService } from '../../../../services/config.service';
 import { MatDatepicker, MatSelect, MatInput, MatDialog } from '@angular/material';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
 import { OverlayCardService } from '../../../../services/overlay-card.service';
 import { AddCompanyPopup } from './add-company-popup/add-company-popup.compoent';
 import { CardOverlayref } from '../../../../services/card-overlay-ref';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { AddBitService } from '../add-bit.service';
+import { Company } from '../../Company';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'add-bit',
     templateUrl: './add-bit.component.html',
     styleUrls: ['./add-bit.component.scss']
 })
-export class AddBitComponent implements OnDestroy, AfterViewInit {
+export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
     @Input() form: FormGroup;
     @Input() lastBillNo;
-    @Input() bits: Bit[];
+    @Input() companies: Company[];
+    @Input() bits: Bit[] = [
+        { type: '4" 4kg', size: 44, feet: 0, length: 0, count: 0 }
+    ];
     @ViewChild('picker', { static: false }) picker: MatDatepicker<any>;
     @ViewChild('dateInput', { static: false }) dateInput: ElementRef;
+    @ViewChild('companySelect', { static: false }) companySelect: MatSelect;
+    @ViewChild('bitSelect', { static: false }) bitSelect: MatSelect;
+    @ViewChild('quantityInput', { static: false }) quantityInput: MatInput;
     companyPopupref: CardOverlayref;
-
+    quantityInput$ = new Subject();
     appearance;
     pickerClosedSubscription: Subscription;
     checkUniqueBillNoUrl;
     billNoValidationPending;
     previousBillNo = '';
-    _inputElems: QueryList<ElementRef | MatSelect | MatInput>;
-    companies;
-    @ViewChildren('inputFocus') set inputElems(elems: QueryList<ElementRef | MatInput>) {
-        setTimeout(() => {
-            this._inputElems = elems;
-        }, 100);
-    }
+    @ViewChildren('inputFocus') inputFocus: QueryList<ElementRef>;
     getBitUrl;
     @ViewChild('addCompanyBtn', { static: false, read: ElementRef }) addCompanyBtn: ElementRef
 
@@ -44,9 +48,47 @@ export class AddBitComponent implements OnDestroy, AfterViewInit {
     constructor(
         private config: ConfigService,
         private cardOverlay: OverlayCardService,
-        private dialog: MatDialog
+        private addBitService: AddBitService,
+        private toastr: ToastrService,
     ) {
         this.appearance = this.config.getConfig('formAppearance');
+    }
+
+
+    ngOnInit() {
+        this.quantityInput$.pipe(
+            debounceTime(500),
+            distinctUntilChanged()
+        ).subscribe((value) => {
+            const ctrlCount = this.bitFormArray.controls.length;
+            const count = value ? +value : 0;
+            if (count === ctrlCount) {
+                return;
+            }
+            if (count > ctrlCount) {
+                // add new control
+                let newCtrlCount = count - ctrlCount;
+                while (newCtrlCount) {
+                    const serialNo = 1; // should be previous serial no ++
+                    const bit = this.form.get('bit').value;
+                    const company = this.form.get('company').value;
+                    this.bitFormArray.push(this.addBitService.buildPipeForm(serialNo, bit, company))
+                    newCtrlCount--;
+                }
+                return;
+            }
+
+            if (count < ctrlCount) {
+                // remove control
+
+                let removeCtrlCount = ctrlCount - count;
+
+                while (removeCtrlCount) {
+                    this.bitFormArray.removeAt(this.bitFormArray.controls.length - 1);
+                    removeCtrlCount--;
+                }
+            }
+        })
     }
 
     ngOnDestroy() {
@@ -55,87 +97,112 @@ export class AddBitComponent implements OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.pickerClosedSubscription = this.picker.closedStream.subscribe((res) => {
-            let nextCtrl = this._inputElems.toArray()[1];
-            if (nextCtrl) {
-                ((nextCtrl as ElementRef).nativeElement as HTMLInputElement).focus();
-            };
+        setTimeout(() => {
+            (this.dateInput.nativeElement as HTMLInputElement).focus();
+            this.picker.open()
+        }, 500);
+
+        this.picker.closedStream.subscribe(() => {
+            if (this.form.get('company').invalid) {
+                this.companySelect.open();
+                this.companySelect.focus();
+            }
+        })
+
+    }
+
+    onBitChange() {
+        if (!this.form.get('quantity').value) {
+            setTimeout(() => this.quantityInput.focus(), 200);
+        }
+
+        const selectedBit: Bit = this.form.get('bit').value;
+
+        this.bitFormArray.controls.forEach(ctrl => {
+            ctrl.get('bit').setValue(selectedBit);
         })
     }
 
-    // bill no should be greater than last entered bill no
-    onBillNoChange() {
-        const billNoCtrl = this.form.get('billNo');
-        const billNo = billNoCtrl.value;
-        // const godownTypeCtrl = this.form.get('godownType');
-        console.log('change')
-        if (billNoCtrl.hasError('required')) {
-            billNoCtrl.markAllAsTouched();
-            return;
-        } else {
-            if (billNo <= this.lastBillNo) {
-                billNoCtrl.markAllAsTouched();
-                billNoCtrl.setErrors({ lesserBillNo: true });
-                // (this._inputElems.toArray()[0] as MatInput).focus();
-            } else {
-
-                if (this.picker) {
-                    (this.dateInput.nativeElement as HTMLInputElement).focus();
-                    this.picker.open();
-                }
-                return;
-            }
+    onCompanyChange() {
+        if (this.form.get('bit').invalid) {
+            setTimeout(() => {
+                this.bitSelect.open();
+                this.bitSelect.focus();
+            }, 100);
         }
+        const selectedCompany: Company = this.form.get('company').value;
+
+        this.bitFormArray.controls.forEach(ctrl => {
+            ctrl.get('company').setValue(selectedCompany);
+        })
     }
 
-    onBillEnter() {
-        // either enter key up or change will be called, both are not called same time
-        this.onBillNoChange();
-    }
 
     onEnter(event: KeyboardEvent, currentIndex) {
-        const nextCtrl = this._inputElems.toArray()[currentIndex + 1];
-        if (nextCtrl) {
-            if (nextCtrl instanceof MatInput) {
-                return setTimeout(() => {
-                    nextCtrl.focus();
-                }, 100)
-
+        let ctrl: ElementRef = null;
+        const validKeys = ['Enter', 'ArrowDown', 'ArrowUp'];
+        if (validKeys.indexOf(event.key) !== -1) {
+            if (event.key === 'Enter' || event.key === 'ArrowDown') {
+                ctrl = this.inputFocus.toArray()[currentIndex + 1];
             }
-            if (nextCtrl instanceof ElementRef) {
-                (nextCtrl.nativeElement as HTMLInputElement).focus();
+            if (event.key === 'ArrowUp') {
+                ctrl = this.inputFocus.toArray()[currentIndex - 1];
+            }
+            if (ctrl) {
+                (ctrl.nativeElement as HTMLInputElement).focus();
             }
         }
+
+
     }
 
-    calcBitAdded(bitCtrl: FormGroup) {
-        let start: any = this.bits.find(pipe => pipe.size === bitCtrl.get('size').value).count;
-        start = start ? +start : 0;
-        let intialStart = start;
-        const count = bitCtrl.get('count').value ? +bitCtrl.get('count').value : 0;
-        if (count <= 0) {
-            // do nothing
-        } else {
-            start += 1;
-        }
-        const end = intialStart + count;
-        bitCtrl.get('start').setValue(start.toString());
-        bitCtrl.get('end').setValue(end.toString())
-    }
-
-    bitAddedDisplay(bitCtrl) {
-        let start = bitCtrl.get('start').value ? +bitCtrl.get('start').value : 0;
-        const end = bitCtrl.get('end').value ? +bitCtrl.get('end').value : 0;
-        if (start === end) {
-            return start;
-        }
-        return `(${start} - ${end})`;
-    }
 
     addCompany() {
         if (this.companyPopupref) {
             this.companyPopupref.close()
         }
-        this.companyPopupref = this.cardOverlay.open(AddCompanyPopup, this.addCompanyBtn, {}, []);
+        this.companyPopupref = this.cardOverlay.open(AddCompanyPopup, this.addCompanyBtn, {}, [
+            {
+                originX: 'start',
+                originY: 'top',
+                overlayX: 'start',
+                overlayY: 'top',
+                offsetX: -250,
+                offsetY: -85
+            }
+        ]);
+        this.companyPopupref.afterClosed$.subscribe((company: Company) => {
+            if (company) {
+                this.companies.push(company);
+            }
+        })
+    }
+
+
+
+    enableQuantity() {
+        if (this.disableQuantity()) {
+            this.form.get('quantity').disable()
+        } else {
+            this.form.get('quantity').enable()
+        }
+    }
+    showInfo() {
+        console.log('click')
+        if (this.form.get('date').invalid) {
+            return this.toastr.error('Please enter date', null, { timeOut: 2000 });
+        }
+
+        if (this.form.get('bit').invalid) {
+            return this.toastr.error('Please Select Bit', null, { timeOut: 2000 });
+        }
+
+        if (this.form.get('company').invalid) {
+            return this.toastr.error('Please Select Company', null, { timeOut: 2000 });
+        }
+    }
+
+    private disableQuantity() {
+        return this.form.get('date').invalid || this.form.get('bit').invalid || this.form.get('company').invalid
     }
 }

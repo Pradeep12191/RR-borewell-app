@@ -71,7 +71,7 @@ export class AddBitDialogComponent {
                 no: b.bitNo ? +b.bitNo : 0,
                 size: b.bit.size,
                 type: b.bit.type,
-                bit_id: b.bit.id,
+                id: b.bit.id,
                 compnay_id: this.form.value.company.id,
                 compnay_name: this.form.value.company.name,
                 date: (this.form.value.date as Moment).format('DD-MM-YYYY')

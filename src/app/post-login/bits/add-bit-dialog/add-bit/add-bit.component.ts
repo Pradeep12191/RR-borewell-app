@@ -23,6 +23,7 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
     @Input() form: FormGroup;
     @Input() companies: Company[];
     @Input() bitSizes: BitSize[];
+    @Input() notifyReset: Subject<void>;
     @ViewChild('picker', { static: false }) picker: MatDatepicker<any>;
     @ViewChild('dateInput', { static: false }) dateInput: ElementRef;
     @ViewChild('companySelect', { static: false }) companySelect: MatSelect;
@@ -36,6 +37,8 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
     checkUniqueBillNoUrl;
     billNoValidationPending;
     previousBillNo = '';
+    notifyResetSubscription: Subscription;
+
     @ViewChildren('inputFocus') inputFocus: QueryList<ElementRef>;
     getBitUrl;
     @ViewChild('addCompanyBtn', { static: false, read: ElementRef }) addCompanyBtn: ElementRef
@@ -88,12 +91,20 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
                     removeCtrlCount--;
                 }
             }
+        });
+
+        this.notifyReset.subscribe(() => {
+            setTimeout(() => {
+                (this.dateInput.nativeElement as HTMLInputElement).focus();
+                this.picker.open()
+            }, 500);
         })
     }
 
     ngOnDestroy() {
-        if (this.companyPopupref) { this.companyPopupref.close() }
-        if (this.pickerClosedSubscription) { this.pickerClosedSubscription.unsubscribe() }
+        if (this.companyPopupref) { this.companyPopupref.close(); }
+        if (this.pickerClosedSubscription) { this.pickerClosedSubscription.unsubscribe(); }
+        if (this.notifyResetSubscription) { this.notifyResetSubscription.unsubscribe(); }
     }
 
     ngAfterViewInit() {

@@ -9,7 +9,6 @@ import { BitSizeListResolver } from '../../guards/resolveGuard/bit/bit-size-list
 const routes: Routes = [
     {
         path: '', component: BitsComponent, resolve: {
-            // godowns: GodownTypesResolver,
             bitData: BitListResolver,
             companies: BitCompaniesResolver,
             bitSizes: BitSizeListResolver

@@ -46,8 +46,8 @@ import { BitSizeListResolver } from '../../guards/resolveGuard/bit/bit-size-list
         AddCompanyPopup
     ],
     providers: [
-        BitListResolver,
         BitCompaniesResolver,
+        BitListResolver,
         BitSizeListResolver,
         AddBitService,
         OverlayCardService

@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { throwError } from 'rxjs';
 import { BitSize } from '../BitSize';
 import { LoaderService } from '../../../services/loader-service';
+import { Godown } from '../../pipe/Godown';
 
 @Injectable()
 export class AddBitService {
@@ -17,6 +18,8 @@ export class AddBitService {
     private bitSizeListUrl: string;
     private lastBitUrl: string;
     private addBitUrl: string;
+    private bitsCountUrl: string;
+    private godownUrl: string;
     constructor(
         private fb: FormBuilder,
         private auth: AuthService,
@@ -30,11 +33,17 @@ export class AddBitService {
         this.bitSizeListUrl = this.config.getAbsoluteUrl('bitSizes');
         this.lastBitUrl = this.config.getAbsoluteUrl('lastBitSerialNo');
         this.addBitUrl = this.config.getAbsoluteUrl('addBit');
+        this.bitsCountUrl = this.config.getAbsoluteUrl('bitsCount');
+        this.godownUrl = this.config.getAbsoluteUrl('bitGodowns');
     }
 
     getCompanies() {
         const params = new HttpParams().set('user_id', this.auth.userid);
         return this.http.get<Company[]>(this.getCompanyUrl, { params })
+    }
+
+    getGodowns() {
+        return this.http.get<Godown[]>(this.godownUrl)
     }
 
     getBitSizes() {
@@ -53,6 +62,11 @@ export class AddBitService {
                 return throwError(err);
             })
         )
+    }
+
+    getBitsCount(godownId) {
+        const params = new HttpParams().set('user_id', this.auth.userid).append('godown_id', godownId);
+        return this.http.get<BitSize[]>(this.bitsCountUrl, { params });
     }
 
     addBitCompany(company: Company) {
@@ -75,9 +89,6 @@ export class AddBitService {
         this.loader.showSaveLoader('Saving Bit...');
         return this.http.post(this.addBitUrl, payload).pipe(
             finalize(() => this.loader.hideSaveLoader()),
-            map(() => {
-                this.toastr.success('Bit added successfully');
-            }),
             catchError((err) => {
                 if (err) {
                     this.toastr.error('Error while saving Bit', null, { timeOut: 2000 });

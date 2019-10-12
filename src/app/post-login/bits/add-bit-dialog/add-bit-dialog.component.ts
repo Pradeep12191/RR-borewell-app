@@ -1,12 +1,16 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef, MatStepper } from '@angular/material';
 import { Godown } from '../../pipe/Godown';
 import { Moment } from 'moment';
 import { ConfigService } from '../../../services/config.service';
 import { Company } from '../Company';
 import { BitSize } from '../BitSize';
 import { AddBitService } from './add-bit.service';
+import { LoaderService } from '../../../services/loader-service';
+import { finalize } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
+import { Subject } from 'rxjs';
 
 @Component({
     templateUrl: './add-bit-dialog.component.html',
@@ -19,6 +23,8 @@ export class AddBitDialogComponent {
     stepIndex = 0;
     postUrl;
     companies: Company[];
+    notifyReset = new Subject()
+    @ViewChild(MatStepper, { static: false }) stepper: MatStepper;
 
     get bitssFormArray() {
         return this.form.get('bits') as FormArray;
@@ -28,7 +34,10 @@ export class AddBitDialogComponent {
         private fb: FormBuilder,
         @Inject(MAT_DIALOG_DATA) data,
         private config: ConfigService,
-        private addBitService: AddBitService
+        private addBitService: AddBitService,
+        private dialogRef: MatDialogRef<AddBitDialogComponent>,
+        private loader: LoaderService,
+        private toastr: ToastrService
     ) {
         this.bitSizes = data.bitSizes;
         this.selectedGodown = data.selectedGodown;
@@ -74,7 +83,28 @@ export class AddBitDialogComponent {
         });
 
         console.log(JSON.stringify(payload, null, 2));
-        this.addBitService.addBit(payload).subscribe(() => { }, () => { });
+        this.addBitService.addBit(payload).subscribe(() => {
+            this.toastr.success('Bit added successfully');
+            while (this.bitssFormArray.length) {
+                this.bitssFormArray.removeAt(this.bitssFormArray.length - 1);
+            }
+            this.stepper.reset();
+            this.notifyReset.next();
+        }, () => { });
+    }
+
+    updateAndClose() {
+        this.loader.showSaveLoader('Loading')
+        this.addBitService.getBitsCount(this.selectedGodown.godown_id)
+            .pipe(finalize(() => this.loader.hideSaveLoader()))
+            .subscribe((bits) => {
+                this.dialogRef.close(bits)
+            }, (err) => {
+                if (err) {
+                    this.toastr.error('Error while fetching bit count', null, { timeOut: 2000 })
+                }
+                this.dialogRef.close()
+            })
     }
 
 

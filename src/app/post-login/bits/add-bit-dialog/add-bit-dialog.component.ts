@@ -18,7 +18,6 @@ import { BitSize } from '../BitSize';
 export class AddBitDialogComponent {
     form: FormGroup;
     bitSizes: BitSize[];
-    lastBillNo;
     selectedGodown: Godown;
     stepIndex = 0;
     postUrl;

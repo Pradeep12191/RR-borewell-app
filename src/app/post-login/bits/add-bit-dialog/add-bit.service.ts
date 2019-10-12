@@ -37,8 +37,9 @@ export class AddBitService {
         return this.http.get<BitSize[]>(this.bitSizeListUrl)
     }
 
-    getLastBitSerial() {
-
+    getLastBitSerial(pipeSize) {
+        const params = new HttpParams().set('pipe_size', pipeSize)
+        return this.http.get(this.lastBitUrl, { params })
     }
 
     addBitCompany(company: Company) {

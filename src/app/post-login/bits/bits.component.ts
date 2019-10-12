@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AppService } from '../../services/app.service';
 import { finalize } from 'rxjs/operators';
 import { Company } from './Company';
+import { BitSize } from './BitSize';
 
 const BIT_LENGTH = 20;
 
@@ -32,6 +33,7 @@ export class BitsComponent {
     routeDataSubscription: Subscription;
     bits: Bit[];
     lastBillUrl;
+    bitSizes: BitSize[];
     bitUrl;
     companies: Company[]
     constructor(
@@ -51,7 +53,7 @@ export class BitsComponent {
             this.godowns = data.bitData.godowns;
             this.selectedGodown = this.godowns[1];
             this.companies = data.companies
-
+            this.bitSizes = data.bitSizes
             setTimeout(() => {
                 // this.items = [1, 2, 3, 4, 5, 6, 7, 8]
                 this.updateBits(data.bitData.bits);
@@ -102,7 +104,8 @@ export class BitsComponent {
                 data: {
                     selectedGodown: this.selectedGodown,
                     lastBill,
-                    companies: this.companies
+                    companies: this.companies,
+                    bitSizes: this.bitSizes
                 },
                 disableClose: true
             });

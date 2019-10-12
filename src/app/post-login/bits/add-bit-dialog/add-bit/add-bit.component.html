@@ -23,7 +23,7 @@
         <mat-form-field class="calc-field" fxFlex="30" [appearance]="appearance">
             <mat-label>Select Bit</mat-label>
             <mat-select (selectionChange)="onBitChange(); enableQuantity()" formControlName="bit" #bitSelect>
-                <mat-option [value]="bit" *ngFor="let bit of bits">{{ bit.type }}</mat-option>
+                <mat-option [value]="bitSize" *ngFor="let bitSize of bitSizes">{{ bitSize.type }}</mat-option>
             </mat-select>
         </mat-form-field>
         <mat-form-field (click)="showInfo()" class="calc-field" fxFlex="30" [appearance]="appearance">

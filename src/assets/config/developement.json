@@ -119,6 +119,10 @@
             "url": "rpm_sheet_report"
         },
         {
+            "name": "bitSizes",
+            "url": "bit_size_list"
+        },
+        {
             "name": "bitCompanies",
             "url": "bits_company_list"
         },

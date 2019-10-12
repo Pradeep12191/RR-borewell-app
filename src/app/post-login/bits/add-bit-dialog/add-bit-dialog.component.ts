@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { ConfigService } from '../../../services/config.service';
 import { ToastrService } from 'ngx-toastr';
 import { Company } from '../Company';
+import { BitSize } from '../BitSize';
 
 @Component({
     templateUrl: './add-bit-dialog.component.html',
@@ -16,7 +17,7 @@ import { Company } from '../Company';
 })
 export class AddBitDialogComponent {
     form: FormGroup;
-    bits: BitBill[];
+    bitSizes: BitSize[];
     lastBillNo;
     selectedGodown: Godown;
     stepIndex = 0;
@@ -35,12 +36,9 @@ export class AddBitDialogComponent {
         private dialogRef: MatDialogRef<AddBitDialogComponent>,
         private toastr: ToastrService
     ) {
-        this.bits = data.lastBill;
+        this.bitSizes = data.bitSizes;
         this.selectedGodown = data.selectedGodown;
         this.companies = data.companies;
-        if (this.bits && this.bits.length) {
-            this.lastBillNo = +this.bits[0].bill_no;
-        }
         this.postUrl = this.config.getAbsoluteUrl('addBit');
         this.form = this.fb.group({
             date: ['', Validators.required],
@@ -63,6 +61,7 @@ export class AddBitDialogComponent {
             compnay_name: this.form.value.company.name,
             bit_size: this.form.value.bit.size,
             bit_type: this.form.value.bit.type,
+            bit_id: this.form.value.bit.id,
             bits: []
         }
 
@@ -72,6 +71,7 @@ export class AddBitDialogComponent {
                 no: b.bitNo ? +b.bitNo : 0,
                 size: b.bit.size,
                 type: b.bit.type,
+                bit_id: b.bit.id,
                 compnay_id: this.form.value.company.id,
                 compnay_name: this.form.value.company.name,
                 date: (this.form.value.date as Moment).format('DD-MM-YYYY')

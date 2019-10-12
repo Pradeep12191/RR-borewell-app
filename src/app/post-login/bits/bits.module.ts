@@ -18,6 +18,7 @@ import { PipesModule } from '../../pipes/pipes.module';
 import { BitCompaniesResolver } from '../../guards/resolveGuard/bit/bit-companies.resolver';
 import { AddBitService } from './add-bit-dialog/add-bit.service';
 import { OverlayCardService } from '../../services/overlay-card.service';
+import { BitSizeListResolver } from '../../guards/resolveGuard/bit/bit-size-list.resolver';
 
 @NgModule({
     imports: [
@@ -47,6 +48,7 @@ import { OverlayCardService } from '../../services/overlay-card.service';
     providers: [
         BitListResolver,
         BitCompaniesResolver,
+        BitSizeListResolver,
         AddBitService,
         OverlayCardService
     ]

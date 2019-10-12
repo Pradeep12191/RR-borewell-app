@@ -4,13 +4,15 @@ import { BitsComponent } from './bits.component';
 import { GodownTypesResolver } from '../../guards/resolveGuard/select-option/godown-types.resolver';
 import { BitListResolver } from '../../guards/resolveGuard/bit/bit-list.resolver';
 import { BitCompaniesResolver } from '../../guards/resolveGuard/bit/bit-companies.resolver';
+import { BitSizeListResolver } from '../../guards/resolveGuard/bit/bit-size-list.resolver';
 
 const routes: Routes = [
     {
         path: '', component: BitsComponent, resolve: {
             // godowns: GodownTypesResolver,
             bitData: BitListResolver,
-            companies: BitCompaniesResolver
+            companies: BitCompaniesResolver,
+            bitSizes: BitSizeListResolver
         }
     }
 ]

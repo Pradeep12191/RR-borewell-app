@@ -3,17 +3,17 @@
         <div fxLayout fxFlex="50" fxLayoutGap="10px">
             <div fxFlex="45" class="bold">Bit Size</div>
             <div class="bold">:</div>
-            <div>{{ bitData.bit.type }}</div>
+            <div>{{ bitData?.bit?.type }}</div>
         </div>
         <div fxLayout fxFlex="25" fxLayoutGap="10px">
             <div fxFlex="60" class="bold">Bit Quantity</div>
             <div class="bold">:</div>
-            <div>{{ bitData.quantity }}</div>
+            <div>{{ bitData?.quantity }}</div>
         </div>
         <div fxLayout fxFlex="25" fxLayoutGap="10px">
             <div fxFlex="60" class="bold">Date</div>
             <div class="bold">:</div>
-            <div>{{ bitData.date | date: 'dd/MM/yyyy' }}</div>
+            <div>{{ bitData?.date | date: 'dd/MM/yyyy' }}</div>
         </div>
     </div>
     <div fxLayout fxLayoutGap="25px">
@@ -25,7 +25,7 @@
         <div fxLayout fxFlex="25" fxLayoutGap="10px">
             <div fxFlex="60" class="bold">Company</div>
             <div class="bold">:</div>
-            <div>{{ bitData.company.name }}</div>
+            <div>{{ bitData?.company?.name }}</div>
         </div>
         <div fxFlex="25"></div>
     </div>
@@ -59,4 +59,4 @@
     </div>
 </div>
 <div class="m-b-5 font-italic bold">Remarks</div>
-<div class="font-italic" [innerHTML]="bitData.remarks | newLine"></div>
+<div class="font-italic" [innerHTML]="bitData?.remarks | newLine"></div>

@@ -29,9 +29,10 @@
         </div>
     </div>
 
-    <div fxLayout="row wrap" *ngIf="bits?.length; else emptyTpl" [@listState]="bits?.length">
-        <div fxFlex="25" fxLayout fxLayoutAlign="center center" class="m-b-32" *ngFor="let bit of bits">
-            <div class="pipe-card" (click)="viewPipeData(pipe)">
+    <div fxLayout="row wrap" fxLayoutGap="40px" class="widget-container" *ngIf="bits?.length; else emptyTpl"
+        [@listState]="bits?.length">
+        <div fxFlex="calc(25% - 40px)" class="m-b-32 pipe" *ngFor="let bit of bits">
+            <div class="pipe-card" (click)="viewPipeData(bit)">
                 <div fxLayout class="pipe-title" fxLayout fxLayoutAlign="center center">
                     {{ bit.type}}
                     <button mat-icon-button class="pipe-arrow-button">
@@ -39,7 +40,7 @@
                     </button>
                 </div>
                 <div fxLayout class="bottom-info" fxLayoutGap="10">
-                    <div fxFlex="75" class="pipe-info">
+                    <div fxFlex class="pipe-info">
                         <div fxLayout="column" fxLayoutGap="10px">
                             <div fxLayout fxLayoutGap="10px">
                                 <div fxFlex="50">
@@ -51,19 +52,10 @@
                                 <div fxFlex="50">
                                     Feet
                                 </div>
-                                <div fxFlex class="bold">{{ bit.length }}</div>
+                                <div fxFlex class="bold">{{ bit.count * 20 }}</div>
                             </div>
                         </div>
                     </div>
-                    <div fxFlex fxLayout fxLayoutAlign="center center" (click)="assignVehicle(bit, $event)" class="pipe-card-btn">
-                        <div fxLayout="column">
-                            <div class="pipe-card-btn-title">Assign Vehicle</div>
-                            <div fxLayout fxLayoutAlign="center center">
-                                <mat-icon>directions_car</mat-icon>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>

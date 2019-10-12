@@ -71,7 +71,7 @@
             "url": "get_last_serial"
         },
         {
-            "name": "BitList",
+            "name": "bitsCount",
             "url": "bits_count"
         },
         {
@@ -129,6 +129,10 @@
         {
             "name": "addBitCompany",
             "url": "add_bit_company"
+        },
+        {
+            "name":"bitGodowns",
+            "url": "get_bit_godown_types"
         }
     ],
     "reportGenerateUrls": [

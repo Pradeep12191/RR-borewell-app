@@ -9,8 +9,6 @@ import { MatDialog, MatSelectChange } from '@angular/material';
 import { AddBitDialogComponent } from './add-bit-dialog/add-bit-dialog.component';
 import { HttpParams, HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
-import { BitBill } from './add-bit-dialog/LastBitBill';
-import { LoaderService } from '../../services/loader-service';
 import { ToastrService } from 'ngx-toastr';
 import { AppService } from '../../services/app.service';
 import { finalize } from 'rxjs/operators';
@@ -40,7 +38,6 @@ export class BitsComponent {
         private config: ConfigService,
         private route: ActivatedRoute,
         private dialog: MatDialog,
-        private loader: LoaderService,
         private http: HttpClient,
         private toastr: ToastrService,
         private auth: AuthService,
@@ -50,23 +47,19 @@ export class BitsComponent {
         this.lastBillUrl = this.config.getAbsoluteUrl('LastBitBill');
         this.bitUrl = this.config.getAbsoluteUrl('BitList');
         this.routeDataSubscription = this.route.data.subscribe((data) => {
-            this.godowns = data.bitData.godowns;
-            this.selectedGodown = this.godowns[1];
             this.companies = data.companies
-            this.bitSizes = data.bitSizes
+            this.bitSizes = data.bitSizes;
+            this.godowns = data.bitData.godowns;
+            this.selectedGodown = this.godowns[0];
             setTimeout(() => {
-                // this.items = [1, 2, 3, 4, 5, 6, 7, 8]
-                this.updateBits(data.bitData.bits);
+                this.bits = data.bitData.bits;
             })
+            
         })
     }
 
     updateBits(bits) {
         this.bits = bits;
-
-        // this.bits.forEach(bit => {
-        //     bit['length'] = bit.count ? (+bit.count * BIT_LENGTH).toString() : '0';
-        // });
     }
 
     navigateToViewBill() {

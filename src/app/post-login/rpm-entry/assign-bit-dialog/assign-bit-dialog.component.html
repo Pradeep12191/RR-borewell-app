@@ -1,0 +1,71 @@
+<!-- <h1 mat-dialog-title class="text-center">Add Pipe</h1> -->
+<mat-toolbar color="primary">
+    <div fxFlex fxLayoutAlign="center center">
+        <div>Assign Vehicle - {{ vehicle.regNo }}</div>
+    </div>
+    <button mat-icon-button (click)="onDoneClick()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</mat-toolbar>
+
+<div mat-dialog-content>
+    <div fxFlex fxLayoutAlign="start">
+        <div fxFlex="5"></div>
+        <div fxFlex="80" fxLayout="column" fxLayoutGap="10px">
+            <div fxLayout fxLayoutGap="25px">
+                <div fxLayout fxLayoutGap="10px">
+                    <div>RPM Entry No</div>
+                    <div>:</div>
+                    <div class="bold">{{ rpmEntryNo }}</div>
+                </div>
+                <div fxLayout fxLayoutGap="10px">
+                    <div>Bit Quantity</div>
+                    <div>:</div>
+                    <div class="bold">{{ selectedBits?.length || 0 }}</div>
+                </div>
+            </div>
+
+            <transfer-items fxFlex [leftWidth]="65" (selectionUpdate)="onTransferSelection($event)" selectAllToolTipMsg="select all bits"
+                [loaderStatus$]="loaderStatus$" [data]="bitSerialNos" displayPropName="serial_no" noDataSelectedMsg="No Bits Assigned">
+                <ng-container *ngIf="!selectedGodown || !selectedBit">
+                    <ng-container *transferItemIntialMsg>
+                        Please select Godown Type and Bit Size
+                    </ng-container>
+                </ng-container>
+                <transfer-item-left-header-content fxFlex>
+                    <div fxLayout class="m-t-10 m-r-10" fxLayoutGap="10px">
+                        <mat-form-field class="calc-field" fxFlex="calc(40% - 10px)">
+                            <mat-select #godownSelect (selectionChange)="onChange('godown')" required [(ngModel)]="selectedGodown"
+                                placeholder="Godown">
+                                <mat-option [value]="godown" *ngFor="let godown of godowns">{{ godown.godownType |
+                                    uppercase }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="calc-field" fxFlex="60">
+                            <mat-select #pipeSelect (selectionChange)="onChange('bit')" required [(ngModel)]="selectedBit"
+                                placeholder="Bit">
+                                <mat-option [value]="bit" *ngFor="let bit of bits">{{ bit.type }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </transfer-item-left-header-content>
+                <transfer-item-right-header-content style="min-height: inherit">
+                    <div fxFlex fxLayoutAlign="center center" style="min-height: inherit">
+                        {{vehicle.regNo}}
+                    </div>
+                </transfer-item-right-header-content>
+            </transfer-items>
+        </div>
+
+        <div fxFlex fxFlexAlign="end" fxLayoutAlign="end" class="assign-btn">
+            <button [disabled]="!selectedBits?.length" (click)="confirmAssign()" mat-raised-button color="primary">Confirm
+                Assign</button>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-actions>
+    <div fxFlex fxLayout fxLayoutAlign="end center">
+        <button (click)="onDoneClick()" mat-raised-button color="primary">DONE</button>
+    </div>
+</div>

@@ -22,6 +22,8 @@ import { RpmTableData } from '../../models/RpmTableData';
 import { RpmValue } from '../../models/RpmValue';
 import { RpmEntry } from '../../models/RpmEntry';
 import { CommonService } from '../../services/common.service';
+import { BitSize } from '../bits/BitSize';
+import { AssignBitDialogComponent } from './assign-bit-dialog/assign-bit-dialog.component';
 
 @Component({
     templateUrl: './rpm-entry-component.html',
@@ -50,6 +52,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     appearance;
     date = null;
     godowns: Godown[];
+    bitGodowns: Godown[];
+    bitSizes: BitSize[];
     bookStartNo;
     bookId;
     bookEndNo;
@@ -119,6 +123,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.pipes = data.pipes;
             this.vehicles = data.vehicles;
             this.godowns = data.godowns;
+            this.bitGodowns = data.bitGodowns;
+            this.bitSizes = data.bits;
             this.pipeFlex = this.pipeTotalFlex / this.pipes.length;
             this.pipeFlex = Math.round(this.pipeFlex * 100) / 100;
 
@@ -152,6 +158,27 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.allInputs[2] = this.damageFeetInputs;
         this.allInputs[3] = this.expenseFeetInputs;
 
+    }
+
+    openAssignBitDialog() {
+        const dialogRef = this.dialog.open(AssignBitDialogComponent, {
+            data: {
+                bitGodowns: this.bitGodowns,
+                bits: this.bitSizes,
+                vehicle: this.selectedVehicle,
+                date: this.date,
+                rpmEntryNo: this.rpmEntryNo
+            },
+            width: '1000px',
+            position: { top: '0px' },
+            maxHeight: '100vh',
+            height: '100vh',
+            disableClose: true
+        });
+
+        dialogRef.afterClosed().subscribe(() => {
+
+        })
     }
 
     onInputKeyUp(event: KeyboardEvent, rowIndex, colIndex) {

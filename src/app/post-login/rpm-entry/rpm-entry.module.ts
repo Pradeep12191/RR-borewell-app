@@ -12,6 +12,11 @@ import { AssignVehicleDialogComponent } from './assign-vehicle-dialog/assign-veh
 import { TransferItemsModule } from '../../transfer-items/transfer-items.module';
 import { RpmEntryService } from './rpm-entry.service';
 import { RpmConfirmAssignVehicleDialogComponent } from './assign-vehicle-dialog/rpm-confirm-assign-vehicle-dialog/rpm-confirm-assign-vehicle-dialog.component';
+import { BitGodownsResolver } from '../../guards/resolveGuard/bit/bit-godowns.resolver';
+import { AddBitService } from '../bits/add-bit-dialog/add-bit.service';
+import { BitSizeListResolver } from '../../guards/resolveGuard/bit/bit-size-list.resolver';
+import { AssignBitDialogComponent } from './assign-bit-dialog/assign-bit-dialog.component';
+import { AssignBitConfirmDialogComponent } from './assign-bit-dialog/assign-bit-confirm-dialog/assign-bit-confirm-dialog.component';
 
 @NgModule({
     imports: [
@@ -28,16 +33,22 @@ import { RpmConfirmAssignVehicleDialogComponent } from './assign-vehicle-dialog/
     declarations: [
         RpmEntryComponent,
         AssignVehicleDialogComponent,
-        RpmConfirmAssignVehicleDialogComponent
+        RpmConfirmAssignVehicleDialogComponent,
+        AssignBitDialogComponent,
+        AssignBitConfirmDialogComponent
         // AddBookPopupComponent
     ],
     entryComponents: [
         AssignVehicleDialogComponent,
-        RpmConfirmAssignVehicleDialogComponent
+        RpmConfirmAssignVehicleDialogComponent,
+        AssignBitDialogComponent,
+        AssignBitConfirmDialogComponent
         // AddBookPopupComponent
     ],
     providers: [
-        
+        BitSizeListResolver,
+        BitGodownsResolver,
+        AddBitService
     ]
 })
 export class RpmEntryModule {

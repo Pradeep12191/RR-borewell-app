@@ -133,6 +133,14 @@
         {
             "name":"bitGodowns",
             "url": "get_bit_godown_types"
+        },
+        {
+            "name": "unassignedBitSerialNos",
+            "url": "get_unassigned_sno_bit"
+        },
+        {
+            "name": "assignVehicleBit",
+            "url": "assign_vehicle_bit"
         }
     ],
     "reportGenerateUrls": [

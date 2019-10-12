@@ -2,7 +2,7 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 import { Observable } from 'rxjs';
 import { AddBitService } from '../../../post-login/bits/add-bit-dialog/add-bit.service';
 
-export class BitListResolver implements Resolve<any>{
+export class BitGodownsResolver implements Resolve<any>{
     constructor(
         private addBitService: AddBitService
     ) {

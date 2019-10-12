@@ -243,14 +243,14 @@
             <div [formGroup]="form" fxLayout class="m-t-10">
                 <mat-form-field [appearance]="appearance" fxFlex>
                     <mat-label>Remarks</mat-label>
-                    <textarea formControlName="remarks" matInput cols="30" rows="6"></textarea>
+                    <textarea #remarksInput (keydown)="onInputKeyUp($event, 4, 0)" formControlName="remarks" matInput cols="30" rows="6"></textarea>
                 </mat-form-field>
             </div>
         </mat-card-content>
     </mat-card>
     <div fxLayoutAlign="end" class="m-t-25">
         <div>
-            <button [disabled]="!selectedVehicle" (click)="submit()" mat-raised-button color="primary" type="button">SUBMIT</button>
+            <button [disabled]="!selectedVehicle"  (click)="submit()" mat-raised-button color="primary" type="button">SUBMIT</button>
         </div>
     </div>
 </div>

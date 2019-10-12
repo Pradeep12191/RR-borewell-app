@@ -7,11 +7,13 @@ import { Company } from '../Company';
 import { map, catchError } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { throwError } from 'rxjs';
+import { BitSize } from '../BitSize';
 
 @Injectable()
 export class AddBitService {
     private getCompanyUrl: string;
     private addCompanyUrl: string;
+    private bitSizeListUrl: string;
     constructor(
         private fb: FormBuilder,
         private auth: AuthService,
@@ -21,11 +23,16 @@ export class AddBitService {
     ) {
         this.getCompanyUrl = this.config.getAbsoluteUrl('bitCompanies')
         this.addCompanyUrl = this.config.getAbsoluteUrl('addBitCompany');
+        this.bitSizeListUrl = this.config.getAbsoluteUrl('bitSizes');
     }
 
     getCompanies() {
         const params = new HttpParams().set('user_id', this.auth.userid);
         return this.http.get<Company[]>(this.getCompanyUrl, { params })
+    }
+
+    getBitSizes() {
+        return this.http.get<BitSize[]>(this.bitSizeListUrl)
     }
 
     addBitCompany(company: Company) {

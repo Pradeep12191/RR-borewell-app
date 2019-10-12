@@ -12,6 +12,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AddBitService } from '../add-bit.service';
 import { Company } from '../../Company';
 import { ToastrService } from 'ngx-toastr';
+import { BitSize } from '../../BitSize';
 
 @Component({
     selector: 'add-bit',
@@ -22,9 +23,7 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
     @Input() form: FormGroup;
     @Input() lastBillNo;
     @Input() companies: Company[];
-    @Input() bits: Bit[] = [
-        { type: '4" 4kg', size: 44, feet: 0, length: 0, count: 0 }
-    ];
+    @Input() bitSizes: BitSize[];
     @ViewChild('picker', { static: false }) picker: MatDatepicker<any>;
     @ViewChild('dateInput', { static: false }) dateInput: ElementRef;
     @ViewChild('companySelect', { static: false }) companySelect: MatSelect;

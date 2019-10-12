@@ -57,12 +57,12 @@ export class AddBitDialogComponent {
             quantity: +this.form.value.quantity,
             remarks: this.form.value.remarks,
             date: (this.form.value.date as Moment).format('DD-MM-YYYY'),
-            compnay_id: this.form.value.company.id,
-            compnay_name: this.form.value.company.name,
+            company_id: this.form.value.company.id,
+            company_name: this.form.value.company.name,
             bit_size: this.form.value.bit.size,
             bit_type: this.form.value.bit.type,
             bit_id: this.form.value.bit.id,
-            bits: []
+            k_assign_bits: []
         }
 
         this.form.value.bits.forEach(b => {
@@ -72,11 +72,11 @@ export class AddBitDialogComponent {
                 size: b.bit.size,
                 type: b.bit.type,
                 id: b.bit.id,
-                compnay_id: this.form.value.company.id,
-                compnay_name: this.form.value.company.name,
+                company_id: this.form.value.company.id,
+                company_name: this.form.value.company.name,
                 date: (this.form.value.date as Moment).format('DD-MM-YYYY')
             }
-            payload.bits.push(bit);
+            payload.k_assign_bits.push(bit);
         });
 
         console.log(JSON.stringify(payload, null, 2));

@@ -71,7 +71,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChildren('outFeetInput') outFeetInputs: QueryList<ElementRef>;
     @ViewChildren('damageFeetInput') damageFeetInputs: QueryList<ElementRef>;
     @ViewChildren('expenseFeetInput') expenseFeetInputs: QueryList<ElementRef>;
-    allInputs: QueryList<ElementRef>[] = new Array(4);
+    @ViewChildren('remarksInput', { read: ElementRef }) remarksInput: QueryList<ElementRef>;
+    allInputs: QueryList<ElementRef>[] = new Array(5);
 
     get pointExpenseFeetFormArray() {
         return this.form.get('pointExpenseFeet') as FormArray
@@ -157,6 +158,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.allInputs[1] = this.outFeetInputs;
         this.allInputs[2] = this.damageFeetInputs;
         this.allInputs[3] = this.expenseFeetInputs;
+        this.allInputs[4] = this.remarksInput;
 
     }
 
@@ -184,48 +186,21 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     onInputKeyUp(event: KeyboardEvent, rowIndex, colIndex) {
         const validKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter']
         if (validKeys.indexOf(event.key) !== -1) {
+            const trigger = (event.target as HTMLInputElement);
+            const curPos = trigger.selectionStart;
+            const length = trigger.value.length;
             if (event.key === 'Enter' || event.key === 'ArrowRight') {
-                const queryList = this.allInputs[rowIndex];
-                const nextElRef = queryList.toArray()[colIndex + 1];
-                if (nextElRef) {
-                    const input = nextElRef.nativeElement as HTMLInputElement;
-                    input.focus();
+                if (event.key === 'ArrowRight') {
+                    if (curPos === length) {
+                        this.moveNextInput(rowIndex, colIndex);
+                    }
                 } else {
-                    // focus currently at last input, try traversing to next enabled control
-                    let nextRow: QueryList<ElementRef> = null;
-                    for (let i = rowIndex + 1; i < this.allInputs.length; i++) {
-                        nextRow = this.allInputs[i];
-                        const firstInput = nextRow.toArray()[0].nativeElement as HTMLInputElement;
-                        if (firstInput && !firstInput.disabled) {
-                            break;
-                        }
-                    }
-                    if (nextRow) {
-                        const firstInput = nextRow.toArray()[0].nativeElement as HTMLInputElement;
-                        firstInput.focus();
-                    }
+                    this.moveNextInput(rowIndex, colIndex);
                 }
             }
             if (event.key === 'ArrowLeft') {
-                const queryList = this.allInputs[rowIndex];
-                const prevElRef = queryList.toArray()[colIndex - 1];
-                if (prevElRef) {
-                    const input = prevElRef.nativeElement as HTMLInputElement;
-                    input.focus();
-                } else {
-                    // focus currently at first input, try traversing to previous row enabled control
-                    let prevRow: QueryList<ElementRef> = null;
-                    for (let i = rowIndex - 1; i >= 0; i--) {
-                        prevRow = this.allInputs[i];
-                        const lastInput = prevRow.toArray()[prevRow.length - 1].nativeElement as HTMLInputElement;
-                        if (lastInput && !lastInput.disabled) {
-                            break;
-                        }
-                    }
-                    if (prevRow) {
-                        const lastInput = prevRow.toArray()[prevRow.length - 1].nativeElement as HTMLInputElement;
-                        lastInput.focus();
-                    }
+                if (curPos === 0) {
+                    this.movePrevInput(rowIndex, colIndex);
                 }
             }
 
@@ -262,8 +237,67 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }
 
         }
+    }
 
+    moveNextInput(rowIndex, colIndex) {
+        const queryList = this.allInputs[rowIndex];
+        const nextElRef = queryList.toArray()[colIndex + 1];
+        if (nextElRef) {
+            const input = nextElRef.nativeElement as HTMLInputElement;
+            input.focus();
+            setTimeout(() => {
+                input.setSelectionRange(0, 0);
+            })
 
+        } else {
+            // focus currently at last input, try traversing to next enabled control
+            let nextRow: QueryList<ElementRef> = null;
+            for (let i = rowIndex + 1; i < this.allInputs.length; i++) {
+                nextRow = this.allInputs[i];
+                const firstInput = nextRow.toArray()[0].nativeElement as HTMLInputElement;
+                if (firstInput && !firstInput.disabled) {
+                    break;
+                }
+            }
+            if (nextRow) {
+                const firstInput = nextRow.toArray()[0].nativeElement as HTMLInputElement;
+                setTimeout(() => {
+                    firstInput.focus();
+                })
+                setTimeout(() => {
+                    firstInput.setSelectionRange(0, 0);
+                })
+            }
+        }
+    }
+
+    movePrevInput(rowIndex, colIndex) {
+        const queryList = this.allInputs[rowIndex];
+        const prevElRef = queryList.toArray()[colIndex - 1];
+        if (prevElRef) {
+            const input = prevElRef.nativeElement as HTMLInputElement;
+            input.focus();
+            setTimeout(() => {
+                input.setSelectionRange(input.value.length, input.value.length);
+            })
+        } else {
+            // focus currently at first input, try traversing to previous row enabled control
+            let prevRow: QueryList<ElementRef> = null;
+            for (let i = rowIndex - 1; i >= 0; i--) {
+                prevRow = this.allInputs[i];
+                const lastInput = prevRow.toArray()[prevRow.length - 1].nativeElement as HTMLInputElement;
+                if (lastInput && !lastInput.disabled) {
+                    break;
+                }
+            }
+            if (prevRow) {
+                const lastInput = prevRow.toArray()[prevRow.length - 1].nativeElement as HTMLInputElement;
+                lastInput.focus();
+                setTimeout(() => {
+                    lastInput.setSelectionRange(lastInput.value.length, lastInput.value.length);
+                })
+            }
+        }
     }
 
     onCheckChange(event: MatCheckboxChange, type: 'in' | 'out' | 'damage') {

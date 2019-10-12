@@ -244,8 +244,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         const nextElRef = queryList.toArray()[colIndex + 1];
         if (nextElRef) {
             const input = nextElRef.nativeElement as HTMLInputElement;
-            input.focus();
             setTimeout(() => {
+                input.focus();
                 input.setSelectionRange(0, 0);
             })
 
@@ -263,8 +263,6 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 const firstInput = nextRow.toArray()[0].nativeElement as HTMLInputElement;
                 setTimeout(() => {
                     firstInput.focus();
-                })
-                setTimeout(() => {
                     firstInput.setSelectionRange(0, 0);
                 })
             }
@@ -276,8 +274,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         const prevElRef = queryList.toArray()[colIndex - 1];
         if (prevElRef) {
             const input = prevElRef.nativeElement as HTMLInputElement;
-            input.focus();
             setTimeout(() => {
+                input.focus();
                 input.setSelectionRange(input.value.length, input.value.length);
             })
         } else {
@@ -292,8 +290,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             if (prevRow) {
                 const lastInput = prevRow.toArray()[prevRow.length - 1].nativeElement as HTMLInputElement;
-                lastInput.focus();
                 setTimeout(() => {
+                    lastInput.focus();
                     lastInput.setSelectionRange(lastInput.value.length, lastInput.value.length);
                 })
             }

@@ -14,6 +14,7 @@ export class AddBitService {
     private getCompanyUrl: string;
     private addCompanyUrl: string;
     private bitSizeListUrl: string;
+    private lastBitUrl: string;
     constructor(
         private fb: FormBuilder,
         private auth: AuthService,
@@ -24,6 +25,7 @@ export class AddBitService {
         this.getCompanyUrl = this.config.getAbsoluteUrl('bitCompanies')
         this.addCompanyUrl = this.config.getAbsoluteUrl('addBitCompany');
         this.bitSizeListUrl = this.config.getAbsoluteUrl('bitSizes');
+        this.lastBitUrl = this.config.getAbsoluteUrl('lastBitSerialNo');
     }
 
     getCompanies() {
@@ -33,6 +35,10 @@ export class AddBitService {
 
     getBitSizes() {
         return this.http.get<BitSize[]>(this.bitSizeListUrl)
+    }
+
+    getLastBitSerial() {
+
     }
 
     addBitCompany(company: Company) {

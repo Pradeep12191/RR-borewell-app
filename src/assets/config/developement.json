@@ -75,7 +75,7 @@
             "url": "bits_count"
         },
         {
-            "name": "LastBitBill",
+            "name": "lastBitSerialNo",
             "url": "bit_last_serial_no"
         },
         {

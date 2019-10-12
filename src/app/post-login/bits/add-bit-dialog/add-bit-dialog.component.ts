@@ -1,15 +1,12 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Bit } from '../Bit';
-import { BitBill } from './LastBitBill';
+import { MAT_DIALOG_DATA } from '@angular/material';
 import { Godown } from '../../pipe/Godown';
 import { Moment } from 'moment';
-import { HttpClient } from '@angular/common/http';
 import { ConfigService } from '../../../services/config.service';
-import { ToastrService } from 'ngx-toastr';
 import { Company } from '../Company';
 import { BitSize } from '../BitSize';
+import { AddBitService } from './add-bit.service';
 
 @Component({
     templateUrl: './add-bit-dialog.component.html',
@@ -30,10 +27,8 @@ export class AddBitDialogComponent {
     constructor(
         private fb: FormBuilder,
         @Inject(MAT_DIALOG_DATA) data,
-        private http: HttpClient,
         private config: ConfigService,
-        private dialogRef: MatDialogRef<AddBitDialogComponent>,
-        private toastr: ToastrService
+        private addBitService: AddBitService
     ) {
         this.bitSizes = data.bitSizes;
         this.selectedGodown = data.selectedGodown;
@@ -79,6 +74,7 @@ export class AddBitDialogComponent {
         });
 
         console.log(JSON.stringify(payload, null, 2));
+        this.addBitService.addBit(payload).subscribe(() => { }, () => { });
     }
 
 

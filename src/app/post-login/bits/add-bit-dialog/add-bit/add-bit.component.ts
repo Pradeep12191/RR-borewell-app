@@ -21,7 +21,6 @@ import { BitSize } from '../../BitSize';
 })
 export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
     @Input() form: FormGroup;
-    @Input() lastBillNo;
     @Input() companies: Company[];
     @Input() bitSizes: BitSize[];
     @ViewChild('picker', { static: false }) picker: MatDatepicker<any>;
@@ -29,6 +28,7 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
     @ViewChild('companySelect', { static: false }) companySelect: MatSelect;
     @ViewChild('bitSelect', { static: false }) bitSelect: MatSelect;
     @ViewChild('quantityInput', { static: false }) quantityInput: MatInput;
+    lastBitSerialNo: number;
     companyPopupref: CardOverlayref;
     quantityInput$ = new Subject();
     appearance;
@@ -61,6 +61,8 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
         ).subscribe((value) => {
             const ctrlCount = this.bitFormArray.controls.length;
             const count = value ? +value : 0;
+            let serialNo = this.lastBitSerialNo || 0;
+
             if (count === ctrlCount) {
                 return;
             }
@@ -68,10 +70,9 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
                 // add new control
                 let newCtrlCount = count - ctrlCount;
                 while (newCtrlCount) {
-                    const serialNo = 1; // should be previous serial no ++
                     const bit = this.form.get('bit').value;
                     const company = this.form.get('company').value;
-                    this.bitFormArray.push(this.addBitService.buildPipeForm(serialNo, bit, company))
+                    this.bitFormArray.push(this.addBitService.buildPipeForm(++serialNo, bit, company))
                     newCtrlCount--;
                 }
                 return;
@@ -111,15 +112,22 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
     }
 
     onBitChange() {
-        if (!this.form.get('quantity').value) {
-            setTimeout(() => this.quantityInput.focus(), 200);
-        }
 
-        const selectedBit: Bit = this.form.get('bit').value;
+        const selectedBit: BitSize = this.form.get('bit').value;
 
-        this.bitFormArray.controls.forEach(ctrl => {
-            ctrl.get('bit').setValue(selectedBit);
-        })
+        this.addBitService.getLastBitSerial(selectedBit.size).subscribe((lastBitSerialNo) => {
+            this.lastBitSerialNo = lastBitSerialNo;
+            let serialNo = lastBitSerialNo;
+            if (!this.form.get('quantity').value) {
+                setTimeout(() => this.quantityInput.focus(), 200);
+            }
+            this.bitFormArray.controls.forEach(ctrl => {
+                ctrl.get('bit').setValue(selectedBit);
+                ctrl.get('serialNo').setValue(++serialNo);
+            })
+        }, () => { });
+
+
     }
 
     onCompanyChange() {

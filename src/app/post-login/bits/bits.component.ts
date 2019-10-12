@@ -91,36 +91,23 @@ export class BitsComponent {
     }
 
     openAddBit() {
-
-        const params = new HttpParams().set('user_id', this.auth.userid).append('gudown_id', this.selectedGodown.godown_id);
-        let lastSerialNo: BitBill[];
-        this.loader.showSaveLoader('Loading ...');
-        this.http.get<BitBill[]>(this.lastBillUrl, { params }).subscribe(lastBill => {
-            const dialogRef = this.dialog.open(AddBitDialogComponent, {
-                width: '60vw',
-                position: { top: '0px' },
-                maxHeight: '100vh',
-                height: '100vh',
-                data: {
-                    selectedGodown: this.selectedGodown,
-                    lastBill,
-                    companies: this.companies,
-                    bitSizes: this.bitSizes
-                },
-                disableClose: true
-            });
-            dialogRef.afterClosed().subscribe((bits) => {
-                if (bits) {
-                    this.updateBits(bits);
-                    // this.selectedGodownId = this.app.selectedGodownId
-                }
-            });
-            this.loader.hideSaveLoader();
-        }, (err) => {
-            this.loader.hideSaveLoader();
-            if (err) {
-                this.toastr.error('Unable to fetch Last Bill Data', null, { timeOut: 2000 })
+        const dialogRef = this.dialog.open(AddBitDialogComponent, {
+            width: '60vw',
+            position: { top: '0px' },
+            maxHeight: '100vh',
+            height: '100vh',
+            data: {
+                selectedGodown: this.selectedGodown,
+                companies: this.companies,
+                bitSizes: this.bitSizes
+            },
+            disableClose: true
+        });
+        dialogRef.afterClosed().subscribe((bits) => {
+            if (bits) {
+                this.updateBits(bits);
+                // this.selectedGodownId = this.app.selectedGodownId
             }
-        })
+        });
     }
 }

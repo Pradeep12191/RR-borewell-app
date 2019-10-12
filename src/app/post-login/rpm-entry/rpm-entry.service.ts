@@ -14,12 +14,14 @@ import { RpmTableData } from '../../models/RpmTableData';
 import { PipeSize } from '../../models/PipeSize';
 import { RpmValue } from '../../models/RpmValue';
 import { FormBuilder } from '@angular/forms';
+import { BitSerialNo } from '../../models/BitSerialNo';
 
 @Injectable()
 export class RpmEntryService {
     private bookPostUrl: string;
     private getLastRpmEntrySheetUrl: string;
     private postAssignVehicleUrl: string;
+    private putAssignVehicleBitUrl: string;
     private rpmTableDataurl: string;
     private submitRpmUrl: string;
     constructor(
@@ -32,6 +34,7 @@ export class RpmEntryService {
         this.bookPostUrl = this.config.getAbsoluteUrl('addBook');
         this.getLastRpmEntrySheetUrl = this.config.getAbsoluteUrl('vehicleLastRpmEntry');
         this.postAssignVehicleUrl = this.config.getAbsoluteUrl('AssignPipeToVehicle');
+        this.putAssignVehicleBitUrl = this.config.getAbsoluteUrl('assignVehicleBit');
         this.rpmTableDataurl = this.config.getAbsoluteUrl('rpmTableData');
         this.submitRpmUrl = this.config.getAbsoluteUrl('submitRpmEntry');
     }
@@ -79,6 +82,22 @@ export class RpmEntryService {
             catchError((err) => {
                 if (err) {
                     this.toastr.error('Error while assinging Pipe', null, { timeOut: 2000 })
+                }
+                return throwError(err);
+            })
+        )
+    }
+
+    updateAssignBit(payload: any, vehicle: Vehicle) {
+        console.log(JSON.stringify(payload, null, 2));
+        return this.http.put<BitSerialNo[]>(this.putAssignVehicleBitUrl, payload).pipe(
+            map((pipes) => {
+                this.toastr.success('Bits assigned to vehicle ' + vehicle.regNo + ' successfully')
+                return pipes
+            }),
+            catchError((err) => {
+                if (err) {
+                    this.toastr.error('Error while assinging Bit', null, { timeOut: 2000 })
                 }
                 return throwError(err);
             })

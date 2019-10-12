@@ -21,6 +21,7 @@ import { CompanyiesResolver } from '../guards/resolveGuard/select-option/compani
 import { PipeSizesResolver } from '../guards/resolveGuard/select-option/pipe-sizes.resolver';
 import { AddBookPopupComponent } from './rpm-entry/add-book-popup/add-book-popup.component';
 import { RpmEntryService } from './rpm-entry/rpm-entry.service';
+import { BitGodownsResolver } from '../guards/resolveGuard/bit/bit-godowns.resolver';
 
 
 

@@ -64,7 +64,46 @@
         </div>
 
     </div>
-    <mat-card>
+
+
+    <mat-card class="custom-card m-b-16">
+        <mat-card-header>
+            <mat-card-title>RPM Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div fxLayout fxLayoutGap="48px">
+                <div fxLayout="column" fxLayoutGap="10px">
+                    <div class="font-12">Start RPM</div>
+                    <div class="bold font-20">0</div>
+                </div>
+                <mat-form-field fxFlex="20" [appearance]="appearance">
+                    <mat-label>End RPM</mat-label>
+                    <input type="text" matInput positiveNumber>
+                </mat-form-field>
+                <div fxLayout fxLayoutAlign="start center">
+                    <div fxLayoutAlign="center center" fxFlex="20" class="shift-top-16">
+                        <mat-checkbox color="primary"></mat-checkbox>
+                    </div>
+                    <mat-form-field fxFlex="80" [appearance]="appearance">
+                        <mat-label>Manual RPM</mat-label>
+                        <input type="text" matInput positiveNumber>
+                    </mat-form-field>
+                </div>
+
+                <div fxLayout="column" fxLayoutGap="10px">
+                    <div class="font-12">Running RPM</div>
+                    <div class="bold font-20">0</div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="custom-card">
+        <mat-card-header>
+            <mat-card-title>
+                Pipe Details
+            </mat-card-title>
+        </mat-card-header>
         <mat-card-content>
             <div class="pipe-header" fxLayout>
                 <div fxFlex="28"></div>
@@ -243,14 +282,15 @@
             <div [formGroup]="form" fxLayout class="m-t-10">
                 <mat-form-field [appearance]="appearance" fxFlex>
                     <mat-label>Remarks</mat-label>
-                    <textarea #remarksInput (keydown)="onInputKeyUp($event, 4, 0)" formControlName="remarks" matInput cols="30" rows="6"></textarea>
+                    <textarea #remarksInput (keydown)="onInputKeyUp($event, 4, 0)" formControlName="remarks" matInput
+                        cols="30" rows="6"></textarea>
                 </mat-form-field>
             </div>
         </mat-card-content>
     </mat-card>
     <div fxLayoutAlign="end" class="m-t-25">
         <div>
-            <button [disabled]="!selectedVehicle"  (click)="submit()" mat-raised-button color="primary" type="button">SUBMIT</button>
+            <button [disabled]="!selectedVehicle" (click)="submit()" mat-raised-button color="primary" type="button">SUBMIT</button>
         </div>
     </div>
 </div>

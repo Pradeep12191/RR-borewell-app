@@ -66,7 +66,7 @@
     </div>
 
     <div fxLayout fxLayoutGap="16px" class="m-b-16">
-        <mat-card fxFlex="calc(40% - 16px)" class="custom-card">
+        <mat-card fxFlex="calc(50% - 16px)" class="custom-card">
             <mat-card-header>
                 <mat-card-title>RPM Details</mat-card-title>
             </mat-card-header>
@@ -104,67 +104,82 @@
                 </div>
             </mat-card-content>
         </mat-card>
-        <mat-card fxFlex="60" class="custom-card">
+        <mat-card fxFlex="50" class="custom-card">
             <mat-card-header>
                 <mat-card-title>
                     Service Details
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <div fxLayout="column">
-                    <div fxLayout>
-                        <mat-form-field fxFlex="15" class="m-r-16">
-                            <mat-label>Limit</mat-label>
-                            <input type="text" positiveNumber matInput>
-                        </mat-form-field>
+                <div fxLayout="column" fxLayoutGap="16px">
+                    <div fxLayout fxLayoutGap="16px">
+                        <div fxLayoutAlign="start center" fxFlex="10">
+                            <span class="link-label">
+                                250
+                            </span>
+                        </div>
                         <div fxLayoutAlign="start center" fxFlex="35">Engine Oil Service</div>
                         <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
                         <div fxLayoutAlign="end center" fxFlex>
-                            <button mat-raised-button color="primary">Complete Service</button>
+                            <button mat-icon-button color="primary">
+                                <mat-icon>refresh</mat-icon>
+                            </button>
                         </div>
                     </div>
-                    <div fxLayout>
-                        <mat-form-field fxFlex="15" class="m-r-16">
-                            <mat-label>Limit</mat-label>
-                            <input type="text" positiveNumber matInput>
-                        </mat-form-field>
+                    <div fxLayout fxLayoutGap="16px">
+                        <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
+                            <span class="link-label">
+                                600
+                            </span>
+                        </div>
                         <div fxLayoutAlign="start center" fxFlex="35">Compressor Oil Service</div>
                         <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
                         <div fxLayoutAlign="end center" fxFlex>
-                            <button mat-raised-button color="primary">Complete Service</button>
+                            <button mat-icon-button color="primary">
+                                <mat-icon>refresh</mat-icon>
+                            </button>
                         </div>
                     </div>
-                    <div fxLayout>
-                        <mat-form-field fxFlex="15" class="m-r-16">
-                            <mat-label>Limit</mat-label>
-                            <input type="text" positiveNumber matInput>
-                        </mat-form-field>
+                    <div fxLayout fxLayoutGap="16px">
+                        <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
+                            <span class="link-label">
+                                750
+                            </span>
+                        </div>
                         <div fxLayoutAlign="start center" fxFlex="35">Engine Air Filter</div>
                         <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
                         <div fxLayoutAlign="end center" fxFlex>
-                            <button mat-raised-button color="primary">Complete Service</button>
+                            <button mat-icon-button color="primary">
+                                <mat-icon>refresh</mat-icon>
+                            </button>
                         </div>
                     </div>
-                    <div fxLayout>
-                        <mat-form-field fxFlex="15" class="m-r-16">
-                            <mat-label>Limit</mat-label>
-                            <input type="text" positiveNumber matInput>
-                        </mat-form-field>
-                        <div fxLayoutAlign="start center" fxFlex="35">Compressor Air Service</div>
+                    <div fxLayout fxLayoutGap="16px">
+                        <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
+                            <span class="link-label">
+                                2000
+                            </span>
+                        </div>
+                        <div fxLayoutAlign="start center" fxFlex="35">Compressor Air Filter</div>
                         <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
                         <div fxLayoutAlign="end center" fxFlex>
-                            <button mat-raised-button color="primary">Complete Service</button>
+                            <button mat-icon-button color="primary">
+                                <mat-icon>refresh</mat-icon>
+                            </button>
                         </div>
                     </div>
-                    <div fxLayout>
-                        <mat-form-field fxFlex="15" class="m-r-16">
-                            <mat-label>Limit</mat-label>
-                            <input type="text" positiveNumber matInput>
-                        </mat-form-field>
+                    <div fxLayout fxLayoutGap="16px">
+                        <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
+                            <span class="link-label">
+                                2000
+                            </span>
+                        </div>
                         <div fxLayoutAlign="start center" fxFlex="35">Seperator</div>
                         <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
                         <div fxLayoutAlign="end center" fxFlex>
-                            <button mat-raised-button color="primary">Complete Service</button>
+                            <button mat-icon-button color="primary">
+                                <mat-icon>refresh</mat-icon>
+                            </button>
                         </div>
                     </div>
                 </div>

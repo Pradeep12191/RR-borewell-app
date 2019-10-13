@@ -343,3 +343,9 @@ mat-form-field.calc-field{
      }
  }
  
+ .link-label:hover{
+     cursor: pointer;
+     color: $panel-header-color;
+     text-decoration: underline;
+     text-decoration-color: $panel-header-color;
+ }

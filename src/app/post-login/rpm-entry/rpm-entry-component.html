@@ -98,7 +98,7 @@
                         <div class="bold font-20">0</div>
                     </div>
                     <div fxLayout fxLayoutAlign="start center">
-                        <div fxFlex="40" class="font-14">Point detail RPM</div>
+                        <div fxFlex="40" class="font-14">Point Diesel RPM</div>
                         <div class="bold font-20">0</div>
                     </div>
                 </div>
@@ -245,8 +245,66 @@
         </mat-card-content>
     </mat-card>
 
+    <mat-card class="custom-card m-b-16">
+        <mat-card-header>
+            <mat-card-title>Depth Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div fxLayout="column">
+                <div fxLayout>
+                    <div fxLayout fxLayoutGap="25px" fxFlex="40">
+                        <div fxLayoutAlign="start center" fxFlex="25">Bore Depth</div>
+                        <mat-form-field fxFlex="50">
+                            <mat-label>Feet</mat-label>
+                            <input type="text" matInput positiveNumber>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout fxFlex="60">
+                        <div fxLayoutAlign="start center">Feet Avg</div>
+                        <div>
+                            <div class="label-container">66</div>
+                        </div>
+                    </div>
+                </div>
+                <div fxLayout>
+                    <div fxLayout fxLayoutGap="25px" fxFlex="40">
+                        <div fxLayoutAlign="start center" fxFlex="25">Erection Pipe Feet</div>
+                        <mat-form-field fxFlex="50">
+                            <mat-label>Feet</mat-label>
+                            <input type="text" matInput positiveNumber>
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="60">
+                    </div>
+                </div>
+                <div class="m-t-16" fxLayout fxLayoutGap="15px">
+                    <div fxLayoutAlign="start center">
+                        Above
+                    </div>
+                    <mat-form-field fxFlex="10">
+                        <mat-label>Feet</mat-label>
+                        <mat-select>
+                            <mat-option value="200">200</mat-option>
+                            <mat-option value="250">250</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div fxLayoutAlign="start center">Feet</div>
+                    <mat-form-field fxFlex="3">
+                        <mat-label>hrs</mat-label>
+                        <input type="text" positiveNumber matInput>
+                    </mat-form-field>
+                    <div fxLayoutAlign="start center">hrs</div>
+                    <mat-form-field fxFlex="3">
+                        <mat-label>min</mat-label>
+                        <input type="text" positiveNumber matInput>
+                    </mat-form-field>
+                    <div fxLayoutAlign="start center">min</div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
 
-    <mat-card class="custom-card">
+    <mat-card class="custom-card m-b-16">
         <mat-card-header>
             <mat-card-title>
                 Pipe Details
@@ -427,6 +485,62 @@
                     </div>
                 </div>
             </form>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="custom-card">
+        <mat-card-header>
+            <mat-card-title>Bit Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div fxLayout="column" fxLayoutGap="15px">
+                <div fxLayout fxLayoutGap="15px">
+                    <div fxLayoutAlign="start center" fxFlex="15">TCD no</div>
+                    <mat-form-field fxFlex="15">
+                        <mat-label>Serial no</mat-label>
+                        <mat-select placeholder="Select serial no">
+                            <mat-option value="1">1</mat-option>
+                            <mat-option value="2">2</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div fxLayoutAlign="start center">Bit No</div>
+                    <div class="font-20 bold" fxFlex="15" fxLayoutAlign="start center">1234</div>
+                </div>
+                <div fxLayout fxLayoutGap="15px">
+                    <div fxLayoutAlign="start center" fxFlex="15">Bit Running Feet</div>
+                    <div fxFlex="15" class="bold font-20">10</div>
+                </div>
+                <div fxLayout fxLayoutGap="15px">
+                    <div fxLayoutAlign="start center" fxFlex="15">Bit Previous Feet</div>
+                    <div fxFlex="15" class="bold font-20">10</div>
+                </div>
+                <div fxLayout fxLayoutGap="15px">
+                    <div fxLayoutAlign="start center" fxFlex="15">Total Feet</div>
+                    <div fxFlex="15" class="bold font-20">10</div>
+                </div>
+                <div fxLayout fxLayoutGap="15px">
+                    <div fxLayoutAlign="start center" fxFlex="15">Hammer</div>
+                    <div fxLayoutAlign="start center" class="bold font-20">10</div>
+                    <button mat-icon-button color="primary">
+                        <mat-icon>refresh</mat-icon>
+                    </button>
+                </div>
+                <div fxLayout fxLayoutGap="15px">
+                    <div fxLayoutAlign="start center" fxFlex="15">Piston</div>
+                    <div fxLayoutAlign="start center" class="bold font-20">10</div>
+                    <button mat-icon-button color="primary">
+                        <mat-icon>refresh</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="custom-card m-t-16">
+        <mat-card-header>
+            <mat-card-title>
+                Remarks
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
             <div [formGroup]="form" fxLayout class="m-t-10">
                 <mat-form-field [appearance]="appearance" fxFlex>
                     <mat-label>Remarks</mat-label>

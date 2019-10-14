@@ -16,6 +16,21 @@
     margin-top: -24px;
 }
 
+.label-container{
+    height: 100%;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    border: 0px;
+    background: #eee;
+    margin-left: 15px;
+    font-weight: bold;
+    border-radius: 4px;
+    box-shadow: -1px 0px 6px inset rgba(0, 0, 0, 0.54);
+}
+
 .diesel{
     .diesel__content{
         height: 64px;

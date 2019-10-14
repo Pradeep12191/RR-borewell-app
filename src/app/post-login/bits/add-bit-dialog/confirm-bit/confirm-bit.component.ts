@@ -10,5 +10,4 @@ import { Bit } from '../../Bit';
 export class ConfirmBitComponent{
     @Input('formValue') bitData;
     @Input() godown: Godown;
-    @Input() bits: Bit[];
 }

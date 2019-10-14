@@ -107,7 +107,7 @@ export class AssignBitDialogComponent implements AfterViewInit {
 
         dialogRef.afterClosed().subscribe((res) => {
             if (res) {
-                this.selectedBits = res;
+                this.bitSerialNos = res;
             }
         })
     }

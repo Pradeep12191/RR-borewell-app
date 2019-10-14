@@ -114,7 +114,7 @@
                 <div fxLayout="column" fxLayoutGap="16px">
                     <div fxLayout fxLayoutGap="16px">
                         <div fxLayoutAlign="start center" fxFlex="10">
-                            <span class="link-label">
+                            <span>
                                 250
                             </span>
                         </div>
@@ -128,7 +128,7 @@
                     </div>
                     <div fxLayout fxLayoutGap="16px">
                         <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
-                            <span class="link-label">
+                            <span>
                                 600
                             </span>
                         </div>
@@ -142,7 +142,7 @@
                     </div>
                     <div fxLayout fxLayoutGap="16px">
                         <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
-                            <span class="link-label">
+                            <span>
                                 750
                             </span>
                         </div>
@@ -155,11 +155,16 @@
                         </div>
                     </div>
                     <div fxLayout fxLayoutGap="16px">
-                        <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
-                            <span class="link-label">
+                        <div [matMenuTriggerFor]="menu" fxLayoutAlign="start center" fxFlex="10" class="m-r-16" class="link-label">
+                            <span>
                                 2000
                             </span>
+                            <mat-icon>arrow_drop_down</mat-icon>
                         </div>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item>2000</button>
+                            <button mat-menu-item>750</button>
+                        </mat-menu>
                         <div fxLayoutAlign="start center" fxFlex="35">Compressor Air Filter</div>
                         <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
                         <div fxLayoutAlign="end center" fxFlex>
@@ -170,7 +175,7 @@
                     </div>
                     <div fxLayout fxLayoutGap="16px">
                         <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
-                            <span class="link-label">
+                            <span>
                                 2000
                             </span>
                         </div>

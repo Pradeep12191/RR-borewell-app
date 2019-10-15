@@ -65,303 +65,305 @@
 
     </div>
 
-    <div fxLayout fxLayoutGap="16px" class="m-b-16">
-        <mat-card fxFlex class="custom-card">
-            <mat-card-header>
-                <mat-card-title>RPM Details</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <div fxLayout="column">
-                    <div fxLayout fxLayoutAlign="start center">
-                        <div fxFlex="40" class="font-14">Start RPM</div>
-                        <div class="bold font-20">0</div>
-                    </div>
-                    <div fxLayout fxLayoutAlign="start center">
-                        <div fxFlex="40">End RPM</div>
-                        <mat-form-field fxFlex="50">
-                            <mat-label>RPM</mat-label>
-                            <input type="text" matInput positiveNumber>
-                        </mat-form-field>
-                    </div>
-                    <div fxLayout fxLayoutAlign="start center">
-                        <div fxFlex="40">
-                            <mat-checkbox color="primary">Manual RPM</mat-checkbox>
+    <form [formGroup]="form">
+        <div fxLayout fxLayoutGap="16px" class="m-b-16">
+            <mat-card formGroupName="rpm" fxFlex class="custom-card">
+                <mat-card-header>
+                    <mat-card-title>RPM Details</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div fxLayout="column">
+                        <div fxLayout fxLayoutAlign="start center">
+                            <div fxFlex="40" class="font-14">Start RPM</div>
+                            <div class="bold font-20">0</div>
                         </div>
-                        <mat-form-field fxFlex="50">
-                            <mat-label>RPM</mat-label>
-                            <input type="text" matInput positiveNumber>
-                        </mat-form-field>
-                    </div>
+                        <div fxLayout fxLayoutAlign="start center">
+                            <div fxFlex="40">End RPM</div>
+                            <mat-form-field fxFlex="50">
+                                <mat-label>RPM</mat-label>
+                                <input formControlName="end" type="text" matInput positiveNumber>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout fxLayoutAlign="start center">
+                            <div fxFlex="40">
+                                <mat-checkbox formControlName="isManual" color="primary">Manual RPM</mat-checkbox>
+                            </div>
+                            <mat-form-field fxFlex="50">
+                                <mat-label>RPM</mat-label>
+                                <input type="text" matInput positiveNumber formControlName="manual">
+                            </mat-form-field>
+                        </div>
 
-                    <div fxLayoutAlign="start center" fxLayout class="m-b-16">
-                        <div fxFlex="40" class="font-14">Running RPM</div>
-                        <div class="bold font-20">0</div>
+                        <div fxLayoutAlign="start center" fxLayout class="m-b-16">
+                            <div fxFlex="40" class="font-14">Running RPM</div>
+                            <div class="bold font-20">0</div>
+                        </div>
+                        <div fxLayout fxLayoutAlign="start center">
+                            <div fxFlex="40" class="font-14">Point Diesel RPM</div>
+                            <div class="bold font-20">0</div>
+                        </div>
                     </div>
-                    <div fxLayout fxLayoutAlign="start center">
-                        <div fxFlex="40" class="font-14">Point Diesel RPM</div>
-                        <div class="bold font-20">0</div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card fxFlex class="custom-card">
+                <mat-card-header>
+                    <mat-card-title>
+                        Service Details
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div fxLayout="column" fxLayoutGap="16px">
+                        <div fxLayout fxLayoutGap="16px">
+                            <div fxLayoutAlign="start center" fxFlex="10">
+                                <span *ngIf="vehicleServiceLimits?.e_oil_service; else hyphenTpl">
+                                    {{ vehicleServiceLimits?.e_oil_service }}
+                                </span>
+                            </div>
+                            <div fxLayoutAlign="start center" fxFlex="35">Engine Oil Service</div>
+                            <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
+                            <div fxLayoutAlign="end center" fxFlex>
+                                <button mat-icon-button color="primary">
+                                    <mat-icon>refresh</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <div fxLayout fxLayoutGap="16px">
+                            <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
+                                <span *ngIf="vehicleServiceLimits?.c_oil_service; else hyphenTpl">
+                                    {{ vehicleServiceLimits?.c_oil_service }}
+                                </span>
+                            </div>
+                            <div fxLayoutAlign="start center" fxFlex="35">Compressor Oil Service</div>
+                            <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
+                            <div fxLayoutAlign="end center" fxFlex>
+                                <button mat-icon-button color="primary">
+                                    <mat-icon>refresh</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <div fxLayout fxLayoutGap="16px">
+                            <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
+                                <span *ngIf="vehicleServiceLimits?.e_air_filter; else hyphenTpl">
+                                    {{ vehicleServiceLimits?.e_air_filter}}
+                                </span>
+                            </div>
+                            <div fxLayoutAlign="start center" fxFlex="35">Engine Air Filter</div>
+                            <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
+                            <div fxLayoutAlign="end center" fxFlex>
+                                <button mat-icon-button color="primary">
+                                    <mat-icon>refresh</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <div fxLayout fxLayoutGap="16px">
+                            <div *ngIf="vehicleServiceLimits?.c_air_filter; else hyphenTpl10" [matMenuTriggerFor]="menu"
+                                fxLayoutAlign="start center" fxFlex="10" class="m-r-16" class="link-label">
+                                <span>
+                                    {{activeCompressorAirFilterLimit.limit}}
+                                </span>
+                                <mat-icon>arrow_drop_down</mat-icon>
+                            </div>
+                            <div fxLayoutAlign="start center" fxFlex="35">Compressor Air Filter</div>
+                            <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
+                            <div fxLayoutAlign="end center" fxFlex>
+                                <button mat-icon-button color="primary">
+                                    <mat-icon>refresh</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <div fxLayout fxLayoutGap="16px">
+                            <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
+                                <span *ngIf="vehicleServiceLimits?.seperator; else hyphenTpl">
+                                    {{ vehicleServiceLimits?.seperator}}
+                                </span>
+                            </div>
+                            <div fxLayoutAlign="start center" fxFlex="35">Seperator</div>
+                            <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
+                            <div fxLayoutAlign="end center" fxFlex>
+                                <button mat-icon-button color="primary">
+                                    <mat-icon>refresh</mat-icon>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </mat-card-content>
-        </mat-card>
-        <mat-card fxFlex class="custom-card">
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <mat-card formGroupName="diesel" class="custom-card m-b-16">
             <mat-card-header>
                 <mat-card-title>
-                    Service Details
+                    Diesel
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <div fxLayout="column" fxLayoutGap="16px">
-                    <div fxLayout fxLayoutGap="16px">
-                        <div fxLayoutAlign="start center" fxFlex="10">
-                            <span *ngIf="vehicleServiceLimits?.e_oil_service; else hyphenTpl">
-                                {{ vehicleServiceLimits?.e_oil_service }}
-                            </span>
-                        </div>
-                        <div fxLayoutAlign="start center" fxFlex="35">Engine Oil Service</div>
-                        <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
-                        <div fxLayoutAlign="end center" fxFlex>
-                            <button mat-icon-button color="primary">
-                                <mat-icon>refresh</mat-icon>
-                            </button>
-                        </div>
+                <div fxLayout="column" class="diesel" fxLayoutGap="10px">
+                    <div fxLayout class="diesel__header">
+                        <div fxFlex class="bold text-center">Compressor</div>
+                        <div fxFlex class="bold text-center">Lorry</div>
+                        <div fxFlex class="bold text-center">Support</div>
+                        <div fxFlex class="bold text-center">Total</div>
+                        <div fxFlex class="bold text-center">Previous Diesel RPM</div>
+                        <div fxFlex class="bold text-center">Diesel Avg</div>
                     </div>
-                    <div fxLayout fxLayoutGap="16px">
-                        <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
-                            <span *ngIf="vehicleServiceLimits?.c_oil_service; else hyphenTpl">
-                                {{ vehicleServiceLimits?.c_oil_service }}
-                            </span>
+                    <div class="diesel__content">
+                        <div fxFlex class="b-r">
+                            <div class="input-wrapper h-100" fxFlex>
+                                <input formControlName="compressor" type="text" class="h-100" placeholder="Liter" positiveNumber>
+                                <mat-icon class="input-edit-icon">edit</mat-icon>
+                                <!-- <label>Count</label> -->
+                                <span class="focus-border">
+                                    <i></i>
+                                </span>
+                            </div>
                         </div>
-                        <div fxLayoutAlign="start center" fxFlex="35">Compressor Oil Service</div>
-                        <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
-                        <div fxLayoutAlign="end center" fxFlex>
-                            <button mat-icon-button color="primary">
-                                <mat-icon>refresh</mat-icon>
-                            </button>
+                        <div fxFlex class="b-r">
+                            <div class="input-wrapper h-100" fxFlex>
+                                <input formControlName="lorry" type="text" class="h-100" placeholder="Liter" positiveNumber>
+                                <mat-icon class="input-edit-icon">edit</mat-icon>
+                                <!-- <label>Count</label> -->
+                                <span class="focus-border">
+                                    <i></i>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    <div fxLayout fxLayoutGap="16px">
-                        <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
-                            <span *ngIf="vehicleServiceLimits?.e_air_filter; else hyphenTpl">
-                                {{ vehicleServiceLimits?.e_air_filter}}
-                            </span>
+                        <div fxFlex class="b-r">
+                            <div class="input-wrapper h-100" fxFlex>
+                                <input formControlName="support" type="text" class="h-100" placeholder="Liter" positiveNumber>
+                                <mat-icon class="input-edit-icon">edit</mat-icon>
+                                <!-- <label>Count</label> -->
+                                <span class="focus-border">
+                                    <i></i>
+                                </span>
+                            </div>
                         </div>
-                        <div fxLayoutAlign="start center" fxFlex="35">Engine Air Filter</div>
-                        <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
-                        <div fxLayoutAlign="end center" fxFlex>
-                            <button mat-icon-button color="primary">
-                                <mat-icon>refresh</mat-icon>
-                            </button>
+                        <div fxFlex class="b-r">
                         </div>
-                    </div>
-                    <div fxLayout fxLayoutGap="16px">
-                        <div *ngIf="vehicleServiceLimits?.c_air_filter; else hyphenTpl10" [matMenuTriggerFor]="menu"
-                            fxLayoutAlign="start center" fxFlex="10" class="m-r-16" class="link-label">
-                            <span>
-                                {{activeCompressorAirFilterLimit.limit}}
-                            </span>
-                            <mat-icon>arrow_drop_down</mat-icon>
+                        <div fxFlex class="b-r">
                         </div>
-                        <div fxLayoutAlign="start center" fxFlex="35">Compressor Air Filter</div>
-                        <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
-                        <div fxLayoutAlign="end center" fxFlex>
-                            <button mat-icon-button color="primary">
-                                <mat-icon>refresh</mat-icon>
-                            </button>
-                        </div>
-                    </div>
-                    <div fxLayout fxLayoutGap="16px">
-                        <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
-                            <span *ngIf="vehicleServiceLimits?.seperator; else hyphenTpl">
-                                {{ vehicleServiceLimits?.seperator}}
-                            </span>
-                        </div>
-                        <div fxLayoutAlign="start center" fxFlex="35">Seperator</div>
-                        <div fxLayoutAlign="start center" fxFlex="15" class="font-24 bold">0</div>
-                        <div fxLayoutAlign="end center" fxFlex>
-                            <button mat-icon-button color="primary">
-                                <mat-icon>refresh</mat-icon>
-                            </button>
+                        <div fxFlex>
                         </div>
                     </div>
                 </div>
             </mat-card-content>
         </mat-card>
-    </div>
 
-    <mat-card class="custom-card m-b-16">
-        <mat-card-header>
-            <mat-card-title>
-                Diesel
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <div fxLayout="column" class="diesel" fxLayoutGap="10px">
-                <div fxLayout class="diesel__header">
-                    <div fxFlex class="bold text-center">Compressor</div>
-                    <div fxFlex class="bold text-center">Lorry</div>
-                    <div fxFlex class="bold text-center">Support</div>
-                    <div fxFlex class="bold text-center">Total</div>
-                    <div fxFlex class="bold text-center">Previous Diesel RPM</div>
-                    <div fxFlex class="bold text-center">Diesel Avg</div>
-                </div>
-                <div class="diesel__content">
-                    <div fxFlex class="b-r">
-                        <div class="input-wrapper h-100" fxFlex>
-                            <input type="text" class="h-100" placeholder="Liter" positiveNumber>
-                            <mat-icon class="input-edit-icon">edit</mat-icon>
-                            <!-- <label>Count</label> -->
-                            <span class="focus-border">
-                                <i></i>
-                            </span>
+        <div fxLayout fxLayoutGap="16px" class="m-b-16">
+            <mat-card formGroupName="depth" fxFlex class="custom-card">
+                <mat-card-header>
+                    <mat-card-title>Depth Details</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div fxLayout="column">
+                        <div fxLayout fxLayoutGap="25px" class="label-row">
+                            <div fxFlex="25" fxLayoutAlign="start center">Feet Avg</div>
+                            <div>
+                                <div class="label-container">66</div>
+                            </div>
+                        </div>
+                        <div fxLayout fxLayoutGap="25px">
+                            <div fxLayoutAlign="start center" fxFlex="25">Bore Depth</div>
+                            <mat-form-field fxFlex="50">
+                                <mat-label>Feet</mat-label>
+                                <input type="text" matInput positiveNumber formControlName="bore">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout fxLayoutGap="25px">
+                            <div fxLayoutAlign="start center" fxFlex="25">Pipe Erection Feet</div>
+                            <mat-form-field fxFlex="50">
+                                <mat-label>Feet</mat-label>
+                                <input formControlName="pipeErection" type="text" matInput positiveNumber>
+                            </mat-form-field>
+                        </div>
+                        <div formGroupName="above" fxFlex fxLayout fxLayoutGap="15px">
+                            <div fxLayoutAlign="start center">
+                                Above
+                            </div>
+                            <mat-form-field fxFlex="15" class="calc-field">
+                                <mat-label>Feet</mat-label>
+                                <mat-select formControlName="feet">
+                                    <mat-option [value]="rpmHourFeet" *ngFor="let rpmHourFeet of rpmHourFeets">{{
+                                        rpmHourFeet.limit }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <div fxLayoutAlign="start center">Feet</div>
+                            <mat-form-field fxFlex="8" class="calc-field">
+                                <mat-label>hrs</mat-label>
+                                <input type="text" positiveNumber formControlName="hrs" matInput>
+                            </mat-form-field>
+                            <div fxLayoutAlign="start center">hrs</div>
+                            <mat-form-field fxFlex="8" class="calc-field">
+                                <mat-label>min</mat-label>
+                                <input type="text" positiveNumber matInput formControlName="min">
+                            </mat-form-field>
+                            <div fxLayoutAlign="start center">min</div>
                         </div>
                     </div>
-                    <div fxFlex class="b-r">
-                        <div class="input-wrapper h-100" fxFlex>
-                            <input type="text" class="h-100" placeholder="Liter" positiveNumber>
-                            <mat-icon class="input-edit-icon">edit</mat-icon>
-                            <!-- <label>Count</label> -->
-                            <span class="focus-border">
-                                <i></i>
-                            </span>
+                </mat-card-content>
+            </mat-card>
+            <mat-card fxFlex class="custom-card">
+                <mat-card-header>
+                    <mat-card-title>Bit Details</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div fxLayout="column" fxLayoutGap="15px">
+                        <div fxLayout fxLayoutGap="15px">
+                            <div fxLayoutAlign="start center" fxFlex="30">TCD no</div>
+                            <mat-form-field fxFlex="25">
+                                <mat-label>Serial no</mat-label>
+                                <mat-select placeholder="Select serial no" formControlName="bit">
+                                    <mat-option [value]="bit" *ngFor="let bit of assignedBits" value="1">{{
+                                        bit.serial_no
+                                        }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <div fxLayoutAlign="start center">Bit No</div>
+                            <div class="font-20 bold" fxLayoutAlign="start center">{{ form.get('bit').value?.bit_no }}</div>
+                        </div>
+                        <div fxLayout fxLayoutGap="15px">
+                            <div fxLayoutAlign="start center" fxFlex="30">Bit Running Feet</div>
+                            <div class="bold font-20">10</div>
+                        </div>
+                        <div fxLayout fxLayoutGap="15px">
+                            <div fxLayoutAlign="start center" fxFlex="30">Bit Previous Feet</div>
+                            <div class="bold font-20">10</div>
+                        </div>
+                        <div fxLayout fxLayoutGap="15px">
+                            <div fxLayoutAlign="start center" fxFlex="30">Total Feet</div>
+                            <div class="bold font-20">10</div>
+                        </div>
+                        <div fxLayout fxLayoutGap="15px">
+                            <div fxLayoutAlign="start center" fxFlex="30">Hammer</div>
+                            <div fxLayoutAlign="start center" class="bold font-20">10</div>
+                            <button mat-icon-button color="primary">
+                                <mat-icon>refresh</mat-icon>
+                            </button>
+                        </div>
+                        <div fxLayout fxLayoutGap="15px">
+                            <div fxLayoutAlign="start center" fxFlex="30">Piston</div>
+                            <div fxLayoutAlign="start center" class="bold font-20">10</div>
+                            <button mat-icon-button color="primary">
+                                <mat-icon>refresh</mat-icon>
+                            </button>
                         </div>
                     </div>
-                    <div fxFlex class="b-r">
-                        <div class="input-wrapper h-100" fxFlex>
-                            <input type="text" class="h-100" placeholder="Liter" positiveNumber>
-                            <mat-icon class="input-edit-icon">edit</mat-icon>
-                            <!-- <label>Count</label> -->
-                            <span class="focus-border">
-                                <i></i>
-                            </span>
-                        </div>
-                    </div>
-                    <div fxFlex class="b-r">
-                    </div>
-                    <div fxFlex class="b-r">
-                    </div>
-                    <div fxFlex>
-                    </div>
-                </div>
-            </div>
-        </mat-card-content>
-    </mat-card>
+                </mat-card-content>
+            </mat-card>
+        </div>
 
-    <div fxLayout fxLayoutGap="16px" class="m-b-16">
-        <mat-card fxFlex class="custom-card">
+
+        <mat-card class="custom-card m-b-16">
             <mat-card-header>
-                <mat-card-title>Depth Details</mat-card-title>
+                <mat-card-title>
+                    Pipe Details
+                </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <div fxLayout="column">
-                    <div fxLayout fxLayoutGap="25px" class="label-row">
-                        <div fxFlex="25" fxLayoutAlign="start center">Feet Avg</div>
-                        <div>
-                            <div class="label-container">66</div>
-                        </div>
-                    </div>
-                    <div fxLayout fxLayoutGap="25px">
-                        <div fxLayoutAlign="start center" fxFlex="25">Bore Depth</div>
-                        <mat-form-field fxFlex="50">
-                            <mat-label>Feet</mat-label>
-                            <input type="text" matInput positiveNumber>
-                        </mat-form-field>
-                    </div>
-                    <div fxLayout fxLayoutGap="25px">
-                        <div fxLayoutAlign="start center" fxFlex="25">Erection Pipe Feet</div>
-                        <mat-form-field fxFlex="50">
-                            <mat-label>Feet</mat-label>
-                            <input type="text" matInput positiveNumber>
-                        </mat-form-field>
-                    </div>
-                    <div fxFlex fxLayout fxLayoutGap="15px">
-                        <div fxLayoutAlign="start center">
-                            Above
-                        </div>
-                        <mat-form-field fxFlex="15" class="calc-field">
-                            <mat-label>Feet</mat-label>
-                            <mat-select>
-                                <mat-option [value]="rpmHourFeet" *ngFor="let rpmHourFeet of rpmHourFeets">{{
-                                    rpmHourFeet.limit }}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <div fxLayoutAlign="start center">Feet</div>
-                        <mat-form-field fxFlex="8" class="calc-field">
-                            <mat-label>hrs</mat-label>
-                            <input type="text" positiveNumber matInput>
-                        </mat-form-field>
-                        <div fxLayoutAlign="start center">hrs</div>
-                        <mat-form-field fxFlex="8" class="calc-field">
-                            <mat-label>min</mat-label>
-                            <input type="text" positiveNumber matInput>
-                        </mat-form-field>
-                        <div fxLayoutAlign="start center">min</div>
-                    </div>
+                <div class="pipe-header" fxLayout>
+                    <div fxFlex="28"></div>
+                    <div [fxFlex]="pipeFlex" fxLayoutAlign="center center" class="header-cell bold" *ngFor="let pipe of pipes">{{
+                        pipe.type }}</div>
                 </div>
-            </mat-card-content>
-        </mat-card>
-        <mat-card fxFlex class="custom-card">
-            <mat-card-header>
-                <mat-card-title>Bit Details</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <div fxLayout="column" fxLayoutGap="15px">
-                    <div fxLayout fxLayoutGap="15px">
-                        <div fxLayoutAlign="start center" fxFlex="30">TCD no</div>
-                        <mat-form-field fxFlex="25">
-                            <mat-label>Serial no</mat-label>
-                            <mat-select placeholder="Select serial no">
-                                <mat-option [value]="bit" *ngFor="let bit of assignedBits" value="1">{{ bit.serial_no }}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <div fxLayoutAlign="start center">Bit No</div>
-                        <div class="font-20 bold" fxLayoutAlign="start center">1234</div>
-                    </div>
-                    <div fxLayout fxLayoutGap="15px">
-                        <div fxLayoutAlign="start center" fxFlex="30">Bit Running Feet</div>
-                        <div class="bold font-20">10</div>
-                    </div>
-                    <div fxLayout fxLayoutGap="15px">
-                        <div fxLayoutAlign="start center" fxFlex="30">Bit Previous Feet</div>
-                        <div class="bold font-20">10</div>
-                    </div>
-                    <div fxLayout fxLayoutGap="15px">
-                        <div fxLayoutAlign="start center" fxFlex="30">Total Feet</div>
-                        <div class="bold font-20">10</div>
-                    </div>
-                    <div fxLayout fxLayoutGap="15px">
-                        <div fxLayoutAlign="start center" fxFlex="30">Hammer</div>
-                        <div fxLayoutAlign="start center" class="bold font-20">10</div>
-                        <button mat-icon-button color="primary">
-                            <mat-icon>refresh</mat-icon>
-                        </button>
-                    </div>
-                    <div fxLayout fxLayoutGap="15px">
-                        <div fxLayoutAlign="start center" fxFlex="30">Piston</div>
-                        <div fxLayoutAlign="start center" class="bold font-20">10</div>
-                        <button mat-icon-button color="primary">
-                            <mat-icon>refresh</mat-icon>
-                        </button>
-                    </div>
-                </div>
-            </mat-card-content>
-        </mat-card>
-    </div>
-
-
-    <mat-card class="custom-card m-b-16">
-        <mat-card-header>
-            <mat-card-title>
-                Pipe Details
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <div class="pipe-header" fxLayout>
-                <div fxFlex="28"></div>
-                <div [fxFlex]="pipeFlex" fxLayoutAlign="center center" class="header-cell bold" *ngFor="let pipe of pipes">{{
-                    pipe.type }}</div>
-            </div>
-            <form [formGroup]="form">
                 <div class="table" (click)="tableClick($event)" fxLayout="column">
                     <div class="row" fxLayout>
                         <div fxFlex="28" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 bold bg-grey">Previous
@@ -529,30 +531,30 @@
                             class="cell" [class.b-r-0]="!last">{{ balanceStockFeet.feet || '' }}</div>
                     </div>
                 </div>
-            </form>
-        </mat-card-content>
-    </mat-card>
-    <mat-card class="custom-card m-t-16">
-        <mat-card-header>
-            <mat-card-title>
-                Remarks
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <div [formGroup]="form" fxLayout class="m-t-10">
-                <mat-form-field [appearance]="appearance" fxFlex>
-                    <mat-label>Remarks</mat-label>
-                    <textarea #remarksInput (keydown)="onInputKeyUp($event, 4, 0)" formControlName="remarks" matInput
-                        cols="30" rows="6"></textarea>
-                </mat-form-field>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="custom-card m-t-16">
+            <mat-card-header>
+                <mat-card-title>
+                    Remarks
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div [formGroup]="form" fxLayout class="m-t-10">
+                    <mat-form-field [appearance]="appearance" fxFlex>
+                        <mat-label>Remarks</mat-label>
+                        <textarea #remarksInput (keydown)="onInputKeyUp($event, 4, 0)" formControlName="remarks"
+                            matInput cols="30" rows="6"></textarea>
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <div fxLayoutAlign="end" class="m-t-25">
+            <div>
+                <button [disabled]="!selectedVehicle" (click)="submit()" mat-raised-button color="primary" type="button">SUBMIT</button>
             </div>
-        </mat-card-content>
-    </mat-card>
-    <div fxLayoutAlign="end" class="m-t-25">
-        <div>
-            <button [disabled]="!selectedVehicle" (click)="submit()" mat-raised-button color="primary" type="button">SUBMIT</button>
         </div>
-    </div>
+    </form>
 </div>
 
 <mat-menu #menu="matMenu">

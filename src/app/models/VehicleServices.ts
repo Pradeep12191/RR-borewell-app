@@ -3,7 +3,7 @@ export interface VehicleServices {
     c_oil_service: number,
     e_air_filter: number,
     e_oil_service: number,
-    id: number,
+    id?: number,
     seperator: number,
-    vehicle_id: number
+    vehicle_id?: number
 }

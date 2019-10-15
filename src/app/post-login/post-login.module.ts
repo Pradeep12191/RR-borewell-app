@@ -51,8 +51,7 @@ import { BitGodownsResolver } from '../guards/resolveGuard/bit/bit-godowns.resol
         GodownTypesResolver,
         OverlayCardService,
         CompanyiesResolver,
-        PipeSizesResolver,
-        RpmEntryService
+        PipeSizesResolver
     ],
     entryComponents: [
         AddBookPopupComponent

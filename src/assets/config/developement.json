@@ -141,6 +141,22 @@
         {
             "name": "assignVehicleBit",
             "url": "assign_vehicle_bit"
+        },
+        {
+            "name": "rpmHourFeets",
+            "url": "get_rpm_hour_feet_list"
+        },
+        {
+            "name": "compresserAirFilterServiceList",
+            "url": "get_compressor_air_filter_service_limit_list"
+        },
+        {
+            "name": "getServiceLimits",
+            "url": "vehicle_service_limits"
+        },
+        {
+            "name": "assignedBitSerialNos",
+            "url": "get_assigned_sno_bit"
         }
     ],
     "reportGenerateUrls": [

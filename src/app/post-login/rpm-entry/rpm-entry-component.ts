@@ -125,6 +125,26 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             outVehicle: ['', Validators.required],
             outRpmNo: ['', Validators.required],
             remarks: { value: '', disabled: false },
+            rpm: this.fb.group({
+                end: '',
+                manual: '',
+                isManual: false
+            }),
+            diesel: this.fb.group({
+                compressor: '',
+                lorry: '',
+                support: ''
+            }),
+            depth: this.fb.group({
+                bore: '',
+                pipeErection: '',
+                above: this.fb.group({
+                    feet: '',
+                    hrs: '',
+                    min: ''
+                })
+            }),
+            bit: ''
         })
         this.appearance = this.config.getConfig('formAppearance');
     }
@@ -672,7 +692,40 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             remarks: this.form.value.remarks,
             vehicle_no: this.selectedVehicle.regNo,
             date: this.date ? (this.date as Moment).format('DD-MM-YYYY') : '',
-            f_rpm_table_data: []
+            f_rpm_table_data: [],
+            rpm: {
+                start: 0,
+                manual: +this.form.value.rpm.manual,
+                end: +this.form.value.rpm.end,
+                running: 0,
+                point_diesel: 0
+            },
+            diesel: {
+                average: 0,
+                previous_rpm: 0,
+                total: 0,
+                support: +this.form.value.diesel.support,
+                compressor: +this.form.value.diesel.compressor,
+                lorry: +this.form.value.diesel.lorry
+            },
+            service: {
+                c_air_filter: 0,
+                c_oil_service: 0,
+                e_air_filter: 0,
+                e_oil_service: 0,
+                seperator: 0
+            },
+            depth: {
+                average: 0,
+                above: {
+                    feet: this.form.value.depth.above.feet,
+                    hrs: +this.form.value.depth.above.hrs,
+                    min: +this.form.value.depth.above.min,
+                },
+                bore: +this.form.value.depth.bore,
+                pipe_erection: +this.form.value.depth.pipeErection 
+            },
+            bit: this.form.value.bit
         }
 
         for (const pipe of this.pipes) {

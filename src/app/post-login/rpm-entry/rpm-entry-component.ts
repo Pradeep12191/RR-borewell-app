@@ -725,7 +725,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 bore: +this.form.value.depth.bore,
                 pipe_erection: +this.form.value.depth.pipeErection 
             },
-            bit: this.form.value.bit
+            bit: {
+                ...this.form.value.bit,
+                hammer: 0,
+                piston: 0,
+                previous_feet: 0,
+                running_feet: 0,
+                total_feet: 0
+            }
         }
 
         for (const pipe of this.pipes) {

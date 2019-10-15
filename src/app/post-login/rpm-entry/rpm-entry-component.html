@@ -114,8 +114,8 @@
                 <div fxLayout="column" fxLayoutGap="16px">
                     <div fxLayout fxLayoutGap="16px">
                         <div fxLayoutAlign="start center" fxFlex="10">
-                            <span>
-                                250
+                            <span *ngIf="vehicleServiceLimits?.e_oil_service; else hyphenTpl">
+                                {{ vehicleServiceLimits?.e_oil_service }}
                             </span>
                         </div>
                         <div fxLayoutAlign="start center" fxFlex="35">Engine Oil Service</div>
@@ -128,8 +128,8 @@
                     </div>
                     <div fxLayout fxLayoutGap="16px">
                         <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
-                            <span>
-                                600
+                            <span *ngIf="vehicleServiceLimits?.c_oil_service; else hyphenTpl">
+                                {{ vehicleServiceLimits?.c_oil_service }}
                             </span>
                         </div>
                         <div fxLayoutAlign="start center" fxFlex="35">Compressor Oil Service</div>
@@ -142,8 +142,8 @@
                     </div>
                     <div fxLayout fxLayoutGap="16px">
                         <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
-                            <span>
-                                750
+                            <span *ngIf="vehicleServiceLimits?.e_air_filter; else hyphenTpl">
+                                {{ vehicleServiceLimits?.e_air_filter}}
                             </span>
                         </div>
                         <div fxLayoutAlign="start center" fxFlex="35">Engine Air Filter</div>
@@ -155,9 +155,10 @@
                         </div>
                     </div>
                     <div fxLayout fxLayoutGap="16px">
-                        <div [matMenuTriggerFor]="menu" fxLayoutAlign="start center" fxFlex="10" class="m-r-16" class="link-label">
+                        <div *ngIf="vehicleServiceLimits?.c_air_filter; else hyphenTpl10" [matMenuTriggerFor]="menu"
+                            fxLayoutAlign="start center" fxFlex="10" class="m-r-16" class="link-label">
                             <span>
-                                2000
+                                {{activeCompressorAirFilterLimit.limit}}
                             </span>
                             <mat-icon>arrow_drop_down</mat-icon>
                         </div>
@@ -171,8 +172,8 @@
                     </div>
                     <div fxLayout fxLayoutGap="16px">
                         <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
-                            <span>
-                                2000
+                            <span *ngIf="vehicleServiceLimits?.seperator; else hyphenTpl">
+                                {{ vehicleServiceLimits?.seperator}}
                             </span>
                         </div>
                         <div fxLayoutAlign="start center" fxFlex="35">Seperator</div>
@@ -280,8 +281,8 @@
                         <mat-form-field fxFlex="15" class="calc-field">
                             <mat-label>Feet</mat-label>
                             <mat-select>
-                                <mat-option value="200">200</mat-option>
-                                <mat-option value="250">250</mat-option>
+                                <mat-option [value]="rpmHourFeet" *ngFor="let rpmHourFeet of rpmHourFeets">{{
+                                    rpmHourFeet.limit }}</mat-option>
                             </mat-select>
                         </mat-form-field>
                         <div fxLayoutAlign="start center">Feet</div>
@@ -310,8 +311,7 @@
                         <mat-form-field fxFlex="25">
                             <mat-label>Serial no</mat-label>
                             <mat-select placeholder="Select serial no">
-                                <mat-option value="1">1</mat-option>
-                                <mat-option value="2">2</mat-option>
+                                <mat-option [value]="bit" *ngFor="let bit of assignedBits" value="1">{{ bit.serial_no }}</mat-option>
                             </mat-select>
                         </mat-form-field>
                         <div fxLayoutAlign="start center">Bit No</div>
@@ -556,6 +556,16 @@
 </div>
 
 <mat-menu #menu="matMenu">
-    <button mat-menu-item>2000</button>
-    <button mat-menu-item>750</button>
+    <button (click)="onServieLimitSelect(limit)" *ngFor="let limit of compressorAirFilterServiceLimits" mat-menu-item>{{limit.limit}}</button>
 </mat-menu>
+
+<ng-template #hyphenTpl>
+    <div fxFlex fxLayoutAlign="center center">
+        <div class="dash"></div>
+    </div>
+</ng-template>
+<ng-template #hyphenTpl10>
+    <div fxFlex="10" fxLayoutAlign="center center">
+        <div class="dash"></div>
+    </div>
+</ng-template>

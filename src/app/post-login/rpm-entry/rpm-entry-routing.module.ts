@@ -6,6 +6,8 @@ import { VehicleListResolver } from '../../guards/resolveGuard/vehicle/vehicle-l
 import { GodownTypesResolver } from '../../guards/resolveGuard/select-option/godown-types.resolver';
 import { BitGodownsResolver } from '../../guards/resolveGuard/bit/bit-godowns.resolver';
 import { BitSizeListResolver } from '../../guards/resolveGuard/bit/bit-size-list.resolver';
+import { RpmHourFeetResolver } from '../../guards/resolveGuard/rpm-hour-feet.resolver';
+import { CompressorAirFilterLimitResolver } from '../../guards/resolveGuard/compressor-air-filter-service-limt.resolver';
 
 const routes: Routes = [
     {
@@ -14,7 +16,9 @@ const routes: Routes = [
             vehicles: VehicleListResolver,
             godowns: GodownTypesResolver,
             bitGodowns: BitGodownsResolver,
-            bits: BitSizeListResolver
+            bits: BitSizeListResolver,
+            rpmHourFeets: RpmHourFeetResolver,
+            compressorAirFilterServiceLimits: CompressorAirFilterLimitResolver
         }
     }
 ]

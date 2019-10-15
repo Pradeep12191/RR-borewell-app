@@ -17,6 +17,9 @@ import { AddBitService } from '../bits/add-bit-dialog/add-bit.service';
 import { BitSizeListResolver } from '../../guards/resolveGuard/bit/bit-size-list.resolver';
 import { AssignBitDialogComponent } from './assign-bit-dialog/assign-bit-dialog.component';
 import { AssignBitConfirmDialogComponent } from './assign-bit-dialog/assign-bit-confirm-dialog/assign-bit-confirm-dialog.component';
+import { RpmHourFeetResolver } from '../../guards/resolveGuard/rpm-hour-feet.resolver';
+import { OverlayCardService } from '../../services/overlay-card.service';
+import { CompressorAirFilterLimitResolver } from '../../guards/resolveGuard/compressor-air-filter-service-limt.resolver';
 
 @NgModule({
     imports: [
@@ -46,9 +49,13 @@ import { AssignBitConfirmDialogComponent } from './assign-bit-dialog/assign-bit-
         // AddBookPopupComponent
     ],
     providers: [
+        OverlayCardService,
         BitSizeListResolver,
         BitGodownsResolver,
-        AddBitService
+        RpmHourFeetResolver,
+        AddBitService,
+        RpmEntryService,
+        CompressorAirFilterLimitResolver
     ]
 })
 export class RpmEntryModule {

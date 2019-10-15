@@ -7,14 +7,12 @@ import { map, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Vehicle } from '../../models/Vehicle';
 import { AuthService } from '../../services/auth.service';
-import { Pipe } from '../../models/Pipe';
 import { RpmEntrySheet } from '../../models/RpmEntrySheet';
-import { RpmEntry } from '../../models/RpmEntry';
 import { RpmTableData } from '../../models/RpmTableData';
-import { PipeSize } from '../../models/PipeSize';
-import { RpmValue } from '../../models/RpmValue';
 import { FormBuilder } from '@angular/forms';
 import { BitSerialNo } from '../../models/BitSerialNo';
+import { ServiceLimit } from '../../models/Limit';
+import { VehicleServices } from '../../models/VehicleServices';
 
 @Injectable()
 export class RpmEntryService {
@@ -24,6 +22,10 @@ export class RpmEntryService {
     private putAssignVehicleBitUrl: string;
     private rpmTableDataurl: string;
     private submitRpmUrl: string;
+    private rpmHourFeetUrl: string;
+    private compressorAirFilterLimitUrl: string;
+    private vehicleServicesUrl: string;
+    private assignedBitSerialNoUrl: string;
     constructor(
         private http: HttpClient,
         private config: ConfigService,
@@ -37,6 +39,11 @@ export class RpmEntryService {
         this.putAssignVehicleBitUrl = this.config.getAbsoluteUrl('assignVehicleBit');
         this.rpmTableDataurl = this.config.getAbsoluteUrl('rpmTableData');
         this.submitRpmUrl = this.config.getAbsoluteUrl('submitRpmEntry');
+        this.rpmHourFeetUrl = this.config.getAbsoluteUrl('rpmHourFeets');
+        this.compressorAirFilterLimitUrl = this.config.getAbsoluteUrl('compresserAirFilterServiceList');
+        this.vehicleServicesUrl = this.config.getAbsoluteUrl('getServiceLimits')
+        this.vehicleServicesUrl = this.config.getAbsoluteUrl('getServiceLimits')
+        this.assignedBitSerialNoUrl = this.config.getAbsoluteUrl('assignedBitSerialNos');
     }
 
     postBook(book: Book) {
@@ -188,6 +195,28 @@ export class RpmEntryService {
         }), catchError((err) => {
             return throwError(err)
         }))
+    }
+
+    getRpmHourFeets() {
+        return this.http.get<ServiceLimit[]>(this.rpmHourFeetUrl)
+    }
+
+    getCompressorAirFilterLimits() {
+        return this.http.get<ServiceLimit[]>(this.compressorAirFilterLimitUrl);
+    }
+
+    getServiceLimits(vehicle: Vehicle) {
+        const params = new HttpParams().set('user_id', this.auth.userid).append('vehicle_id', vehicle.vehicle_id);
+        return this.http.get<VehicleServices>(this.vehicleServicesUrl, { params })
+    }
+
+    getAssignedBits(vehicle: Vehicle) {
+        const params = new HttpParams().set('user_id', this.auth.userid).append('vehicle_id', vehicle.vehicle_id);
+        return this.http.get<BitSerialNo[]>(this.assignedBitSerialNoUrl, { params })
+    }
+
+    updateCompressorAirFilter(payload) {
+        return this.http.put(this.vehicleServicesUrl, payload)
     }
 
     buildPointExpenseForm(pipeType) {

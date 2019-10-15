@@ -15,6 +15,7 @@ import { Godown } from '../pipe/Godown';
 import { ConfigService } from '../../services/config.service';
 import { LoaderService } from '../../services/loader-service';
 import { finalize } from 'rxjs/operators';
+import { zip } from 'rxjs';
 import { RpmEntryService } from './rpm-entry.service';
 import { Book } from '../../models/Book';
 import { RpmEntrySheet } from '../../models/RpmEntrySheet';
@@ -24,6 +25,10 @@ import { RpmEntry } from '../../models/RpmEntry';
 import { CommonService } from '../../services/common.service';
 import { BitSize } from '../bits/BitSize';
 import { AssignBitDialogComponent } from './assign-bit-dialog/assign-bit-dialog.component';
+import { ServiceLimit } from '../../models/Limit';
+import { VehicleServices } from '../../models/VehicleServices';
+import { BitSerialNo } from '../../models/BitSerialNo';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     templateUrl: './rpm-entry-component.html',
@@ -54,10 +59,15 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     godowns: Godown[];
     bitGodowns: Godown[];
     bitSizes: BitSize[];
+    rpmHourFeets: ServiceLimit[];
+    compressorAirFilterServiceLimits: ServiceLimit[];
+    activeCompressorAirFilterLimit: ServiceLimit;
+    assignedBits: BitSerialNo[];
     bookStartNo;
     bookId;
     bookEndNo;
     rpmEntryNo;
+    vehicleServiceLimits: VehicleServices
     book: Book;
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
@@ -99,7 +109,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         private rpmEntryService: RpmEntryService,
         private snackBar: MatSnackBar,
         private loader: LoaderService,
-        private common: CommonService
+        private common: CommonService,
+        private toastr: ToastrService
     ) {
         this.form = this.fb.group({
             pointExpenseFeet: this.fb.array([]),
@@ -126,6 +137,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.godowns = data.godowns;
             this.bitGodowns = data.bitGodowns;
             this.bitSizes = data.bits;
+            this.rpmHourFeets = data.rpmHourFeets;
+            this.compressorAirFilterServiceLimits = data.compressorAirFilterServiceLimits;
             this.pipeFlex = this.pipeTotalFlex / this.pipes.length;
             this.pipeFlex = Math.round(this.pipeFlex * 100) / 100;
 
@@ -178,8 +191,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             disableClose: true
         });
 
-        dialogRef.afterClosed().subscribe(() => {
-
+        dialogRef.afterClosed().subscribe((res) => {
+            if (res) {
+                this.assignedBits = res;
+            }
         })
     }
 
@@ -513,11 +528,39 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    onServieLimitSelect(limit: ServiceLimit) {
+        this.loader.showSaveLoader('Loading')
+        const services: VehicleServices = {
+            ...this.vehicleServiceLimits,
+            c_air_filter: limit.limit,
+            vehicle_id: +this.selectedVehicle.vehicle_id
+        }
+        this.rpmEntryService.updateCompressorAirFilter(services).pipe(
+            finalize(() => {
+                this.loader.hideSaveLoader()
+            })
+        ).subscribe(() => {
+            this.activeCompressorAirFilterLimit = limit
+            this.toastr.success('Compressor Air Filter Service Limit updated successfully', null, { timeOut: 2000 })
+        }, (err) => {
+            if (err) {
+                this.toastr.error('Error while updating compressor air filter service limit', null, { timeOut: 2000 })
+            }
+        });
+    }
+
     onVehicleChange() {
-        this.loader.showSaveLoader('Loading ...')
-        this.rpmEntryService.getLastRpmEntrySheet(this.selectedVehicle).pipe(finalize(() => {
+        this.loader.showSaveLoader('Loading ...');
+        const lastRpmSheet$ = this.rpmEntryService.getLastRpmEntrySheet(this.selectedVehicle);
+        const vehicleServiceLimit$ = this.rpmEntryService.getServiceLimits(this.selectedVehicle);
+        const assingedBit$ = this.rpmEntryService.getAssignedBits(this.selectedVehicle);
+        zip(lastRpmSheet$, vehicleServiceLimit$, assingedBit$).pipe(finalize(() => {
             this.loader.hideSaveLoader();
-        })).subscribe((lastRpmEntrySheet) => {
+        })).subscribe(([lastRpmEntrySheet, serviceLimits, assignedBits]) => {
+            this.vehicleServiceLimits = serviceLimits;
+            this.activeCompressorAirFilterLimit = this.compressorAirFilterServiceLimits
+                .find(c => c.limit === this.vehicleServiceLimits.c_air_filter);
+            this.assignedBits = assignedBits;
             this.rpmEntryNo = lastRpmEntrySheet.rpm_sheet_no;
             this.bookEndNo = lastRpmEntrySheet.end;
             this.bookStartNo = lastRpmEntrySheet.start;

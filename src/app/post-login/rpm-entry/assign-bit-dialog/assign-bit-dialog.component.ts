@@ -11,6 +11,8 @@ import { finalize } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { BitSerialNo } from '../../../models/BitSerialNo';
 import { AssignBitConfirmDialogComponent } from './assign-bit-confirm-dialog/assign-bit-confirm-dialog.component';
+import { RpmEntryService } from '../rpm-entry.service';
+import { LoaderService } from '../../../services/loader-service';
 
 
 @Component({
@@ -39,7 +41,9 @@ export class AssignBitDialogComponent implements AfterViewInit {
         private http: HttpClient,
         private toastr: ToastrService,
         private dialog: MatDialog,
-        private dialogRef: MatDialogRef<AssignBitDialogComponent>
+        private dialogRef: MatDialogRef<AssignBitDialogComponent>,
+        private rpmEntryService: RpmEntryService,
+        private loader: LoaderService
     ) {
         this.godowns = data.bitGodowns;
         this.selectedGodown = this.godowns[0];
@@ -113,6 +117,15 @@ export class AssignBitDialogComponent implements AfterViewInit {
     }
 
     onDoneClick() {
-        this.dialogRef.close()
+        this.loader.showSaveLoader('Loading');
+        this.rpmEntryService.getAssignedBits(this.vehicle).pipe(
+            finalize(() => this.loader.hideSaveLoader())
+        ).subscribe((res) => {
+            this.dialogRef.close(res)
+        }, () => {
+            this.toastr.error('Error while fetching assigned bits');
+            this.dialogRef.close()
+        })
+
     }
 }

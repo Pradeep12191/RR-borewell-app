@@ -33,6 +33,28 @@
     }
 }
 
+.diesel-row{
+    height: 42px;
+    border: 1px solid black;
+    div{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:not(:last-child){
+            border-right: 1px solid black
+        }
+    }
+}
+
+.label-container{
+    height: 42px;
+    border: 1px solid;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+}
 .row{
     min-height: 42px;
 }

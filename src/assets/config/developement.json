@@ -157,6 +157,10 @@
         {
             "name": "assignedBitSerialNos",
             "url": "get_assigned_sno_bit"
+        },
+        {
+            "name": "viewBit",
+            "url": "bit_list"
         }
     ],
     "reportGenerateUrls": [

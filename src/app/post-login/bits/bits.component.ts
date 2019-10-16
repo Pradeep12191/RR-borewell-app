@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ConfigService } from '../../services/config.service';
 import { Godown } from '../pipe/Godown';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { listStateTrigger } from '../../animations';
 import { Bit } from './Bit';
@@ -41,7 +41,8 @@ export class BitsComponent {
         private http: HttpClient,
         private toastr: ToastrService,
         private auth: AuthService,
-        private app: AppService
+        private app: AppService,
+        private router: Router
     ) {
         this.appearance = this.config.getConfig('formAppearance');
         this.lastBillUrl = this.config.getAbsoluteUrl('LastBitBill');
@@ -62,8 +63,8 @@ export class BitsComponent {
         this.bits = bits;
     }
 
-    navigateToViewBill() {
-
+    navigateToViewBit() {
+        this.router.navigate(['viewBit'], {relativeTo: this.route})
     }
 
     godownChange($event: MatSelectChange) {

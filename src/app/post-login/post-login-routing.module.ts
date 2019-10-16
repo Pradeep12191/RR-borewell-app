@@ -19,7 +19,7 @@ const routes: Routes = [
             { path: 'assignVehicle', loadChildren: () => import('./pipe/assign-vehicle/assign-vehicle.module').then(mod => mod.AssignVehicleModule) },
             { path: 'viewPipeData/:pipeSize/:pipeType', loadChildren: () => import('./pipe/pipe-data/pipe-data.module').then(mod => mod.PipeDataModule) },
             { path: 'bits', loadChildren: () => import('./bits/bits.module').then(mod => mod.BitsModule) },
-            { path: 'bits/addBit', loadChildren: () => import('./bits/add-bit-screen/add-bit-screen.module').then(mod => mod.AddBitScreenModule) },
+            { path: 'bits/viewBit', loadChildren: () => import('./bits/view-bit/view-bit.module').then(mod => mod.ViewBitModule) },
             { path: 'rpmEntry', loadChildren: () => import('./rpm-entry/rpm-entry.module').then(mod => mod.RpmEntryModule) },
             { path: 'rpmEntry/report', loadChildren: () => import('./rpm-entry-report/rpm-entry-report.module').then(mod => mod.RpmEntryReportModule) },
             { path: 'godownExchange', loadChildren: () => import('./godown-exchange/godown-exchange.module').then(mod => mod.GodownExchangeModule) },

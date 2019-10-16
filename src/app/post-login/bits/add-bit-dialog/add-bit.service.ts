@@ -10,6 +10,7 @@ import { throwError } from 'rxjs';
 import { BitSize } from '../BitSize';
 import { LoaderService } from '../../../services/loader-service';
 import { Godown } from '../../pipe/Godown';
+import { BitData } from '../view-bit/BitData';
 
 @Injectable()
 export class AddBitService {
@@ -20,6 +21,7 @@ export class AddBitService {
     private addBitUrl: string;
     private bitsCountUrl: string;
     private godownUrl: string;
+    private viewBitUrl: string;
     constructor(
         private fb: FormBuilder,
         private auth: AuthService,
@@ -35,6 +37,7 @@ export class AddBitService {
         this.addBitUrl = this.config.getAbsoluteUrl('addBit');
         this.bitsCountUrl = this.config.getAbsoluteUrl('bitsCount');
         this.godownUrl = this.config.getAbsoluteUrl('bitGodowns');
+        this.viewBitUrl = this.config.getAbsoluteUrl('viewBit');
     }
 
     getCompanies() {
@@ -44,6 +47,11 @@ export class AddBitService {
 
     getGodowns() {
         return this.http.get<Godown[]>(this.godownUrl)
+    }
+
+    getViewBitList() {
+        const params = new HttpParams().set('user_id', this.auth.userid);
+        return this.http.get<BitData[]>(this.viewBitUrl, { params })
     }
 
     getBitSizes() {

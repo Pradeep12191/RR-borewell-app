@@ -1,0 +1,82 @@
+<div fxLayout class="back-btn-container">
+    <button mat-mini-fab class="back-btn" (click)="backToBits()" color="primary">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+</div>
+
+<div fxLayout fxLayoutAlign="center center">
+    <expand-table [accordionEffect]="false" *ngIf="bits?.length;  else emptyTpl" fxFlex="90" [data]="bits" [columns]="columns"
+        [dataSource]="bitDataSource">
+        <ng-container *expandDetails="let bit">
+            <div fxLayout="column" class="m-b-16" fxFlex>
+                <ng-container *ngTemplateOutlet="bitDetailsTpl; context: { $implicit: bit }"> </ng-container>
+            </div>
+        </ng-container>
+    </expand-table>
+    <ng-template #emptyTpl>
+        <mat-card>
+            <mat-card-content>No Bit found.</mat-card-content>
+        </mat-card>
+    </ng-template>
+</div>
+
+<ng-template let-bit #bitDetailsTpl>
+    <div class="card m-b-16 m-t-16 white" fxFlex>
+        <div class="section-title m-b-16 contact-title">
+            <div fxLayout fxLayoutAlign="space-between">
+                <div fxLayout fxLayoutGap="10px">
+                    <div>
+                        Bit Size
+                    </div>
+                    <div>:</div>
+                    <div>{{ bit.bit_type }}</div>
+                </div>
+                <div fxLayout fxLayoutGap="10px">
+                    <div>
+                        Company
+                    </div>
+                    <div>:</div>
+                    <div>{{ bit?.company_name | uppercase }}</div>
+                </div>
+                <div fxLayout fxLayoutGap="10px">
+                    <div>
+                        Quantity
+                    </div>
+                    <div>:</div>
+                    <div>{{ bill?.quantity }}</div>
+                </div>
+                <div fxLayout fxLayoutGap="10px">
+                    <div>
+                        Date
+                    </div>
+                    <div>:</div>
+                    <div>{{ bit?.date }}</div>
+                </div>
+            </div>
+
+        </div>
+        <div fxLayout="column" fxLayoutGap="10px">
+            <div class="p-b-5 line" fxLayout fxLayoutAlign="start center" fxLayoutGap="5px">
+                <div fxFlex class="text-center bold">
+                    BIT SERIAL NO.
+                </div>
+                <div fxFlex class="text-center bold">
+                    BIT NO.
+                </div>
+                <div fxFlex class="text-center bold">
+                    BIT SIZE
+                </div>
+            </div>
+            <div fxLayout *ngFor="let assignBit of bit.k_assign_bits">
+                <div fxFlex class="text-center">{{ assignBit.serial_no }}</div>
+                <div fxFlex class="bold text-center">{{ assignBit.no || 0 }}</div>
+                <div fxFlex class="bold text-center">{{ assignBit.type }}</div>
+            </div>
+        </div>
+    </div>
+    <ng-container *ngIf="bit.remarks">
+        <div class="font-italic bold m-b-5">Remarks</div>
+        <div class="dashed m-b-5"></div>
+        <div class="m-l-5 font-italic" [innerHTML]="bit.remarks | newLine"></div>
+    </ng-container>
+</ng-template>

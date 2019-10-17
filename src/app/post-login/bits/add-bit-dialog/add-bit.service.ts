@@ -58,18 +58,9 @@ export class AddBitService {
         return this.http.get<BitSize[]>(this.bitSizeListUrl)
     }
 
-    getLastBitSerial(pipeSize) {
-        this.loader.showSaveLoader('Fetching Last bit serial no.')
-        const params = new HttpParams().set('pipe_size', pipeSize).append('user_id', this.auth.userid);
-        return this.http.get<number>(this.lastBitUrl, { params }).pipe(
-            finalize(() => this.loader.hideSaveLoader()),
-            catchError((err) => {
-                if (err) {
-                    this.toastr.error('Error while Fetching last bit serial no', null, { timeOut: 2000 })
-                }
-                return throwError(err);
-            })
-        )
+    getLastBitSerial() {
+        const params = new HttpParams().set('pipe_size', '').append('user_id', this.auth.userid);
+        return this.http.get<number>(this.lastBitUrl, { params });
     }
 
     getBitsCount(godownId) {

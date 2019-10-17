@@ -14,6 +14,8 @@ import { AppService } from '../../services/app.service';
 import { finalize } from 'rxjs/operators';
 import { Company } from './Company';
 import { BitSize } from './BitSize';
+import { AddBitService } from './add-bit-dialog/add-bit.service';
+import { LoaderService } from '../../services/loader-service';
 
 const BIT_LENGTH = 20;
 
@@ -32,6 +34,7 @@ export class BitsComponent {
     bits: Bit[];
     lastBillUrl;
     bitSizes: BitSize[];
+    lastBitSerialNo;
     bitUrl;
     companies: Company[]
     constructor(
@@ -41,6 +44,8 @@ export class BitsComponent {
         private http: HttpClient,
         private toastr: ToastrService,
         private auth: AuthService,
+        private addBitService: AddBitService,
+        private loader: LoaderService,
         private app: AppService,
         private router: Router
     ) {
@@ -55,7 +60,7 @@ export class BitsComponent {
             setTimeout(() => {
                 this.bits = data.bitData.bits;
             })
-            
+
         })
     }
 
@@ -64,7 +69,7 @@ export class BitsComponent {
     }
 
     navigateToViewBit() {
-        this.router.navigate(['viewBit'], {relativeTo: this.route})
+        this.router.navigate(['viewBit'], { relativeTo: this.route })
     }
 
     godownChange($event: MatSelectChange) {
@@ -85,23 +90,31 @@ export class BitsComponent {
     }
 
     openAddBit() {
-        const dialogRef = this.dialog.open(AddBitDialogComponent, {
-            width: '60vw',
-            position: { top: '0px' },
-            maxHeight: '100vh',
-            height: '100vh',
-            data: {
-                selectedGodown: this.selectedGodown,
-                companies: this.companies,
-                bitSizes: this.bitSizes
-            },
-            disableClose: true
-        });
-        dialogRef.afterClosed().subscribe((bits) => {
-            if (bits) {
-                this.updateBits(bits);
-                // this.selectedGodownId = this.app.selectedGodownId
-            }
+        this.loader.showSaveLoader('Loading ...')
+        this.addBitService.getLastBitSerial().pipe(
+            finalize(() => this.loader.hideSaveLoader())
+        ).subscribe((lastBitSerialNo) => {
+            const dialogRef = this.dialog.open(AddBitDialogComponent, {
+                width: '60vw',
+                position: { top: '0px' },
+                maxHeight: '100vh',
+                height: '100vh',
+                data: {
+                    selectedGodown: this.selectedGodown,
+                    companies: this.companies,
+                    bitSizes: this.bitSizes,
+                    lastBitSerialNo
+                },
+                disableClose: true
+            });
+            dialogRef.afterClosed().subscribe((bits) => {
+                if (bits) {
+                    this.updateBits(bits);
+                    // this.selectedGodownId = this.app.selectedGodownId
+                }
+            });
+        }, () => {
+            this.toastr.error('Unable to Fetch Last Bit Serial No')
         });
     }
 }

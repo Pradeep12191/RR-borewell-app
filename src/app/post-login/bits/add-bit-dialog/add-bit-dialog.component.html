@@ -11,7 +11,7 @@
     <mat-horizontal-stepper (selectionChange)="stepIndex = $event.selectedIndex" [linear]="true" labelPosition="bottom"
         #stepper>
         <mat-step label="Add Bit" [stepControl]="form">
-            <add-bit [form]="form" [bitSizes]="bitSizes" [notifyReset]="notifyReset" [companies]="companies" ></add-bit>
+            <add-bit [lastBitSerialNo]="lastBitSerialNo" [form]="form" [bitSizes]="bitSizes" [notifyReset]="notifyReset" [companies]="companies" ></add-bit>
             <div fxLayout fxLayoutAlign="end">
                 <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="stepper.next()">CONFIRM</button>
             </div>

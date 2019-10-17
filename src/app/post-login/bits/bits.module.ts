@@ -19,6 +19,7 @@ import { BitCompaniesResolver } from '../../guards/resolveGuard/bit/bit-companie
 import { AddBitService } from './add-bit-dialog/add-bit.service';
 import { OverlayCardService } from '../../services/overlay-card.service';
 import { BitSizeListResolver } from '../../guards/resolveGuard/bit/bit-size-list.resolver';
+import { BitLastSerialNoResolver } from '../../guards/resolveGuard/bit/bit-last-serial-no.resolver';
 
 @NgModule({
     imports: [
@@ -49,6 +50,7 @@ import { BitSizeListResolver } from '../../guards/resolveGuard/bit/bit-size-list
         BitCompaniesResolver,
         BitListResolver,
         BitSizeListResolver,
+        BitLastSerialNoResolver,
         AddBitService,
         OverlayCardService
     ]

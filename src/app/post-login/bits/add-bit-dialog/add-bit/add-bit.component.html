@@ -69,6 +69,6 @@
     </div>
     <mat-form-field [appearance]="appearance" style="width: 100%">
         <mat-label>Remarks</mat-label>
-        <textarea focusIndex="10" name="" id="" cols="30" rows="3" matInput formControlName="remarks"></textarea>
+        <textarea (keydown)="onEnter($event, bitFormArray.controls?.length)" focusIndex="10" name="" id="" cols="30" rows="3" matInput formControlName="remarks" #inputFocus="matInput"></textarea>
     </mat-form-field>
 </form>

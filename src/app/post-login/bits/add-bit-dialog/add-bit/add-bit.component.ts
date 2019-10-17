@@ -24,12 +24,12 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
     @Input() companies: Company[];
     @Input() bitSizes: BitSize[];
     @Input() notifyReset: Subject<void>;
+    @Input() lastBitSerialNo;
     @ViewChild('picker', { static: false }) picker: MatDatepicker<any>;
     @ViewChild('dateInput', { static: false }) dateInput: ElementRef;
     @ViewChild('companySelect', { static: false }) companySelect: MatSelect;
     @ViewChild('bitSelect', { static: false }) bitSelect: MatSelect;
     @ViewChild('quantityInput', { static: false }) quantityInput: MatInput;
-    lastBitSerialNo: number;
     companyPopupref: CardOverlayref;
     quantityInput$ = new Subject();
     appearance;
@@ -129,18 +129,17 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
     onBitChange() {
 
         const selectedBit: BitSize = this.form.get('bit').value;
+        this.bitFormArray.controls.forEach(ctrl => {
+            ctrl.get('bit').setValue(selectedBit);
+        });
+        if (!this.form.get('quantity').value) {
+            setTimeout(() => this.quantityInput.focus(), 200);
+        }
+        // this.addBitService.getLastBitSerial(selectedBit.size).subscribe((lastBitSerialNo) => {
+        //     this.lastBitSerialNo = lastBitSerialNo;
+        //     let serialNo = lastBitSerialNo;
 
-        this.addBitService.getLastBitSerial(selectedBit.size).subscribe((lastBitSerialNo) => {
-            this.lastBitSerialNo = lastBitSerialNo;
-            let serialNo = lastBitSerialNo;
-            if (!this.form.get('quantity').value) {
-                setTimeout(() => this.quantityInput.focus(), 200);
-            }
-            this.bitFormArray.controls.forEach(ctrl => {
-                ctrl.get('bit').setValue(selectedBit);
-                ctrl.get('serialNo').setValue(++serialNo);
-            })
-        }, () => { });
+        // }, () => { });
 
 
     }

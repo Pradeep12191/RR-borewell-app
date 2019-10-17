@@ -23,6 +23,7 @@ export class AddBitDialogComponent {
     stepIndex = 0;
     postUrl;
     companies: Company[];
+    lastBitSerialNo;
     notifyReset = new Subject()
     @ViewChild(MatStepper, { static: false }) stepper: MatStepper;
 
@@ -42,6 +43,7 @@ export class AddBitDialogComponent {
         this.bitSizes = data.bitSizes;
         this.selectedGodown = data.selectedGodown;
         this.companies = data.companies;
+        this.lastBitSerialNo = data.lastBitSerialNo
         this.postUrl = this.config.getAbsoluteUrl('addBit');
         this.form = this.fb.group({
             date: ['', Validators.required],

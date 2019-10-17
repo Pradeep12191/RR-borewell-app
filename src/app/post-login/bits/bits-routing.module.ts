@@ -5,6 +5,7 @@ import { GodownTypesResolver } from '../../guards/resolveGuard/select-option/god
 import { BitListResolver } from '../../guards/resolveGuard/bit/bit-list.resolver';
 import { BitCompaniesResolver } from '../../guards/resolveGuard/bit/bit-companies.resolver';
 import { BitSizeListResolver } from '../../guards/resolveGuard/bit/bit-size-list.resolver';
+import { BitLastSerialNoResolver } from '../../guards/resolveGuard/bit/bit-last-serial-no.resolver';
 
 const routes: Routes = [
     {

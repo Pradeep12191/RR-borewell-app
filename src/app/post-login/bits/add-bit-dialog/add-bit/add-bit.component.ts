@@ -39,7 +39,7 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
     previousBillNo = '';
     notifyResetSubscription: Subscription;
 
-    @ViewChildren('inputFocus') inputFocus: QueryList<ElementRef>;
+    @ViewChildren('inputFocus') inputFocus: QueryList<ElementRef | MatInput>;
     getBitUrl;
     @ViewChild('addCompanyBtn', { static: false, read: ElementRef }) addCompanyBtn: ElementRef
 
@@ -159,8 +159,11 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
     }
 
 
-    onEnter(event: KeyboardEvent, currentIndex) {
-        let ctrl: ElementRef = null;
+    onEnter(event: KeyboardEvent, currentIndex = 0) {
+        if (currentIndex !== 0 && !currentIndex) {
+            return
+        }
+        let ctrl: ElementRef | MatInput = null;
         const validKeys = ['Enter', 'ArrowDown', 'ArrowUp'];
         if (validKeys.indexOf(event.key) !== -1) {
             if (event.key === 'Enter' || event.key === 'ArrowDown') {
@@ -170,6 +173,12 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
                 ctrl = this.inputFocus.toArray()[currentIndex - 1];
             }
             if (ctrl) {
+                if (ctrl instanceof MatInput) {
+                    return setTimeout(() => {
+                        (ctrl as MatInput).focus();
+                    })
+                    
+                }
                 (ctrl.nativeElement as HTMLInputElement).focus();
             }
         }

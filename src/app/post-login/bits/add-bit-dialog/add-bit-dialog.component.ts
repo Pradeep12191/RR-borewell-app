@@ -65,6 +65,7 @@ export class AddBitDialogComponent {
             bit_size: this.form.value.bit.size,
             bit_type: this.form.value.bit.type,
             bit_id: this.form.value.bit.id,
+            godown_id: this.selectedGodown.godown_id,
             k_assign_bits: []
         }
 
@@ -83,13 +84,14 @@ export class AddBitDialogComponent {
         });
 
         console.log(JSON.stringify(payload, null, 2));
-        this.addBitService.addBit(payload).subscribe(() => {
+        this.addBitService.addBit(payload).subscribe((res) => {
             this.toastr.success('Bit added successfully');
-            while (this.bitssFormArray.length) {
-                this.bitssFormArray.removeAt(this.bitssFormArray.length - 1);
-            }
-            this.stepper.reset();
-            this.notifyReset.next();
+            this.dialogRef.close(res)
+            // while (this.bitssFormArray.length) {
+            //     this.bitssFormArray.removeAt(this.bitssFormArray.length - 1);
+            // }
+            // this.stepper.reset();
+            // this.notifyReset.next();
         }, () => { });
     }
 

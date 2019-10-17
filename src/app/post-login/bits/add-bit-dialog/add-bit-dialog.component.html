@@ -2,7 +2,7 @@
     <div fxFlex fxLayoutAlign="center center">
         <div>Add Bit - {{ selectedGodown?.godownType | uppercase }}</div>
     </div>
-    <button mat-icon-button (click)="updateAndClose()">
+    <button mat-icon-button mat-dialog-close>
         <mat-icon>clear</mat-icon>
     </button>
 </mat-toolbar>
@@ -25,6 +25,6 @@
 <div mat-dialog-actions *ngIf="stepIndex === 1">
     <div fxFlex fxLayout fxLayoutAlign="space-between">
         <button mat-raised-button color="primary" (click)="stepper.previous()">EDIT</button>
-        <button mat-raised-button color="primary" (click)="saveBit()">SAVE AND ADD NEXT BITS</button>
+        <button mat-raised-button color="primary" (click)="saveBit()">SAVE</button>
     </div>
 </div>

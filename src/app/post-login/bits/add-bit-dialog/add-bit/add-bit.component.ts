@@ -72,6 +72,10 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
             if (count > ctrlCount) {
                 // add new control
                 let newCtrlCount = count - ctrlCount;
+                let lastCtrl = this.bitFormArray.at(this.bitFormArray.controls.length - 1);
+                if (lastCtrl) {
+                    serialNo = lastCtrl.get('serialNo').value;
+                }
                 while (newCtrlCount) {
                     const bit = this.form.get('bit').value;
                     const company = this.form.get('company').value;

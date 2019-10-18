@@ -17,6 +17,14 @@
     }
 }
 
+.control-container{
+    height: 460px;
+    overflow: auto;
+    .control-item{
+        height: 46px;
+    }
+}
+
 .empty-msg{
     height: 64px;
     color: orange;

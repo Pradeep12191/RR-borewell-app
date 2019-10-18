@@ -1,10 +1,10 @@
-import { Component, Input, ElementRef, ViewChild, QueryList, ViewChildren, OnDestroy, AfterViewInit, OnInit } from '@angular/core';
+import { Component, Input, ElementRef, ViewChild, QueryList, ViewChildren, OnDestroy, AfterViewInit, OnInit, NgZone } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { Bit } from '../../Bit';
 import { Godown } from '../../../pipe/Godown';
 import { ConfigService } from '../../../../services/config.service';
 import { MatDatepicker, MatSelect, MatInput, MatDialog } from '@angular/material';
-import { Subscription, Subject } from 'rxjs';
+import { Subscription, Subject, zip, forkJoin } from 'rxjs';
 import { OverlayCardService } from '../../../../services/overlay-card.service';
 import { AddCompanyPopup } from './add-company-popup/add-company-popup.compoent';
 import { CardOverlayref } from '../../../../services/card-overlay-ref';
@@ -31,15 +31,17 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
     @ViewChild('bitSelect', { static: false }) bitSelect: MatSelect;
     @ViewChild('quantityInput', { static: false }) quantityInput: MatInput;
     companyPopupref: CardOverlayref;
-    quantityInput$ = new Subject();
     appearance;
     pickerClosedSubscription: Subscription;
     checkUniqueBillNoUrl;
     billNoValidationPending;
+    quantityInput$ = new Subject();
     previousBillNo = '';
     notifyResetSubscription: Subscription;
+    quantiyInputSubscription: Subscription;
 
     @ViewChildren('inputFocus') inputFocus: QueryList<ElementRef | MatInput>;
+    @ViewChild('remarks', { static: false }) remarks: MatInput;
     getBitUrl;
     @ViewChild('addCompanyBtn', { static: false, read: ElementRef }) addCompanyBtn: ElementRef
 
@@ -52,16 +54,21 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
         private cardOverlay: OverlayCardService,
         private addBitService: AddBitService,
         private toastr: ToastrService,
+        private ngZone: NgZone
     ) {
         this.appearance = this.config.getConfig('formAppearance');
     }
 
 
     ngOnInit() {
-        this.quantityInput$.pipe(
-            debounceTime(500),
+
+        
+
+        this.quantiyInputSubscription = this.quantityInput$.pipe(
+            debounceTime(300),
             distinctUntilChanged()
-        ).subscribe((value) => {
+        ).subscribe((event: KeyboardEvent) => {
+            const value = (event.target as HTMLInputElement).value;
             const ctrlCount = this.bitFormArray.controls.length;
             const count = value ? +value : 0;
             let serialNo = this.lastBitSerialNo || 0;
@@ -95,7 +102,9 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
                     removeCtrlCount--;
                 }
             }
+
         });
+
 
         this.notifyReset.subscribe(() => {
             setTimeout(() => {
@@ -105,10 +114,28 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
         })
     }
 
+    goToFirstControl(event) {
+        console.log('1');
+        const value = (event.target as HTMLInputElement).value;
+        const ctrlCount = this.bitFormArray.controls.length;
+        const count = value ? +value : 0;
+        setTimeout(() => {
+            const firstCtrl = this.inputFocus.toArray()[0];
+            if (firstCtrl) {
+                if (firstCtrl instanceof MatInput) {
+                    firstCtrl.focus();
+                } else {
+                    ((firstCtrl as ElementRef).nativeElement as HTMLInputElement).focus();
+                }
+            }
+        }, 500)
+    }
+
     ngOnDestroy() {
         if (this.companyPopupref) { this.companyPopupref.close(); }
         if (this.pickerClosedSubscription) { this.pickerClosedSubscription.unsubscribe(); }
         if (this.notifyResetSubscription) { this.notifyResetSubscription.unsubscribe(); }
+        if (this.quantiyInputSubscription) { this.quantiyInputSubscription.unsubscribe(); }
     }
 
     ngAfterViewInit() {
@@ -159,27 +186,50 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
     }
 
 
-    onEnter(event: KeyboardEvent, currentIndex = 0) {
-        if (currentIndex !== 0 && !currentIndex) {
-            return
-        }
-        let ctrl: ElementRef | MatInput = null;
+    onEnter(event: KeyboardEvent) {
+
         const validKeys = ['Enter', 'ArrowDown', 'ArrowUp'];
         if (validKeys.indexOf(event.key) !== -1) {
             if (event.key === 'Enter' || event.key === 'ArrowDown') {
-                ctrl = this.inputFocus.toArray()[currentIndex + 1];
+                // ctrl = this.inputFocus.toArray()[currentIndex + 1];
+                setTimeout(() => {
+                    const trigger = event.target as HTMLInputElement;
+                    const currentRow = trigger.parentElement.parentElement;
+                    let nextRow: HTMLElement = null;
+                    let nextInput: HTMLInputElement = null
+                    if (currentRow) {
+                        nextRow = currentRow.nextElementSibling as HTMLElement;
+                    }
+
+                    if (nextRow) {
+                        nextInput = nextRow.querySelector('.input-wrapper input')
+                    }
+                    if (nextInput) {
+                        nextInput.focus();
+                    } else {
+                        if (this.remarks) {
+                            this.remarks.focus() 
+                        }
+                    }
+                })
             }
             if (event.key === 'ArrowUp') {
-                ctrl = this.inputFocus.toArray()[currentIndex - 1];
-            }
-            if (ctrl) {
-                if (ctrl instanceof MatInput) {
-                    return setTimeout(() => {
-                        (ctrl as MatInput).focus();
-                    })
-                    
-                }
-                (ctrl.nativeElement as HTMLInputElement).focus();
+                setTimeout(() => {
+                    const trigger = event.target as HTMLInputElement;
+                    const currentRow = trigger.parentElement.parentElement;
+                    let prevRow: HTMLElement = null;
+                    let prevInput: HTMLInputElement = null
+                    if (currentRow) {
+                        prevRow = currentRow.previousElementSibling as HTMLElement;
+                    }
+
+                    if (prevRow) {
+                        prevInput = prevRow.querySelector('.input-wrapper input')
+                    }
+                    if (prevInput) {
+                        prevInput.focus();
+                    }
+                })
             }
         }
 

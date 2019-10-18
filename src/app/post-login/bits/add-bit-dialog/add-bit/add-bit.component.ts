@@ -68,7 +68,7 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
             }),
             distinctUntilChanged(),
             map((value) => {
-                if (!value) return null;
+                // if (!value) return null;
                 // const value = (event.target as HTMLInputElement).value;
                 const ctrlCount = this.bitFormArray.controls.length;
                 const count = value ? +value : 0;
@@ -102,11 +102,8 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
                         removeCtrlCount--;
                     }
                 }
-                if (this.bitFormArray.controls.length) {
-                    this.bitFormArray.controls = [...this.bitFormArray.controls]
-                    return this.bitFormArray.controls
-                }
-                return null;
+                this.bitFormArray.controls = [...this.bitFormArray.controls];
+                return this.bitFormArray.controls
             })
         )
     }

@@ -24,7 +24,7 @@ export class AddBitDialogComponent {
     postUrl;
     companies: Company[];
     lastBitSerialNo;
-    notifyReset = new Subject()
+    notifyReset = new Subject();
     @ViewChild(MatStepper, { static: false }) stepper: MatStepper;
 
     get bitssFormArray() {
@@ -86,14 +86,15 @@ export class AddBitDialogComponent {
         });
 
         console.log(JSON.stringify(payload, null, 2));
-        this.addBitService.addBit(payload).subscribe((res) => {
+        this.addBitService.addBit(payload).subscribe((lastBitSerialNo) => {
+            this.lastBitSerialNo = lastBitSerialNo
             this.toastr.success('Bit added successfully');
-            this.dialogRef.close(res)
-            // while (this.bitssFormArray.length) {
-            //     this.bitssFormArray.removeAt(this.bitssFormArray.length - 1);
-            // }
-            // this.stepper.reset();
-            // this.notifyReset.next();
+            // this.dialogRef.close(res)
+            while (this.bitssFormArray.length) {
+                this.bitssFormArray.removeAt(this.bitssFormArray.length - 1);
+            }
+            this.stepper.reset();
+            this.notifyReset.next();
         }, () => { });
     }
 

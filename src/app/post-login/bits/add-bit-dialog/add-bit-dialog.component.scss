@@ -15,7 +15,7 @@ mat-toolbar{
 
 .mat-dialog-content[mat-dialog-content]{
     &.add-bit-step{
-        max-height: calc(100vh - 106px);
+        max-height: calc(100vh - 150px);
     }
     &.confirm-bit-step{
         max-height: calc(100vh - 150px)

@@ -30,7 +30,7 @@
             <mat-label>
                 Enter Quantity
             </mat-label>
-            <input positiveNumber formControlName="quantity" matInput (input)="quantityInput$.next($event.target.value)" #quantityInput="matInput">
+            <input positiveNumber (keydown.enter)="goToFirstControl($event)" formControlName="quantity" matInput (input)="quantityInput$.next($event)" #quantityInput="matInput">
         </mat-form-field>
         <div class="m-l-16" fxLayout="column" fxFlex fxLayoutGap="10px">
             <div class="font-12">Previous No</div>
@@ -45,8 +45,8 @@
             <div fxFlex="33" class="bold font-12 text-center">COMPANY NAME</div>
             <div fxFlex="33" class="bold font-12 text-center">BIT NO</div>
         </div>
-        <div *ngIf="bitFormArray.controls.length; else emptyMsgTpl" fxLayout="column" fxLayoutGap="10px">
-            <div fxLayout formArrayName="bits" *ngFor="let bitCtrl of bitFormArray.controls; let i = index">
+        <cdk-virtual-scroll-viewport class="control-container" itemSize="46" *ngIf="bitFormArray.controls.length; else emptyMsgTpl" fxLayout="column">
+            <div fxLayout fxLayoutAlign="start center" formArrayName="bits" class="control-item" *cdkVirtualFor="let bitCtrl of bitFormArray.controls; let i = index; let c = count">
                 <ng-container [formGroup]="bitCtrl">
                     <div fxLayout fxLayoutAlign="center center" fxFlex="25" class="text-center">{{
                         bitCtrl.get('serialNo').value }}</div>
@@ -55,20 +55,20 @@
                     <div fxLayout fxLayoutAlign="center center" fxFlex="25" class="text-center">{{
                         bitCtrl.get('company').value.name }}</div>
                     <div class="input-wrapper" fxFlex="25">
-                        <input (keydown)="onEnter($event, i)" positiveNumber formControlName="bitNo" placeholder="Bit No" autocomplete="off" #inputFocus>
+                        <input (keydown)="onEnter($event)" positiveNumber formControlName="bitNo" placeholder="Bit No" autocomplete="off" #inputFocus>
                         <span class="focus-border">
                             <i></i>
                         </span>
                     </div>
                 </ng-container>
             </div>
-        </div>
+        </cdk-virtual-scroll-viewport>
         <ng-template #emptyMsgTpl>
             <div class="empty-msg" fxLayout fxLayoutAlign="center center">Please Enter Quantity</div>
         </ng-template>
     </div>
     <mat-form-field [appearance]="appearance" style="width: 100%">
         <mat-label>Remarks</mat-label>
-        <textarea (keydown)="onEnter($event, bitFormArray.controls?.length)" focusIndex="10" name="" id="" cols="30" rows="3" matInput formControlName="remarks" #inputFocus="matInput"></textarea>
+        <textarea id="remarks" focusIndex="10" name="" id="" cols="30" rows="3" matInput formControlName="remarks" #remarks="matInput"></textarea>
     </mat-form-field>
 </form>

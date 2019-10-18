@@ -8,7 +8,8 @@
         </mat-form-field>
         <mat-form-field [appearance]="appearance">
             <mat-label>Company Name</mat-label>
-            <mat-select (selectionChange)="onCompanyChange(); enableQuantity()" formControlName="company" #companySelect>
+            <mat-select (selectionChange)="onCompanyChange(); enableQuantity()" formControlName="company"
+                #companySelect>
                 <mat-option [value]="company" *ngFor="let company of companies">{{ company.name }}</mat-option>
             </mat-select>
         </mat-form-field>
@@ -30,7 +31,8 @@
             <mat-label>
                 Enter Quantity
             </mat-label>
-            <input positiveNumber (keydown.enter)="goToFirstControl($event)" formControlName="quantity" matInput (input)="quantityInput$.next($event)" #quantityInput="matInput">
+            <input positiveNumber (keydown.enter)="goToFirstControl($event)" formControlName="quantity" matInput
+                (input)="onBitInput($event)" #quantityInput="matInput">
         </mat-form-field>
         <div class="m-l-16" fxLayout="column" fxFlex fxLayoutGap="10px">
             <div class="font-12">Previous No</div>
@@ -45,30 +47,36 @@
             <div fxFlex="33" class="bold font-12 text-center">COMPANY NAME</div>
             <div fxFlex="33" class="bold font-12 text-center">BIT NO</div>
         </div>
-        <cdk-virtual-scroll-viewport class="control-container" itemSize="46" *ngIf="bitFormArray.controls.length; else emptyMsgTpl" fxLayout="column">
-            <div fxLayout fxLayoutAlign="start center" formArrayName="bits" class="control-item" *cdkVirtualFor="let bitCtrl of bitFormArray.controls; let i = index; let c = count">
-                <ng-container [formGroup]="bitCtrl">
-                    <div fxLayout fxLayoutAlign="center center" fxFlex="25" class="text-center">{{
-                        bitCtrl.get('serialNo').value }}</div>
-                    <div fxLayout fxLayoutAlign="center center" fxFlex="25" class="text-center">{{
-                        bitCtrl.get('bit').value.type }}</div>
-                    <div fxLayout fxLayoutAlign="center center" fxFlex="25" class="text-center">{{
-                        bitCtrl.get('company').value.name }}</div>
-                    <div class="input-wrapper" fxFlex="25">
-                        <input (keydown)="onEnter($event)" positiveNumber formControlName="bitNo" placeholder="Bit No" autocomplete="off" #inputFocus>
-                        <span class="focus-border">
-                            <i></i>
-                        </span>
-                    </div>
-                </ng-container>
-            </div>
-        </cdk-virtual-scroll-viewport>
+        <ng-container *ngIf="infinite | async as controls; else emptyMsgTpl">
+            <cdk-virtual-scroll-viewport class="control-container" itemSize="46"
+                fxLayout="column">
+                <div fxLayout fxLayoutAlign="start center" formArrayName="bits" class="control-item" *cdkVirtualFor="let bitCtrl of controls">
+                    <ng-container [formGroup]="bitCtrl">
+                        <div fxLayout fxLayoutAlign="center center" fxFlex="25" class="text-center">{{
+                            bitCtrl.get('serialNo').value }}</div>
+                        <div fxLayout fxLayoutAlign="center center" fxFlex="25" class="text-center">{{
+                            bitCtrl.get('bit').value.type }}</div>
+                        <div fxLayout fxLayoutAlign="center center" fxFlex="25" class="text-center">{{
+                            bitCtrl.get('company').value.name }}</div>
+                        <div class="input-wrapper" fxFlex="25">
+                            <input (keydown)="onEnter($event)" positiveNumber formControlName="bitNo" placeholder="Bit No"
+                                autocomplete="off" #inputFocus>
+                            <span class="focus-border">
+                                <i></i>
+                            </span>
+                        </div>
+                    </ng-container>
+                </div>
+            </cdk-virtual-scroll-viewport>
+        </ng-container>
+
         <ng-template #emptyMsgTpl>
             <div class="empty-msg" fxLayout fxLayoutAlign="center center">Please Enter Quantity</div>
         </ng-template>
     </div>
     <mat-form-field [appearance]="appearance" style="width: 100%">
         <mat-label>Remarks</mat-label>
-        <textarea id="remarks" focusIndex="10" name="" id="" cols="30" rows="3" matInput formControlName="remarks" #remarks="matInput"></textarea>
+        <textarea id="remarks" focusIndex="10" name="" id="" cols="30" rows="3" matInput formControlName="remarks"
+            #remarks="matInput"></textarea>
     </mat-form-field>
 </form>

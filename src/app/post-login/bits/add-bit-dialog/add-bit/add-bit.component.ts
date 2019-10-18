@@ -62,7 +62,7 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
         this.infinite = this.quantityInput$.pipe(
             switchMap((value) => {
                 if (value) {
-                    return timer(3000).pipe(mergeMap(() => of(value)))
+                    return timer(300).pipe(mergeMap(() => of(value)))
                 }
                 return of(null);
             }),

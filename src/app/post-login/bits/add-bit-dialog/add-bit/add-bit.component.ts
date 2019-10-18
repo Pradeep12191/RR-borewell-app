@@ -4,11 +4,11 @@ import { Bit } from '../../Bit';
 import { Godown } from '../../../pipe/Godown';
 import { ConfigService } from '../../../../services/config.service';
 import { MatDatepicker, MatSelect, MatInput, MatDialog } from '@angular/material';
-import { Subscription, Subject, zip, forkJoin, BehaviorSubject, Observable } from 'rxjs';
+import { Subscription, Subject, zip, forkJoin, BehaviorSubject, Observable, timer, of } from 'rxjs';
 import { OverlayCardService } from '../../../../services/overlay-card.service';
 import { AddCompanyPopup } from './add-company-popup/add-company-popup.compoent';
 import { CardOverlayref } from '../../../../services/card-overlay-ref';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, switchMap, exhaustMap, delay, mergeMap } from 'rxjs/operators';
 import { AddBitService } from '../add-bit.service';
 import { Company } from '../../Company';
 import { ToastrService } from 'ngx-toastr';
@@ -59,16 +59,21 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
         private cdr: ChangeDetectorRef
     ) {
         this.appearance = this.config.getConfig('formAppearance');
-       this.infinite = this.quantityInput$.pipe(
-            debounceTime(300),
+        this.infinite = this.quantityInput$.pipe(
+            switchMap((value) => {
+                if (value) {
+                    return timer(300).pipe(mergeMap(() => of(value)))
+                }
+                return of(null);
+            }),
             distinctUntilChanged(),
-            map((event: KeyboardEvent) => {
-                if(!event) return;
-                const value = (event.target as HTMLInputElement).value;
+            map((value) => {
+                if (!value) return null;
+                // const value = (event.target as HTMLInputElement).value;
                 const ctrlCount = this.bitFormArray.controls.length;
                 const count = value ? +value : 0;
                 let serialNo = this.lastBitSerialNo || 0;
-    
+
                 if (count === ctrlCount) {
                     return;
                 }
@@ -86,19 +91,20 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
                         newCtrlCount--;
                     }
                 }
-    
+
                 if (count < ctrlCount) {
                     // remove control
-    
+
                     let removeCtrlCount = ctrlCount - count;
-    
+
                     while (removeCtrlCount) {
                         this.bitFormArray.removeAt(this.bitFormArray.controls.length - 1);
                         removeCtrlCount--;
                     }
                 }
-                if(this.bitFormArray.controls.length){
-                    return [...this.bitFormArray.controls]
+                if (this.bitFormArray.controls.length) {
+                    this.bitFormArray.controls = [...this.bitFormArray.controls]
+                    return this.bitFormArray.controls
                 }
                 return null;
             })
@@ -112,6 +118,7 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
 
 
         this.notifyReset.subscribe(() => {
+            this.quantityInput$.next(null);
             setTimeout(() => {
                 (this.dateInput.nativeElement as HTMLInputElement).focus();
                 this.picker.open()
@@ -264,7 +271,7 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
     }
 
     onBitInput($event) {
-        this.quantityInput$.next($event);
+        this.quantityInput$.next($event.target.value);
     }
 
 

@@ -48,7 +48,7 @@
             <div fxFlex="33" class="bold font-12 text-center">BIT NO</div>
         </div>
         <ng-container *ngIf="infinite | async as controls; else emptyMsgTpl">
-            <cdk-virtual-scroll-viewport class="control-container" itemSize="46"
+            <cdk-virtual-scroll-viewport *ngIf="controls.length; else emptyMsgTpl" class="control-container" itemSize="46"
                 fxLayout="column">
                 <div fxLayout fxLayoutAlign="start center" formArrayName="bits" class="control-item" *cdkVirtualFor="let bitCtrl of controls">
                     <ng-container [formGroup]="bitCtrl">

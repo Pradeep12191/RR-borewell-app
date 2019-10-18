@@ -1,14 +1,14 @@
-import { Component, Input, ElementRef, ViewChild, QueryList, ViewChildren, OnDestroy, AfterViewInit, OnInit, NgZone } from '@angular/core';
+import { Component, Input, ElementRef, ViewChild, QueryList, ViewChildren, OnDestroy, AfterViewInit, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { Bit } from '../../Bit';
 import { Godown } from '../../../pipe/Godown';
 import { ConfigService } from '../../../../services/config.service';
 import { MatDatepicker, MatSelect, MatInput, MatDialog } from '@angular/material';
-import { Subscription, Subject, zip, forkJoin } from 'rxjs';
+import { Subscription, Subject, zip, forkJoin, BehaviorSubject, Observable } from 'rxjs';
 import { OverlayCardService } from '../../../../services/overlay-card.service';
 import { AddCompanyPopup } from './add-company-popup/add-company-popup.compoent';
 import { CardOverlayref } from '../../../../services/card-overlay-ref';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { AddBitService } from '../add-bit.service';
 import { Company } from '../../Company';
 import { ToastrService } from 'ngx-toastr';
@@ -35,7 +35,8 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
     pickerClosedSubscription: Subscription;
     checkUniqueBillNoUrl;
     billNoValidationPending;
-    quantityInput$ = new Subject();
+    quantityInput$ = new BehaviorSubject(null);
+    infinite: Observable<any>;
     previousBillNo = '';
     notifyResetSubscription: Subscription;
     quantiyInputSubscription: Subscription;
@@ -54,56 +55,60 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
         private cardOverlay: OverlayCardService,
         private addBitService: AddBitService,
         private toastr: ToastrService,
-        private ngZone: NgZone
+        private ngZone: NgZone,
+        private cdr: ChangeDetectorRef
     ) {
         this.appearance = this.config.getConfig('formAppearance');
+       this.infinite = this.quantityInput$.pipe(
+            debounceTime(300),
+            distinctUntilChanged(),
+            map((event: KeyboardEvent) => {
+                if(!event) return;
+                const value = (event.target as HTMLInputElement).value;
+                const ctrlCount = this.bitFormArray.controls.length;
+                const count = value ? +value : 0;
+                let serialNo = this.lastBitSerialNo || 0;
+    
+                if (count === ctrlCount) {
+                    return;
+                }
+                if (count > ctrlCount) {
+                    // add new control
+                    let newCtrlCount = count - ctrlCount;
+                    let lastCtrl = this.bitFormArray.at(this.bitFormArray.controls.length - 1);
+                    if (lastCtrl) {
+                        serialNo = lastCtrl.get('serialNo').value;
+                    }
+                    while (newCtrlCount) {
+                        const bit = this.form.get('bit').value;
+                        const company = this.form.get('company').value;
+                        this.bitFormArray.push(this.addBitService.buildPipeForm(++serialNo, bit, company))
+                        newCtrlCount--;
+                    }
+                }
+    
+                if (count < ctrlCount) {
+                    // remove control
+    
+                    let removeCtrlCount = ctrlCount - count;
+    
+                    while (removeCtrlCount) {
+                        this.bitFormArray.removeAt(this.bitFormArray.controls.length - 1);
+                        removeCtrlCount--;
+                    }
+                }
+                if(this.bitFormArray.controls.length){
+                    return [...this.bitFormArray.controls]
+                }
+                return null;
+            })
+        )
     }
 
 
     ngOnInit() {
 
-        
 
-        this.quantiyInputSubscription = this.quantityInput$.pipe(
-            debounceTime(300),
-            distinctUntilChanged()
-        ).subscribe((event: KeyboardEvent) => {
-            const value = (event.target as HTMLInputElement).value;
-            const ctrlCount = this.bitFormArray.controls.length;
-            const count = value ? +value : 0;
-            let serialNo = this.lastBitSerialNo || 0;
-
-            if (count === ctrlCount) {
-                return;
-            }
-            if (count > ctrlCount) {
-                // add new control
-                let newCtrlCount = count - ctrlCount;
-                let lastCtrl = this.bitFormArray.at(this.bitFormArray.controls.length - 1);
-                if (lastCtrl) {
-                    serialNo = lastCtrl.get('serialNo').value;
-                }
-                while (newCtrlCount) {
-                    const bit = this.form.get('bit').value;
-                    const company = this.form.get('company').value;
-                    this.bitFormArray.push(this.addBitService.buildPipeForm(++serialNo, bit, company))
-                    newCtrlCount--;
-                }
-                return;
-            }
-
-            if (count < ctrlCount) {
-                // remove control
-
-                let removeCtrlCount = ctrlCount - count;
-
-                while (removeCtrlCount) {
-                    this.bitFormArray.removeAt(this.bitFormArray.controls.length - 1);
-                    removeCtrlCount--;
-                }
-            }
-
-        });
 
 
         this.notifyReset.subscribe(() => {
@@ -208,7 +213,7 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
                         nextInput.focus();
                     } else {
                         if (this.remarks) {
-                            this.remarks.focus() 
+                            this.remarks.focus()
                         }
                     }
                 })
@@ -258,6 +263,9 @@ export class AddBitComponent implements OnDestroy, AfterViewInit, OnInit {
         })
     }
 
+    onBitInput($event) {
+        this.quantityInput$.next($event);
+    }
 
 
     enableQuantity() {

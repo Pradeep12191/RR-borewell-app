@@ -2,7 +2,7 @@
     <div fxFlex fxLayoutAlign="center center">
         <div>Add Bit - {{ selectedGodown?.godownType | uppercase }}</div>
     </div>
-    <button mat-icon-button mat-dialog-close>
+    <button mat-icon-button (click)="updateAndClose()">
         <mat-icon>clear</mat-icon>
     </button>
 </mat-toolbar>
@@ -11,7 +11,8 @@
     <mat-horizontal-stepper (selectionChange)="stepIndex = $event.selectedIndex" [linear]="true" labelPosition="bottom"
         #stepper>
         <mat-step label="Add Bit" [stepControl]="form">
-            <add-bit [lastBitSerialNo]="lastBitSerialNo" [form]="form" [bitSizes]="bitSizes" [notifyReset]="notifyReset" [companies]="companies" ></add-bit>
+            <add-bit [lastBitSerialNo]="lastBitSerialNo" [form]="form" [bitSizes]="bitSizes" [notifyReset]="notifyReset"
+                [companies]="companies"></add-bit>
             <div fxLayout fxLayoutAlign="end">
                 <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="stepper.next()">CONFIRM</button>
             </div>
@@ -22,9 +23,17 @@
     </mat-horizontal-stepper>
 </div>
 
-<div mat-dialog-actions *ngIf="stepIndex === 1">
+<div mat-dialog-actions *ngIf="stepIndex === 1; else doneTpl">
     <div fxFlex fxLayout fxLayoutAlign="space-between">
         <button mat-raised-button color="primary" (click)="stepper.previous()">EDIT</button>
-        <button mat-raised-button color="primary" (click)="saveBit()">SAVE</button>
+        <button mat-raised-button color="primary" (click)="saveBit()">SAVE AND ADD NEXT BITS</button>
     </div>
 </div>
+
+<ng-template #doneTpl>
+    <div mat-dialog-actions>
+        <div fxFlex fxLayout fxLayoutAlign="space-between">
+            <button mat-raised-button color="primary" (click)="updateAndClose()">DONE</button>
+        </div>
+    </div>
+</ng-template>

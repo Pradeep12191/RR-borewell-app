@@ -21,40 +21,7 @@
 </div>
 
 <ng-template let-bit #bitDetailsTpl>
-    <div class="card m-b-16 m-t-16 white" fxFlex>
-        <div class="section-title m-b-16 contact-title">
-            <div fxLayout fxLayoutAlign="space-between">
-                <div fxLayout fxLayoutGap="10px">
-                    <div>
-                        Bit Size
-                    </div>
-                    <div>:</div>
-                    <div>{{ bit.bit_type }}</div>
-                </div>
-                <div fxLayout fxLayoutGap="10px">
-                    <div>
-                        Company
-                    </div>
-                    <div>:</div>
-                    <div>{{ bit?.company_name | uppercase }}</div>
-                </div>
-                <div fxLayout fxLayoutGap="10px">
-                    <div>
-                        Quantity
-                    </div>
-                    <div>:</div>
-                    <div>{{ bill?.quantity }}</div>
-                </div>
-                <div fxLayout fxLayoutGap="10px">
-                    <div>
-                        Date
-                    </div>
-                    <div>:</div>
-                    <div>{{ bit?.date }}</div>
-                </div>
-            </div>
-
-        </div>
+    <div class="card m-b-16 m-t-16 white p-t-16" fxFlex>
         <div fxLayout="column" fxLayoutGap="10px">
             <div class="p-b-5 line" fxLayout fxLayoutAlign="start center" fxLayoutGap="5px">
                 <div fxFlex class="text-center bold">

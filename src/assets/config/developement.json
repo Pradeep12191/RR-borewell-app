@@ -104,7 +104,7 @@
         },
         {
             "name": "vehicleLastRpmEntry",
-            "url": "last_rpm_sheet_data"
+            "url": "rpm_data"
         },
         {
             "name": "rpmTableData",

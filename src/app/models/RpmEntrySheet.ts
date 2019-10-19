@@ -10,9 +10,9 @@ import { RpmVehicleExchage } from './RpmVehicleExchange';
 export interface RpmEntrySheet {
     book_id: number;
     end: number;
+    start: number;
     rpm_sheet_no: number;
     f_rpm_table_data: RpmEntry[],
-    start: number;
     vehicle_id: number;
     rpm_vehicle_exchange? : RpmVehicleExchage;
     bit?: BitDetail;

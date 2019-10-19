@@ -687,7 +687,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             vehicle_id: +this.selectedVehicle.vehicle_id,
             rpm_vehicle_exchange: {
                 vehicle_in_id: this.form.value.inVehicle ? +this.form.value.inVehicle.vehicle_id : 0,
+                vehicle_in_no: this.form.value.inVehicle ? this.form.value.inVehicle.regNo : '',
                 vehicle_out_id: this.form.value.outVehicle ? +this.form.value.outVehicle.vehicle_id : 0,
+                vehicle_out_no: this.form.value.outVehicle ? this.form.value.outVehicle.regNo : '',
                 vehicle_in_rpm_sheet_no: this.form.value.inRpmNo || 0,
                 vehicle_out_rpm_sheet_no: this.form.value.outRpmNo || 0,
             },

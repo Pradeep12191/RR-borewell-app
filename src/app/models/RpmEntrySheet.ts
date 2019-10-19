@@ -5,6 +5,7 @@ import { VehicleServices } from './VehicleServices';
 import { Diesel } from './RpmEntry/Diesel';
 import { Depth } from './RpmEntry/Depth';
 import { BitDetail } from './RpmEntry/BitDetail';
+import { RpmVehicleExchage } from './RpmVehicleExchange';
 
 export interface RpmEntrySheet {
     book_id: number;
@@ -13,10 +14,7 @@ export interface RpmEntrySheet {
     f_rpm_table_data: RpmEntry[],
     start: number;
     vehicle_id: number;
-    vehicle_in_id: number;
-    vehicle_in_rpm_sheet_no: number;
-    vehicle_out_id: number;
-    vehicle_out_rpm_sheet_no: number;
+    rpm_vehicle_exchange? : RpmVehicleExchage;
     bit?: BitDetail;
     rpm?: RpmDetails,
     service?: VehicleServices;

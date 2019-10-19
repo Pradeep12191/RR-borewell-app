@@ -8,14 +8,14 @@
         </mat-form-field>
         <div fxLayout="column" class="shift-top-24" fxLayoutGap="5px">
             <div class="font-italic font-14 sub-title">Godown Delivery Pipe</div>
-            <button [disabled]="!selectedVehicle" (click)="assignVehicle()" mat-raised-button color="primary">
+            <button [disabled]="!selectedVehicle || !bookId" (click)="assignVehicle()" mat-raised-button color="primary">
                 <mat-icon class="m-r-5">local_shipping</mat-icon>
                 Assign Vehicle
             </button>
         </div>
         <div fxLayout="column" fxLayoutGap="5px" class="shift-top-24">
             <div class="font-italic font-14 sub-title">Godown Delivery Bit</div>
-            <button [disabled]="!selectedVehicle" (click)="openAssignBitDialog()" mat-raised-button color="primary">
+            <button [disabled]="!selectedVehicle || !bookId" (click)="openAssignBitDialog()" mat-raised-button color="primary">
                 <mat-icon class="m-r-5">local_shipping</mat-icon>
                 Assign Vehicle
             </button>

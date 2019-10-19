@@ -128,25 +128,25 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             outRpmNo: ['', Validators.required],
             remarks: { value: '', disabled: false },
             rpm: this.fb.group({
-                end: '',
-                manual: '',
+                end: { value: '', disabled: true },
+                manual: { value: '', disabled: true },
                 isManual: false
             }),
             diesel: this.fb.group({
-                compressor: '',
-                lorry: '',
-                support: ''
+                compressor: { value: '', disabled: true },
+                lorry: { value: '', disabled: true },
+                support: { value: '', disabled: true }
             }),
             depth: this.fb.group({
-                bore: '',
-                pipeErection: '',
+                bore: { value: '', disabled: true },
+                pipeErection: { value: '', disabled: true },
                 above: this.fb.group({
-                    feet: '',
-                    hrs: '',
-                    min: ''
+                    feet: { value: '', disabled: true },
+                    hrs: { value: '', disabled: true },
+                    min: { value: '', disabled: true }
                 })
             }),
-            bit: ''
+            bit: { value: '', disabled: true }
         })
         this.appearance = this.config.getConfig('formAppearance');
     }
@@ -517,6 +517,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.bookEndNo = rpmSheet.end;
                 this.rpmEntryNo = rpmSheet.rpm_sheet_no;
                 this.rpmSheet = rpmSheet;
+                this.enableAllControls();
             }
 
         })
@@ -604,6 +605,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.loader.hideSaveLoader();
         })).subscribe(([lastRpmEntrySheet, serviceLimits, assignedBits]) => {
             if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
+                this.resetStockFeets();
                 this.resetBook();
                 return this.addBook(true);
             }
@@ -619,13 +621,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.picker.open();
             this.dateInput.nativeElement.focus();
             // once vehicle is selected enable all controls
-            this.form.get('isInVehicle').enable();
-            this.form.get('isOutVehicle').enable();
-            this.form.get('isDamage').enable();
-            this.form.get('remarks').enable();
             this.updatePreviousStockFeet(lastRpmEntrySheet);
             this.rpmSheet = lastRpmEntrySheet;
-            this.pointExpenseFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+            this.enableAllControls();
             this.resetStockFeets();
         }, (err) => {
 
@@ -667,6 +665,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private resetBook() {
+        this.disableAllControls();
+        this.rpmSheet = null;
         this.bookId = null;
         this.bookEndNo = null;
         this.bookStartNo = null;
@@ -678,9 +678,16 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         // this.form.reset();
 
-        this.form.get('rpm').reset();
-        this.form.get('diesel').reset();
-        this.form.get('depth').reset();
+        this.form.get('rpm.manual').reset('');
+        this.form.get('rpm.end').reset('');
+        this.form.get('diesel.compressor').reset('');
+        this.form.get('diesel.lorry').reset('');
+        this.form.get('diesel.support').reset('');
+        this.form.get('depth.pipeErection').reset('');
+        this.form.get('depth.bore').reset('');
+        this.form.get('depth.above.feet').reset('');
+        this.form.get('depth.above.hrs').reset('');
+        this.form.get('depth.above.min').reset('');
         this.form.get('bit').reset();
         this.form.get('inVehicle').reset();
         this.form.get('outVehicle').reset();
@@ -704,7 +711,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             ctrl.get('value').disable();
         })
         this.pointExpenseFeetFormArray.controls.forEach(ctrl => {
-        ctrl.get('value').reset();
+            ctrl.get('value').reset();
         });
 
         // this.picker.open();
@@ -712,11 +719,36 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     }
 
+    disableAllControls() {
+        this.form.get('bit').disable();
+        this.form.get('diesel').disable();
+        this.form.get('depth').disable();
+        this.form.get('rpm').disable();
+
+        this.form.get('isInVehicle').disable();
+        this.form.get('isOutVehicle').disable();
+        this.form.get('isDamage').disable();
+        this.form.get('remarks').disable();
+        this.pointExpenseFeetFormArray.controls.forEach(ctrl => ctrl.disable());
+
+    }
+
     enableAllControls() {
-        this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
-        this.pointExpenseFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
-        this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
-        this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+        this.form.get('bit').enable();
+        this.form.get('diesel').enable();
+        this.form.get('depth').enable();
+        this.form.get('rpm').enable();
+
+        this.form.get('isInVehicle').enable();
+        this.form.get('isOutVehicle').enable();
+        this.form.get('isDamage').enable();
+        this.form.get('remarks').enable();
+        this.pointExpenseFeetFormArray.controls.forEach(ctrl => ctrl.enable());
+
+        // this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+        // this.pointExpenseFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+        // this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+        // this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
     }
 
     onDepthInput() {

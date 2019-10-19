@@ -503,7 +503,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             originY: 'top',
             overlayX: 'start',
             overlayY: 'top',
-            offsetX: -250,
+            offsetX: -330,
             offsetY: -85
         }]);
         this.bookPopupRef.afterClosed$.subscribe((data: RpmEntrySheet) => {

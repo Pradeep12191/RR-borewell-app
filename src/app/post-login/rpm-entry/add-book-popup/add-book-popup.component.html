@@ -6,16 +6,24 @@
             <mat-icon>clear</mat-icon>
         </button>
     </mat-toolbar>
-    <form class="content" #bookForm="ngForm" (ngSubmit)="saveBook()">
-        <div fxLayout>
-            <mat-form-field [appearance]="appearance">
-                <mat-label>Count</mat-label>
-                <input type="text" required #bookInp name="bookCount" autocomplete="off" [(ngModel)]="bookCount" matInput>
+    <form class="content" [formGroup]="bookForm">
+        <div fxLayout class="alert p-10 m-b-10" *ngIf="bookForm.invalid && bookForm.dirty && isSubmitAttempt" fxLayoutGap="10px">
+            <mat-icon>error_outline</mat-icon>
+            <div fxLayoutAlign="start center">{{ getErrorMessage() }}</div>
+        </div>
+        <div fxLayout fxLayoutGap="16px">
+            <mat-form-field [appearance]="appearance" fxFlex class="calc-field">
+                <mat-label>Start Page No</mat-label>
+                <input type="text" (keydown.enter)="onStartEnter()" required #bookStart formControlName="start" autocomplete="off" matInput>
+            </mat-form-field>
+            <mat-form-field [appearance]="appearance" class="calc-field" fxFlex>
+                <mat-label>End Page No</mat-label>
+                <input (keydown.enter)="saveBook()" type="text" required #bookEnd formControlName="end" autocomplete="off" matInput>
             </mat-form-field>
         </div>
         <div fxLayout fxLayoutGap="25px">
             <button (click)="cancel()" type="button" color="warn" mat-raised-button>CANCEL</button>
-            <button mat-raised-button color="primary">SAVE</button>
+            <button (click)="saveBook()" mat-raised-button type="button" color="primary">SAVE</button>
         </div>
     </form>
 

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, Inject, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, Inject, OnInit, OnDestroy } from '@angular/core';
 import { SCALE_UP_ANIMATION } from '../../../animations/scale-up.animaion';
 import { CardOverlayref } from '../../../services/card-overlay-ref';
 import { ConfigService } from '../../../services/config.service';
@@ -6,6 +6,7 @@ import { RpmEntryService } from '../rpm-entry.service';
 import { OVERLAY_CARD_DATA } from '../../../services/overlay-card.service';
 import { Vehicle } from '../../../models/Vehicle';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 function compareValidator(control: AbstractControl) {
     const start = +control.get('start').value;
@@ -22,7 +23,7 @@ function compareValidator(control: AbstractControl) {
     styleUrls: ['./add-book-popup.component.scss'],
     animations: [SCALE_UP_ANIMATION]
 })
-export class AddBookPopupComponent implements AfterViewInit, OnInit {
+export class AddBookPopupComponent implements AfterViewInit, OnInit, OnDestroy {
     appearance;
     bookCount;
     startPageNo;
@@ -30,6 +31,8 @@ export class AddBookPopupComponent implements AfterViewInit, OnInit {
     isSubmitAttempt;
     bookForm: FormGroup;
     vehicle: Vehicle;
+    bookRequired: boolean;
+    valueChangesSubscription: Subscription;
 
     @ViewChild('bookInp', { static: false, read: ElementRef }) bookInput: ElementRef
     @ViewChild('bookStart', { static: false, read: ElementRef }) bookStart: ElementRef
@@ -44,13 +47,23 @@ export class AddBookPopupComponent implements AfterViewInit, OnInit {
         this.appearance = this.config.getConfig('formAppearance');
         console.log(data);
         this.vehicle = data.vehicle;
+        this.bookRequired = data.isRequired;
     }
 
     ngOnInit() {
         this.bookForm = this.fb.group({
             start: ['', [Validators.required]],
             end: ['', Validators.required]
-        }, { validators: compareValidator })
+        }, { validators: compareValidator });
+
+        this.valueChangesSubscription = this.bookForm.valueChanges.subscribe(() => {
+            // this.bookRequired = false;
+        });
+    }
+    ngOnDestroy() {
+        if (this.valueChangesSubscription) {
+            this.valueChangesSubscription.unsubscribe();
+        }
     }
 
     saveBook() {

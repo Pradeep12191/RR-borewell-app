@@ -23,5 +23,6 @@ export interface RpmEntrySheet {
     vehicle_no?: string;
     remarks?: string;
     date?: string;
+    book_page_over?: boolean;
     rpmTableData?: RpmTableData
 }

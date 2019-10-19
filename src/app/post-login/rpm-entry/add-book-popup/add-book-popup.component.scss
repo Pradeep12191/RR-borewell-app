@@ -31,7 +31,12 @@
     color: red;
     border: 1px solid;
     font-size: 12px;
+    &--info{
+        color: #17a2b8;
+    }
 }
+
+
 
 .custom.mat-toolbar{
     height: 54px;

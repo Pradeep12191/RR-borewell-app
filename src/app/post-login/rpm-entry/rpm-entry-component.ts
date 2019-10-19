@@ -70,6 +70,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     rpmEntryNo;
     vehicleServiceLimits: VehicleServices
     book: Book;
+    bookRequired = false;
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
     @ViewChild('inVehicleSelect', { static: false }) inVehicleSelect: MatSelect;
@@ -491,13 +492,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
 
-    addBook() {
+    addBook(isRequired = false) {
         if (this.bookPopupRef) {
             this.bookPopupRef.close();
         }
         this.bookPopupRef = this.cardOverlay.open(AddBookPopupComponent, this.addBookBtn, {
             data: {
-                vehicle: this.selectedVehicle
+                vehicle: this.selectedVehicle,
+                isRequired
             }
         }, [{
             originX: 'start',
@@ -509,6 +511,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }]);
         this.bookPopupRef.afterClosed$.subscribe((rpmSheet: RpmEntrySheet) => {
             if (rpmSheet) {
+                this.bookRequired = false;
                 this.bookId = rpmSheet.book_id;
                 this.bookStartNo = rpmSheet.start
                 this.bookEndNo = rpmSheet.end;
@@ -600,6 +603,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         zip(lastRpmSheet$, vehicleServiceLimit$, assingedBit$).pipe(finalize(() => {
             this.loader.hideSaveLoader();
         })).subscribe(([lastRpmEntrySheet, serviceLimits, assignedBits]) => {
+            if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
+                this.resetBook();
+                return this.addBook(true);
+            }
+            this.bookRequired = false;
             this.vehicleServiceLimits = serviceLimits;
             this.activeCompressorAirFilterLimit = this.compressorAirFilterServiceLimits
                 .find(c => c.limit === this.vehicleServiceLimits.c_air_filter);
@@ -658,7 +666,22 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    private resetBook() {
+        this.bookId = null;
+        this.bookEndNo = null;
+        this.bookStartNo = null;
+        this.rpmEntryNo = null;
+        this.bookRequired = true;
+    }
+
     private resetStockFeets() {
+
+        // this.form.reset();
+
+        this.form.get('rpm').reset();
+        this.form.get('diesel').reset();
+        this.form.get('depth').reset();
+        this.form.get('bit').reset();
         this.form.get('inVehicle').reset();
         this.form.get('outVehicle').reset();
         this.form.get('inRpmNo').reset();
@@ -681,7 +704,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             ctrl.get('value').disable();
         })
         this.pointExpenseFeetFormArray.controls.forEach(ctrl => {
-            ctrl.get('value').reset();
+        ctrl.get('value').reset();
         });
 
         // this.picker.open();
@@ -806,9 +829,16 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         this.rpmEntryService.submitRpm(payload).subscribe((lastRpmEntrySheet) => {
             this.common.scrollTop();
+            this.resetStockFeets();
+
+            if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
+                this.resetBook();
+                this.addBook(true);
+                return;
+            }
+
             this.rpmSheet = lastRpmEntrySheet;
             this.updatePreviousStockFeet(lastRpmEntrySheet);
-            this.resetStockFeets();
         }, () => { })
     }
 

@@ -7,18 +7,25 @@
         </button>
     </mat-toolbar>
     <form class="content" [formGroup]="bookForm">
-        <div fxLayout class="alert p-10 m-b-10" *ngIf="bookForm.invalid && bookForm.dirty && isSubmitAttempt" fxLayoutGap="10px">
+        <div *ngIf="bookRequired" fxLayout class="alert alert--info p-10 m-b-10">
+            <mat-icon class="m-r-10">error_outline</mat-icon>
+            <div fxLayoutAlign="start center">New Book is required</div>
+        </div>
+        <div fxLayout class="alert p-10 m-b-10" *ngIf="bookForm.invalid && bookForm.dirty && isSubmitAttempt"
+            fxLayoutGap="10px">
             <mat-icon>error_outline</mat-icon>
             <div fxLayoutAlign="start center">{{ getErrorMessage() }}</div>
         </div>
         <div fxLayout fxLayoutGap="16px">
             <mat-form-field [appearance]="appearance" fxFlex class="calc-field">
                 <mat-label>Start Page No</mat-label>
-                <input type="text" (keydown.enter)="onStartEnter()" required #bookStart formControlName="start" autocomplete="off" matInput>
+                <input type="text" (keydown.enter)="onStartEnter()" required #bookStart formControlName="start"
+                    autocomplete="off" matInput>
             </mat-form-field>
             <mat-form-field [appearance]="appearance" class="calc-field" fxFlex>
                 <mat-label>End Page No</mat-label>
-                <input (keydown.enter)="saveBook()" type="text" required #bookEnd formControlName="end" autocomplete="off" matInput>
+                <input (keydown.enter)="saveBook()" type="text" required #bookEnd formControlName="end" autocomplete="off"
+                    matInput>
             </mat-form-field>
         </div>
         <div fxLayout fxLayoutGap="25px">

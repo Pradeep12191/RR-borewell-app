@@ -32,7 +32,12 @@
                 <div fxFlex class="bold">{{ (bookEndNo || bookEndNo == 0) ? bookEndNo : '-' }}</div>
             </div>
         </div>
-        <div>
+        <div fxLayout="column" fxLayoutGap="10px" [ngClass]="bookRequired ? 'shift-top-24': ''">
+            <div *ngIf="bookRequired">
+                <div class="banner text-center">
+                    Add a book *
+                </div>
+            </div>
             <button #addBookBtn [disabled]="!selectedVehicle" (click)="addBook()" mat-raised-button color="primary">Add
                 New Book</button>
         </div>
@@ -364,7 +369,8 @@
                             <div fxLayoutAlign="start center" fxFlex="25">Pipe Erection Feet</div>
                             <mat-form-field fxFlex="50">
                                 <mat-label>Feet</mat-label>
-                                <input (input)="onDepthInput()" formControlName="pipeErection" type="text" matInput positiveNumber>
+                                <input (input)="onDepthInput()" formControlName="pipeErection" type="text" matInput
+                                    positiveNumber>
                             </mat-form-field>
                         </div>
                         <div formGroupName="above" fxFlex fxLayout fxLayoutGap="15px">

@@ -542,8 +542,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         if (this.rpmSheet.rpm) {
+            this.rpmSheet.rpm.total = endRpm;
             this.rpmSheet.rpm.running = running;
-            this.rpmSheet.rpm.point_diesel = running + start;
+            this.rpmSheet.rpm.point_diesel = this.rpmSheet.rpm.prev_diesel_rpm + running;
         }
     }
 
@@ -607,15 +608,15 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         zip(lastRpmSheet$, vehicleServiceLimit$, assingedBit$).pipe(finalize(() => {
             this.loader.hideSaveLoader();
         })).subscribe(([lastRpmEntrySheet, serviceLimits, assignedBits]) => {
+            this.vehicleServiceLimits = serviceLimits;
+            this.activeCompressorAirFilterLimit = this.compressorAirFilterServiceLimits
+                .find(c => c.limit === this.vehicleServiceLimits.c_air_filter);
             if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
                 this.resetStockFeets();
                 this.resetBook();
                 return this.addBook(true);
             }
             this.bookRequired = false;
-            this.vehicleServiceLimits = serviceLimits;
-            this.activeCompressorAirFilterLimit = this.compressorAirFilterServiceLimits
-                .find(c => c.limit === this.vehicleServiceLimits.c_air_filter);
             this.assignedBits = assignedBits;
             this.rpmEntryNo = lastRpmEntrySheet.rpm_sheet_no;
             this.bookEndNo = lastRpmEntrySheet.end;

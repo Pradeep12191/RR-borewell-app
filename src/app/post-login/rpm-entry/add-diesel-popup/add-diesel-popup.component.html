@@ -16,7 +16,7 @@
         </div>
         <div fxLayout fxLayoutGap="25px">
             <button (click)="cancel()" type="button" color="warn" mat-raised-button>CANCEL</button>
-            <button mat-raised-button color="primary">OK</button>
+            <button [disabled]="dieselForm.invalid" mat-raised-button color="primary">OK</button>
         </div>
     </form>
 

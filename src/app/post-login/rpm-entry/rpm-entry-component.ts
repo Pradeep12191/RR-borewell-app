@@ -551,9 +551,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         if (this.rpmSheet.rpm) {
-            this.rpmSheet.rpm.total = endRpm;
+            this.rpmSheet.rpm.total = Math.round(endRpm * 100) / 100;
             this.rpmSheet.rpm.running = running;
-            this.rpmSheet.rpm.point_diesel = this.rpmSheet.rpm.prev_diesel_rpm + running;
+            if (running) {
+                this.rpmSheet.rpm.point_diesel = this.rpmSheet.rpm.prev_diesel_rpm + running;
+                this.rpmSheet.rpm.point_diesel = Math.round(this.rpmSheet.rpm.point_diesel * 100) / 100;
+            }
         }
     }
 
@@ -785,9 +788,43 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         dieselOverlayRef.afterClosed$.subscribe((res: number) => {
             if (res) {
-                this.rpmSheet.diesel.compressor = res
+                this.rpmSheet.diesel.compressor = +res
+                if (this.rpmSheet.rpm) {
+                    this.rpmSheet.rpm.prev_diesel_rpm = 0;
+                    this.rpmSheet.rpm.point_diesel = this.rpmSheet.rpm.running
+                }
+                this.updateTotalDiesel();
+                this.updateDieselAvg();
             }
         })
+    }
+
+    /**
+     * compressor diesel / previous diesel rpm
+     */
+    updateDieselAvg() {
+        let avg = 0;
+        if (this.rpmSheet.diesel) {
+            const compressorDiesel = +this.rpmSheet.diesel.compressor;
+            const previousDieselRpm = +this.rpmSheet.diesel.previous_rpm;
+            if (previousDieselRpm <= 0 || compressorDiesel <= 0) {
+                avg = 0;
+            } else {
+                avg = compressorDiesel / previousDieselRpm;
+                avg  = Math.round(avg * 100) / 100;
+            }
+            this.rpmSheet.diesel.average = avg;
+        }
+    }
+
+    updateTotalDiesel() {
+        let totalDiesel = 0;
+        const lorry = +this.form.get('diesel.lorry').value;
+        const support = +this.form.get('diesel.support').value;
+        if (this.rpmSheet.diesel) {
+            totalDiesel = this.rpmSheet.diesel.compressor + lorry + support
+            this.rpmSheet.diesel.total = totalDiesel;
+        }
     }
 
     onDepthInput() {

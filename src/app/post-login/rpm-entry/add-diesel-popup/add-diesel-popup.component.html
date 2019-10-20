@@ -1,0 +1,23 @@
+<div class="popup-card mat-elevation-z4" @scaleUp>
+    <mat-toolbar class="custom" color="primary">
+        <span>FILL DIESEL</span>
+        <span class="space"></span>
+        <button mat-icon-button (click)="cancel()">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </mat-toolbar>
+    <form class="content" [formGroup]="dieselForm" (ngSubmit)="updateDiesel()">
+        <div fxLayout fxLayoutGap="16px">
+            <mat-form-field [appearance]="appearance" fxFlex class="calc-field">
+                <mat-label>Liter</mat-label>
+                <input type="text" formControlName="liter" #literInput
+                    autocomplete="off" matInput>
+            </mat-form-field>
+        </div>
+        <div fxLayout fxLayoutGap="25px">
+            <button (click)="cancel()" type="button" color="warn" mat-raised-button>CANCEL</button>
+            <button mat-raised-button color="primary">OK</button>
+        </div>
+    </form>
+
+</div>

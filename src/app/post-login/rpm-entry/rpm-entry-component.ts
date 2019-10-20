@@ -29,6 +29,7 @@ import { ServiceLimit } from '../../models/Limit';
 import { VehicleServices } from '../../models/VehicleServices';
 import { BitSerialNo } from '../../models/BitSerialNo';
 import { ToastrService } from 'ngx-toastr';
+import { AddDieselPopupComponent } from './add-diesel-popup/add-diesel-popup.component';
 
 @Component({
     templateUrl: './rpm-entry-component.html',
@@ -84,6 +85,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChildren('damageFeetInput') damageFeetInputs: QueryList<ElementRef>;
     @ViewChildren('expenseFeetInput') expenseFeetInputs: QueryList<ElementRef>;
     @ViewChildren('remarksInput', { read: ElementRef }) remarksInput: QueryList<ElementRef>;
+    @ViewChild('compressorInput', { static: false }) diselCompEl: ElementRef
     allInputs: QueryList<ElementRef>[] = new Array(5);
 
     get pointExpenseFeetFormArray() {
@@ -750,6 +752,32 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         // this.pointExpenseFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
         // this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
         // this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+    }
+
+    openDiesel(liter) {
+        if (!this.selectedVehicle || !this.bookId) {
+            return
+        }
+        const dieselOverlayRef = this.cardOverlay.open(AddDieselPopupComponent, this.diselCompEl, {
+            data: {
+                diesel: liter
+            }
+        },
+            [{
+                originX: 'end',
+                originY: 'top',
+                overlayX: 'end',
+                overlayY: 'top',
+                offsetX: 220,
+                offsetY: -78
+            }]
+        )
+
+        dieselOverlayRef.afterClosed$.subscribe((res: number) => {
+            if (res) {
+                this.rpmSheet.diesel.compressor = res
+            }
+        })
     }
 
     onDepthInput() {

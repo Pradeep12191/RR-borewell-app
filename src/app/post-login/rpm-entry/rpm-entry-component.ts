@@ -525,6 +525,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         })
     };
 
+    /*
+        total rpm = end rpm + manual rpm(if any) - used for next rpm sheet start rpm
+        runnimg rpm = total rpm - start rpm 
+        point diesel rpm = previous diesel rpm + running rpm
+        (previous diesel rpm will be reset when diesel is re-fueled, and hence point detail rpm will be running rpm).
+        services also calculated based on running rpm(sums up on previous service rpm, till gets reset - 
+        once reseted service rpm starts from current running rpm)
+     */
     onRpmEndInput() {
         let start = 0;
         let running = 0;

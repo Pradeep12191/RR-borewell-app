@@ -732,6 +732,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.pointExpenseFeetFormArray.controls.forEach(ctrl => {
             ctrl.get('value').reset();
         });
+        this.form.get('depth.above.hrs').disable();
+        this.form.get('depth.above.min').disable();
 
         // this.picker.open();
         // (this.dateInput.nativeElement as HTMLInputElement).focus()
@@ -964,7 +966,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         return this.fb.group({ pipeType, pipeId, pipeSize, value: { value: '', disabled: true } })
     }
 
-    private updateFeetAvg() {
+    updateFeetAvg() {
         const hrs = +this.form.get('depth.above.hrs').value;
         const min = +this.form.get('depth.above.min').value;
         if (this.rpmSheet.depth) {

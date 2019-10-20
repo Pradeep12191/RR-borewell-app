@@ -1003,7 +1003,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         return rpm;
     }
 
-    private updateExtraFeet() {
+    updateExtraFeet() {
         const aboveFeet: ServiceLimit = this.form.get('depth.above.feet').value;
         const boreDepth = +this.form.get('depth.bore').value;
         let extraFeet = 0;

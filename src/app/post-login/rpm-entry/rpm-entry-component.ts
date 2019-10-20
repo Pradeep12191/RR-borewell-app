@@ -529,9 +529,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         total rpm = end rpm + manual rpm(if any) - used for next rpm sheet start rpm
         runnimg rpm = total rpm - start rpm 
         point diesel rpm = previous diesel rpm + running rpm
-        (previous diesel rpm will be reset when diesel is re-fueled, and hence point detail rpm will be running rpm).
+        (previous diesel rpm will be reset when diesel is re-filled, and hence point detail rpm will be running rpm
+        ie, previous diesel rpm will be 0).
         services also calculated based on running rpm(sums up on previous service rpm, till gets reset - 
-        once reseted service rpm starts from current running rpm)
+        once reseted service rpm starts from current running rpm ie, previous service rpm will be 0)
      */
     onRpmEndInput() {
         let start = 0;
@@ -842,7 +843,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 manual: +this.form.value.rpm.manual,
                 end: +this.form.value.rpm.end,
                 running: this.rpmSheet.rpm.running,
-                point_diesel: this.rpmSheet.rpm.point_diesel
+                point_diesel: this.rpmSheet.rpm.point_diesel,
+                total: this.rpmSheet.rpm.total,
+                prev_diesel_rpm: this.rpmSheet.rpm.prev_diesel_rpm
             },
             diesel: {
                 average: this.rpmSheet.diesel.average,

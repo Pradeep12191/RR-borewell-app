@@ -37,7 +37,7 @@ export class OverlayCardService {
     }
 
     open<T>(component: ComponentType<T>, connectedElementRef: ElementRef, config: CardOverlayConfig = {}, poisiton: ConnectedPosition[] = DEFAULT_POSITON) {
-        this.common.blockScroll(true);
+        // this.common.blockScroll(true);
         const dialogConfig = { ...DEFAULT_CONFIG, ...config }
         const overlayRef = this.createOverlay(dialogConfig, connectedElementRef, poisiton);
         const dialoRef = new CardOverlayref(overlayRef, this.common);

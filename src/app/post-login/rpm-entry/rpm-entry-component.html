@@ -80,7 +80,7 @@
                     <div fxLayout="column">
                         <div fxLayout fxLayoutAlign="start center">
                             <div fxFlex="40" class="font-14">Start RPM</div>
-                            <div class="bold font-20">
+                            <div class="bold font-16">
                                 <div *ngIf="rpmSheet?.rpm?.start || rpmSheet?.rpm?.start === 0; else hyphenTpl">
                                     {{rpmSheet?.rpm?.start}}
                                 </div>
@@ -107,7 +107,7 @@
 
                         <div fxLayoutAlign="start center" fxLayout class="m-b-16">
                             <div fxFlex="40" class="font-14">Running RPM</div>
-                            <div class="bold font-20">
+                            <div class="bold font-16">
                                 <div *ngIf="rpmSheet?.rpm?.running || rpmSheet?.rpm?.running === 0; else hyphenTpl">
                                     {{ rpmSheet?.rpm?.running }}
                                 </div>
@@ -115,7 +115,7 @@
                         </div>
                         <div fxLayout fxLayoutAlign="start center">
                             <div fxFlex="40" class="font-14">Point Diesel RPM</div>
-                            <div class="bold font-20">
+                            <div class="bold font-16">
                                 <div *ngIf="rpmSheet?.rpm?.point_diesel || rpmSheet?.rpm?.point_diesel === 0; else hyphenTpl">
                                     {{ rpmSheet?.rpm?.point_diesel }}
                                 </div>
@@ -131,14 +131,14 @@
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <div fxLayout fxLayoutGap="5px" class="bold font-12">
+                    <!-- <div fxLayout fxLayoutGap="5px" class="bold font-12">
                         <div fxFlex="10"></div>
                         <div fxFlex="35"></div>
                         <div fxFlex>Previous RPM</div>
                         <div fxFlex>Total RPM</div>
                         <div fxFlex="40px"></div>
-                    </div>
-                    <div fxLayout="column" fxLayoutGap="16px">
+                    </div> -->
+                    <div fxLayout="column" fxLayoutGap="5px">
                         <div fxLayout fxLayoutGap="5px">
                             <div fxLayoutAlign="start center" fxFlex="10">
                                 <span *ngIf="vehicleServiceLimits?.e_oil_service; else hyphenTpl">
@@ -146,9 +146,6 @@
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="35">Engine Oil Service</div>
-                            <div fxLayoutAlign="start center" class="bold font-14" fxFlex>
-                                    {{rpmSheet?.service?.e_oil_service || 0 }}
-                            </div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
                                     {{ rpmSheet?.service?.e_oil_service + rpmSheet?.rpm?.running }}
                             </div>
@@ -166,9 +163,6 @@
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="35">Compressor Oil Service</div>
-                            <div fxLayoutAlign="start center" class="bold font-14" fxFlex>
-                                    {{rpmSheet?.service?.c_oil_service || 0 }}
-                            </div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
                                     {{ rpmSheet?.service?.c_oil_service + rpmSheet?.rpm?.running }}
                             </div>
@@ -185,9 +179,6 @@
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="35">Engine Air Filter</div>
-                            <div fxLayoutAlign="start center" class="bold font-14" fxFlex>
-                                    {{rpmSheet?.service?.e_air_filter || 0 }}
-                            </div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
                                     {{ rpmSheet?.service?.e_air_filter + rpmSheet?.rpm?.running }}
                             </div>
@@ -206,9 +197,6 @@
                                 <mat-icon>arrow_drop_down</mat-icon>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="35">Compressor Air Filter</div>
-                            <div fxLayoutAlign="start center" class="bold font-14" fxFlex>
-                                    {{rpmSheet?.service?.c_air_filter || 0 }}
-                            </div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
                                     {{ rpmSheet?.service?.c_air_filter + rpmSheet?.rpm?.running }}
                             </div>
@@ -225,11 +213,8 @@
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="35">Seperator</div>
-                            <div fxLayoutAlign="start center" class="bold font-14" fxFlex>
-                                    {{rpmSheet?.service?.e_air_filter || 0 }}
-                            </div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
-                                    {{ rpmSheet?.service?.e_air_filter + rpmSheet?.rpm?.running }}
+                                    {{ rpmSheet?.service?.seperator + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
                                 <button mat-icon-button color="primary">
@@ -259,15 +244,16 @@
                         <div fxFlex class="bold text-center">Diesel Avg</div>
                     </div>
                     <div class="diesel__content">
-                        <div fxFlex class="b-r">
-                            <div class="input-wrapper h-100" fxFlex>
-                                <input formControlName="compressor" type="text" class="h-100" placeholder="Liter"
-                                    positiveNumber>
+                        <div  fxFlex class="b-r compressor-diesel" [class.disabled]="!selectedVehicle || !bookId" #compressorInput>
+                            <div (click)="openDiesel(rpmSheet?.diesel?.compressor)" fxLayoutAlign="center center" class="input-wrapper h-100" fxFlex>
+                                {{ rpmSheet?.diesel?.compressor }}
+                                <!-- <input formControlName="compressor" type="text" class="h-100" placeholder="Liter"
+                                    positiveNumber> -->
                                 <mat-icon class="input-edit-icon">edit</mat-icon>
                                 <!-- <label>Count</label> -->
-                                <span class="focus-border">
+                                <!-- <span class="focus-border">
                                     <i></i>
-                                </span>
+                                </span> -->
                             </div>
                         </div>
                         <div fxFlex class="b-r">
@@ -298,7 +284,7 @@
                             </div>
                         </div>
                         <div fxFlex class="b-r">
-                            <div *ngIf="rpmSheet?.diesel?.previous_rpm || rpmSheet?.diesel?.previous_rpm === 0; else hyphenTpl">
+                            <div fxLayoutAlign="center center" fxFlex *ngIf="rpmSheet?.diesel?.previous_rpm || rpmSheet?.diesel?.previous_rpm === 0; else hyphenTpl">
                                 {{ rpmSheet?.diesel?.previous_rpm }}
                             </div>
                         </div>

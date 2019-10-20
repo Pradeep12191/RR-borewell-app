@@ -15,7 +15,7 @@ export class CardOverlayref {
     }
 
     close(data?): void {
-        this.common.blockScroll(false);
+        // this.common.blockScroll(false);
         this.overlayRef.dispose();
         this.afterClosed.next(data)
         this.afterClosed.complete();

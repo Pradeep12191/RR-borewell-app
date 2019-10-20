@@ -131,58 +131,46 @@
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <div fxLayout class="bold">
-                        <div fxFlex="45" class="m-r-20"></div>
+                    <div fxLayout fxLayoutGap="5px" class="bold font-12">
+                        <div fxFlex="10"></div>
+                        <div fxFlex="35"></div>
                         <div fxFlex>Previous RPM</div>
-                        <div fxFlex class="text-right">Total RPM</div>
+                        <div fxFlex>Total RPM</div>
                         <div fxFlex="40px"></div>
                     </div>
                     <div fxLayout="column" fxLayoutGap="16px">
-                        <div fxLayout fxLayoutGap="10px">
+                        <div fxLayout fxLayoutGap="5px">
                             <div fxLayoutAlign="start center" fxFlex="10">
                                 <span *ngIf="vehicleServiceLimits?.e_oil_service; else hyphenTpl">
                                     {{ vehicleServiceLimits?.e_oil_service }}
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="35">Engine Oil Service</div>
-                            <div fxLayoutAlign="start center" fxFlex class="font-14 bold">
-                                <div fxLayout fxFlex>
-                                    <div fxFlex>
-                                        {{rpmSheet?.service?.e_oil_service }}
-                                    </div>
-                                    <div *ngIf="rpmSheet?.rpm?.running" class="text-right" fxFlex fxLayout fxLayoutGap="5px">
-                                        <div fxFlex>
-                                            {{ rpmSheet?.service?.e_oil_service + rpmSheet?.rpm?.running }}
-                                        </div>
-                                        <!-- <div class="badge">new</div> -->
-                                    </div>
-                                </div>
+                            <div fxLayoutAlign="start center" class="bold font-14" fxFlex>
+                                    {{rpmSheet?.service?.e_oil_service || 0 }}
                             </div>
+                            <div fxLayoutAlign="start center" fxFlex class="bold font-14">
+                                    {{ rpmSheet?.service?.e_oil_service + rpmSheet?.rpm?.running }}
+                            </div>
+                           
                             <div fxLayoutAlign="end center">
                                 <button mat-icon-button color="primary">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
                         </div>
-                        <div fxLayout fxLayoutGap="10px">
+                        <div fxLayout fxLayoutGap="5px">
                             <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
                                 <span *ngIf="vehicleServiceLimits?.c_oil_service; else hyphenTpl">
                                     {{ vehicleServiceLimits?.c_oil_service }}
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="35">Compressor Oil Service</div>
-                            <div fxLayoutAlign="start center" fxFlex class="font-14 bold">
-                                <div fxLayout fxFlex>
-                                    <div fxFlex>
-                                        {{rpmSheet?.service?.c_oil_service }}
-                                    </div>
-                                    <div *ngIf="rpmSheet?.rpm?.running" class="text-right" fxFlex fxLayout fxLayoutGap="5px">
-                                        <div fxFlex>
-                                            {{ rpmSheet?.service?.c_oil_service + rpmSheet?.rpm?.running }}
-                                        </div>
-                                        <!-- <div class="badge">new</div> -->
-                                    </div>
-                                </div>
+                            <div fxLayoutAlign="start center" class="bold font-14" fxFlex>
+                                    {{rpmSheet?.service?.c_oil_service || 0 }}
+                            </div>
+                            <div fxLayoutAlign="start center" fxFlex class="bold font-14">
+                                    {{ rpmSheet?.service?.c_oil_service + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
                                 <button mat-icon-button color="primary">
@@ -190,25 +178,18 @@
                                 </button>
                             </div>
                         </div>
-                        <div fxLayout fxLayoutGap="10px">
+                        <div fxLayout fxLayoutGap="5px">
                             <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
                                 <span *ngIf="vehicleServiceLimits?.e_air_filter; else hyphenTpl">
-                                    {{ vehicleServiceLimits?.e_air_filter}}
+                                    {{ vehicleServiceLimits?.e_air_filter }}
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="35">Engine Air Filter</div>
-                            <div fxLayoutAlign="start center" fxFlex class="font-14 bold">
-                                <div fxLayout fxFlex>
-                                    <div fxFlex>
-                                        {{rpmSheet?.service?.e_air_filter }}
-                                    </div>
-                                    <div *ngIf="rpmSheet?.rpm?.running" class="text-right" fxFlex fxLayout fxLayoutGap="5px">
-                                        <div fxFlex>
-                                            {{ rpmSheet?.service?.e_air_filter + rpmSheet?.rpm?.running }}
-                                        </div>
-                                        <!-- <div class="badge">new</div> -->
-                                    </div>
-                                </div>
+                            <div fxLayoutAlign="start center" class="bold font-14" fxFlex>
+                                    {{rpmSheet?.service?.e_air_filter || 0 }}
+                            </div>
+                            <div fxLayoutAlign="start center" fxFlex class="bold font-14">
+                                    {{ rpmSheet?.service?.e_air_filter + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
                                 <button mat-icon-button color="primary">
@@ -216,7 +197,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div fxLayout fxLayoutGap="10px">
+                        <div fxLayout fxLayoutGap="5px">
                             <div *ngIf="vehicleServiceLimits?.c_air_filter; else hyphenTpl10" [matMenuTriggerFor]="menu"
                                 fxLayoutAlign="start center" fxFlex="10" class="m-r-16" class="link-label">
                                 <span>
@@ -225,18 +206,11 @@
                                 <mat-icon>arrow_drop_down</mat-icon>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="35">Compressor Air Filter</div>
-                            <div fxLayoutAlign="start center" fxFlex class="font-14 bold">
-                                <div fxLayout fxFlex>
-                                    <div fxFlex>
-                                        {{rpmSheet?.service?.c_air_filter }}
-                                    </div>
-                                    <div *ngIf="rpmSheet?.rpm?.running" class="text-right" fxFlex fxLayout fxLayoutGap="5px">
-                                        <div fxFlex>
-                                            {{ rpmSheet?.service?.c_air_filter + rpmSheet?.rpm?.running }}
-                                        </div>
-                                        <!-- <div class="badge">new</div> -->
-                                    </div>
-                                </div>
+                            <div fxLayoutAlign="start center" class="bold font-14" fxFlex>
+                                    {{rpmSheet?.service?.c_air_filter || 0 }}
+                            </div>
+                            <div fxLayoutAlign="start center" fxFlex class="bold font-14">
+                                    {{ rpmSheet?.service?.c_air_filter + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
                                 <button mat-icon-button color="primary">
@@ -244,25 +218,18 @@
                                 </button>
                             </div>
                         </div>
-                        <div fxLayout fxLayoutGap="10px">
+                        <div fxLayout fxLayoutGap="5px">
                             <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
                                 <span *ngIf="vehicleServiceLimits?.seperator; else hyphenTpl">
                                     {{ vehicleServiceLimits?.seperator}}
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="35">Seperator</div>
-                            <div fxLayoutAlign="start center" fxFlex class="font-14 bold">
-                                <div fxLayout fxFlex>
-                                    <div fxFlex>
-                                        {{rpmSheet?.service?.seperator }}
-                                    </div>
-                                    <div *ngIf="rpmSheet?.rpm?.running" class="text-right" fxFlex fxLayout fxLayoutGap="5px">
-                                        <div fxFlex>
-                                            {{ rpmSheet?.service?.seperator + rpmSheet?.rpm?.running }}
-                                        </div>
-                                        <!-- <div class="badge">new</div> -->
-                                    </div>
-                                </div>
+                            <div fxLayoutAlign="start center" class="bold font-14" fxFlex>
+                                    {{rpmSheet?.service?.e_air_filter || 0 }}
+                            </div>
+                            <div fxLayoutAlign="start center" fxFlex class="bold font-14">
+                                    {{ rpmSheet?.service?.e_air_filter + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
                                 <button mat-icon-button color="primary">
@@ -331,8 +298,8 @@
                             </div>
                         </div>
                         <div fxFlex class="b-r">
-                            <div *ngIf="rpmSheet?.diesel?.point_diesel || rpmSheet?.diesel?.point_diesel === 0; else hyphenTpl">
-                                {{ rpmSheet?.diesel?.point_diesel }}
+                            <div *ngIf="rpmSheet?.diesel?.previous_rpm || rpmSheet?.diesel?.previous_rpm === 0; else hyphenTpl">
+                                {{ rpmSheet?.diesel?.previous_rpm }}
                             </div>
                         </div>
                         <div fxFlex>
@@ -355,7 +322,7 @@
                         <div fxLayout fxLayoutGap="25px" class="label-row">
                             <div fxFlex="25" fxLayoutAlign="start center">Feet Avg</div>
                             <div>
-                                <div class="label-container">{{ rpmSheet?.depth?.avg }}</div>
+                                <div class="label-container">{{ rpmSheet?.depth?.average }}</div>
                             </div>
                         </div>
                         <div fxLayout fxLayoutGap="25px">

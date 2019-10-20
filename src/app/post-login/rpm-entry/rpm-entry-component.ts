@@ -534,6 +534,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         if (endRpm > start) {
             running = endRpm - start
+            running = Math.round(running * 100) / 100;
         } else {
             running = null
         }
@@ -778,6 +779,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             (this.dateInput.nativeElement as HTMLInputElement).focus();
             return this.snackBar.open('Date is required', null, { duration: 2000 })
         }
+
         const pointExpenseFeet = this.form.value.pointExpenseFeet
         this.rpmEntryTable.pointExpenseFeet = pointExpenseFeet;
         const payload: RpmEntrySheet = {
@@ -814,11 +816,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 lorry: +this.form.value.diesel.lorry
             },
             service: {
-                c_air_filter: this.rpmSheet.service.c_air_filter,
-                c_oil_service: this.rpmSheet.service.c_oil_service,
-                e_air_filter: this.rpmSheet.service.c_air_filter,
-                e_oil_service: this.rpmSheet.service.e_oil_service,
-                seperator: this.rpmSheet.service.seperator
+                c_air_filter: this.rpmSheet.service.c_air_filter + this.rpmSheet.rpm.running,
+                c_oil_service: this.rpmSheet.service.c_oil_service + this.rpmSheet.rpm.running,
+                e_air_filter: this.rpmSheet.service.c_air_filter + this.rpmSheet.rpm.running,
+                e_oil_service: this.rpmSheet.service.e_oil_service + this.rpmSheet.rpm.running,
+                seperator: this.rpmSheet.service.seperator + this.rpmSheet.rpm.running
             },
             depth: {
                 average: 0,

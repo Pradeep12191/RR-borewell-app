@@ -26,7 +26,7 @@ export class AddDieselPopupComponent implements AfterViewInit {
         this.liter = data;
         this.appearance = this.config.getConfig('formAppearance')
         this.dieselForm = this.fb.group({
-            liter: [data.diesel, Validators.required]
+            liter: ['', Validators.required]
         })
     };
 

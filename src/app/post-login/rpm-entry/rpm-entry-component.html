@@ -147,9 +147,9 @@
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="35">Engine Oil Service</div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
-                                    {{ rpmSheet?.service?.e_oil_service + rpmSheet?.rpm?.running }}
+                                {{ rpmSheet?.service?.e_oil_service + rpmSheet?.rpm?.running }}
                             </div>
-                           
+
                             <div fxLayoutAlign="end center">
                                 <button mat-icon-button color="primary">
                                     <mat-icon>refresh</mat-icon>
@@ -164,7 +164,7 @@
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="35">Compressor Oil Service</div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
-                                    {{ rpmSheet?.service?.c_oil_service + rpmSheet?.rpm?.running }}
+                                {{ rpmSheet?.service?.c_oil_service + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
                                 <button mat-icon-button color="primary">
@@ -180,7 +180,7 @@
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="35">Engine Air Filter</div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
-                                    {{ rpmSheet?.service?.e_air_filter + rpmSheet?.rpm?.running }}
+                                {{ rpmSheet?.service?.e_air_filter + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
                                 <button mat-icon-button color="primary">
@@ -198,7 +198,7 @@
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="35">Compressor Air Filter</div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
-                                    {{ rpmSheet?.service?.c_air_filter + rpmSheet?.rpm?.running }}
+                                {{ rpmSheet?.service?.c_air_filter + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
                                 <button mat-icon-button color="primary">
@@ -214,7 +214,7 @@
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="35">Seperator</div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
-                                    {{ rpmSheet?.service?.seperator + rpmSheet?.rpm?.running }}
+                                {{ rpmSheet?.service?.seperator + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
                                 <button mat-icon-button color="primary">
@@ -244,16 +244,18 @@
                         <div fxFlex class="bold text-center">Diesel Avg</div>
                     </div>
                     <div class="diesel__content">
-                        <div  fxFlex class="b-r compressor-diesel" [class.disabled]="!selectedVehicle || !bookId" #compressorInput>
-                            <div (click)="openDiesel(rpmSheet?.diesel?.compressor)" fxLayoutAlign="center center" class="input-wrapper h-100" fxFlex>
+                        <div fxFlex class="b-r compressor-diesel" [class.disabled]="!selectedVehicle || !bookId"
+                            #compressorInput>
+                            <div (click)="openDiesel(rpmSheet?.diesel?.compressor)" fxLayoutAlign="center center" class="input-wrapper h-100"
+                                fxFlex>
                                 {{ rpmSheet?.diesel?.compressor }}
                                 <mat-icon class="input-edit-icon">edit</mat-icon>
                             </div>
                         </div>
                         <div fxFlex class="b-r">
                             <div class="input-wrapper h-100" fxFlex>
-                                <input formControlName="lorry" (input)="updateTotalDiesel()" type="text" class="h-100" placeholder="Liter"
-                                    positiveNumber>
+                                <input formControlName="lorry" (input)="updateTotalDiesel()" type="text" class="h-100"
+                                    placeholder="Liter" positiveNumber>
                                 <mat-icon class="input-edit-icon">edit</mat-icon>
                                 <!-- <label>Count</label> -->
                                 <span class="focus-border">
@@ -263,8 +265,8 @@
                         </div>
                         <div fxFlex class="b-r">
                             <div class="input-wrapper h-100" fxFlex>
-                                <input formControlName="support" (input)="updateTotalDiesel()" type="text" class="h-100" placeholder="Liter"
-                                    positiveNumber>
+                                <input formControlName="support" (input)="updateTotalDiesel()" type="text" class="h-100"
+                                    placeholder="Liter" positiveNumber>
                                 <mat-icon class="input-edit-icon">edit</mat-icon>
                                 <!-- <label>Count</label> -->
                                 <span class="focus-border">
@@ -326,20 +328,23 @@
                             </div>
                             <mat-form-field fxFlex="15" class="calc-field">
                                 <mat-label>Feet</mat-label>
-                                <mat-select formControlName="feet">
+                                <mat-select formControlName="feet" (selectionChange)="updateExtraFeet()">
                                     <mat-option [value]="rpmHourFeet" *ngFor="let rpmHourFeet of rpmHourFeets">{{
                                         rpmHourFeet.limit }}</mat-option>
                                 </mat-select>
                             </mat-form-field>
+                            <div fxLayoutAlign="start center" *ngIf="rpmSheet?.depth?.above?.extra_feet > 0" class="bold font-14">{{
+                                rpmSheet?.depth?.above?.extra_feet }}</div>
                             <div fxLayoutAlign="start center">Feet</div>
                             <mat-form-field fxFlex="8" class="calc-field">
                                 <mat-label>hrs</mat-label>
-                                <input type="text" positiveNumber formControlName="hrs" matInput>
+                                <input type="text" (input)="updateFeetAvg()" positiveNumber formControlName="hrs"
+                                    matInput>
                             </mat-form-field>
                             <div fxLayoutAlign="start center">hrs</div>
                             <mat-form-field fxFlex="8" class="calc-field">
                                 <mat-label>min</mat-label>
-                                <input type="text" positiveNumber matInput formControlName="min">
+                                <input type="text" (input)="updateFeetAvg()" positiveNumber matInput formControlName="min">
                             </mat-form-field>
                             <div fxLayoutAlign="start center">min</div>
                         </div>
@@ -351,7 +356,7 @@
                     <mat-card-title>Bit Details</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <div fxLayout="column" fxLayoutGap="15px">
+                    <div fxLayout="column">
                         <div fxLayout fxLayoutGap="15px">
                             <div fxLayoutAlign="start center" fxFlex="30">TCD no</div>
                             <mat-form-field fxFlex="25">
@@ -363,27 +368,27 @@
                                 </mat-select>
                             </mat-form-field>
                             <div fxLayoutAlign="start center">Bit No</div>
-                            <div class="font-20 bold" fxLayoutAlign="start center">{{ form.get('bit').value?.bit_no }}</div>
+                            <div class="font-16 bold" fxLayoutAlign="start center">{{ form.get('bit').value?.bit_no }}</div>
                         </div>
-                        <div fxLayout fxLayoutGap="15px">
-                            <div fxLayoutAlign="start center" fxFlex="30">Bit Running Feet</div>
-                            <div class="bold font-20">
+                        <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
+                            <div fxFlex="30">Bit Running Feet</div>
+                            <div class="bold font-16">
                                 <div *ngIf="rpmSheet?.bit?.running_feet ||rpmSheet?.bit?.running_feet === 0; else hyphenTpl">
                                     {{ rpmSheet?.bit?.running_feet }}
                                 </div>
                             </div>
                         </div>
-                        <div fxLayout fxLayoutGap="15px">
+                        <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
                             <div fxLayoutAlign="start center" fxFlex="30">Bit Previous Feet</div>
-                            <div class="bold font-20">
+                            <div class="bold font-16">
                                 <div *ngIf="rpmSheet?.bit?.total_feet || rpmSheet?.bit?.total_feet === 0; else hyphenTpl">
                                     {{ rpmSheet?.bit?.previous_feet }}
                                 </div>
                             </div>
                         </div>
-                        <div fxLayout fxLayoutGap="15px">
+                        <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
                             <div fxLayoutAlign="start center" fxFlex="30">Total Feet</div>
-                            <div class="bold font-20">
+                            <div class="bold font-16">
                                 <div *ngIf="rpmSheet?.bit?.total_feet || rpmSheet?.bit?.running_feet === 0; else hyphenTpl">
                                     {{ rpmSheet?.bit?.total_feet }}
                                 </div>
@@ -391,7 +396,7 @@
                         </div>
                         <div fxLayout fxLayoutGap="15px">
                             <div fxLayoutAlign="start center" fxFlex="30">Hammer</div>
-                            <div fxLayoutAlign="start center" class="bold font-20">
+                            <div fxLayoutAlign="start center" class="bold font-16">
                                 <div *ngIf="rpmSheet?.bit?.hammer || rpmSheet?.bit?.hammer === 0; else hyphenTpl">
                                     {{ rpmSheet?.bit?.hammer }}
                                 </div>
@@ -402,7 +407,7 @@
                         </div>
                         <div fxLayout fxLayoutGap="15px">
                             <div fxLayoutAlign="start center" fxFlex="30">Piston</div>
-                            <div fxLayoutAlign="start center" class="bold font-20">
+                            <div fxLayoutAlign="start center" class="bold font-16">
                                 <div *ngIf="rpmSheet?.bit?.piston || rpmSheet?.bit?.piston === 0; else hyphenTpl">
                                     {{ rpmSheet?.bit?.piston }}
                                 </div>

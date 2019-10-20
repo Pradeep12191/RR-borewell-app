@@ -520,8 +520,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.rpmEntryNo = rpmSheet.rpm_sheet_no;
                 this.rpmSheet = rpmSheet;
                 this.enableAllControls();
+                this.addDepthToSheet();
             }
-
         })
     };
 
@@ -558,6 +558,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.rpmSheet.rpm.point_diesel = Math.round(this.rpmSheet.rpm.point_diesel * 100) / 100;
             }
         }
+
+        this.updateFeetAvg();
     }
 
     assignVehicle() {
@@ -640,6 +642,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.updatePreviousStockFeet(lastRpmEntrySheet);
             this.rpmSheet = lastRpmEntrySheet;
             this.enableAllControls();
+            this.addDepthToSheet();
             this.resetStockFeets();
         }, (err) => {
 
@@ -752,7 +755,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     enableAllControls() {
         this.form.get('bit').enable();
         this.form.get('diesel').enable();
-        this.form.get('depth').enable();
+        this.form.get('depth.bore').enable();
+        this.form.get('depth.pipeErection').enable();
+        this.form.get('depth.above.feet').enable();
         this.form.get('rpm').enable();
 
         this.form.get('isInVehicle').enable();
@@ -811,7 +816,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 avg = 0;
             } else {
                 avg = compressorDiesel / previousDieselRpm;
-                avg  = Math.round(avg * 100) / 100;
+                avg = Math.round(avg * 100) / 100;
             }
             this.rpmSheet.diesel.average = avg;
         }
@@ -842,6 +847,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             runningFeet = 0;
         }
+
+        this.updateExtraFeet();
 
         if (this.rpmSheet && this.rpmSheet.bit) {
             this.rpmSheet.bit.running_feet = runningFeet;
@@ -956,6 +963,80 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     private buildPointExpenseForm(pipeType, pipeId, pipeSize) {
         return this.fb.group({ pipeType, pipeId, pipeSize, value: { value: '', disabled: true } })
     }
+
+    private updateFeetAvg() {
+        const hrs = +this.form.get('depth.above.hrs').value;
+        const min = +this.form.get('depth.above.min').value;
+        if (this.rpmSheet.depth) {
+            const extraFeet = +this.rpmSheet.depth.above.extra_feet;
+            const runningRpm = +this.rpmSheet.rpm.running;
+            let feetAvg = 0;
+
+            if (extraFeet) {
+                const extraRpm = this.convertToRpm(hrs, min);
+                let diffRpm = extraRpm;
+                if (runningRpm) {
+                    diffRpm = runningRpm - extraRpm;
+                }
+                if (diffRpm > 0) {
+                    feetAvg = extraFeet / diffRpm;
+                }
+                this.rpmSheet.depth.average = Math.round(feetAvg * 100) / 100;
+            } else {
+                this.rpmSheet.depth.average = 0;
+            }
+        }
+    }
+
+    private convertToRpm(h = 0, m = 0) {
+        const hrs = h ? +h : 0;
+        const min = m ? +m : 0;
+        const rpmMin = 60;
+        let rpm = 0;
+        const totalMin = hrs * 60 + min;
+
+        if (totalMin) {
+            rpm = totalMin / rpmMin;
+        }
+        return rpm;
+    }
+
+    private updateExtraFeet() {
+        const aboveFeet: ServiceLimit = this.form.get('depth.above.feet').value;
+        const boreDepth = +this.form.get('depth.bore').value;
+        let extraFeet = 0;
+
+        extraFeet = boreDepth - aboveFeet.limit;
+
+        if (this.rpmSheet.depth) {
+            if (extraFeet > 0) {
+                this.rpmSheet.depth.above.extra_feet = extraFeet;
+                this.form.get('depth.above.hrs').enable();
+                this.form.get('depth.above.min').enable();
+            } else {
+                this.form.get('depth.above.hrs').reset();
+                this.form.get('depth.above.min').reset();
+                this.form.get('depth.above.hrs').disable();
+                this.form.get('depth.above.min').disable();
+                this.rpmSheet.depth.above.extra_feet = 0;
+            }
+        }
+        this.updateFeetAvg();
+    }
+
+    // as depth details are not available in 
+    private addDepthToSheet() {
+        setTimeout(() => {
+            this.form.get('depth.above.feet').setValue(this.rpmHourFeets[0]);
+        });
+        this.rpmSheet.depth = {
+            above: { extra_feet: 0, feet: this.rpmHourFeets[0], hrs: 0, min: 0 },
+            average: 0,
+            bore: 0,
+            pipe_erection: 0
+        }
+    }
+
     tableClick($event: MouseEvent) {
         const trigger = $event.target as HTMLElement;
         if (trigger.tagName === 'INPUT' && trigger.attributes.getNamedItem('disabled') && !this.selectedVehicle) {

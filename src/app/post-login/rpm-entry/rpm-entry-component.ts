@@ -501,10 +501,15 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.routeDataSubscription) { this.routeDataSubscription.unsubscribe() }
     }
 
-    confirmServiceCompletion(serviceName) {
+    confirmServiceCompletion(serviceName, propName) {
         const dialogRef = this.dialog.open(ServiceCompleteConfirmDialog, {
             data: {
                 serviceName
+            }
+        });
+        dialogRef.afterClosed().subscribe((res) => {
+            if (res === 'yes') {
+                this.rpmSheet.service[propName] = 0;
             }
         })
     }
@@ -1008,6 +1013,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }
 
             this.rpmSheet = lastRpmEntrySheet;
+            this.addDepthToSheet();
             this.updatePreviousStockFeet(lastRpmEntrySheet);
         }, () => {
             this.toastr.error('Error while saving RPM Entry Sheet')

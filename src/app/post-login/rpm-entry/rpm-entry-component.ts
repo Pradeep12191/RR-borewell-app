@@ -14,7 +14,7 @@ import { AssignVehicleDialogComponent } from './assign-vehicle-dialog/assign-veh
 import { Godown } from '../pipe/Godown';
 import { ConfigService } from '../../services/config.service';
 import { LoaderService } from '../../services/loader-service';
-import { finalize } from 'rxjs/operators';
+import { finalize, mergeMap, map } from 'rxjs/operators';
 import { zip } from 'rxjs';
 import { RpmEntryService } from './rpm-entry.service';
 import { Book } from '../../models/Book';
@@ -563,7 +563,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             running = endRpm - start
             running = Math.round(running * 100) / 100;
         } else {
-            running = null
+            running = 0;
         }
 
         if (this.rpmSheet.rpm) {
@@ -729,6 +729,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.form.get('rpm.manual').reset('');
         this.form.get('rpm.end').reset('');
+        this.form.get('rpm.tracEndHour').reset('');
         this.form.get('diesel.compressor').reset('');
         this.form.get('diesel.lorry').reset('');
         this.form.get('diesel.support').reset('');
@@ -744,7 +745,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('outRpmNo').reset();
         this.form.get('isDamage').reset();
         this.form.get('isInVehicle').reset();
-        this.form.get('remarks').reset();
+        this.form.get('remarks').reset('');
         this.date = null;
         this.form.get('isOutVehicle').reset();
         this.veicleExInFormArray.controls.forEach(ctrl => {
@@ -873,7 +874,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     updateBitTotalFeet(bit: BitSerialNo) {
         const boreDepth = +this.form.get('depth.bore').value;
         const pipeErectionDepth = +this.form.get('depth.pipeErection').value;
-        
+
         let runningFeet = 0;
         let bitPreviousFeet = 0;
 
@@ -921,7 +922,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             f_rpm_table_data: [],
             rpm: {
                 tractor_start_hour: this.rpmSheet.rpm.tractor_start_hour,
-                tractor_end_hour: this.form.value.rpm.tracEndHour,
+                tractor_end_hour: +this.form.value.rpm.tracEndHour,
                 start: this.rpmSheet.rpm.start,
                 manual: +this.form.value.rpm.manual,
                 end: +this.form.value.rpm.end,
@@ -951,8 +952,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 average: 0,
                 above: {
                     feet: this.form.value.depth.above.feet,
-                    hrs: +this.form.value.depth.above.hrs,
-                    min: +this.form.value.depth.above.min,
+                    hrs: this.form.value.depth.above.hrs ? +this.form.value.depth.above.hrs : 0,
+                    min: this.form.value.depth.above.min ? +this.form.value.depth.above.min : 0,
                 },
                 bore: +this.form.value.depth.bore,
                 pipe_erection: +this.form.value.depth.pipeErection
@@ -985,11 +986,21 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 point_expenses_feet: +this.form.value.pointExpenseFeet.find(p => +p.pipeId === +pipe.id).value || 0,
             }
             payload.f_rpm_table_data.push(rpmEntry);
-        }
-        this.rpmEntryService.submitRpm(payload).subscribe((lastRpmEntrySheet) => {
+        };
+        this.rpmEntryService.submitRpm(payload).pipe(
+            mergeMap((lastRpmEntrySheet) => {
+                return this.rpmEntryService.getAssignedBits(this.selectedVehicle).pipe(map((assignedBits) => {
+                    return { lastRpmEntrySheet, assignedBits }
+                }));
+            }),
+        ).subscribe(({ lastRpmEntrySheet, assignedBits }) => {
+            this.toastr.success('Rpm Saved Successfully', null, { timeOut: 3000 });
             this.common.scrollTop();
             this.resetStockFeets();
-
+            if (assignedBits) {
+                this.assignedBits = assignedBits;
+                this.form.get('bit').reset()
+            }
             if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
                 this.resetBook();
                 this.addBook(true);
@@ -998,7 +1009,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
             this.rpmSheet = lastRpmEntrySheet;
             this.updatePreviousStockFeet(lastRpmEntrySheet);
-        }, () => { })
+        }, () => {
+            this.toastr.error('Error while saving RPM Entry Sheet')
+        })
     }
 
     private buildPointExpenseForm(pipeType, pipeId, pipeSize) {

@@ -167,7 +167,7 @@
                             </div>
 
                             <div fxLayoutAlign="end center">
-                                <button (click)="confirmServiceCompletion('Tractor Engine Oil')" mat-icon-button color="primary">
+                                <button [disabled]="!selectedVehicle || !bookId" (click)="confirmServiceCompletion('Tractor Engine Oil')" mat-icon-button color="primary">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -184,7 +184,7 @@
                             </div>
 
                             <div fxLayoutAlign="end center">
-                                <button (click)="confirmServiceCompletion('Tractor Gear Oil')" mat-icon-button color="primary">
+                                <button [disabled]="!selectedVehicle || !bookId" (click)="confirmServiceCompletion('Tractor Gear Oil')" mat-icon-button color="primary">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -201,7 +201,7 @@
                             </div>
 
                             <div fxLayoutAlign="end center">
-                                <button mat-icon-button color="primary" (click)="confirmServiceCompletion('Engine Oil')">
+                                <button [disabled]="!selectedVehicle || !bookId" mat-icon-button color="primary" (click)="confirmServiceCompletion('Engine Oil')">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -217,7 +217,7 @@
                                 {{ rpmSheet?.service?.c_oil_service + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
-                                <button mat-icon-button color="primary" (click)="confirmServiceCompletion('Compressor Oil')">
+                                <button [disabled]="!selectedVehicle || !bookId" mat-icon-button color="primary" (click)="confirmServiceCompletion('Compressor Oil')">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -233,7 +233,7 @@
                                 {{ rpmSheet?.service?.e_air_filter + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
-                                <button mat-icon-button color="primary" (click)="confirmServiceCompletion('Engine Air Filter')">
+                                <button [disabled]="!selectedVehicle || !bookId" mat-icon-button color="primary" (click)="confirmServiceCompletion('Engine Air Filter')">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -251,7 +251,7 @@
                                 {{ rpmSheet?.service?.c_air_filter + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
-                                <button mat-icon-button color="primary">
+                                <button (click)="confirmServiceCompletion('Seperator')" [disabled]="!selectedVehicle || !bookId" mat-icon-button color="primary">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -267,7 +267,7 @@
                                 {{ rpmSheet?.service?.seperator + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
-                                <button mat-icon-button color="primary" (click)="confirmServiceCompletion('Seperator')">
+                                <button [disabled]="!selectedVehicle || !bookId" mat-icon-button color="primary" (click)="confirmServiceCompletion('Seperator')">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -451,7 +451,7 @@
                                     {{ rpmSheet?.bit?.hammer }}
                                 </div>
                             </div>
-                            <button mat-icon-button color="primary">
+                            <button mat-icon-button color="primary" [disabled]="!selectedVehicle || !bookId">
                                 <mat-icon>refresh</mat-icon>
                             </button>
                         </div>
@@ -462,7 +462,7 @@
                                     {{ rpmSheet?.bit?.piston }}
                                 </div>
                             </div>
-                            <button mat-icon-button color="primary">
+                            <button mat-icon-button color="primary" [disabled]="!selectedVehicle || !bookId">
                                 <mat-icon>refresh</mat-icon>
                             </button>
                         </div>

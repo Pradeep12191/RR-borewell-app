@@ -72,6 +72,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     vehicleServiceLimits: VehicleServices
     book: Book;
     bookRequired = false;
+    tracRunningRpm = 0;
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
     @ViewChild('inVehicleSelect', { static: false }) inVehicleSelect: MatSelect;
@@ -132,6 +133,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             rpm: this.fb.group({
                 end: { value: '', disabled: true },
                 manual: { value: '', disabled: true },
+                tracEndHour: { value: '', disabled: true },
                 isManual: false
             }),
             diesel: this.fb.group({
@@ -562,6 +564,20 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.updateFeetAvg();
     }
 
+    onTracEndInput() {
+        const tracEndHour = +this.form.get('rpm.tracEndHour').value;
+        const tracStartHour = +this.rpmSheet.rpm.tractor_start_hour;
+        let runningTracRpm = 0;
+
+        if (tracEndHour > tracStartHour) {
+            runningTracRpm = tracEndHour - tracStartHour;
+            runningTracRpm = Math.round(runningTracRpm * 100) / 100;
+        } else {
+            runningTracRpm = 0;
+        }
+        this.tracRunningRpm = runningTracRpm;
+    }
+
     assignVehicle() {
         const dialogRef = this.dialog.open(AssignVehicleDialogComponent, {
             data: {
@@ -885,6 +901,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             date: this.date ? (this.date as Moment).format('DD-MM-YYYY') : '',
             f_rpm_table_data: [],
             rpm: {
+                tractor_start_hour: this.rpmSheet.rpm.tractor_start_hour,
+                tractor_end_hour: this.form.value.rpm.tracEndHour,
                 start: this.rpmSheet.rpm.start,
                 manual: +this.form.value.rpm.manual,
                 end: +this.form.value.rpm.end,
@@ -902,11 +920,13 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 lorry: +this.form.value.diesel.lorry
             },
             service: {
-                c_air_filter: this.rpmSheet.service.c_air_filter + this.rpmSheet.rpm.running,
-                c_oil_service: this.rpmSheet.service.c_oil_service + this.rpmSheet.rpm.running,
-                e_air_filter: this.rpmSheet.service.c_air_filter + this.rpmSheet.rpm.running,
-                e_oil_service: this.rpmSheet.service.e_oil_service + this.rpmSheet.rpm.running,
-                seperator: this.rpmSheet.service.seperator + this.rpmSheet.rpm.running
+                tractor_e_oil_service: this.roundValue(this.rpmSheet.service.tractor_e_oil_service + this.tracRunningRpm),
+                tractor_g_oil_service: this.roundValue(this.rpmSheet.service.tractor_g_oil_service + this.tracRunningRpm),
+                c_air_filter: this.roundValue(this.rpmSheet.service.c_air_filter + this.rpmSheet.rpm.running),
+                c_oil_service: this.roundValue(this.rpmSheet.service.c_oil_service + this.rpmSheet.rpm.running),
+                e_air_filter: this.roundValue(this.rpmSheet.service.c_air_filter + this.rpmSheet.rpm.running),
+                e_oil_service: this.roundValue(this.rpmSheet.service.e_oil_service + this.rpmSheet.rpm.running),
+                seperator: this.roundValue(this.rpmSheet.service.seperator + this.rpmSheet.rpm.running)
             },
             depth: {
                 average: 0,
@@ -969,24 +989,21 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     updateFeetAvg() {
         const hrs = +this.form.get('depth.above.hrs').value;
         const min = +this.form.get('depth.above.min').value;
+        const aboveFeet: ServiceLimit = this.form.get('depth.above.feet').value;
         if (this.rpmSheet.depth) {
             const extraFeet = +this.rpmSheet.depth.above.extra_feet;
             const runningRpm = +this.rpmSheet.rpm.running;
             let feetAvg = 0;
 
-            if (extraFeet) {
-                const extraRpm = this.convertToRpm(hrs, min);
-                let diffRpm = extraRpm;
-                if (runningRpm) {
-                    diffRpm = runningRpm - extraRpm;
-                }
-                if (diffRpm > 0) {
-                    feetAvg = extraFeet / diffRpm;
-                }
-                this.rpmSheet.depth.average = Math.round(feetAvg * 100) / 100;
-            } else {
-                this.rpmSheet.depth.average = 0;
+            const extraRpm = this.convertToRpm(hrs, min);
+            let diffRpm = extraRpm;
+            if (runningRpm) {
+                diffRpm = runningRpm - extraRpm;
             }
+            if (diffRpm > 0) {
+                feetAvg = aboveFeet.limit / diffRpm;
+            }
+            this.rpmSheet.depth.average = Math.floor(feetAvg);
         }
     }
 
@@ -1037,6 +1054,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             bore: 0,
             pipe_erection: 0
         }
+    }
+
+    private roundValue(value) {
+        if (value) {
+            return Math.round(value * 100) / 100;
+        }
+
+        return 0;
     }
 
     tableClick($event: MouseEvent) {

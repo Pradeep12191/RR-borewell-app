@@ -79,6 +79,22 @@
                 <mat-card-content>
                     <div fxLayout="column">
                         <div fxLayout fxLayoutAlign="start center">
+                            <div fxFlex="40" class="font-14">Tractor Start Hour</div>
+                            <div class="bold font-16">
+                                <div *ngIf="rpmSheet?.rpm?.tractor_start_hour || rpmSheet?.rpm?.tractor_start_hour === 0; else hyphenTpl">
+                                    {{rpmSheet?.rpm?.tractor_start_hour}}
+                                </div>
+                            </div>
+                        </div>
+                        <div fxLayout fxLayoutAlign="start center">
+                            <div fxFlex="40">Tractor End Hour</div>
+                            <mat-form-field fxFlex="50">
+                                <mat-label>Hour</mat-label>
+                                <input (input)="onTracEndInput()" formControlName="tracEndHour" [allowDecimal]="true" (input)="onRpmEndInput()"
+                                    type="text" matInput positiveNumber>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout fxLayoutAlign="start center">
                             <div fxFlex="40" class="font-14">Start RPM</div>
                             <div class="bold font-16">
                                 <div *ngIf="rpmSheet?.rpm?.start || rpmSheet?.rpm?.start === 0; else hyphenTpl">
@@ -141,11 +157,45 @@
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div fxLayout fxLayoutGap="5px">
                             <div fxLayoutAlign="start center" fxFlex="10">
+                                <span *ngIf="vehicleServiceLimits?.tractor_e_oil_service; else hyphenTpl">
+                                    {{ vehicleServiceLimits?.tractor_e_oil_service }}
+                                </span>
+                            </div>
+                            <div fxLayoutAlign="start center" fxFlex="45">Tractor Engine Oil Service</div>
+                            <div fxLayoutAlign="start center" fxFlex class="bold font-14">
+                                {{ rpmSheet?.service?.tractor_e_oil_service + tracRunningRpm }}
+                            </div>
+
+                            <div fxLayoutAlign="end center">
+                                <button mat-icon-button color="primary">
+                                    <mat-icon>refresh</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <div fxLayout fxLayoutGap="5px">
+                            <div fxLayoutAlign="start center" fxFlex="10">
+                                <span *ngIf="vehicleServiceLimits?.tractor_g_oil_service; else hyphenTpl">
+                                    {{ vehicleServiceLimits?.tractor_g_oil_service }}
+                                </span>
+                            </div>
+                            <div fxLayoutAlign="start center" fxFlex="45">Trator Gear Oil Service</div>
+                            <div fxLayoutAlign="start center" fxFlex class="bold font-14">
+                                {{ rpmSheet?.service?.tractor_g_oil_service + tracRunningRpm }}
+                            </div>
+
+                            <div fxLayoutAlign="end center">
+                                <button mat-icon-button color="primary">
+                                    <mat-icon>refresh</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <div fxLayout fxLayoutGap="5px">
+                            <div fxLayoutAlign="start center" fxFlex="10">
                                 <span *ngIf="vehicleServiceLimits?.e_oil_service; else hyphenTpl">
                                     {{ vehicleServiceLimits?.e_oil_service }}
                                 </span>
                             </div>
-                            <div fxLayoutAlign="start center" fxFlex="35">Engine Oil Service</div>
+                            <div fxLayoutAlign="start center" fxFlex="45">Engine Oil Service</div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
                                 {{ rpmSheet?.service?.e_oil_service + rpmSheet?.rpm?.running }}
                             </div>
@@ -162,7 +212,7 @@
                                     {{ vehicleServiceLimits?.c_oil_service }}
                                 </span>
                             </div>
-                            <div fxLayoutAlign="start center" fxFlex="35">Compressor Oil Service</div>
+                            <div fxLayoutAlign="start center" fxFlex="45">Compressor Oil Service</div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
                                 {{ rpmSheet?.service?.c_oil_service + rpmSheet?.rpm?.running }}
                             </div>
@@ -178,7 +228,7 @@
                                     {{ vehicleServiceLimits?.e_air_filter }}
                                 </span>
                             </div>
-                            <div fxLayoutAlign="start center" fxFlex="35">Engine Air Filter</div>
+                            <div fxLayoutAlign="start center" fxFlex="45">Engine Air Filter</div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
                                 {{ rpmSheet?.service?.e_air_filter + rpmSheet?.rpm?.running }}
                             </div>
@@ -196,7 +246,7 @@
                                 </span>
                                 <mat-icon>arrow_drop_down</mat-icon>
                             </div>
-                            <div fxLayoutAlign="start center" fxFlex="35">Compressor Air Filter</div>
+                            <div fxLayoutAlign="start center" fxFlex="45">Compressor Air Filter</div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
                                 {{ rpmSheet?.service?.c_air_filter + rpmSheet?.rpm?.running }}
                             </div>
@@ -212,7 +262,7 @@
                                     {{ vehicleServiceLimits?.seperator}}
                                 </span>
                             </div>
-                            <div fxLayoutAlign="start center" fxFlex="35">Seperator</div>
+                            <div fxLayoutAlign="start center" fxFlex="45">Seperator</div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
                                 {{ rpmSheet?.service?.seperator + rpmSheet?.rpm?.running }}
                             </div>

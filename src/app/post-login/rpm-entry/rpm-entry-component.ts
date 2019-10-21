@@ -220,6 +220,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         dialogRef.afterClosed().subscribe((res) => {
             if (res) {
+                this.form.get('bit').reset();
                 this.assignedBits = res;
             }
         })

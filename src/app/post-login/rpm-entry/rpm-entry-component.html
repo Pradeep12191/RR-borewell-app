@@ -412,7 +412,7 @@
                             <mat-form-field fxFlex="25">
                                 <mat-label>Serial no</mat-label>
                                 <mat-select placeholder="Select serial no" (selectionChange)="updateBitTotalFeet($event.value)" formControlName="bit">
-                                    <mat-option [value]="bit" *ngFor="let bit of assignedBits; trackBy: bitsTrackBy" value="1">{{
+                                    <mat-option [value]="bit" *ngFor="let bit of assignedBits" value="1">{{
                                         bit.serial_no
                                         }}</mat-option>
                                 </mat-select>

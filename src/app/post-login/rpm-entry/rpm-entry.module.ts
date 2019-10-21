@@ -21,6 +21,7 @@ import { RpmHourFeetResolver } from '../../guards/resolveGuard/rpm-hour-feet.res
 import { OverlayCardService } from '../../services/overlay-card.service';
 import { CompressorAirFilterLimitResolver } from '../../guards/resolveGuard/compressor-air-filter-service-limt.resolver';
 import { AddDieselPopupComponent } from './add-diesel-popup/add-diesel-popup.component';
+import { ServiceCompleteConfirmDialog } from './service-complete-confirm-dialog/service-complete-confirm-dialog.component';
 
 @NgModule({
     imports: [
@@ -40,12 +41,14 @@ import { AddDieselPopupComponent } from './add-diesel-popup/add-diesel-popup.com
         RpmConfirmAssignVehicleDialogComponent,
         AssignBitDialogComponent,
         AssignBitConfirmDialogComponent,
+        ServiceCompleteConfirmDialog,
         AddDieselPopupComponent,
         // AddBookPopupComponent
     ],
     entryComponents: [
         AssignVehicleDialogComponent,
         RpmConfirmAssignVehicleDialogComponent,
+        ServiceCompleteConfirmDialog,
         AssignBitDialogComponent,
         AssignBitConfirmDialogComponent,
         AddDieselPopupComponent

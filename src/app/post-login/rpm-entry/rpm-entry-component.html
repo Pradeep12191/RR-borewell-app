@@ -167,7 +167,7 @@
                             </div>
 
                             <div fxLayoutAlign="end center">
-                                <button mat-icon-button color="primary">
+                                <button (click)="confirmServiceCompletion('Tractor Engine Oil')" mat-icon-button color="primary">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -184,7 +184,7 @@
                             </div>
 
                             <div fxLayoutAlign="end center">
-                                <button mat-icon-button color="primary">
+                                <button (click)="confirmServiceCompletion('Tractor Gear Oil')" mat-icon-button color="primary">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -201,7 +201,7 @@
                             </div>
 
                             <div fxLayoutAlign="end center">
-                                <button mat-icon-button color="primary">
+                                <button mat-icon-button color="primary" (click)="confirmServiceCompletion('Engine Oil')">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -217,7 +217,7 @@
                                 {{ rpmSheet?.service?.c_oil_service + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
-                                <button mat-icon-button color="primary">
+                                <button mat-icon-button color="primary" (click)="confirmServiceCompletion('Compressor Oil')">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -233,7 +233,7 @@
                                 {{ rpmSheet?.service?.e_air_filter + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
-                                <button mat-icon-button color="primary">
+                                <button mat-icon-button color="primary" (click)="confirmServiceCompletion('Engine Air Filter')">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -267,7 +267,7 @@
                                 {{ rpmSheet?.service?.seperator + rpmSheet?.rpm?.running }}
                             </div>
                             <div fxLayoutAlign="end center">
-                                <button mat-icon-button color="primary">
+                                <button mat-icon-button color="primary" (click)="confirmServiceCompletion('Seperator')">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -411,8 +411,8 @@
                             <div fxLayoutAlign="start center" fxFlex="30">TCD no</div>
                             <mat-form-field fxFlex="25">
                                 <mat-label>Serial no</mat-label>
-                                <mat-select placeholder="Select serial no" formControlName="bit">
-                                    <mat-option [value]="bit" *ngFor="let bit of assignedBits" value="1">{{
+                                <mat-select placeholder="Select serial no" (selectionChange)="updateBitTotalFeet($event.value)" formControlName="bit">
+                                    <mat-option [value]="bit" *ngFor="let bit of assignedBits; trackBy: bitsTrackBy" value="1">{{
                                         bit.serial_no
                                         }}</mat-option>
                                 </mat-select>
@@ -431,8 +431,8 @@
                         <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
                             <div fxLayoutAlign="start center" fxFlex="30">Bit Previous Feet</div>
                             <div class="bold font-16">
-                                <div *ngIf="rpmSheet?.bit?.total_feet || rpmSheet?.bit?.total_feet === 0; else hyphenTpl">
-                                    {{ rpmSheet?.bit?.previous_feet }}
+                                <div *ngIf="form.get('bit').value; else hyphenTpl">
+                                    {{ form.get('bit').value?.previous_feet }}
                                 </div>
                             </div>
                         </div>

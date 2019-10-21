@@ -30,6 +30,7 @@ import { VehicleServices } from '../../models/VehicleServices';
 import { BitSerialNo } from '../../models/BitSerialNo';
 import { ToastrService } from 'ngx-toastr';
 import { AddDieselPopupComponent } from './add-diesel-popup/add-diesel-popup.component';
+import { ServiceCompleteConfirmDialog } from './service-complete-confirm-dialog/service-complete-confirm-dialog.component';
 
 @Component({
     templateUrl: './rpm-entry-component.html',
@@ -222,6 +223,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.assignedBits = res;
             }
         })
+    }
+
+    public bitsTrackBy(index, item: BitSerialNo) {
+        return item.serial_no;
     }
 
     onInputKeyUp(event: KeyboardEvent, rowIndex, colIndex) {
@@ -493,6 +498,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnDestroy() {
         if (this.routeDataSubscription) { this.routeDataSubscription.unsubscribe() }
+    }
+
+    confirmServiceCompletion(serviceName) {
+        const dialogRef = this.dialog.open(ServiceCompleteConfirmDialog, {
+            data: {
+                serviceName
+            }
+        })
     }
 
 
@@ -851,13 +864,20 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onDepthInput() {
+        const bit: BitSerialNo = this.form.get('bit').value;
+        this.updateBitTotalFeet(bit);
+        this.updateExtraFeet();
+    }
+
+    updateBitTotalFeet(bit: BitSerialNo) {
         const boreDepth = +this.form.get('depth.bore').value;
         const pipeErectionDepth = +this.form.get('depth.pipeErection').value;
+        
         let runningFeet = 0;
         let bitPreviousFeet = 0;
 
-        if (this.rpmSheet && this.rpmSheet.bit && this.rpmSheet.bit.previous_feet) {
-            bitPreviousFeet = this.rpmSheet.bit.previous_feet;
+        if (bit) {
+            bitPreviousFeet = +bit.previous_feet
         }
 
         if (boreDepth >= pipeErectionDepth) {
@@ -865,8 +885,6 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             runningFeet = 0;
         }
-
-        this.updateExtraFeet();
 
         if (this.rpmSheet && this.rpmSheet.bit) {
             this.rpmSheet.bit.running_feet = runningFeet;

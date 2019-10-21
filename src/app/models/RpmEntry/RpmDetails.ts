@@ -1,4 +1,6 @@
 export interface RpmDetails {
+    tractor_start_hour: number;
+    tractor_end_hour: number;
     start: number;
     end: number;
     manual: number;

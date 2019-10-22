@@ -87,7 +87,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChildren('damageFeetInput') damageFeetInputs: QueryList<ElementRef>;
     @ViewChildren('expenseFeetInput') expenseFeetInputs: QueryList<ElementRef>;
     @ViewChildren('remarksInput', { read: ElementRef }) remarksInput: QueryList<ElementRef>;
-    @ViewChild('compressorInput', { static: false }) diselCompEl: ElementRef
+    @ViewChild('compressorInput', { static: false }) diselCompEl: ElementRef;
+    @ViewChildren('rpmInput') rpmInputs: QueryList<ElementRef>;
+    @ViewChildren('depthInput') depthInputs: QueryList<ElementRef>;
+    @ViewChild('aboveFeetSelect', { static: false }) aboveFeetSelect: MatSelect;
+    @ViewChild('bitSelect', { static: false }) bitSelect: MatSelect;
     allInputs: QueryList<ElementRef>[] = new Array(5);
 
     get pointExpenseFeetFormArray() {
@@ -189,7 +193,35 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         setTimeout(() => {
             this.vehicleSelect.open();
             this.vehicleSelect.focus();
+        });
+
+        this.aboveFeetSelect._closedStream.subscribe(() => {
+
+            setTimeout(() => {
+                if (this.rpmSheet.depth && this.rpmSheet.depth.above && this.rpmSheet.depth.above.extra_feet) {
+                    // hrs and min will be enabled, so focus on those
+                    // hrs - depthInput - 2
+                    const hrsInput = this.depthInputs.toArray()[2];
+                    if (hrsInput) {
+                        (hrsInput.nativeElement as HTMLInputElement).focus()
+                    }
+                } else {
+                    if (this.assignedBits && this.assignedBits.length) {
+                        this.bitSelect.open();
+                        this.bitSelect.focus();
+                    } else {
+                        this.snackBar.open('No Bits available, so skipping bit', null, { duration: 2000 });
+                        this.moveNextInput(0, -1);
+                    }
+                }
+            });
+
         })
+
+        this.bitSelect._closedStream.subscribe(() => {
+            this.moveNextInput(0, -1);
+        })
+
         this.picker.closedStream.subscribe(() => {
             // this.inVehicleSelect.open();
             // this.inVehicleSelect.focus();
@@ -200,6 +232,43 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.allInputs[3] = this.expenseFeetInputs;
         this.allInputs[4] = this.remarksInput;
 
+    }
+
+    onRpmInputEnter(currentIndex) {
+        const nextInput = this.rpmInputs.toArray()[currentIndex + 1];
+        if (nextInput) {
+            (nextInput.nativeElement as HTMLInputElement).focus();
+        } else {
+            const boreDepthInput = this.depthInputs.toArray()[0];
+            if (boreDepthInput) {
+                (boreDepthInput.nativeElement as HTMLInputElement).focus();
+            }
+            // if no next input you are at last input
+            // go to depth input first control - bore depth
+        }
+    }
+
+    onDepthEnter(currentIndex) {
+        if (currentIndex === 1) {
+            // 1 - pipe erection feet
+            // open above feet select
+            this.aboveFeetSelect.open();
+            this.aboveFeetSelect.focus();
+            return;
+        }
+
+        const nextInput = this.depthInputs.toArray()[currentIndex + 1];
+        if (nextInput) {
+            (nextInput.nativeElement as HTMLInputElement).focus();
+        } else {
+            if (this.assignedBits && this.assignedBits.length) {
+                this.bitSelect.open();
+                this.bitSelect.focus();
+            } else {
+                this.snackBar.open('No Bits available, so skipping bit', null, { duration: 2000 });
+                this.moveNextInput(0, -1);
+            }
+        }
     }
 
     openAssignBitDialog() {
@@ -289,7 +358,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     moveNextInput(rowIndex, colIndex) {
         const queryList = this.allInputs[rowIndex];
         const nextElRef = queryList.toArray()[colIndex + 1];
-        if (nextElRef) {
+        if (nextElRef && !(nextElRef.nativeElement as HTMLInputElement).disabled) {
             const input = nextElRef.nativeElement as HTMLInputElement;
             setTimeout(() => {
                 input.focus();

@@ -1024,14 +1024,28 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         return this.fb.group({ pipeType, pipeId, pipeSize, value: { value: '', disabled: true } })
     }
 
+
+    // feet avg will be above feet / running rpm - extra feet rpm (if have extra feet)
+    // if bore depth is less than above feet(no extra feet and rpm), so feet avg will be bore depth / running rpm
     updateFeetAvg() {
         const hrs = +this.form.get('depth.above.hrs').value;
         const min = +this.form.get('depth.above.min').value;
+        const boreDepth = +this.form.get('depth.bore').value;
         const aboveFeet: ServiceLimit = this.form.get('depth.above.feet').value;
         if (this.rpmSheet.depth) {
             const extraFeet = +this.rpmSheet.depth.above.extra_feet;
             const runningRpm = +this.rpmSheet.rpm.running;
             let feetAvg = 0;
+
+            if (!extraFeet) {
+                if (boreDepth && runningRpm) {
+                    feetAvg = boreDepth / runningRpm;
+                    this.rpmSheet.depth.average = Math.floor(feetAvg);
+                } else {
+                    this.rpmSheet.depth.average = 0;
+                }
+                return;
+            }
 
             const extraRpm = this.convertToRpm(hrs, min);
             let diffRpm = extraRpm;

@@ -7,10 +7,10 @@ import { MAT_DIALOG_DATA } from '@angular/material';
     styleUrls: ['./service-complete-confirm-dialog.component.scss']
 })
 export class ServiceCompleteConfirmDialog {
-    serviceName;
+    message;
     constructor(
         @Inject(MAT_DIALOG_DATA) private data
     ) {
-        this.serviceName = data.serviceName
+        this.message = data.message
     }
 }

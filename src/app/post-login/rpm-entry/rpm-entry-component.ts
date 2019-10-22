@@ -501,15 +501,27 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.routeDataSubscription) { this.routeDataSubscription.unsubscribe() }
     }
 
-    confirmServiceCompletion(serviceName, propName) {
+    confirmServiceCompletion(name, propName, type: 'service' | 'bit' = 'service') {
+        let message = '';
+        if (type === 'service') {
+            message = `Would you like to complete ${name} service ?`
+        }
+        if (type === 'bit') {
+            message = `Would you like to finish the ${name} ?`
+        }
         const dialogRef = this.dialog.open(ServiceCompleteConfirmDialog, {
             data: {
-                serviceName
+                message
             }
         });
         dialogRef.afterClosed().subscribe((res) => {
             if (res === 'yes') {
-                this.rpmSheet.service[propName] = 0;
+                if (type === 'service') {
+                    this.rpmSheet.service[propName] = 0;
+                }
+                if (type === 'bit') {
+                    this.rpmSheet.bit[propName] = 0;
+                }
             }
         })
     }
@@ -965,8 +977,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             bit: {
                 ...this.form.value.bit,
-                hammer: this.rpmSheet.bit.hammer,
-                piston: this.rpmSheet.bit.piston,
+                hammer: this.rpmSheet.bit.hammer + this.rpmSheet.bit.running_feet,
+                piston: this.rpmSheet.bit.piston + this.rpmSheet.bit.running_feet,
                 previous_feet: this.rpmSheet.bit.previous_feet,
                 running_feet: this.rpmSheet.bit.running_feet,
                 total_feet: this.rpmSheet.bit.total_feet

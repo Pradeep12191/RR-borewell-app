@@ -897,6 +897,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (bit) {
             bitPreviousFeet = +bit.previous_feet
+        } else {
+            return;
         }
 
         if (pipeErectionDepth && (boreDepth >= pipeErectionDepth)) {

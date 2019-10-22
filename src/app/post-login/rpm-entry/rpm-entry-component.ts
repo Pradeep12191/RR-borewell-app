@@ -219,7 +219,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         })
 
         this.bitSelect._closedStream.subscribe(() => {
-            this.moveNextInput(0, -1);
+            // this.moveNextInput(0, -1);
         })
 
         this.picker.closedStream.subscribe(() => {

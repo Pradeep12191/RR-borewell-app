@@ -420,7 +420,7 @@
                             <div fxLayoutAlign="start center">Bit No</div>
                             <div class="font-16 bold" fxLayoutAlign="start center">{{ form.get('bit').value?.bit_no }}</div>
                         </div>
-                        <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
+                        <div *ngIf="this.form.get('depth.pipeErection').value && form.get('bit').value" fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
                             <div fxFlex="30">Bit Running Feet</div>
                             <div class="bold font-16">
                                 <div *ngIf="rpmSheet?.bit?.running_feet ||rpmSheet?.bit?.running_feet === 0; else hyphenTpl">
@@ -428,7 +428,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
+                        <div fxLayout fxLayoutGap="15px" *ngIf="form.get('bit').value" class="h-40" fxLayoutAlign="start center">
                             <div fxLayoutAlign="start center" fxFlex="30">Bit Previous Feet</div>
                             <div class="bold font-16">
                                 <div *ngIf="form.get('bit').value; else hyphenTpl">
@@ -436,7 +436,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
+                        <div *ngIf="this.form.get('depth.pipeErection').value && form.get('bit').value" fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
                             <div fxLayoutAlign="start center" fxFlex="30">Total Feet</div>
                             <div class="bold font-16">
                                 <div *ngIf="rpmSheet?.bit?.total_feet || rpmSheet?.bit?.running_feet === 0; else hyphenTpl">

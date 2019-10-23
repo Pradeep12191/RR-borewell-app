@@ -1179,7 +1179,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             const runningRpm = +this.rpmSheet.rpm.running;
             let feetAvg = 0;
 
-            if (!extraFeet) {
+            if (!(extraFeet && (hrs || min))) {
                 if (boreDepth && runningRpm) {
                     feetAvg = boreDepth / runningRpm;
                     this.rpmSheet.depth.average = Math.floor(feetAvg);

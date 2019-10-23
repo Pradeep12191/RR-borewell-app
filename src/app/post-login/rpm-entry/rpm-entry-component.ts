@@ -649,25 +649,28 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     onRpmEndInput() {
         let start = 0;
-        let running = 0;
+        // let running = 0;
         const end = +this.form.get('rpm.end').value;
         const manual = +this.form.get('rpm.manual').value;
-        const endRpm = end + manual;
+        // const endRpm = end + manual;
         if (this.rpmSheet.rpm && this.rpmSheet.rpm.start) {
             start = this.rpmSheet.rpm.start
         }
-        if (endRpm > start) {
-            running = endRpm - start
-            running = Math.round(running * 100) / 100;
+        let machineRunningRpm = end - start;
+        if (machineRunningRpm <= 0) {
+            machineRunningRpm = 0;
         } else {
-            running = 0;
+            machineRunningRpm = this.roundValue(machineRunningRpm);
+        }
+
+        if (manual) {
+            machineRunningRpm = this.roundValue(manual + machineRunningRpm);
         }
 
         if (this.rpmSheet.rpm) {
-            this.rpmSheet.rpm.total = Math.round(endRpm * 100) / 100;
-            this.rpmSheet.rpm.running = running;
-            if (running) {
-                this.rpmSheet.rpm.point_diesel = this.rpmSheet.rpm.prev_diesel_rpm + running;
+            this.rpmSheet.rpm.running = machineRunningRpm;
+            if (machineRunningRpm) {
+                this.rpmSheet.rpm.point_diesel = this.rpmSheet.rpm.prev_diesel_rpm + machineRunningRpm;
                 this.rpmSheet.rpm.point_diesel = Math.round(this.rpmSheet.rpm.point_diesel * 100) / 100;
             }
         }
@@ -1047,6 +1050,16 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         const pointExpenseFeet = this.form.value.pointExpenseFeet
         this.rpmEntryTable.pointExpenseFeet = pointExpenseFeet;
+
+        const end = +this.form.value.rpm.end;
+
+        if (end && end > this.rpmSheet.rpm.start) {
+            this.rpmSheet.rpm.total = Math.round(end * 100) / 100;
+        } else {
+            this.rpmSheet.rpm.total = this.rpmSheet.rpm.start
+        }
+
+
         const payload: RpmEntrySheet = {
             book_id: this.bookId,
             end: this.bookEndNo,
@@ -1250,7 +1263,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    private roundValue(value) {
+    roundValue(value) {
         if (value) {
             return Math.round(value * 100) / 100;
         }

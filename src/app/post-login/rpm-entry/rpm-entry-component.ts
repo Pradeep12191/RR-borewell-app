@@ -807,7 +807,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 // available stock feet is already calculated by updateAllPipeStock()
                 // - which is only rrincome (previous stock wil be missing) from table data url
                 // so add ly previous stock to avaliable stock.
-                // in general rr / mmIncome will be added with avialble stock at updateAllPipeStock() and previous stock will be added here
+                // in general rr / mmIncome will be added with avialble stock at updateAllPipeStock()
+                // and previous stock will be added here
                 availableStock.feet = availableStock.feet + previousStock.feet
                 balanceStock.feet = availableStock.feet;
             })

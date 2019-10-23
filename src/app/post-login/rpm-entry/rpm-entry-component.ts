@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { PipeSize } from '../../models/PipeSize';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
@@ -31,6 +31,14 @@ import { BitSerialNo } from '../../models/BitSerialNo';
 import { ToastrService } from 'ngx-toastr';
 import { AddDieselPopupComponent } from './add-diesel-popup/add-diesel-popup.component';
 import { ServiceCompleteConfirmDialog } from './service-complete-confirm-dialog/service-complete-confirm-dialog.component';
+import { AssignBit } from '../bits/view-bit/AssignBit';
+
+interface VehicleChangeData {
+    lastRpmEntrySheet: RpmEntrySheet;
+    serviceLimits: VehicleServices;
+    assignedBits: BitSerialNo[];
+    incomeData: RpmTableData
+}
 
 @Component({
     templateUrl: './rpm-entry-component.html',
@@ -223,6 +231,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         })
 
         this.picker.closedStream.subscribe(() => {
+            if (this.date) {
+                this.enableAllControls();
+            }
             // this.inVehicleSelect.open();
             // this.inVehicleSelect.focus();
         });
@@ -735,9 +746,22 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         const lastRpmSheet$ = this.rpmEntryService.getLastRpmEntrySheet(this.selectedVehicle);
         const vehicleServiceLimit$ = this.rpmEntryService.getServiceLimits(this.selectedVehicle);
         const assingedBit$ = this.rpmEntryService.getAssignedBits(this.selectedVehicle);
-        zip(lastRpmSheet$, vehicleServiceLimit$, assingedBit$).pipe(finalize(() => {
-            this.loader.hideSaveLoader();
-        })).subscribe(([lastRpmEntrySheet, serviceLimits, assignedBits]) => {
+        this.disableAllControls();
+        zip(lastRpmSheet$, vehicleServiceLimit$, assingedBit$).pipe(
+            finalize(() => {
+                this.loader.hideSaveLoader();
+            }),
+            mergeMap(([lastRpmEntrySheet, serviceLimits, assignedBits]) => {
+                if (lastRpmEntrySheet.book_page_over) {
+                    return of<VehicleChangeData>({ lastRpmEntrySheet, serviceLimits, assignedBits, incomeData: null });
+                }
+                return this.rpmEntryService.getRpmTableData(this.selectedVehicle, lastRpmEntrySheet.rpm_sheet_no).pipe(
+                    map((incomeData) => {
+                        return { lastRpmEntrySheet, serviceLimits, assignedBits, incomeData }
+                    })
+                );
+            })
+        ).subscribe(({ lastRpmEntrySheet, serviceLimits, assignedBits, incomeData }) => {
             this.vehicleServiceLimits = serviceLimits;
             this.activeCompressorAirFilterLimit = this.compressorAirFilterServiceLimits
                 .find(c => c.limit === this.vehicleServiceLimits.c_air_filter);
@@ -746,6 +770,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.resetBook();
                 return this.addBook(true);
             }
+
             this.bookRequired = false;
             this.assignedBits = assignedBits;
             this.rpmEntryNo = lastRpmEntrySheet.rpm_sheet_no;
@@ -754,12 +779,17 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.bookId = lastRpmEntrySheet.book_id;
             this.picker.open();
             this.dateInput.nativeElement.focus();
+            this.resetStockFeets();
             // once vehicle is selected enable all controls
+            if (incomeData) {
+                this.rpmEntryTable.rrIncome = [...incomeData.rrIncome];
+                this.rpmEntryTable.mmIncome = [...incomeData.mmIncome];
+                this.updateAllPipeStockFeet()
+            }
             this.updatePreviousStockFeet(lastRpmEntrySheet);
             this.rpmSheet = lastRpmEntrySheet;
-            this.enableAllControls();
             this.addDepthToSheet();
-            this.resetStockFeets();
+            this.enableAllControls();
         }, (err) => {
 
         })
@@ -771,16 +801,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (rpmData) {
             rpmData.forEach(rd => {
                 const previousStock = this.rpmEntryTable.previousStockFeet.find(ps => ps.pipeId === rd.pipe_id);
-                const rrIncome = this.rpmEntryTable.rrIncome.find(ps => ps.pipeId === rd.pipe_id);
-                const mmIncome = this.rpmEntryTable.mmIncome.find(ps => ps.pipeId === rd.pipe_id);
                 const availableStock = this.rpmEntryTable.availableStockFeet.find(ps => ps.pipeId === rd.pipe_id);
                 const balanceStock = this.rpmEntryTable.balanceStockFeet.find(ps => ps.pipeId === rd.pipe_id);
                 previousStock.feet = rd.previous_stock_feet ? +rd.previous_stock_feet : 0;
-                rrIncome.feet = rd.rr_income_feet ? +rd.rr_income_feet : 0;
-                mmIncome.feet = rd.mm_income_feet ? +rd.mm_income_feet : 0;
-                rrIncome.length = rd.rr_income;
-                mmIncome.length = rd.mm_income;
-                availableStock.feet = rrIncome.feet + mmIncome.feet + previousStock.feet;
+                // available stock feet is already calculated by updateAllPipeStock()
+                // - which is only rrincome (previous stock wil be missing) from table data url
+                // so add ly previous stock to avaliable stock.
+                // in general rr / mmIncome will be added with avialble stock at updateAllPipeStock() and previous stock will be added here
+                availableStock.feet = availableStock.feet + previousStock.feet
                 balanceStock.feet = availableStock.feet;
             })
         } else {
@@ -852,6 +880,31 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('depth.above.hrs').disable();
         this.form.get('depth.above.min').disable();
 
+        this.rpmEntryTable.rrIncome.forEach(r => {
+            r.feet = 0;
+            r.length = 0;
+        });
+
+        this.rpmEntryTable.mmIncome.forEach(m => {
+            m.feet = 0;
+            m.length = 0;
+        });
+
+        this.rpmEntryTable.previousStockFeet.forEach(m => {
+            m.feet = 0;
+            m.length = 0;
+        });
+
+        this.rpmEntryTable.availableStockFeet.forEach(m => {
+            m.feet = 0;
+            m.length = 0;
+        });
+
+        this.rpmEntryTable.balanceStockFeet.forEach(m => {
+            m.feet = 0;
+            m.length = 0;
+        });
+
         // this.picker.open();
         // (this.dateInput.nativeElement as HTMLInputElement).focus()
 
@@ -872,6 +925,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     enableAllControls() {
+        if (!this.date) {
+            return;
+        }
         this.form.get('bit').enable();
         this.form.get('diesel').enable();
         this.form.get('depth.bore').enable();
@@ -1083,8 +1139,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }),
         ).subscribe(({ lastRpmEntrySheet, assignedBits }) => {
             this.toastr.success('Rpm Saved Successfully', null, { timeOut: 3000 });
-            this.common.scrollTop();
+            // this.common.scrollTop();
+            this.openDatePicker()
             this.resetStockFeets();
+            this.disableAllControls();
             if (assignedBits) {
                 this.assignedBits = assignedBits;
                 this.form.get('bit').reset()
@@ -1204,5 +1262,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (trigger.tagName === 'INPUT' && trigger.attributes.getNamedItem('disabled') && !this.selectedVehicle) {
             return this.snackBar.open('Please Select a Vehicle', null, { duration: 4000 });
         }
+    }
+
+    private openDatePicker() {
+        setTimeout(() => {
+            (this.dateInput.nativeElement as HTMLInputElement).focus();
+            this.picker.open();
+        })
     }
 }

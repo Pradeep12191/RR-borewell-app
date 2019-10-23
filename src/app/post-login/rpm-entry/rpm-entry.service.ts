@@ -182,7 +182,7 @@ export class RpmEntryService {
             }
             return rpmData
         }), catchError((err) => {
-            this.toastr.error('Error while Fetching RPM Entry')
+            // this.toastr.error('Error while Fetching RPM Entry')
             return throwError(err)
         }))
     }

@@ -112,6 +112,8 @@ export class AssignVehicleDialogComponent {
         this.rpmEntryService.getRpmTableData(this.vehicle, this.rpmEntryNo).subscribe((data) => {
             this.loader.hideSaveLoader();
             this.dialogRef.close(data)
+        }, () => {
+            this.toastr.error('Error while Fetching RPM Entry');
         })
     }
 }

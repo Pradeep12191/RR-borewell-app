@@ -8,14 +8,14 @@
         </mat-form-field>
         <div fxLayout="column" class="shift-top-24" fxLayoutGap="5px">
             <div class="font-italic font-14 sub-title">Godown Delivery Pipe</div>
-            <button [disabled]="!selectedVehicle || !bookId" (click)="assignVehicle()" mat-raised-button color="primary">
+            <button [disabled]="!selectedVehicle || !bookId || !date" (click)="assignVehicle()" mat-raised-button color="primary">
                 <mat-icon class="m-r-5">local_shipping</mat-icon>
                 Assign Vehicle
             </button>
         </div>
         <div fxLayout="column" fxLayoutGap="5px" class="shift-top-24">
             <div class="font-italic font-14 sub-title">Godown Delivery Bit</div>
-            <button [disabled]="!selectedVehicle || !bookId" (click)="openAssignBitDialog()" mat-raised-button color="primary">
+            <button [disabled]="!selectedVehicle || !bookId || !date" (click)="openAssignBitDialog()" mat-raised-button color="primary">
                 <mat-icon class="m-r-5">local_shipping</mat-icon>
                 Assign Vehicle
             </button>
@@ -684,7 +684,7 @@
         </mat-card>
         <div fxLayoutAlign="end" class="m-t-25">
             <div>
-                <button [disabled]="!selectedVehicle" (click)="submit()" mat-raised-button color="primary" type="button">SUBMIT</button>
+                <button [disabled]="!selectedVehicle || !bookId || !date" (click)="submit()" mat-raised-button color="primary" type="button">SUBMIT</button>
             </div>
         </div>
     </div>

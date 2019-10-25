@@ -15,7 +15,8 @@
         </div>
         <div fxLayout="column" fxLayoutGap="5px" class="shift-top-24">
             <div class="font-italic font-14 sub-title">Godown Delivery Bit</div>
-            <button [disabled]="!selectedVehicle || !bookId || !date" (click)="openAssignBitDialog()" mat-raised-button color="primary">
+            <button [disabled]="!selectedVehicle || !bookId || !date" (click)="openAssignBitDialog()" mat-raised-button
+                color="primary">
                 <mat-icon class="m-r-5">local_shipping</mat-icon>
                 Assign Vehicle
             </button>
@@ -90,8 +91,9 @@
                             <div fxFlex="40">Tractor End Hour</div>
                             <mat-form-field fxFlex="50">
                                 <mat-label>Hour</mat-label>
-                                <input (input)="onTracEndInput()" (keydown.enter)="onRpmInputEnter(0)" #rpmInput formControlName="tracEndHour" [allowDecimal]="true"
-                                    (input)="onRpmEndInput()" type="text" matInput positiveNumber>
+                                <input (input)="onTracEndInput()" (keydown.enter)="onRpmInputEnter(0)" #rpmInput
+                                    formControlName="tracEndHour" [allowDecimal]="true" (input)="onRpmEndInput()" type="text"
+                                    matInput positiveNumber>
                             </mat-form-field>
                         </div>
                         <div fxLayout fxLayoutAlign="start center">
@@ -106,8 +108,8 @@
                             <div fxFlex="40">End RPM</div>
                             <mat-form-field fxFlex="50">
                                 <mat-label>RPM</mat-label>
-                                <input formControlName="end" [allowDecimal]="true" (keydown.enter)="onRpmInputEnter(1)" #rpmInput (input)="onRpmEndInput()" type="text"
-                                    matInput positiveNumber>
+                                <input formControlName="end" [allowDecimal]="true" (keydown.enter)="onRpmInputEnter(1)"
+                                    #rpmInput (input)="onRpmEndInput()" type="text" matInput positiveNumber>
                             </mat-form-field>
                         </div>
                         <div fxLayout fxLayoutAlign="start center">
@@ -116,8 +118,8 @@
                             </div>
                             <mat-form-field fxFlex="50">
                                 <mat-label>RPM</mat-label>
-                                <input type="text" [allowDecimal]="true" (input)="onRpmEndInput()" (keydown.enter)="onRpmInputEnter(2)" matInput #rpmInput
-                                    positiveNumber formControlName="manual">
+                                <input type="text" [allowDecimal]="true" (input)="onRpmEndInput()" (keydown.enter)="onRpmInputEnter(2)"
+                                    matInput #rpmInput positiveNumber formControlName="manual">
                             </mat-form-field>
                         </div>
 
@@ -311,8 +313,8 @@
                         </div>
                         <div fxFlex class="b-r">
                             <div class="input-wrapper h-100" fxFlex>
-                                <input formControlName="lorry" (input)="updateTotalDiesel()" type="text" class="h-100"
-                                    placeholder="Liter" positiveNumber>
+                                <input formControlName="lorry" #dieselInput (keydown.enter)="onDieselEnter(0)" (input)="updateTotalDiesel()"
+                                    type="text" class="h-100" placeholder="Liter" positiveNumber>
                                 <mat-icon class="input-edit-icon">edit</mat-icon>
                                 <!-- <label>Count</label> -->
                                 <span class="focus-border">
@@ -322,8 +324,9 @@
                         </div>
                         <div fxFlex class="b-r">
                             <div class="input-wrapper h-100" fxFlex>
-                                <input formControlName="support" (input)="updateTotalDiesel()" type="text" class="h-100"
-                                    placeholder="Liter" positiveNumber>
+                                <input formControlName="support" #dieselInput (keydown.enter)="onDieselEnter(1)"
+                                    (input)="updateTotalDiesel()" type="text" class="h-100" placeholder="Liter"
+                                    positiveNumber>
                                 <mat-icon class="input-edit-icon">edit</mat-icon>
                                 <!-- <label>Count</label> -->
                                 <span class="focus-border">
@@ -368,15 +371,16 @@
                             <div fxLayoutAlign="start center" fxFlex="25">Bore Depth</div>
                             <mat-form-field fxFlex="50">
                                 <mat-label>Feet</mat-label>
-                                <input #depthInput type="text" (keydown.enter)="onDepthEnter(0)" (input)="onDepthInput()" matInput positiveNumber formControlName="bore">
+                                <input #depthInput type="text" (keydown.enter)="onDepthEnter(0)" (input)="onDepthInput()"
+                                    matInput positiveNumber formControlName="bore">
                             </mat-form-field>
                         </div>
                         <div fxLayout fxLayoutGap="25px">
                             <div fxLayoutAlign="start center" fxFlex="25">Pipe Erection Feet</div>
                             <mat-form-field fxFlex="50">
                                 <mat-label>Feet</mat-label>
-                                <input (input)="onDepthInput()" (keydown.enter)="onDepthEnter(1)" #depthInput formControlName="pipeErection" type="text" matInput
-                                    positiveNumber>
+                                <input (input)="onDepthInput()" (keydown.enter)="onDepthEnter(1)" #depthInput
+                                    formControlName="pipeErection" type="text" matInput positiveNumber>
                             </mat-form-field>
                         </div>
                         <div formGroupName="above" fxFlex fxLayout fxLayoutGap="15px">
@@ -385,7 +389,8 @@
                             </div>
                             <mat-form-field fxFlex="15" class="calc-field">
                                 <mat-label>Feet</mat-label>
-                                <mat-select formControlName="feet" (selectionChange)="updateExtraFeet()" #aboveFeetSelect>
+                                <mat-select formControlName="feet" (selectionChange)="updateExtraFeet()"
+                                    #aboveFeetSelect>
                                     <mat-option [value]="rpmHourFeet" *ngFor="let rpmHourFeet of rpmHourFeets">{{
                                         rpmHourFeet.limit }}</mat-option>
                                 </mat-select>
@@ -395,13 +400,14 @@
                             <div fxLayoutAlign="start center">Feet</div>
                             <mat-form-field fxFlex="8" class="calc-field">
                                 <mat-label>hrs</mat-label>
-                                <input type="text" (input)="updateFeetAvg()" (keydown.enter)="onDepthEnter(2)" positiveNumber formControlName="hrs" #depthInput
-                                    matInput>
+                                <input type="text" (input)="updateFeetAvg()" (keydown.enter)="onDepthEnter(2)"
+                                    positiveNumber formControlName="hrs" #depthInput matInput>
                             </mat-form-field>
                             <div fxLayoutAlign="start center">hrs</div>
                             <mat-form-field fxFlex="8" class="calc-field">
                                 <mat-label>min</mat-label>
-                                <input type="text" (input)="updateFeetAvg()" (keydown.enter)="onDepthEnter(3)" #depthInput positiveNumber matInput formControlName="min">
+                                <input type="text" (input)="updateFeetAvg()" (keydown.enter)="onDepthEnter(3)"
+                                    #depthInput positiveNumber matInput formControlName="min">
                             </mat-form-field>
                             <div fxLayoutAlign="start center">min</div>
                         </div>
@@ -446,8 +452,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div fxLayout
-                            fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
+                        <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
                             <div fxLayoutAlign="start center" fxFlex="30">Total Feet</div>
                             <div class="bold font-16">
                                 <ng-container *ngIf="this.form.get('depth.pipeErection').value && form.get('bit').value; else hyphenTpl">
@@ -464,7 +469,8 @@
                                     {{ roundValue(rpmSheet?.bit?.hammer + rpmSheet?.bit?.running_feet) }}
                                 </div>
                             </div>
-                            <button (click)="confirmServiceCompletion('Hammer', 'hammer', 'bit')" mat-icon-button color="primary" [disabled]="!selectedVehicle || !bookId || !date">
+                            <button (click)="confirmServiceCompletion('Hammer', 'hammer', 'bit')" mat-icon-button color="primary"
+                                [disabled]="!selectedVehicle || !bookId || !date">
                                 <mat-icon>refresh</mat-icon>
                             </button>
                         </div>
@@ -475,7 +481,8 @@
                                     {{ roundValue(rpmSheet?.bit?.piston + rpmSheet?.bit?.running_feet) }}
                                 </div>
                             </div>
-                            <button (click)="confirmServiceCompletion('Piston', 'piston', 'bit')" mat-icon-button color="primary" [disabled]="!selectedVehicle || !bookId || !date">
+                            <button (click)="confirmServiceCompletion('Piston', 'piston', 'bit')" mat-icon-button color="primary"
+                                [disabled]="!selectedVehicle || !bookId || !date">
                                 <mat-icon>refresh</mat-icon>
                             </button>
                         </div>
@@ -642,9 +649,9 @@
                             class="cell b-b-0" [class.b-r-0]="!last">
                             <ng-container [formGroup]="ctrl">
                                 <div class="input-wrapper h-100" fxFlex>
-                                    <input #expenseFeetInput (keydown)="onInputKeyUp($event, 3, index)" type="text"
-                                        (input)="updateBalanceStock(+ctrl.get('pipeId').value)" class="h-100"
-                                        formControlName="value" placeholder="Feet" positiveNumber>
+                                    <input #expenseFeetInput (keydown)="onInputKeyUp($event, 3, index, ctrl)" type="text"
+                                        (input)="validateAndUpdateBalanceStock(+ctrl.get('pipeId').value, ctrl.get('value'))"
+                                        class="h-100" formControlName="value" placeholder="Feet" positiveNumber>
                                     <mat-icon class="input-edit-icon">edit</mat-icon>
                                     <!-- <label>Count</label> -->
                                     <span class="focus-border">
@@ -662,6 +669,10 @@
                         <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let balanceStockFeet of rpmEntryTable.balanceStockFeet; let last = last"
                             class="cell" [class.b-r-0]="!last">{{ balanceStockFeet.feet || '' }}</div>
                     </div>
+                </div>
+                <div fxLayout class="alert p-10 m-b-10 m-t-10" fxLayoutGap="10px" *ngIf="pointExpenseFeetFormArray.invalid">
+                    <mat-icon>error_outline</mat-icon>
+                    <div fxLayoutAlign="start center">Point Expense should be less than Available Stock Feet</div>
                 </div>
             </mat-card-content>
         </mat-card>
@@ -684,7 +695,8 @@
         </mat-card>
         <div fxLayoutAlign="end" class="m-t-25">
             <div>
-                <button [disabled]="!selectedVehicle || !bookId || !date" (click)="submit()" mat-raised-button color="primary" type="button">SUBMIT</button>
+                <button [disabled]="!selectedVehicle || !bookId || !date || pointExpenseFeetFormArray.invalid" (click)="submit()" mat-raised-button color="primary"
+                    type="button">SUBMIT</button>
             </div>
         </div>
     </div>

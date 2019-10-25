@@ -26,6 +26,20 @@
                 font-family: Roboto, "Helvetica Neue", sans-serif;
                 font-size: 14px;
             }
+            &.ng-invalid{
+                ~span.focus-border{
+                    &::before, &::after{
+                        background-color: red;
+                        width: 100%;
+                    }
+                    i {
+                        &::after, &::before{
+                            background-color: red;
+                            height: 100%;
+                        }
+                    }
+                }
+            }
             &:focus{
                 outline: none;
                 ~span.focus-border{

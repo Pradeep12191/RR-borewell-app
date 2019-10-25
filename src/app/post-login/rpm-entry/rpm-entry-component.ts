@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, Vie
 import { Subscription, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { PipeSize } from '../../models/PipeSize';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl } from '@angular/forms';
 import { Vehicle } from '../../models/Vehicle';
 import * as moment from 'moment';
 import { Moment } from 'moment';
@@ -98,6 +98,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('compressorInput', { static: false }) diselCompEl: ElementRef;
     @ViewChildren('rpmInput') rpmInputs: QueryList<ElementRef>;
     @ViewChildren('depthInput') depthInputs: QueryList<ElementRef>;
+    @ViewChildren('dieselInput') dieselInputs: QueryList<ElementRef>;
     @ViewChild('aboveFeetSelect', { static: false }) aboveFeetSelect: MatSelect;
     @ViewChild('bitSelect', { static: false }) bitSelect: MatSelect;
     allInputs: QueryList<ElementRef>[] = new Array(5);
@@ -250,9 +251,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (nextInput) {
             (nextInput.nativeElement as HTMLInputElement).focus();
         } else {
-            const boreDepthInput = this.depthInputs.toArray()[0];
-            if (boreDepthInput) {
-                (boreDepthInput.nativeElement as HTMLInputElement).focus();
+            const dieselInput = this.dieselInputs.toArray()[0];
+            if (dieselInput) {
+                (dieselInput.nativeElement as HTMLInputElement).focus();
             }
             // if no next input you are at last input
             // go to depth input first control - bore depth
@@ -310,7 +311,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         return item.serial_no;
     }
 
-    onInputKeyUp(event: KeyboardEvent, rowIndex, colIndex) {
+    onInputKeyUp(event: KeyboardEvent, rowIndex, colIndex, ctrl?: AbstractControl) {
         const validKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter']
         if (validKeys.indexOf(event.key) !== -1) {
             const trigger = (event.target as HTMLInputElement);
@@ -322,6 +323,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.moveNextInput(rowIndex, colIndex);
                     }
                 } else {
+                    if (ctrl && ctrl.invalid) {
+                        return;
+                    }
                     this.moveNextInput(rowIndex, colIndex);
                 }
             }
@@ -500,18 +504,25 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     }
 
+    validateAndUpdateBalanceStock(pipeId, ctrl) {
+        this.updateBalanceStock(pipeId, ctrl)
+    }
+
     /**
      * available 
      */
-    updateBalanceStock(pipeId) {
+    updateBalanceStock(pipeId, ctrl?: AbstractControl) {
         let pointExpenseFeet = this.pointExpenseFeetFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value').value
         pointExpenseFeet = pointExpenseFeet ? +pointExpenseFeet : 0;
         const availableStockFeet = this.rpmEntryTable.availableStockFeet.find(as => as.pipeId === pipeId).feet;
         const balanceStock = this.rpmEntryTable.balanceStockFeet.find(bs => bs.pipeId === pipeId);
         const balanceStockFeet = availableStockFeet - pointExpenseFeet;
-        if (balanceStockFeet > 0) {
+        if (balanceStockFeet >= 0) {
             balanceStock.feet = balanceStockFeet
         } else {
+            if (ctrl) {
+                ctrl.setErrors({ greater: true });
+            }
             balanceStock.feet = 0;
         }
     }
@@ -998,6 +1009,15 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 avg = Math.round(avg * 100) / 100;
             }
             this.rpmSheet.diesel.average = avg;
+        }
+    }
+
+    onDieselEnter(currentIndex) {
+        const nextCtrl = this.dieselInputs.toArray()[currentIndex + 1];
+        if (nextCtrl) {
+            (nextCtrl.nativeElement as HTMLInputElement).focus();
+        } else {
+            (this.depthInputs.toArray()[0].nativeElement as HTMLInputElement).focus()
         }
     }
 

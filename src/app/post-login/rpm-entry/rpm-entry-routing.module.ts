@@ -8,6 +8,7 @@ import { BitGodownsResolver } from '../../guards/resolveGuard/bit/bit-godowns.re
 import { BitSizeListResolver } from '../../guards/resolveGuard/bit/bit-size-list.resolver';
 import { RpmHourFeetResolver } from '../../guards/resolveGuard/rpm-hour-feet.resolver';
 import { CompressorAirFilterLimitResolver } from '../../guards/resolveGuard/compressor-air-filter-service-limt.resolver';
+import { TractorsResolver } from '../../guards/resolveGuard/tractors.resolver';
 
 const routes: Routes = [
     {
@@ -18,7 +19,8 @@ const routes: Routes = [
             bitGodowns: BitGodownsResolver,
             bits: BitSizeListResolver,
             rpmHourFeets: RpmHourFeetResolver,
-            compressorAirFilterServiceLimits: CompressorAirFilterLimitResolver
+            compressorAirFilterServiceLimits: CompressorAirFilterLimitResolver,
+            tractors: TractorsResolver
         }
     }
 ]

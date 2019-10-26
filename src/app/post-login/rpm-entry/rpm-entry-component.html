@@ -80,6 +80,12 @@
                 <mat-card-content>
                     <div fxLayout="column">
                         <div fxLayout fxLayoutAlign="start center">
+                            <mat-form-field  fxFlex="30" class="m-r-16">
+                                <mat-select formControlName="trac">
+                                    <mat-option value="">Select Tractor</mat-option>
+                                    <mat-option *ngFor="let tractor of tractors" [value]="tractor">{{ tractor.regNo }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
                             <div fxFlex="40" class="font-14">Tractor Start Hour</div>
                             <div class="bold font-16">
                                 <div *ngIf="rpmSheet?.rpm?.tractor_start_hour || rpmSheet?.rpm?.tractor_start_hour === 0; else hyphenTpl">
@@ -695,8 +701,8 @@
         </mat-card>
         <div fxLayoutAlign="end" class="m-t-25">
             <div>
-                <button [disabled]="!selectedVehicle || !bookId || !date || pointExpenseFeetFormArray.invalid" (click)="submit()" mat-raised-button color="primary"
-                    type="button">SUBMIT</button>
+                <button [disabled]="!selectedVehicle || !bookId || !date || pointExpenseFeetFormArray.invalid" (click)="submit()"
+                    mat-raised-button color="primary" type="button">SUBMIT</button>
             </div>
         </div>
     </div>

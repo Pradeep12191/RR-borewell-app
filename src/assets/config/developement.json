@@ -161,6 +161,10 @@
         {
             "name": "viewBit",
             "url": "bit_list"
+        },
+        {
+            "name": "tractorList",
+            "url": "tractor_list"
         }
     ],
     "reportGenerateUrls": [

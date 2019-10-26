@@ -26,6 +26,7 @@ export class RpmEntryService {
     private compressorAirFilterLimitUrl: string;
     private vehicleServicesUrl: string;
     private assignedBitSerialNoUrl: string;
+    private tractorsUrl: string;
     constructor(
         private http: HttpClient,
         private config: ConfigService,
@@ -44,6 +45,7 @@ export class RpmEntryService {
         this.vehicleServicesUrl = this.config.getAbsoluteUrl('getServiceLimits')
         this.vehicleServicesUrl = this.config.getAbsoluteUrl('getServiceLimits')
         this.assignedBitSerialNoUrl = this.config.getAbsoluteUrl('assignedBitSerialNos');
+        this.tractorsUrl = this.config.getAbsoluteUrl('tractorList')
     }
 
     postBook(book: Book) {
@@ -194,6 +196,11 @@ export class RpmEntryService {
         }), catchError((err) => {
             return throwError(err)
         }))
+    }
+
+    getTractors() {
+        const params = new HttpParams().set('user_id', this.auth.userid);
+        return this.http.get<Vehicle[]>(this.tractorsUrl, { params })
     }
 
     getRpmHourFeets() {

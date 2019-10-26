@@ -82,6 +82,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     book: Book;
     bookRequired = false;
     tracRunningRpm = 0;
+    tractors: Vehicle[]
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
     @ViewChild('inVehicleSelect', { static: false }) inVehicleSelect: MatSelect;
@@ -148,6 +149,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 end: { value: '', disabled: true },
                 manual: { value: '', disabled: true },
                 tracEndHour: { value: '', disabled: true },
+                trac: { value: '', disabled: false },
                 isManual: false
             }),
             diesel: this.fb.group({
@@ -179,6 +181,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.bitSizes = data.bits;
             this.rpmHourFeets = data.rpmHourFeets;
             this.compressorAirFilterServiceLimits = data.compressorAirFilterServiceLimits;
+            this.tractors = data.tractors;
             this.pipeFlex = this.pipeTotalFlex / this.pipes.length;
             this.pipeFlex = Math.round(this.pipeFlex * 100) / 100;
 

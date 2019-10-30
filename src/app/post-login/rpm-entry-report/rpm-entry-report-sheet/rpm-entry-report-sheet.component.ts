@@ -4,6 +4,7 @@ import { PipeSize } from '../../../models/PipeSize';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { RpmEntry } from '../../../models/RpmEntry';
+import { RpmEntrySheet } from '../../../models/RpmEntrySheet';
 
 @Component({
     selector: 'rpm-entry-report-sheet',
@@ -11,7 +12,7 @@ import { RpmEntry } from '../../../models/RpmEntry';
     styleUrls: ['./rpm-entry-report-sheet.component.scss']
 })
 export class RpmEntryReportSheetComponent implements OnDestroy {
-    @Input() rpmEnrty: RpmEntry;
+    @Input() rpmEnrty: RpmEntrySheet;
     pipes: PipeSize[];
     routeDataSubscription: Subscription;
     pipeTotalFlex = 80;

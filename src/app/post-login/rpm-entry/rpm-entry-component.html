@@ -309,17 +309,9 @@
                         <div fxFlex class="bold text-center">Diesel Avg</div>
                     </div>
                     <div class="diesel__content">
-                        <div fxFlex class="b-r compressor-diesel" [class.disabled]="!selectedVehicle || !bookId"
-                            #compressorInput>
-                            <div (click)="openDiesel(rpmSheet?.diesel?.compressor)" fxLayoutAlign="center center" class="input-wrapper h-100"
-                                fxFlex>
-                                {{ rpmSheet?.diesel?.compressor }}
-                                <mat-icon class="input-edit-icon">edit</mat-icon>
-                            </div>
-                        </div>
                         <div fxFlex class="b-r">
                             <div class="input-wrapper h-100" fxFlex>
-                                <input formControlName="lorry" #dieselInput (keydown.enter)="onDieselEnter(0)" (input)="updateTotalDiesel()"
+                                <input formControlName="compressor" #dieselInput (keydown.enter)="onDieselEnter(0)" (input)="updateTotalDiesel()"
                                     type="text" class="h-100" placeholder="Liter" positiveNumber>
                                 <mat-icon class="input-edit-icon">edit</mat-icon>
                                 <!-- <label>Count</label> -->
@@ -330,7 +322,18 @@
                         </div>
                         <div fxFlex class="b-r">
                             <div class="input-wrapper h-100" fxFlex>
-                                <input formControlName="support" #dieselInput (keydown.enter)="onDieselEnter(1)"
+                                <input formControlName="lorry" #dieselInput (keydown.enter)="onDieselEnter(1)" (input)="updateTotalDiesel()"
+                                    type="text" class="h-100" placeholder="Liter" positiveNumber>
+                                <mat-icon class="input-edit-icon">edit</mat-icon>
+                                <!-- <label>Count</label> -->
+                                <span class="focus-border">
+                                    <i></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div fxFlex class="b-r">
+                            <div class="input-wrapper h-100" fxFlex>
+                                <input formControlName="support" #dieselInput (keydown.enter)="onDieselEnter(2)"
                                     (input)="updateTotalDiesel()" type="text" class="h-100" placeholder="Liter"
                                     positiveNumber>
                                 <mat-icon class="input-edit-icon">edit</mat-icon>

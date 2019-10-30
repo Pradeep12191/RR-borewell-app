@@ -82,6 +82,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     book: Book;
     bookRequired = false;
     tracRunningRpm = 0;
+    previousDieselRpm;
+    pointDieselRpm;
     tractors: Vehicle[]
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
@@ -646,6 +648,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.bookEndNo = rpmSheet.end;
                 this.rpmEntryNo = rpmSheet.rpm_sheet_no;
                 this.rpmSheet = rpmSheet;
+                if (this.rpmSheet.rpm) {
+                    this.previousDieselRpm = this.rpmSheet.rpm.prev_diesel_rpm;
+                    this.pointDieselRpm = this.rpmSheet.rpm.point_diesel;
+                }
+                this.openDatePicker();
                 this.enableAllControls();
                 this.addDepthToSheet();
             }
@@ -683,10 +690,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (this.rpmSheet.rpm) {
             this.rpmSheet.rpm.running = machineRunningRpm;
-            if (machineRunningRpm) {
-                this.rpmSheet.rpm.point_diesel = this.rpmSheet.rpm.prev_diesel_rpm + machineRunningRpm;
-                this.rpmSheet.rpm.point_diesel = Math.round(this.rpmSheet.rpm.point_diesel * 100) / 100;
-            }
+            this.rpmSheet.rpm.point_diesel = this.rpmSheet.rpm.prev_diesel_rpm + machineRunningRpm;
+            this.rpmSheet.rpm.point_diesel = Math.round(this.rpmSheet.rpm.point_diesel * 100) / 100;
         }
 
         this.updateFeetAvg();
@@ -805,6 +810,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             this.updatePreviousStockFeet(lastRpmEntrySheet);
             this.rpmSheet = lastRpmEntrySheet;
+            if (this.rpmSheet.rpm) {
+                this.previousDieselRpm = this.rpmSheet.rpm.prev_diesel_rpm;
+                this.pointDieselRpm = this.rpmSheet.rpm.point_diesel;
+            }
             this.addDepthToSheet();
             this.enableAllControls();
         }, (err) => {
@@ -1028,8 +1037,18 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         let totalDiesel = 0;
         const lorry = +this.form.get('diesel.lorry').value;
         const support = +this.form.get('diesel.support').value;
+        const compressor = +this.form.get('diesel.compressor').value;
+
+        if (compressor) {
+            this.rpmSheet.rpm.prev_diesel_rpm = 0;
+            this.rpmSheet.rpm.point_diesel = this.rpmSheet.rpm.running
+        } else {
+            this.rpmSheet.rpm.prev_diesel_rpm = this.previousDieselRpm;
+            this.rpmSheet.rpm.point_diesel = this.previousDieselRpm + +this.rpmSheet.rpm.running;
+        }
+
         if (this.rpmSheet.diesel) {
-            totalDiesel = this.rpmSheet.diesel.compressor + lorry + support
+            totalDiesel = compressor + lorry + support
             this.rpmSheet.diesel.total = totalDiesel;
         }
     }
@@ -1125,7 +1144,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 tractor_g_oil_service: this.roundValue(this.rpmSheet.service.tractor_g_oil_service + this.tracRunningRpm),
                 c_air_filter: this.roundValue(this.rpmSheet.service.c_air_filter + this.rpmSheet.rpm.running),
                 c_oil_service: this.roundValue(this.rpmSheet.service.c_oil_service + this.rpmSheet.rpm.running),
-                e_air_filter: this.roundValue(this.rpmSheet.service.c_air_filter + this.rpmSheet.rpm.running),
+                e_air_filter: this.roundValue(this.rpmSheet.service.e_air_filter + this.rpmSheet.rpm.running),
                 e_oil_service: this.roundValue(this.rpmSheet.service.e_oil_service + this.rpmSheet.rpm.running),
                 seperator: this.roundValue(this.rpmSheet.service.seperator + this.rpmSheet.rpm.running)
             },
@@ -1176,8 +1195,6 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }),
         ).subscribe(({ lastRpmEntrySheet, assignedBits }) => {
             this.toastr.success('Rpm Saved Successfully', null, { timeOut: 3000 });
-            // this.common.scrollTop();
-            this.openDatePicker()
             this.resetStockFeets();
             this.disableAllControls();
             if (assignedBits) {
@@ -1186,11 +1203,17 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
                 this.resetBook();
+                this.common.scrollTop();
                 this.addBook(true);
                 return;
             }
 
+            this.openDatePicker();
             this.rpmSheet = lastRpmEntrySheet;
+            if (this.rpmSheet.rpm) {
+                this.previousDieselRpm = this.rpmSheet.rpm.prev_diesel_rpm;
+                this.pointDieselRpm = this.rpmSheet.rpm.point_diesel;
+            }
             this.addDepthToSheet();
             this.updatePreviousStockFeet(lastRpmEntrySheet);
         }, () => {

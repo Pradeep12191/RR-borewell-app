@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MaterialModule } from '../material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { A11yModule } from '@angular/cdk/a11y';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { PostLoginRoutingModule } from './post-login-routing.module';
 import { PostLoginComponent } from './post-login.component';
@@ -31,6 +32,7 @@ import { AddBookPopupComponent } from './rpm-entry/add-book-popup/add-book-popup
         FormsModule,
         PostLoginRoutingModule,
         SharedModule,
+        A11yModule
     ],
     declarations: [
         DashboardComponent,

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, Inject, OnInit, OnDestroy } from '@angular/core';
 import { SCALE_UP_ANIMATION } from '../../../animations/scale-up.animaion';
 import { CardOverlayref } from '../../../services/card-overlay-ref';
 import { ConfigService } from '../../../services/config.service';
@@ -23,7 +23,7 @@ function compareValidator(control: AbstractControl) {
     styleUrls: ['./add-book-popup.component.scss'],
     animations: [SCALE_UP_ANIMATION]
 })
-export class AddBookPopupComponent implements AfterViewInit, OnInit, OnDestroy {
+export class AddBookPopupComponent implements OnInit, OnDestroy {
     appearance;
     bookCount;
     startPageNo;
@@ -113,12 +113,6 @@ export class AddBookPopupComponent implements AfterViewInit, OnInit, OnDestroy {
         // jumb to end page no
         setTimeout(() => {
             (this.bookEnd.nativeElement as HTMLInputElement).focus()
-        })
-    }
-
-    ngAfterViewInit() {
-        setTimeout(() => {
-            (this.bookStart.nativeElement as HTMLInputElement).focus()
         })
     }
 }

@@ -643,6 +643,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.bookPopupRef.afterClosed$.subscribe((rpmSheet: RpmEntrySheet) => {
             if (rpmSheet) {
                 this.bookRequired = false;
+                this.resetAll();
                 this.bookId = rpmSheet.book_id;
                 this.bookStartNo = rpmSheet.start
                 this.bookEndNo = rpmSheet.end;
@@ -788,7 +789,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.activeCompressorAirFilterLimit = this.compressorAirFilterServiceLimits
                 .find(c => c.limit === this.vehicleServiceLimits.c_air_filter);
             if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
-                this.resetStockFeets();
+                this.resetAll();
                 this.resetBook();
                 return this.addBook(true);
             }
@@ -801,7 +802,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.bookId = lastRpmEntrySheet.book_id;
             this.picker.open();
             this.dateInput.nativeElement.focus();
-            this.resetStockFeets();
+            this.resetAll();
             // once vehicle is selected enable all controls
             if (incomeData) {
                 this.rpmEntryTable.rrIncome = [...incomeData.rrIncome];
@@ -864,7 +865,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.bookRequired = true;
     }
 
-    private resetStockFeets() {
+    private resetAll() {
 
         // this.form.reset();
 
@@ -1010,9 +1011,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
      * compressor diesel / previous diesel rpm
      */
     updateDieselAvg() {
+        const compressorDiesel = +this.form.get('diesel.compressor').value;
         let avg = 0;
         if (this.rpmSheet.diesel) {
-            const compressorDiesel = +this.rpmSheet.diesel.compressor;
             const previousDieselRpm = +this.rpmSheet.diesel.previous_rpm;
             if (previousDieselRpm <= 0 || compressorDiesel <= 0) {
                 avg = 0;
@@ -1051,6 +1052,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             totalDiesel = compressor + lorry + support
             this.rpmSheet.diesel.total = totalDiesel;
         }
+        this.updateDieselAvg();
     }
 
     onDepthInput() {
@@ -1195,7 +1197,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }),
         ).subscribe(({ lastRpmEntrySheet, assignedBits }) => {
             this.toastr.success('Rpm Saved Successfully', null, { timeOut: 3000 });
-            this.resetStockFeets();
+            this.resetAll();
             this.disableAllControls();
             if (assignedBits) {
                 this.assignedBits = assignedBits;

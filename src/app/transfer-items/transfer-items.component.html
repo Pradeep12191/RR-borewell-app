@@ -4,8 +4,8 @@
             <div [fxFlex]="leftWidth" class="transfer-items-left ">
                 <div fxLayout class="header-shadow left-header">
                     <div class="m-l-16" fxLayout fxLayoutAlign="center center">
-                        <mat-checkbox [disabled]="!_data?.length" [(ngModel)]="selectAllChecked" (change)="selectAllChange($event)" color="primary"
-                            [matTooltip]="selectAllToolTipMsg"></mat-checkbox>
+                        <mat-checkbox [disabled]="!_data?.length" [(ngModel)]="selectAllChecked" (change)="selectAllChange($event)"
+                            color="primary" [matTooltip]="selectAllToolTipMsg"></mat-checkbox>
                     </div>
 
                     <div fxFlex="30" class="m-t-16 m-l-10 m-r-10 m-b-16 input-wrapper" fxLayout>
@@ -25,11 +25,13 @@
                     </ng-content>
                 </div>
                 <div class="chk-box-container" #leftContainer>
+                    <ng-content select="transfer-item-left-list-header">
+                    </ng-content>
                     <div class="msg" *ngIf="intialMsg; else selectionTpl">
                         <ng-container *ngTemplateOutlet="intialMsg"></ng-container>
                     </div>
                     <!-- <div class="msg" *ngIf="!selectedGodown || !selectedPipe; else selectionTpl"> -->
-                        <!-- Please Select Godown and Pipe - intial message if no selected content exists show that else sleetiontpl -->
+                    <!-- Please Select Godown and Pipe - intial message if no selected content exists show that else sleetiontpl -->
                     <!-- </div> -->
                     <ng-template #selectionTpl>
                         <div class="spinner" *ngIf="(loaderStatus$ | async); else dataTpl">
@@ -38,10 +40,15 @@
                         <ng-template #dataTpl>
                             <mat-selection-list @fadeOpactiy *ngIf="_data?.length; else emptyTpl" color="primary"
                                 (selectionChange)="onSelect($event)">
-                                <mat-list-option class="custom-list-option" [selected]="d.isSelected"
-                                    [value]="d" *ngFor="let d of _data | startsWithFilter:searchTerm:displayPropName"
+                                <mat-list-option class="custom-list-option" [selected]="d.isSelected" [value]="d"
+                                    *ngFor="let d of _data | startsWithFilter:searchTerm:searchPropName || displayPropName"
                                     checkboxPosition="before">
-                                    {{ d[displayPropName] }} 
+                                    <ng-container *ngIf="listContent; else listDisplayTpl">
+                                        <ng-container *ngTemplateOutlet="listContent; context: { $implicit: d }"></ng-container>
+                                    </ng-container>
+                                    <ng-template #listDisplayTpl>
+                                            {{ d[displayPropName] }}
+                                    </ng-template>
                                 </mat-list-option>
                             </mat-selection-list>
                             <ng-template #emptyTpl>

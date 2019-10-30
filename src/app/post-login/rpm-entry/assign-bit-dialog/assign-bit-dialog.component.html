@@ -26,12 +26,24 @@
             </div>
 
             <transfer-items fxFlex [leftWidth]="65" (selectionUpdate)="onTransferSelection($event)" selectAllToolTipMsg="select all bits"
-                [loaderStatus$]="loaderStatus$" [data]="bitSerialNos" displayPropName="serial_no" noDataSelectedMsg="No Bits Assigned">
+                [loaderStatus$]="loaderStatus$" [data]="bitSerialNos" [searchPropName]="['serial_no', 'bit_no']" displayPropName="serial_no" noDataSelectedMsg="No Bits Assigned">
                 <ng-container *ngIf="!selectedGodown || !selectedBit">
                     <ng-container *transferItemIntialMsg>
                         Please select Godown Type and Bit Size
                     </ng-container>
                 </ng-container>
+                <ng-container *transferItemLeftListContent="let data">
+                    <div fxLayout>
+                        <div fxFlex>{{ data.serial_no }}</div>
+                        <div fxFlex>{{ data.bit_no }}</div>
+                    </div>
+                </ng-container>
+                <transfer-item-left-list-header>
+                    <div fxLayout class="bit-list-header" fxLayoutAlign="start center">
+                        <div fxLayoutAlign="start center" fxFlex>Serial No</div>
+                        <div fxLayoutAlign="start center" fxFlex>Bit No</div>
+                    </div>
+                </transfer-item-left-list-header>
                 <transfer-item-left-header-content fxFlex>
                     <div fxLayout class="m-t-10 m-r-10" fxLayoutGap="10px">
                         <mat-form-field class="calc-field" fxFlex="calc(40% - 10px)">

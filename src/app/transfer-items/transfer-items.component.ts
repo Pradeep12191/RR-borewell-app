@@ -3,6 +3,7 @@ import { MatCheckboxChange, MatSelectionList, MatSelectionListChange } from '@an
 import { TransferItemIntialMsgDirective } from './transfer-item-intial-msg/transfer-item-intial-msg.component';
 import { FADE_OPACTIY_ANIMATION } from '../animations/fade-opactiy.animation';
 import { BehaviorSubject } from 'rxjs';
+import { TransferItemLeftListContentDirective } from './transfer-item-left-list-content/transfer-item-left-list-content.directive';
 
 
 
@@ -33,12 +34,15 @@ export class TransferItemComponent {
     };
     @Input() leftWidth = 50;
     @Input() displayPropName;
+    @Input() searchPropName;
     @Input() noDataSelectedMsg;
     @Output() selectionUpdate = new EventEmitter<any[]>();
     @Input() loaderStatus$: BehaviorSubject<boolean>;
     @ViewChild(MatSelectionList, { static: false }) selectList: MatSelectionList;
     @ContentChild(TransferItemIntialMsgDirective, { static: false, read: TemplateRef })
     intialMsg: TemplateRef<TransferItemIntialMsgDirective>;
+    @ContentChild(TransferItemLeftListContentDirective, { static: false, read: TemplateRef })
+    listContent: TemplateRef<TransferItemLeftListContentDirective>;
     @ViewChild('leftContainer', { static: false }) leftContainer: ElementRef;
     @ViewChild('rightContainer', { static: false }) rightContainer: ElementRef;
 

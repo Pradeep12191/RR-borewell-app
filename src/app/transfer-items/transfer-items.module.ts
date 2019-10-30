@@ -9,6 +9,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TransferItemLeftHeaderContentComponent } from './transfer-item-left-header-content/transfer-item-left-header-content.component';
 import { TransferItemRightHeaderContentComponent } from './transfer-item-right-header-content/transfer-item-right-header-content.component';
 import { TransferItemIntialMsgDirective } from './transfer-item-intial-msg/transfer-item-intial-msg.component';
+import { TransferItemLeftListHeaderContentComponent } from './transfer-item-left-list-header/transfer-item-left-list-header.component';
+import { TransferItemLeftListContentDirective } from './transfer-item-left-list-content/transfer-item-left-list-content.directive';
 
 @NgModule({
     imports: [
@@ -30,13 +32,17 @@ import { TransferItemIntialMsgDirective } from './transfer-item-intial-msg/trans
         TransferItemComponent,
         TransferItemLeftHeaderContentComponent,
         TransferItemRightHeaderContentComponent,
-        TransferItemIntialMsgDirective
+        TransferItemIntialMsgDirective,
+        TransferItemLeftListHeaderContentComponent,
+        TransferItemLeftListContentDirective
     ],
     exports: [
         TransferItemComponent,
         TransferItemLeftHeaderContentComponent,
         TransferItemRightHeaderContentComponent,
-        TransferItemIntialMsgDirective
+        TransferItemIntialMsgDirective,
+        TransferItemLeftListHeaderContentComponent,
+        TransferItemLeftListContentDirective
     ]
 
 })

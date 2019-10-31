@@ -501,7 +501,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         const availableStockFeet = (rrIncome + mmIncome + previousStockFeet + vehicleInExchange) - (vehicleOutExchange + damageFeet);
         if (availableStockFeet > 0) {
-            availableStock.feet = availableStockFeet;
+            availableStock.feet = this.roundValue(availableStockFeet, 10);
         } else {
             availableStock.feet = 0;
         }
@@ -517,17 +517,17 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
      * available 
      */
     updateBalanceStock(pipeId, ctrl?: AbstractControl) {
+        const pointExpenseFeetCtrl = this.pointExpenseFeetFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value');
         let pointExpenseFeet = this.pointExpenseFeetFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value').value
         pointExpenseFeet = pointExpenseFeet ? +pointExpenseFeet : 0;
         const availableStockFeet = this.rpmEntryTable.availableStockFeet.find(as => as.pipeId === pipeId).feet;
         const balanceStock = this.rpmEntryTable.balanceStockFeet.find(bs => bs.pipeId === pipeId);
         const balanceStockFeet = availableStockFeet - pointExpenseFeet;
         if (balanceStockFeet >= 0) {
-            balanceStock.feet = balanceStockFeet
+            balanceStock.feet = this.roundValue(balanceStockFeet, 10);
+            pointExpenseFeetCtrl.setErrors(null);
         } else {
-            if (ctrl) {
-                ctrl.setErrors({ greater: true });
-            }
+            pointExpenseFeetCtrl.setErrors({greater: true});
             balanceStock.feet = 0;
         }
     }
@@ -1311,9 +1311,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    roundValue(value) {
+    roundValue(value, place = 100) {
         if (value) {
-            return Math.round(value * 100) / 100;
+            return Math.round(value * place) / place;
         }
 
         return 0;

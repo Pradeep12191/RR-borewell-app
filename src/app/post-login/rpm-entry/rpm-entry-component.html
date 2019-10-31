@@ -436,8 +436,7 @@
                                 <mat-select placeholder="Select serial no" #bitSelect (selectionChange)="updateBitTotalFeet($event.value)"
                                     formControlName="bit">
                                     <mat-option [value]="bit" *ngFor="let bit of assignedBits" value="1">{{
-                                        bit.serial_no
-                                        }}</mat-option>
+                                        bit.serial_no + ' - ' + bit.bit_no}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                             <div fxLayoutAlign="start center">Bit No</div>
@@ -565,7 +564,7 @@
                                 <div class="input-wrapper h-100" fxFlex>
                                     <input #inFeetInput (keydown)="onInputKeyUp($event, 0, index)" (input)="updateAvailableStock(+ctrl.get('pipeId').value)"
                                         type="text" class="h-100" formControlName="value" placeholder="Feet"
-                                        positiveNumber>
+                                        positiveNumber [allowDecimal]="true">
                                     <mat-icon class="input-edit-icon">edit</mat-icon>
                                     <!-- <label>Count</label> -->
                                     <span class="focus-border">
@@ -609,7 +608,7 @@
                                 <div class="input-wrapper h-100" fxFlex>
                                     <input type="text" (keydown)="onInputKeyUp($event, 1, index)" #outFeetInput class="h-100"
                                         (input)="updateAvailableStock(+ctrl.get('pipeId').value)" formControlName="value"
-                                        placeholder="Feet" positiveNumber>
+                                        placeholder="Feet" positiveNumber [allowDecimal]="true">
                                     <mat-icon class="input-edit-icon">edit</mat-icon>
                                     <!-- <label>Count</label> -->
                                     <span class="focus-border">
@@ -633,7 +632,7 @@
                                 <div class="input-wrapper h-100" fxFlex>
                                     <input (keydown)="onInputKeyUp($event, 2, index)" type="text" #damageFeetInput
                                         (input)="updateAvailableStock(+ctrl.get('pipeId').value)" class="h-100"
-                                        formControlName="value" placeholder="Feet" positiveNumber>
+                                        formControlName="value" placeholder="Feet" positiveNumber [allowDecimal]="true">
                                     <mat-icon class="input-edit-icon">edit</mat-icon>
                                     <!-- <label>Count</label> -->
                                     <span class="focus-border">
@@ -660,7 +659,7 @@
                                 <div class="input-wrapper h-100" fxFlex>
                                     <input #expenseFeetInput (keydown)="onInputKeyUp($event, 3, index, ctrl)" type="text"
                                         (input)="validateAndUpdateBalanceStock(+ctrl.get('pipeId').value, ctrl.get('value'))"
-                                        class="h-100" formControlName="value" placeholder="Feet" positiveNumber>
+                                        class="h-100" formControlName="value" placeholder="Feet" positiveNumber [allowDecimal]="true">
                                     <mat-icon class="input-edit-icon">edit</mat-icon>
                                     <!-- <label>Count</label> -->
                                     <span class="focus-border">

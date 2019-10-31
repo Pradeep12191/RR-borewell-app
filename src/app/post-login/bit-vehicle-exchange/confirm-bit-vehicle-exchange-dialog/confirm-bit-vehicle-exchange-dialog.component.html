@@ -1,0 +1,68 @@
+<mat-toolbar color="primary">
+    <div fxFlex fxLayoutAlign="center center">
+        <div>Confirmation</div>
+    </div>
+    <button mat-icon-button mat-dialog-close>
+        <mat-icon>clear</mat-icon>
+    </button>
+</mat-toolbar>
+
+<div mat-dialog-content>
+    <div class="card m-b-16">
+        <div fxLayoutAlign="space-between" class="section-title m-b-16 contact-title">
+            <div>
+                Exchange Bits
+            </div>
+            <div fxLayout fxLayoutGap="5px">
+                <div fxFlex>Date</div>
+                <div fxFlex>:</div>
+                <div fxFlex>{{ date | date: 'dd/MM/yyyy' }}</div>
+            </div>
+
+        </div>
+        <div fxLayout="column" class="m-b-16" fxLayoutGap="15px">
+            <div fxLayout fxLayoutGap="10px">
+                <div fxFlex="40" class="text-transform-upper bold font-12" fxLayout fxLayoutAlign="start center">
+                    <div>
+                        From Vehicle
+                    </div>
+                </div>
+                <div>{{ fromVehicle.regNo }}</div>
+            </div>
+            <div fxLayout fxLayoutGap="10px">
+                <div fxFlex="40" class="text-transform-upper bold font-12" fxLayout fxLayoutAlign="start center">
+                    <div>
+                        To Vehicle
+                    </div>
+                </div>
+                <div>{{ toVehicle.regNo }}</div>
+            </div>
+        </div>
+        <div fxLayout="column" class="container">
+            <div fxLayout class="font-14 bold text-center bgc-primary header">
+                <div fxFlex>S.No.</div>
+                <div fxFlex>Bit No</div>
+                <div fxFlex>Bit Serial No</div>
+            </div>
+            <div fxLayout="column" fxLayoutGap="10px" class="text-center table-content">
+                <div fxLayout *ngFor="let bit of bits; let index = index">
+                    <div fxFlex>{{ index + 1 }}</div>
+                    <div fxFlex>{{ bit.bit_no }}</div>
+                    <div fxFlex>{{ bit.serial_no }}</div>
+                </div>
+                <div></div>
+            </div>
+        </div>
+        <div class="m-t-10" fxLayout="column" fxLayoutGap="6px">
+            <div class="bold">Remarks</div>
+            <div [innerHTML]="remarks | newLine" class="font-italic"></div>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-actions>
+    <div fxFlex fxLayout fxLayoutAlign="space-between">
+        <button mat-raised-button color="primary" mat-dialog-close>CANCEL</button>
+        <button mat-raised-button color="primary" (click)="savePipe()">SAVE</button>
+    </div>
+</div>

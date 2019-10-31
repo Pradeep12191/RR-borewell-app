@@ -18,8 +18,8 @@ export class BitVehicleExchangeComponent implements OnInit {
     assignedBits;
     selectedBits = [];
     routeDataSubscription: Subscription;
-    selectedFromVehicle;
-    selectedToVehicle;
+    selectedFromVehicle: Vehicle;
+    selectedToVehicle: Vehicle;
     vehicles: Vehicle[];
     appearance;
     remarks;
@@ -80,6 +80,20 @@ export class BitVehicleExchangeComponent implements OnInit {
                 remarks: this.remarks
             }
         })
+    }
+
+    fromVehicles() {
+        if (this.selectedToVehicle) {
+            return this.vehicles.filter(v => v.vehicle_id !== this.selectedToVehicle.vehicle_id)
+        }
+        return this.vehicles;
+    }
+
+    toVehicles() {
+        if (this.selectedFromVehicle) {
+            return this.vehicles.filter(v => v.vehicle_id !== this.selectedFromVehicle.vehicle_id)
+        }
+        return this.vehicles;
     }
 
     onChange() {

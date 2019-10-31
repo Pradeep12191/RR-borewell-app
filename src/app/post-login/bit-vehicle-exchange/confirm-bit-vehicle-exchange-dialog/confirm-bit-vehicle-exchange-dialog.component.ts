@@ -35,17 +35,22 @@ export class ConfirmBitVehicleExchangeComponent {
         this.date = data.date;
         this.bits = data.bits;
         this.remarks = data.remarks;
-        this.updateUrl = this.config.getAbsoluteUrl('godownExchange');
+        this.updateUrl = this.config.getAbsoluteUrl('bitVehicleExchange');
     }
 
     savePipe() {
-        const payload = {}
-        console.log(JSON.stringify({ assignedPipes: payload }, null, 2));
-        this.http.put(this.updateUrl, { assignedPipes: payload }).subscribe((response) => {
+        const payload = {
+            bits: this.bits,
+            from_vehcile: this.fromVehicle,
+            to_vehicle: this.toVehicle
+        }
+        console.log(JSON.stringify(payload, null, 2));
+        this.http.put(this.updateUrl, payload).subscribe((response) => {
+            this.toastr.success(`Bits Exchanged Successfully`, null, { timeOut: 2000 })
             this.dialogRef.close(response)
         }, (err) => {
             if (err) {
-                this.toastr.error(`Network Error while exchanging godown`, null, { timeOut: 2000 })
+                this.toastr.error(`Network Error while exchanging Bits`, null, { timeOut: 2000 })
             }
         })
     }

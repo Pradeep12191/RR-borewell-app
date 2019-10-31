@@ -40,7 +40,7 @@
                     <mat-form-field class="calc-field" fxFlex="95">
                         <mat-select #fromVehicleSelect (selectionChange)="onChange()" required [(ngModel)]="selectedFromVehicle"
                             placeholder="From Vehicle">
-                            <mat-option [value]="vehicle" *ngFor="let vehicle of vehicles">{{ vehicle.regNo }}</mat-option>
+                            <mat-option [value]="vehicle" *ngFor="let vehicle of fromVehicles()">{{ vehicle.regNo }}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -50,7 +50,7 @@
                     <mat-form-field class="calc-field" fxFlex="95">
                         <mat-select #toVehicleSelect required [(ngModel)]="selectedToVehicle"
                             placeholder="To Vehicle">
-                            <mat-option [value]="vehicle" *ngFor="let vehicle of vehicles">{{ vehicle.regNo }}</mat-option>
+                            <mat-option [value]="vehicle" *ngFor="let vehicle of toVehicles()">{{ vehicle.regNo }}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>

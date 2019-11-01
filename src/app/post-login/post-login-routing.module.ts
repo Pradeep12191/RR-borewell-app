@@ -5,6 +5,7 @@ import { PostLoginComponent } from './post-login.component';
 import { S404Component } from '../404/404.component';
 import { HeaderComponent } from '../header/header.component';
 import { UserInfoResolver } from '../guards/resolveGuard/user-info.resolver';
+import { ErrorComponent } from '../error/error.component';
 
 const routes: Routes = [
     {
@@ -24,6 +25,7 @@ const routes: Routes = [
             { path: 'rpmEntry', loadChildren: () => import('./rpm-entry/rpm-entry.module').then(mod => mod.RpmEntryModule) },
             { path: 'rpmEntry/report', loadChildren: () => import('./rpm-entry-report/rpm-entry-report.module').then(mod => mod.RpmEntryReportModule) },
             { path: 'godownExchange', loadChildren: () => import('./godown-exchange/godown-exchange.module').then(mod => mod.GodownExchangeModule) },
+            { path: 'error', component: ErrorComponent },
             { path: '**', component: S404Component }
         ],
         resolve: {

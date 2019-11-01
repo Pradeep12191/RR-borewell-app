@@ -11,6 +11,7 @@ import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { FADE_IN_ANIMATION, ROTATE_PLUS_ANIMATION, EXPAND } from '../animations';
 import { ConfigService } from '../services/config.service';
 import { CommonService } from '../services/common.service';
+import { AppService } from '../services/app.service';
 
 @Component({
   selector: 'app-post-login',
@@ -57,7 +58,8 @@ export class PostLoginComponent implements OnInit, OnDestroy {
     private loader: LoaderService,
     private router: Router,
     private config: ConfigService,
-    private common: CommonService
+    private common: CommonService,
+    private appService: AppService
   ) {
     this.isMobileSideNav = this.config.getConfig('mobileNav');
     this.classicSidenav = this.config.getConfig('classicSidenav');
@@ -79,10 +81,13 @@ export class PostLoginComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
-        this.loader.showLoader()
+        this.loader.showLoader();
       }
       if (event instanceof NavigationEnd) {
         this.loader.hideLoader();
+        if (!event.url.includes('error')) {
+          this.appService.previousUrl = event.url;
+        }
       }
     });
     this.loaderSubscription = this.loader.loader$.subscribe((status) => {

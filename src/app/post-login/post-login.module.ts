@@ -20,6 +20,7 @@ import { OverlayCardService } from '../services/overlay-card.service';
 import { CompanyiesResolver } from '../guards/resolveGuard/select-option/companies.resolver';
 import { PipeSizesResolver } from '../guards/resolveGuard/select-option/pipe-sizes.resolver';
 import { AddBookPopupComponent } from './rpm-entry/add-book-popup/add-book-popup.component';
+import { ErrorComponent } from '../error/error.component';
 
 
 
@@ -40,7 +41,8 @@ import { AddBookPopupComponent } from './rpm-entry/add-book-popup/add-book-popup
         HeaderComponent,
         S404Component,
         MobileSidenavComponent,
-        AddBookPopupComponent
+        AddBookPopupComponent,
+        ErrorComponent
     ],
     providers: [
         StateResolver,

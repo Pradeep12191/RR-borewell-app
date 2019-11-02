@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { RpmTableData } from '../../../models/RpmTableData';
 import { PipeSize } from '../../../models/PipeSize';
 import { Subscription } from 'rxjs';
@@ -9,7 +9,8 @@ import { RpmEntrySheet } from '../../../models/RpmEntrySheet';
 @Component({
     selector: 'rpm-entry-report-sheet',
     templateUrl: './rpm-entry-report-sheet.component.html',
-    styleUrls: ['./rpm-entry-report-sheet.component.scss']
+    styleUrls: ['./rpm-entry-report-sheet.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RpmEntryReportSheetComponent implements OnDestroy {
     @Input() rpmEnrty: RpmEntrySheet;

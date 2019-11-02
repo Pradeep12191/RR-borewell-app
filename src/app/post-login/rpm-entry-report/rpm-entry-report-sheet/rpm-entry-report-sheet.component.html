@@ -1,81 +1,120 @@
 <div fxLayout fxLayoutGap="16px">
-    <div class="card m-b-16 m-t-16 white" fxFlex>
-        <div class="section-title m-b-16 contact-title">
+    <div class="card m-t-16 white" fxFlex>
+        <!-- <div class="section-title m-b-16 contact-title">
             RPM DETAILS
-        </div>
-        <div fxLayout="column" fxLayoutGap="10px">
+        </div> -->
+        <div fxLayout="column" fxLayoutGap="10px" class="m-t-16">
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
                 <div fxFlex="30">Start Rpm</div>
                 <div>:</div>
-                <div class="font-18"></div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEnrty?.rpm.start; else hyphen">
+                        {{ rpmEnrty?.rpm.start }}
+                    </ng-container>
+                </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
                 <div fxFlex="30">End Rpm</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEnrty?.rpm.end; else hyphen">
+                        {{ rpmEnrty?.rpm.end }}
+                    </ng-container>
+                </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
                 <div fxFlex="30">Manual Rpm</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEnrty?.rpm.manual; else hyphen">
+                        {{ rpmEnrty?.rpm.manual }}
+                    </ng-container>
+                </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
                 <div fxFlex="30">Running Rpm</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEnrty?.rpm.running; else hyphen">
+                        {{ rpmEnrty?.rpm.running }}
+                    </ng-container>
+                </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
                 <div fxFlex="30">Point Diesel Rpm</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEnrty?.rpm.point_diesel; else hyphen">
+                        {{ rpmEnrty?.rpm.point_diesel }}
+                    </ng-container>
+                </div>
             </div>
         </div>
     </div>
-    <div class="card m-b-16 m-t-16 white" fxFlex>
-        <div class="section-title m-b-16 contact-title">
+    <div class="card m-t-16 white" fxFlex>
+        <!-- <div class="section-title m-b-16 contact-title">
             SERVICE DETAILS
-        </div>
-        <div fxLayout="column" fxLayoutGap="10px">
+        </div> -->
+        <div fxLayout="column" fxLayoutGap="10px" class="m-t-16">
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
-                <div fxFlex="10">250</div>
                 <div fxFlex="40">Engine Oil Service</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEnrty?.service.e_oil_service; else hyphen">
+                        {{ rpmEnrty?.service.e_oil_service }}
+                    </ng-container>
+                </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
-                <div fxFlex="10">600</div>
+                <!-- <div fxFlex="10">600</div> -->
                 <div fxFlex="40">Compressor Oil Service</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEnrty?.service.c_oil_service; else hyphen">
+                        {{ rpmEnrty?.service.c_oil_service }}
+                    </ng-container>
+                </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
-                <div fxFlex="10">750</div>
+                <!-- <div fxFlex="10">750</div> -->
                 <div fxFlex="40">Engine Air Filter</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEnrty?.service.e_air_filter; else hyphen">
+                        {{ rpmEnrty?.service.e_air_filter }}
+                    </ng-container>
+                </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
-                <div fxFlex="10">750</div>
+                <!-- <div fxFlex="10">750</div> -->
                 <div fxFlex="40">Compressor Air Filter</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEnrty?.service.c_air_filter; else hyphen">
+                        {{ rpmEnrty?.service.c_air_filter }}
+                    </ng-container>
+                </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
-                <div fxFlex="10">2000</div>
+                <!-- <div fxFlex="10">2000</div> -->
                 <div fxFlex="40">Seperator</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEnrty?.service.seperator; else hyphen">
+                        {{ rpmEnrty?.service.seperator }}
+                    </ng-container>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <div fxLayout>
-    <div class="card m-b-16 m-t-16 white" fxFlex>
-        <div class="section-title m-b-16 contact-title">
+    <div class="card m-t-16 white" fxFlex>
+        <!-- <div class="section-title m-b-16 contact-title">
             DIESEL DETAILS
-        </div>
-        <div fxLayout="column" fxLayoutGap="10px">
+        </div> -->
+        <div fxLayout="column" fxLayoutGap="10px" class="m-t-16">
             <div fxLayout>
                 <div fxFlex class="text-center bold">Compressor</div>
                 <div fxFlex class="text-center bold">Lorry</div>
@@ -85,85 +124,161 @@
                 <div fxFlex class="text-center bold">Diesel Avg</div>
             </div>
             <div fxLayout class="diesel-row">
-                <div fxFlex>0</div>
-                <div fxFlex>0</div>
-                <div fxFlex>0</div>
-                <div fxFlex>0</div>
-                <div fxFlex>0</div>
-                <div fxFlex>0</div>
+                <div fxFlex>
+                    <ng-container *hyphen="rpmEnrty?.diesel.compressor; else hyphen">
+                        {{ rpmEnrty?.diesel.compressor }}
+                    </ng-container>
+                </div>
+                <div fxFlex>
+                    <ng-container *hyphen="rpmEnrty?.diesel.lorry; else hyphen">
+                        {{ rpmEnrty?.diesel.lorry }}
+                    </ng-container>
+                </div>
+                <div fxFlex>
+                    <ng-container *hyphen="rpmEnrty?.diesel.support; else hyphen">
+                        {{ rpmEnrty?.diesel.support }}
+                    </ng-container>
+                </div>
+                <div fxFlex>
+                    <ng-container *hyphen="rpmEnrty?.diesel.total; else hyphen">
+                        {{ rpmEnrty?.diesel.total }}
+                    </ng-container>
+                </div>
+                <div fxFlex>
+                    <ng-container *hyphen="rpmEnrty?.diesel.previous_rpm; else hyphen">
+                        {{ rpmEnrty?.diesel.previous_rpm }}
+                    </ng-container>
+                </div>
+                <div fxFlex>
+                    <ng-container *hyphen="rpmEnrty?.diesel.average; else hyphen">
+                        {{ rpmEnrty?.diesel.average }}
+                    </ng-container>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <div fxLayout fxLayoutGap="16px">
-    <div class="card m-b-16 m-t-16 white" fxFlex>
-        <div class="section-title m-b-16 contact-title">
+    <div class="card m-t-16 white" fxFlex>
+        <!-- <div class="section-title m-b-16 contact-title">
             DEPTH DETAILS
-        </div>
-        <div fxLayout="column" fxLayoutGap="10px">
+        </div> -->
+        <div fxLayout="column" fxLayoutGap="10px" class="m-t-16">
             <div fxLayout fxLayoutAlign="start center">
                 <div fxFlex="30">Feet Avg</div>
-                <div class="label-container">66</div>
+                <div class="label-container">
+                    <ng-container *hyphen="rpmEntry?.depth.average; else hyphen">
+                        {{ rpmEntry?.depth.average }}
+                    </ng-container>
+                </div>
             </div>
             <div fxLayout fxLayoutAlign="start center" fxLayoutGap="15px">
                 <div fxFlex="30">Bore Depth</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEntry?.depth.bore; else hyphen">
+                        {{ rpmEntry?.depth.bore }}
+                    </ng-container>
+                </div>
             </div>
             <div fxLayout fxLayoutAlign="start center" fxLayoutGap="15px">
                 <div fxFlex="30">Pipe Erection Feet</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEntry?.depth.pipe_erection; else hyphen">
+                        {{ rpmEntry?.depth.pipe_erection }}
+                    </ng-container>
+                </div>
             </div>
             <div fxLayout fxLayoutAlign="start center" fxLayoutGap="10px">
                 <div>Above</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEntry?.depth.above.feet?.limit; else hyphen">
+                        {{ rpmEntry?.depth.above.feet?.limit }}
+                    </ng-container>
+                </div>
                 <div>Feet</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEntry?.depth.above.hrs; else hyphen">
+                        {{ rpmEntry?.depth.above.hrs }}
+                    </ng-container>
+                </div>
                 <div>hrs</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEntry?.depth.above.min; else hyphen">
+                        {{ rpmEntry?.depth.above.min }}
+                    </ng-container>
+                </div>
                 <div>min</div>
             </div>
         </div>
     </div>
-    <div class="card m-b-16 m-t-16 white" fxFlex>
-        <div class="section-title m-b-16 contact-title">
+    <div class="card m-t-16 white" fxFlex>
+        <!-- <div class="section-title m-b-16 contact-title">
             BIT DETAILS
-        </div>
-        <div fxLayout="column" fxLayoutGap="10px">
+        </div> -->
+        <div fxLayout="column" fxLayoutGap="10px" class="m-t-16">
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
                 <div fxFlex="30">TCD No</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEntry?.bit.serial_no; else hyphen">
+                        {{ rpmEntry?.bit.serial_no }}
+                    </ng-container>
+                </div>
                 <div>Bit No</div>
-                <div class="font-18">1234</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEntry?.bit.bit_no; else hyphen">
+                        {{ rpmEntry?.bit.bit_no }}
+                    </ng-container>
+                </div>
             </div>
 
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
                 <div fxFlex="30">Bit Running Feet</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEntry?.bit.running_feet; else hyphen">
+                        {{ rpmEntry?.bit.running_feet }}
+                    </ng-container>
+                </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
                 <div fxFlex="30">Bit Previous Feet</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEntry?.bit.previous_feet; else hyphen">
+                        {{ rpmEntry?.bit.previous_feet }}
+                    </ng-container>
+                </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
                 <div fxFlex="30">Total Feet</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEntry?.bit.total_feet; else hyphen">
+                        {{ rpmEntry?.bit.total_feet }}
+                    </ng-container>
+                </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
                 <div fxFlex="30">Hammer</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEntry?.bit.hammer; else hyphen">
+                        {{ rpmEntry?.bit.hammer }}
+                    </ng-container>
+                </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
                 <div fxFlex="30">Piston</div>
                 <div>:</div>
-                <div class="font-18">0</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEntry?.bit.piston; else hyphen">
+                        {{ rpmEntry?.bit.piston }}
+                    </ng-container>
+                </div>
             </div>
         </div>
     </div>
@@ -171,10 +286,10 @@
 
 <div fxLayout>
     <div class="card m-b-16 m-t-16 white" fxFlex>
-        <div class="section-title m-b-16 contact-title">
+        <!-- <div class="section-title m-b-16 contact-title">
             PIPE DETAILS
-        </div>
-        <div fxLayout="column" class="table">
+        </div> -->
+        <div fxLayout="column" class="table m-t-16">
             <div class="pipe-header" fxLayout>
                 <div fxFlex="20"></div>
                 <div [fxFlex]="pipeFlex" fxLayoutAlign="center center" class="header-cell bold" *ngFor="let pipe of pipes">{{
@@ -259,3 +374,7 @@
         <!-- <div class="m-l-5 font-italic" [innerHTML]="bill.remarks | newLine"></div> -->
     </div>
 </div>
+
+<ng-template #hyphen>
+    <div class="hyphen"></div>
+</ng-template>

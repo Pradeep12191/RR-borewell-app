@@ -43,7 +43,6 @@ export class RpmEntryService {
         this.rpmHourFeetUrl = this.config.getAbsoluteUrl('rpmHourFeets');
         this.compressorAirFilterLimitUrl = this.config.getAbsoluteUrl('compresserAirFilterServiceList');
         this.vehicleServicesUrl = this.config.getAbsoluteUrl('getServiceLimits')
-        this.vehicleServicesUrl = this.config.getAbsoluteUrl('getServiceLimits')
         this.assignedBitSerialNoUrl = this.config.getAbsoluteUrl('assignedBitSerialNos');
         this.tractorsUrl = this.config.getAbsoluteUrl('tractorList')
     }
@@ -213,6 +212,11 @@ export class RpmEntryService {
 
     getServiceLimits(vehicle: Vehicle) {
         const params = new HttpParams().set('user_id', this.auth.userid).append('vehicle_id', vehicle.vehicle_id);
+        return this.http.get<VehicleServices>(this.vehicleServicesUrl, { params })
+    }
+
+    getServiceLimitsByVehicleId(vehicleId: string) {
+        const params = new HttpParams().set('user_id', this.auth.userid).append('vehicle_id', vehicleId);
         return this.http.get<VehicleServices>(this.vehicleServicesUrl, { params })
     }
 

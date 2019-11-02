@@ -1,6 +1,6 @@
 {
     "formAppearance": "outline",
-    "apiUrl": "http://103.207.4.72:18082/RR_borewell_api1/webapi/resource/",
+    "apiUrl": "http://103.207.4.72:8073/RR_borewell_api1/webapi/resource/",
     "reportBaseUrl": "http://localhost:3001/",
     "mobileNav": false,
     "classicSidenav": true,

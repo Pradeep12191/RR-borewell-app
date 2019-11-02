@@ -238,7 +238,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         })
 
         this.picker.closedStream.subscribe(() => {
-            if (this.date) {
+            if (this.date && this.bookId) {
                 this.enableAllControls();
             }
             // this.inVehicleSelect.open();
@@ -598,9 +598,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.routeDataSubscription) { this.routeDataSubscription.unsubscribe() }
     }
 
-    confirmServiceCompletion(name, propName, type: 'service' | 'bit' = 'service') {
+    confirmServiceCompletion(name, propName, type: 'service' | 'bit' | 'tractor' = 'service') {
         let message = '';
-        if (type === 'service') {
+        if (type === 'service' || type === 'tractor') {
             message = `Would you like to complete ${name} service ?`
         }
         if (type === 'bit') {
@@ -619,6 +619,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 if (type === 'bit') {
                     this.rpmSheet.bit[propName] = 0;
                 }
+                if (type === 'tractor') {
+                    this.form.get('rpm.trac').value[propName] = 0;
+                }
+
             }
         })
     }
@@ -1132,7 +1136,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 tractor_start_hour: this.form.value.rpm.trac ? this.form.value.rpm.trac.start_hour : 0,
                 tractor_end_hour: this.form.value.rpm.tracEndHour ? +this.form.value.rpm.tracEndHour : 0,
                 tractor_id: this.form.value.rpm.trac ? +this.form.value.rpm.trac.id : 0,
-                tractor_no: this.form.value.rpm.trac ? +this.form.value.rpm.trac.no : 0,
+                tractor_no: this.form.value.rpm.trac ? this.form.value.rpm.trac.no : '',
                 start: this.rpmSheet.rpm.start,
                 manual: +this.form.value.rpm.manual,
                 end: +this.form.value.rpm.end,

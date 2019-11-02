@@ -81,15 +81,15 @@
                     <div fxLayout="column">
                         <div fxLayout fxLayoutAlign="start center">
                             <mat-form-field  fxFlex="30" class="m-r-16">
-                                <mat-select formControlName="trac">
+                                <mat-select (selectionChange)="onTractorChange($event)" formControlName="trac">
                                     <mat-option value="">Select Tractor</mat-option>
-                                    <mat-option *ngFor="let tractor of tractors" [value]="tractor">{{ tractor.regNo }}</mat-option>
+                                    <mat-option *ngFor="let tractor of tractors" [value]="tractor">{{ tractor.no }}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                             <div fxFlex="40" class="font-14">Tractor Start Hour</div>
                             <div class="bold font-16">
-                                <div *ngIf="rpmSheet?.rpm?.tractor_start_hour || rpmSheet?.rpm?.tractor_start_hour === 0; else hyphenTpl">
-                                    {{rpmSheet?.rpm?.tractor_start_hour}}
+                                <div *ngIf="form.get('rpm.trac').value || form.get('rpm.trac').value?.start_hour === 0; else hyphenTpl">
+                                    {{ form.get('rpm.trac').value?.start_hour }}
                                 </div>
                             </div>
                         </div>
@@ -170,8 +170,8 @@
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="45">Tractor Engine Oil Service</div>
-                            <div fxLayoutAlign="start center" fxFlex class="bold font-14">
-                                {{ roundValue(rpmSheet?.service?.tractor_e_oil_service + tracRunningRpm) }}
+                            <div fxLayoutAlign="start center" fxFlex class="bold font-14" *ngIf="form.get('rpm.trac').value; else hyphenTpl">
+                                {{ roundValue(form.get('rpm.trac').value?.e_oil_service + tracRunningRpm) }}
                             </div>
 
                             <div fxLayoutAlign="end center">
@@ -188,8 +188,8 @@
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="45">Trator Gear Oil Service</div>
-                            <div fxLayoutAlign="start center" fxFlex class="bold font-14">
-                                {{ roundValue(rpmSheet?.service?.tractor_g_oil_service + tracRunningRpm) }}
+                            <div fxLayoutAlign="start center" fxFlex class="bold font-14" *ngIf="form.get('rpm.trac').value; else hyphenTpl">
+                                {{ roundValue(form.get('rpm.trac').value?.g_oil_service + tracRunningRpm) }}
                             </div>
 
                             <div fxLayoutAlign="end center">

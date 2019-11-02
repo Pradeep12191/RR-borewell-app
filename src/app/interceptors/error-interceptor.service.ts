@@ -40,6 +40,12 @@ export class ErrorInterceptorService implements HttpInterceptor {
                     } else {
                         this.router.navigate(['/postlogin/error']);
                     }
+                } else {
+                    if (req.url.indexOf('login') !== -1) {
+                        this.toastr.error('Unknown Error occured', "Error", { timeOut: 2000 })
+                    } else {
+                        this.router.navigate(['/postlogin/error']);
+                    }
                 }
             }
             return throwError(err)

@@ -13,6 +13,7 @@ import { FormBuilder } from '@angular/forms';
 import { BitSerialNo } from '../../models/BitSerialNo';
 import { ServiceLimit } from '../../models/Limit';
 import { VehicleServices } from '../../models/VehicleServices';
+import { Tractor } from '../../models/Tractor';
 
 @Injectable()
 export class RpmEntryService {
@@ -199,7 +200,7 @@ export class RpmEntryService {
 
     getTractors() {
         const params = new HttpParams().set('user_id', this.auth.userid);
-        return this.http.get<Vehicle[]>(this.tractorsUrl, { params })
+        return this.http.get<Tractor[]>(this.tractorsUrl, { params })
     }
 
     getRpmHourFeets() {

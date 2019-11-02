@@ -4,6 +4,7 @@ import { PipeSize } from '../../../models/PipeSize';
 import { Godown } from '../../pipe/Godown';
 import { AuthService } from '../../../services/auth.service';
 import { Moment } from 'moment';
+import * as moment from 'moment';
 import { ConfigService } from '../../../services/config.service';
 import { ToastrService } from 'ngx-toastr';
 import { HttpClient } from '@angular/common/http';
@@ -40,7 +41,9 @@ export class ConfirmBitVehicleExchangeComponent {
 
     savePipe() {
         const payload = {
-            bits: this.bits,
+            date: this.date ? (this.date as Moment).format('DD-MM-YYYY') : '',
+            remarks: this.remarks,
+            ex_bits: this.bits,
             from_vehcile: this.fromVehicle,
             to_vehicle: this.toVehicle
         }

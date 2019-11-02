@@ -67,7 +67,7 @@ export class BitVehicleExchangeComponent implements OnInit {
     }
 
     confirm() {
-        this.dialog.open(ConfirmBitVehicleExchangeComponent, {
+        const dialogRef = this.dialog.open(ConfirmBitVehicleExchangeComponent, {
             disableClose: true,
             width: '40vw',
             position: { top: '25px' },
@@ -78,6 +78,11 @@ export class BitVehicleExchangeComponent implements OnInit {
                 toVehicle: this.selectedToVehicle,
                 date: this.date,
                 remarks: this.remarks
+            }
+        });
+        dialogRef.afterClosed().subscribe((res) => {
+            if (res) {
+                this.assignedBits = res
             }
         })
     }

@@ -13,7 +13,7 @@ import { RpmEntrySheet } from '../../../models/RpmEntrySheet';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RpmEntryReportSheetComponent implements OnDestroy {
-    @Input() rpmEnrty: RpmEntrySheet;
+    @Input() rpmEntry: RpmEntrySheet;
     pipes: PipeSize[];
     routeDataSubscription: Subscription;
     pipeTotalFlex = 80;

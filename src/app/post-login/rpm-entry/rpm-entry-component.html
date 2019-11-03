@@ -311,7 +311,7 @@
                     <div class="diesel__content">
                         <div fxFlex class="b-r">
                             <div class="input-wrapper h-100" fxFlex>
-                                <input formControlName="compressor" #dieselInput (keydown.enter)="onDieselEnter(0)" (input)="updateTotalDiesel()"
+                                <input formControlName="compressor" #dieselInput (keydown.enter)="onDieselEnter(0)" (input)="updateTotalDiesel('compressor')"
                                     type="text" class="h-100" placeholder="Liter" positiveNumber>
                                 <mat-icon class="input-edit-icon">edit</mat-icon>
                                 <!-- <label>Count</label> -->

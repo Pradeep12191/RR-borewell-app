@@ -1044,18 +1044,20 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    updateTotalDiesel() {
+    updateTotalDiesel(type = '') {
         let totalDiesel = 0;
         const lorry = +this.form.get('diesel.lorry').value;
         const support = +this.form.get('diesel.support').value;
         const compressor = +this.form.get('diesel.compressor').value;
-
-        if (compressor) {
-            this.rpmSheet.rpm.prev_diesel_rpm = 0;
-            this.rpmSheet.rpm.point_diesel = this.rpmSheet.rpm.running
-        } else {
-            this.rpmSheet.rpm.prev_diesel_rpm = this.previousDieselRpm;
-            this.rpmSheet.rpm.point_diesel = this.previousDieselRpm + +this.rpmSheet.rpm.running;
+        if (type === 'compressor') {
+            // reset previous diesel rpm when compressor diesel is filled
+            if (compressor) {
+                this.rpmSheet.rpm.prev_diesel_rpm = 0;
+                this.rpmSheet.rpm.point_diesel = this.rpmSheet.rpm.running
+            } else {
+                this.rpmSheet.rpm.prev_diesel_rpm = this.previousDieselRpm;
+                this.rpmSheet.rpm.point_diesel = this.roundValue(this.previousDieselRpm + +this.rpmSheet.rpm.running);
+            }
         }
 
         if (this.rpmSheet.diesel) {

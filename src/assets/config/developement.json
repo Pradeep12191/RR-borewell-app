@@ -169,6 +169,10 @@
         {
             "name": "bitVehicleExchange",
             "url": "bit_vehicle_exchange"
+        },
+        {
+            "name": "boreTypes",
+            "url": "bore_types"
         }
     ],
     "reportGenerateUrls": [

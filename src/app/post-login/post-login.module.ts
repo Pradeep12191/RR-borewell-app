@@ -21,6 +21,7 @@ import { CompanyiesResolver } from '../guards/resolveGuard/select-option/compani
 import { PipeSizesResolver } from '../guards/resolveGuard/select-option/pipe-sizes.resolver';
 import { AddBookPopupComponent } from './rpm-entry/add-book-popup/add-book-popup.component';
 import { ErrorComponent } from '../error/error.component';
+import { BoreTypesResolver } from '../guards/resolveGuard/bore-types.resolver';
 
 
 
@@ -53,6 +54,7 @@ import { ErrorComponent } from '../error/error.component';
         OverlayCardService,
         CompanyiesResolver,
         PipeSizesResolver,
+        BoreTypesResolver
     ],
     entryComponents: [
         AddBookPopupComponent

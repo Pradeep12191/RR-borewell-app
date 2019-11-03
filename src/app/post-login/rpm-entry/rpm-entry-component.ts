@@ -33,6 +33,7 @@ import { AddDieselPopupComponent } from './add-diesel-popup/add-diesel-popup.com
 import { ServiceCompleteConfirmDialog } from './service-complete-confirm-dialog/service-complete-confirm-dialog.component';
 import { AssignBit } from '../bits/view-bit/AssignBit';
 import { Tractor } from '../../models/Tractor';
+import { BoreType } from '../../models/BoreType';
 
 interface VehicleChangeData {
     lastRpmEntrySheet: RpmEntrySheet;
@@ -85,7 +86,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     tracRunningRpm = 0;
     previousDieselRpm;
     pointDieselRpm;
-    tractors: Tractor[]
+    tractors: Tractor[];
+    boreTypes: BoreType[];
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
     @ViewChild('inVehicleSelect', { static: false }) inVehicleSelect: MatSelect;
@@ -133,7 +135,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         private snackBar: MatSnackBar,
         private loader: LoaderService,
         private common: CommonService,
-        private toastr: ToastrService
+        private toastr: ToastrService,
     ) {
         this.form = this.fb.group({
             pointExpenseFeet: this.fb.array([]),
@@ -162,6 +164,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }),
             depth: this.fb.group({
                 bore: { value: '', disabled: true },
+                boreType: {value: '', disabled: true},
                 pipeErection: { value: '', disabled: true },
                 above: this.fb.group({
                     feet: { value: '', disabled: true },
@@ -187,6 +190,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.tractors = data.tractors;
             this.pipeFlex = this.pipeTotalFlex / this.pipes.length;
             this.pipeFlex = Math.round(this.pipeFlex * 100) / 100;
+            this.boreTypes = data.boreTypes
 
             this.pipes.forEach(pipe => {
                 const pipeData: RpmValue = { pipeType: pipe.type, feet: 0, pipeId: +pipe.id, pipeSize: +pipe.size, length: 0 }
@@ -200,7 +204,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.veicleExOutFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
                 this.veicleExInFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
                 this.damageFeetFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
-            })
+            });
+            this.form.get('depth.boreType').setValue(this.boreTypes[0]);
         })
     }
 
@@ -886,6 +891,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('depth.above.feet').reset('');
         this.form.get('depth.above.hrs').reset('');
         this.form.get('depth.above.min').reset('');
+        this.form.get('depth.boreType').reset(this.boreTypes[0]);
         this.form.get('bit').reset();
         this.form.get('inVehicle').reset();
         this.form.get('outVehicle').reset();
@@ -968,6 +974,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('depth.bore').enable();
         this.form.get('depth.pipeErection').enable();
         this.form.get('depth.above.feet').enable();
+        this.form.get('depth.boreType').enable();
         // this.form.get('rpm').enable();
         this.form.get('rpm.end').enable();
         this.form.get('rpm.manual').enable();
@@ -1166,6 +1173,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             depth: {
                 average: 0,
+                bore_type: this.form.value.depth.boreType.type,
                 above: {
                     feet: this.form.value.depth.above.feet,
                     hrs: this.form.value.depth.above.hrs ? +this.form.value.depth.above.hrs : 0,
@@ -1325,6 +1333,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.form.get('depth.above.feet').setValue(this.rpmHourFeets[0]);
         });
         this.rpmSheet.depth = {
+            bore_type: this.boreTypes[0].type,
             above: { extra_feet: 0, feet: this.rpmHourFeets[0], hrs: 0, min: 0 },
             average: 0,
             bore: 0,

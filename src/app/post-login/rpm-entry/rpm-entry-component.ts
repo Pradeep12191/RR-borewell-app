@@ -154,13 +154,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 end: { value: '', disabled: true },
                 manual: { value: '', disabled: true },
                 tracEndHour: { value: '', disabled: true },
-                trac: { value: '', disabled: false },
+                trac: { value: '', disabled: true },
                 // isManual: false
             }),
             diesel: this.fb.group({
                 compressor: { value: '', disabled: true },
                 lorry: { value: '', disabled: true },
-                support: { value: '', disabled: true }
+                support: { value: '', disabled: true },
+                tractor: { value: '', disabled: true }
             }),
             depth: this.fb.group({
                 bore: { value: '', disabled: true },
@@ -886,13 +887,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('diesel.compressor').reset('');
         this.form.get('diesel.lorry').reset('');
         this.form.get('diesel.support').reset('');
+        this.form.get('diesel.tractor').reset('');
         this.form.get('depth.pipeErection').reset('');
         this.form.get('depth.bore').reset('');
         this.form.get('depth.above.feet').reset('');
         this.form.get('depth.above.hrs').reset('');
         this.form.get('depth.above.min').reset('');
         this.form.get('depth.boreType').reset(this.boreTypes[0]);
-        this.form.get('bit').reset();
+        this.form.get('bit').reset('');
         this.form.get('inVehicle').reset();
         this.form.get('outVehicle').reset();
         this.form.get('inRpmNo').reset();
@@ -1056,6 +1058,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         const lorry = +this.form.get('diesel.lorry').value;
         const support = +this.form.get('diesel.support').value;
         const compressor = +this.form.get('diesel.compressor').value;
+        const tractor = +this.form.get('diesel.tractor').value;
         if (type === 'compressor') {
             // reset previous diesel rpm when compressor diesel is filled
             if (compressor) {
@@ -1068,7 +1071,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         if (this.rpmSheet.diesel) {
-            totalDiesel = compressor + lorry + support
+            totalDiesel = compressor + lorry + support + tractor
             this.rpmSheet.diesel.total = totalDiesel;
         }
         this.updateDieselAvg();
@@ -1160,7 +1163,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 total: this.rpmSheet.diesel.total,
                 support: +this.form.value.diesel.support,
                 compressor: +this.form.value.diesel.compressor,
-                lorry: +this.form.value.diesel.lorry
+                lorry: +this.form.value.diesel.lorry,
+                tractor: +this.form.value.diesel.tractor
             },
             service: {
                 tractor_e_oil_service: this.form.get('rpm.trac').value ? this.roundValue(this.form.get('rpm.trac').value.e_oil_service + this.tracRunningRpm) : 0,

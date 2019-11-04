@@ -1180,6 +1180,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 bore_type: this.form.value.depth.boreType.type,
                 above: {
                     feet: this.form.value.depth.above.feet,
+                    extra_feet: +this.rpmSheet.depth.above.extra_feet,
                     hrs: this.form.value.depth.above.hrs ? +this.form.value.depth.above.hrs : 0,
                     min: this.form.value.depth.above.min ? +this.form.value.depth.above.min : 0,
                 },

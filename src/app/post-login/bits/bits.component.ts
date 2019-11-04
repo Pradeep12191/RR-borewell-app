@@ -68,6 +68,10 @@ export class BitsComponent {
         this.bits = bits;
     }
 
+    viewBitData(bit: Bit) {
+        this.router.navigate(['postlogin/viewBitData', bit.size, bit.type])
+    }
+
     navigateToViewBit() {
         this.router.navigate(['viewBit'], { relativeTo: this.route })
     }

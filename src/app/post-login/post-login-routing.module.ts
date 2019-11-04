@@ -19,6 +19,7 @@ const routes: Routes = [
             { path: 'viewBills', loadChildren: () => import('./view-bill/view-bill.module').then(mod => mod.ViewBillModule) },
             { path: 'assignVehicle', loadChildren: () => import('./pipe/assign-vehicle/assign-vehicle.module').then(mod => mod.AssignVehicleModule) },
             { path: 'viewPipeData/:pipeSize/:pipeType', loadChildren: () => import('./pipe/pipe-data/pipe-data.module').then(mod => mod.PipeDataModule) },
+            { path: 'viewBitData/:bitSize/:bitType', loadChildren: () => import('./bits/bit-data/bit-data.module').then(mod => mod.BitDataModule) },
             { path: 'bits', loadChildren: () => import('./bits/bits.module').then(mod => mod.BitsModule) },
             { path: 'bits/viewBit', loadChildren: () => import('./bits/view-bit/view-bit.module').then(mod => mod.ViewBitModule) },
             { path: 'bitsExchangeVehicle', loadChildren: () => import('./bit-vehicle-exchange/bit-vehicle-exchange.module').then(mod => mod.BitVehicleExchangeModule) },

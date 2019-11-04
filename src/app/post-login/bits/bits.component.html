@@ -32,7 +32,7 @@
     <div fxLayout="row wrap" fxLayoutGap="40px" class="widget-container" *ngIf="bits?.length; else emptyTpl"
         [@listState]="bits?.length">
         <div fxFlex="calc(25% - 40px)" class="m-b-32 pipe" *ngFor="let bit of bits">
-            <div class="pipe-card" (click)="viewPipeData(bit)">
+            <div class="pipe-card" (click)="viewBitData(bit)">
                 <div fxLayout class="pipe-title" fxLayout fxLayoutAlign="center center">
                     {{ bit.type}}
                     <button mat-icon-button class="pipe-arrow-button">

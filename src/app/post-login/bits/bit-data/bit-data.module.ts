@@ -9,6 +9,10 @@ import { BitDataRoutingModule } from './bit-data-routing.module';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { FormsModule } from '@angular/forms';
+import { BitSizeListResolver } from '../../../guards/resolveGuard/bit/bit-size-list.resolver';
+import { BitService } from '../bit.service';
+import { AddBitService } from '../add-bit-dialog/add-bit.service';
+import { DirectiveModule } from '../../../directives/directive.module';
 
 @NgModule({
     imports: [
@@ -20,13 +24,16 @@ import { FormsModule } from '@angular/forms';
         BitDataRoutingModule,
         ScrollingModule,
         FormsModule,
-        InfiniteScrollModule
+        InfiniteScrollModule,
+        DirectiveModule
     ],
     declarations: [
         BitDataComponent
     ],
     providers: [
-        
+        AddBitService,
+        BitSizeListResolver,
+        BitService
     ]
 
 })

@@ -1,0 +1,133 @@
+@import '~src/mixins.scss';
+
+
+.bill-table{
+    ::ng-deep{
+        mat-row{
+            border-bottom: 1px solid black;
+            min-height: 32px;
+        }
+        mat-row:nth-child(2n +1){
+            border-bottom: 0px;
+        }    
+        mat-cell{
+            border-right: 1px solid;
+            &:first-child{
+                border-left: 1px solid black;
+            }
+        }
+    }
+    
+}
+
+h4{
+    margin: 0;
+}
+
+.back-btn{
+    position: absolute;
+    top: 25px;
+    left: 35px;
+}
+
+.table-container{
+    width: 100%;
+    min-height: calc(100vh - 154px);
+    position: relative;
+    .table{
+        overflow: auto;
+        font-size: 14px;
+        height: calc(100% - 56px);
+        width: 100%;
+    }
+}
+.container{
+    margin-right: -30px;
+}
+.spinner-container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: 6px;
+    margin-left: -20px;
+}
+
+.error-content{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -33px;
+    margin-left: -115px;
+}
+
+.batch-spinner{
+    height: 125px;
+    position: relative;
+    mat-spinner{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -20px;
+        margin-left: -20px;
+    }
+}
+
+.pipe-summary{
+    position: relative;
+    mat-spinner{
+       @include spinner-position;
+    }
+    mat-card-content{
+        height: 100px;
+    }
+}
+
+.header{
+    position: relative;
+    .vehicle-select, .download-btn {
+        position: absolute;
+    }
+    .vehicle-select{
+        right: 0;
+    }
+    .download-btn{
+        left: 0;
+    }
+}
+
+
+
+.header-row{
+    min-height: 56px;
+    background-color: #006064;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid black;
+}
+
+.row{
+    min-height: 32px;
+    border-bottom: 1px solid black;
+}
+
+.header-cell{
+    &:last-of-type{
+        padding-right: 16px;
+    }
+}
+
+.header-cell, .cell{
+    // &:first-of-type{
+    //     padding-left: 24px;
+    // }
+
+    text-align: center;
+}
+
+.cell{
+    &:first-child{
+        border-left: 1px solid black;
+    }
+    border-right: 1px solid black;
+}

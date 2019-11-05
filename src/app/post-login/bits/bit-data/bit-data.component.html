@@ -1,1 +1,94 @@
-Bit Data
+<button mat-mini-fab class="back-btn" (click)="backToBits()" color="primary">
+    <mat-icon>arrow_back</mat-icon>
+</button>
+<div class="m-l-25" fxLayoutAlign="start center">
+    <div fxFlex fxLayoutAlign="center center" class="header shift-top-30">
+        <div fxFlex fxLayoutAlign="space-between">
+            <div fxLayoutAlign="start center" fxFlex="20">
+                Bit Quantity :&nbsp;&nbsp;<span class="bold">{{ count || 0 }}</span>
+            </div>
+            <mat-form-field class="calc-field" fxFlex="17">
+                <mat-label>BIt Size</mat-label>
+                <mat-select (selectionChange)="change()" [(ngModel)]="selectedBit" placeholder="Select Bit">
+                    <mat-option [value]="bit" *ngFor="let bit of bits">{{ bit.type }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="calc-field" fxFlex="17">
+                <mat-label>Vehicle No.</mat-label>
+                <mat-select [disabled]="vehicleDisabled" (selectionChange)="change()" [(ngModel)]="selectedVehicle"
+                    placeholder="Select Vehicle">
+                    <mat-option [value]="vehicle" *ngFor="let vehicle of vehicles">{{ vehicle.regNo }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="calc-field" fxFlex="17">
+                <mat-label>Search serial No.</mat-label>
+                <input type="text" positiveNumber matInput (input)="onSerialNoSearch($event)">
+            </mat-form-field>
+            <div fxFlexAlign="center">
+                <button (click)="downloadPdf()" mat-raised-button color="primary">Download Pdf</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div fxLayout fxLayoutAlign="start start" class="container">
+    <div fxLayout fxLayoutGap="25px" fxFlex>
+        <div class="mat-elevation-z8 table-container">
+            <div fxLayout class="header-row">
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>S.No.</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Bit Size</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Bit No</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Bit Serial No</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Bit Usage</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Company Name</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Vehicle No</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Assigned Date</div>
+            </div>
+            <ng-container *ngIf="infinite | async as bits; else initialLoader">
+                <ng-container *ngIf="!mainLoading; else initialLoader">
+                    <ng-container *ngIf="bits.length; else emptyMsgTpl">
+                        <cdk-virtual-scroll-viewport #viewContainer @fadeIn (scrolledIndexChange)="nextBatch($event, bits.length)"
+                            itemSize="31" fxLayout="column" class="table">
+                            <div class="row" *cdkVirtualFor="let bit of bits; let i = index; trackBy: trackByFn"
+                                fxLayout>
+                                <div fxFlex fxLayoutAlign="center center" class="cell">{{ i + 1 }}</div>
+                                <div fxFlex fxLayoutAlign="center center" class="cell">{{ bit.bit_type }}</div>
+                                <div fxFlex fxLayoutAlign="center center" class="cell">{{ bit.no }}</div>
+                                <div fxFlex fxLayoutAlign="center center" class="cell">{{ bit.serial_no }}</div>
+                                <div fxFlex fxLayoutAlign="center center" class="cell">{{ bit.usage }}</div>
+                                <div fxFlex fxLayoutAlign="center center" class="cell">{{ bit.company_name }}</div>
+                                <div fxFlex fxLayoutAlign="center center" class="cell">{{ bit.vehicle_no }}</div>
+                                <div fxFlex fxLayoutAlign="center center" class="cell">{{ bit.date }}</div>
+                            </div>
+                            <div *ngIf="loading" class="batch-spinner">
+                                <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
+                            </div>
+                        </cdk-virtual-scroll-viewport>
+                    </ng-container>
+                </ng-container>
+
+                <ng-template #emptyMsgTpl>
+                    <div class="m-t-25" fxLayoutAlign="center center">
+                        No Bit Found.
+                    </div>
+                </ng-template>
+            </ng-container>
+            <ng-template #initialLoader>
+                <div *ngIf="!errorOccured; else errorTpl" class="spinner-container">
+
+                    <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
+                </div>
+                <ng-template #errorTpl>
+                    <div class="error-content" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+                        <div>Error - Click Below button to retry</div>
+                        <button (click)="retry()" mat-fab color="primary" aria-label="Retry Button">
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </div>
+
+                </ng-template>
+
+            </ng-template>
+        </div>
+    </div>
+</div>

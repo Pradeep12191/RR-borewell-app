@@ -234,4 +234,4 @@ export class PipeDataComponent implements OnDestroy {
             })
         )
     }
-}
+}   

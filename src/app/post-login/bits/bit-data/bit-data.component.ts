@@ -2,7 +2,7 @@ import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, BehaviorSubject, Observable, Subject } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { tap, throttleTime, map, materialize, exhaustMap } from 'rxjs/operators';
+import { tap, throttleTime, map, materialize, exhaustMap, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { FADE_IN_ANIMATION } from '../../../animations';
 import { ToastrService } from 'ngx-toastr';
 import { Vehicle } from '../../../models/Vehicle';
@@ -75,6 +75,21 @@ export class BitDataComponent implements OnDestroy {
             ).subscribe((count) => {
                 this.count = count
             })
+        })
+
+        this.input$.pipe(
+            distinctUntilChanged(),
+            debounceTime(500),
+            switchMap(() => {
+                return this.bitService.getBitDataCount(
+                    this.selectedBit.size,
+                    this.selectedVehicle.vehicle_id,
+                    this.searchSerialNo
+                )
+            })
+        ).subscribe((count) => {
+            this.count = count;
+            this.offset.next(null);
         })
 
 
@@ -160,8 +175,10 @@ export class BitDataComponent implements OnDestroy {
         // })
     }
 
-    onSerialNoSearch() {
-
+    onSerialNoSearch(e) {
+        this.mainLoading = true;
+        this.searchSerialNo = e.target.value
+        this.input$.next(e.target.value)
     }
 
     backToBits() {

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MaterialModule } from '../material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { A11yModule } from '@angular/cdk/a11y';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { PostLoginRoutingModule } from './post-login-routing.module';
 import { PostLoginComponent } from './post-login.component';
@@ -16,12 +17,11 @@ import { VehicleTypeResolver } from '../guards/resolveGuard/vehicle/vehicle-type
 import { VehicleListResolver } from '../guards/resolveGuard/vehicle/vehicle-list.resolver';
 import { GodownTypesResolver } from '../guards/resolveGuard/select-option/godown-types.resolver';
 import { OverlayCardService } from '../services/overlay-card.service';
-import { AddCompanyPopup } from './bits/add-bit-dialog/add-bit/add-company-popup/add-company-popup.compoent';
 import { CompanyiesResolver } from '../guards/resolveGuard/select-option/companies.resolver';
 import { PipeSizesResolver } from '../guards/resolveGuard/select-option/pipe-sizes.resolver';
 import { AddBookPopupComponent } from './rpm-entry/add-book-popup/add-book-popup.component';
-import { RpmEntryService } from './rpm-entry/rpm-entry.service';
-import { BitGodownsResolver } from '../guards/resolveGuard/bit/bit-godowns.resolver';
+import { ErrorComponent } from '../error/error.component';
+import { BoreTypesResolver } from '../guards/resolveGuard/bore-types.resolver';
 
 
 
@@ -34,6 +34,7 @@ import { BitGodownsResolver } from '../guards/resolveGuard/bit/bit-godowns.resol
         FormsModule,
         PostLoginRoutingModule,
         SharedModule,
+        A11yModule
     ],
     declarations: [
         DashboardComponent,
@@ -41,7 +42,8 @@ import { BitGodownsResolver } from '../guards/resolveGuard/bit/bit-godowns.resol
         HeaderComponent,
         S404Component,
         MobileSidenavComponent,
-        AddBookPopupComponent
+        AddBookPopupComponent,
+        ErrorComponent
     ],
     providers: [
         StateResolver,
@@ -51,7 +53,8 @@ import { BitGodownsResolver } from '../guards/resolveGuard/bit/bit-godowns.resol
         GodownTypesResolver,
         OverlayCardService,
         CompanyiesResolver,
-        PipeSizesResolver
+        PipeSizesResolver,
+        BoreTypesResolver
     ],
     entryComponents: [
         AddBookPopupComponent

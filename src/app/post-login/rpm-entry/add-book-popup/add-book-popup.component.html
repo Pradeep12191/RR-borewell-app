@@ -1,4 +1,4 @@
-<div class="popup-card mat-elevation-z4" @scaleUp>
+<div class="popup-card mat-elevation-z4" @scaleUp cdkTrapFocus cdkTrapFocusAutoCapture>
     <mat-toolbar class="custom" color="primary">
         <span>ADD BOOK</span>
         <span class="space"></span>
@@ -19,7 +19,7 @@
         <div fxLayout fxLayoutGap="16px">
             <mat-form-field [appearance]="appearance" fxFlex class="calc-field">
                 <mat-label>Start Page No</mat-label>
-                <input type="text" (keydown.enter)="onStartEnter()" required #bookStart formControlName="start"
+                <input type="text" (keydown.enter)="onStartEnter()" required cdkFocusInitial formControlName="start"
                     autocomplete="off" matInput>
             </mat-form-field>
             <mat-form-field [appearance]="appearance" class="calc-field" fxFlex>

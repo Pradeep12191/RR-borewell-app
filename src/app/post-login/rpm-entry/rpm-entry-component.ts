@@ -2,14 +2,14 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, Vie
 import { Subscription, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { PipeSize } from '../../models/PipeSize';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl } from '@angular/forms';
 import { Vehicle } from '../../models/Vehicle';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { OverlayCardService } from '../../services/overlay-card.service';
 import { CardOverlayref } from '../../services/card-overlay-ref';
 import { AddBookPopupComponent } from './add-book-popup/add-book-popup.component';
-import { MatDialog, MatSelect, MatSnackBar, MatDatepicker, MatInput, MatCheckboxChange } from '@angular/material';
+import { MatDialog, MatSelect, MatSnackBar, MatDatepicker, MatInput, MatCheckboxChange, MatSelectChange } from '@angular/material';
 import { AssignVehicleDialogComponent } from './assign-vehicle-dialog/assign-vehicle-dialog.component';
 import { Godown } from '../pipe/Godown';
 import { ConfigService } from '../../services/config.service';
@@ -32,6 +32,8 @@ import { ToastrService } from 'ngx-toastr';
 import { AddDieselPopupComponent } from './add-diesel-popup/add-diesel-popup.component';
 import { ServiceCompleteConfirmDialog } from './service-complete-confirm-dialog/service-complete-confirm-dialog.component';
 import { AssignBit } from '../bits/view-bit/AssignBit';
+import { Tractor } from '../../models/Tractor';
+import { BoreType } from '../../models/BoreType';
 
 interface VehicleChangeData {
     lastRpmEntrySheet: RpmEntrySheet;
@@ -82,6 +84,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     book: Book;
     bookRequired = false;
     tracRunningRpm = 0;
+    previousDieselRpm;
+    pointDieselRpm;
+    tractors: Tractor[];
+    boreTypes: BoreType[];
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
     @ViewChild('inVehicleSelect', { static: false }) inVehicleSelect: MatSelect;
@@ -98,6 +104,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('compressorInput', { static: false }) diselCompEl: ElementRef;
     @ViewChildren('rpmInput') rpmInputs: QueryList<ElementRef>;
     @ViewChildren('depthInput') depthInputs: QueryList<ElementRef>;
+    @ViewChildren('dieselInput') dieselInputs: QueryList<ElementRef>;
     @ViewChild('aboveFeetSelect', { static: false }) aboveFeetSelect: MatSelect;
     @ViewChild('bitSelect', { static: false }) bitSelect: MatSelect;
     allInputs: QueryList<ElementRef>[] = new Array(5);
@@ -128,7 +135,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         private snackBar: MatSnackBar,
         private loader: LoaderService,
         private common: CommonService,
-        private toastr: ToastrService
+        private toastr: ToastrService,
     ) {
         this.form = this.fb.group({
             pointExpenseFeet: this.fb.array([]),
@@ -147,15 +154,18 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 end: { value: '', disabled: true },
                 manual: { value: '', disabled: true },
                 tracEndHour: { value: '', disabled: true },
-                isManual: false
+                trac: { value: '', disabled: true },
+                // isManual: false
             }),
             diesel: this.fb.group({
                 compressor: { value: '', disabled: true },
                 lorry: { value: '', disabled: true },
-                support: { value: '', disabled: true }
+                support: { value: '', disabled: true },
+                tractor: { value: '', disabled: true }
             }),
             depth: this.fb.group({
                 bore: { value: '', disabled: true },
+                boreType: {value: '', disabled: true},
                 pipeErection: { value: '', disabled: true },
                 above: this.fb.group({
                     feet: { value: '', disabled: true },
@@ -178,8 +188,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.bitSizes = data.bits;
             this.rpmHourFeets = data.rpmHourFeets;
             this.compressorAirFilterServiceLimits = data.compressorAirFilterServiceLimits;
+            this.tractors = data.tractors;
             this.pipeFlex = this.pipeTotalFlex / this.pipes.length;
             this.pipeFlex = Math.round(this.pipeFlex * 100) / 100;
+            this.boreTypes = data.boreTypes
 
             this.pipes.forEach(pipe => {
                 const pipeData: RpmValue = { pipeType: pipe.type, feet: 0, pipeId: +pipe.id, pipeSize: +pipe.size, length: 0 }
@@ -193,7 +205,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.veicleExOutFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
                 this.veicleExInFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
                 this.damageFeetFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
-            })
+            });
+            this.form.get('depth.boreType').setValue(this.boreTypes[0]);
         })
     }
 
@@ -231,7 +244,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         })
 
         this.picker.closedStream.subscribe(() => {
-            if (this.date) {
+            if (this.date && this.bookId) {
                 this.enableAllControls();
             }
             // this.inVehicleSelect.open();
@@ -250,9 +263,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (nextInput) {
             (nextInput.nativeElement as HTMLInputElement).focus();
         } else {
-            const boreDepthInput = this.depthInputs.toArray()[0];
-            if (boreDepthInput) {
-                (boreDepthInput.nativeElement as HTMLInputElement).focus();
+            const dieselInput = this.dieselInputs.toArray()[0];
+            if (dieselInput) {
+                (dieselInput.nativeElement as HTMLInputElement).focus();
             }
             // if no next input you are at last input
             // go to depth input first control - bore depth
@@ -310,7 +323,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         return item.serial_no;
     }
 
-    onInputKeyUp(event: KeyboardEvent, rowIndex, colIndex) {
+    onInputKeyUp(event: KeyboardEvent, rowIndex, colIndex, ctrl?: AbstractControl) {
         const validKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter']
         if (validKeys.indexOf(event.key) !== -1) {
             const trigger = (event.target as HTMLInputElement);
@@ -322,6 +335,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.moveNextInput(rowIndex, colIndex);
                     }
                 } else {
+                    if (ctrl && ctrl.invalid) {
+                        return;
+                    }
                     this.moveNextInput(rowIndex, colIndex);
                 }
             }
@@ -492,7 +508,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         const availableStockFeet = (rrIncome + mmIncome + previousStockFeet + vehicleInExchange) - (vehicleOutExchange + damageFeet);
         if (availableStockFeet > 0) {
-            availableStock.feet = availableStockFeet;
+            availableStock.feet = this.roundValue(availableStockFeet, 10);
         } else {
             availableStock.feet = 0;
         }
@@ -500,18 +516,25 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     }
 
+    validateAndUpdateBalanceStock(pipeId, ctrl) {
+        this.updateBalanceStock(pipeId, ctrl)
+    }
+
     /**
      * available 
      */
-    updateBalanceStock(pipeId) {
+    updateBalanceStock(pipeId, ctrl?: AbstractControl) {
+        const pointExpenseFeetCtrl = this.pointExpenseFeetFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value');
         let pointExpenseFeet = this.pointExpenseFeetFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value').value
         pointExpenseFeet = pointExpenseFeet ? +pointExpenseFeet : 0;
         const availableStockFeet = this.rpmEntryTable.availableStockFeet.find(as => as.pipeId === pipeId).feet;
         const balanceStock = this.rpmEntryTable.balanceStockFeet.find(bs => bs.pipeId === pipeId);
         const balanceStockFeet = availableStockFeet - pointExpenseFeet;
-        if (balanceStockFeet > 0) {
-            balanceStock.feet = balanceStockFeet
+        if (balanceStockFeet >= 0) {
+            balanceStock.feet = this.roundValue(balanceStockFeet, 10);
+            pointExpenseFeetCtrl.setErrors(null);
         } else {
+            pointExpenseFeetCtrl.setErrors({ greater: true });
             balanceStock.feet = 0;
         }
     }
@@ -581,9 +604,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.routeDataSubscription) { this.routeDataSubscription.unsubscribe() }
     }
 
-    confirmServiceCompletion(name, propName, type: 'service' | 'bit' = 'service') {
+    confirmServiceCompletion(name, propName, type: 'service' | 'bit' | 'tractor' = 'service') {
         let message = '';
-        if (type === 'service') {
+        if (type === 'service' || type === 'tractor') {
             message = `Would you like to complete ${name} service ?`
         }
         if (type === 'bit') {
@@ -602,6 +625,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 if (type === 'bit') {
                     this.rpmSheet.bit[propName] = 0;
                 }
+                if (type === 'tractor') {
+                    this.form.get('rpm.trac').value[propName] = 0;
+                }
+
             }
         })
     }
@@ -627,11 +654,17 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.bookPopupRef.afterClosed$.subscribe((rpmSheet: RpmEntrySheet) => {
             if (rpmSheet) {
                 this.bookRequired = false;
+                this.resetAll();
                 this.bookId = rpmSheet.book_id;
                 this.bookStartNo = rpmSheet.start
                 this.bookEndNo = rpmSheet.end;
                 this.rpmEntryNo = rpmSheet.rpm_sheet_no;
                 this.rpmSheet = rpmSheet;
+                if (this.rpmSheet.rpm) {
+                    this.previousDieselRpm = this.rpmSheet.rpm.prev_diesel_rpm;
+                    this.pointDieselRpm = this.rpmSheet.rpm.point_diesel;
+                }
+                this.openDatePicker();
                 this.enableAllControls();
                 this.addDepthToSheet();
             }
@@ -669,10 +702,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (this.rpmSheet.rpm) {
             this.rpmSheet.rpm.running = machineRunningRpm;
-            if (machineRunningRpm) {
-                this.rpmSheet.rpm.point_diesel = this.rpmSheet.rpm.prev_diesel_rpm + machineRunningRpm;
-                this.rpmSheet.rpm.point_diesel = Math.round(this.rpmSheet.rpm.point_diesel * 100) / 100;
-            }
+            this.rpmSheet.rpm.point_diesel = this.rpmSheet.rpm.prev_diesel_rpm + machineRunningRpm;
+            this.rpmSheet.rpm.point_diesel = Math.round(this.rpmSheet.rpm.point_diesel * 100) / 100;
         }
 
         this.updateFeetAvg();
@@ -680,7 +711,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onTracEndInput() {
         const tracEndHour = +this.form.get('rpm.tracEndHour').value;
-        const tracStartHour = +this.rpmSheet.rpm.tractor_start_hour;
+        const tracStartHour = +this.form.get('rpm.trac').value.start_hour;
         let runningTracRpm = 0;
 
         if (tracEndHour > tracStartHour) {
@@ -769,7 +800,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.activeCompressorAirFilterLimit = this.compressorAirFilterServiceLimits
                 .find(c => c.limit === this.vehicleServiceLimits.c_air_filter);
             if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
-                this.resetStockFeets();
+                this.resetAll();
                 this.resetBook();
                 return this.addBook(true);
             }
@@ -782,7 +813,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.bookId = lastRpmEntrySheet.book_id;
             this.picker.open();
             this.dateInput.nativeElement.focus();
-            this.resetStockFeets();
+            this.resetAll();
             // once vehicle is selected enable all controls
             if (incomeData) {
                 this.rpmEntryTable.rrIncome = [...incomeData.rrIncome];
@@ -791,6 +822,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             this.updatePreviousStockFeet(lastRpmEntrySheet);
             this.rpmSheet = lastRpmEntrySheet;
+            if (this.rpmSheet.rpm) {
+                this.previousDieselRpm = this.rpmSheet.rpm.prev_diesel_rpm;
+                this.pointDieselRpm = this.rpmSheet.rpm.point_diesel;
+            }
             this.addDepthToSheet();
             this.enableAllControls();
         }, (err) => {
@@ -841,22 +876,25 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.bookRequired = true;
     }
 
-    private resetStockFeets() {
+    private resetAll() {
 
         // this.form.reset();
 
         this.form.get('rpm.manual').reset('');
         this.form.get('rpm.end').reset('');
         this.form.get('rpm.tracEndHour').reset('');
+        this.form.get('rpm.trac').reset('');
         this.form.get('diesel.compressor').reset('');
         this.form.get('diesel.lorry').reset('');
         this.form.get('diesel.support').reset('');
+        this.form.get('diesel.tractor').reset('');
         this.form.get('depth.pipeErection').reset('');
         this.form.get('depth.bore').reset('');
         this.form.get('depth.above.feet').reset('');
         this.form.get('depth.above.hrs').reset('');
         this.form.get('depth.above.min').reset('');
-        this.form.get('bit').reset();
+        this.form.get('depth.boreType').reset(this.boreTypes[0]);
+        this.form.get('bit').reset('');
         this.form.get('inVehicle').reset();
         this.form.get('outVehicle').reset();
         this.form.get('inRpmNo').reset();
@@ -908,6 +946,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             m.feet = 0;
             m.length = 0;
         });
+        this.tracRunningRpm = 0;
 
         // this.picker.open();
         // (this.dateInput.nativeElement as HTMLInputElement).focus()
@@ -937,7 +976,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('depth.bore').enable();
         this.form.get('depth.pipeErection').enable();
         this.form.get('depth.above.feet').enable();
-        this.form.get('rpm').enable();
+        this.form.get('depth.boreType').enable();
+        // this.form.get('rpm').enable();
+        this.form.get('rpm.end').enable();
+        this.form.get('rpm.manual').enable();
+        this.form.get('rpm.trac').enable();
 
         this.form.get('isInVehicle').enable();
         this.form.get('isOutVehicle').enable();
@@ -987,9 +1030,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
      * compressor diesel / previous diesel rpm
      */
     updateDieselAvg() {
+        const compressorDiesel = +this.form.get('diesel.compressor').value;
         let avg = 0;
         if (this.rpmSheet.diesel) {
-            const compressorDiesel = +this.rpmSheet.diesel.compressor;
             const previousDieselRpm = +this.rpmSheet.diesel.previous_rpm;
             if (previousDieselRpm <= 0 || compressorDiesel <= 0) {
                 avg = 0;
@@ -1001,14 +1044,37 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    updateTotalDiesel() {
+    onDieselEnter(currentIndex) {
+        const nextCtrl = this.dieselInputs.toArray()[currentIndex + 1];
+        if (nextCtrl) {
+            (nextCtrl.nativeElement as HTMLInputElement).focus();
+        } else {
+            (this.depthInputs.toArray()[0].nativeElement as HTMLInputElement).focus()
+        }
+    }
+
+    updateTotalDiesel(type = '') {
         let totalDiesel = 0;
         const lorry = +this.form.get('diesel.lorry').value;
         const support = +this.form.get('diesel.support').value;
+        const compressor = +this.form.get('diesel.compressor').value;
+        const tractor = +this.form.get('diesel.tractor').value;
+        if (type === 'compressor') {
+            // reset previous diesel rpm when compressor diesel is filled
+            if (compressor) {
+                this.rpmSheet.rpm.prev_diesel_rpm = 0;
+                this.rpmSheet.rpm.point_diesel = this.rpmSheet.rpm.running
+            } else {
+                this.rpmSheet.rpm.prev_diesel_rpm = this.previousDieselRpm;
+                this.rpmSheet.rpm.point_diesel = this.roundValue(this.previousDieselRpm + +this.rpmSheet.rpm.running);
+            }
+        }
+
         if (this.rpmSheet.diesel) {
-            totalDiesel = this.rpmSheet.diesel.compressor + lorry + support
+            totalDiesel = compressor + lorry + support + tractor
             this.rpmSheet.diesel.total = totalDiesel;
         }
+        this.updateDieselAvg();
     }
 
     onDepthInput() {
@@ -1079,8 +1145,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             date: this.date ? (this.date as Moment).format('DD-MM-YYYY') : '',
             f_rpm_table_data: [],
             rpm: {
-                tractor_start_hour: this.rpmSheet.rpm.tractor_start_hour,
-                tractor_end_hour: +this.form.value.rpm.tracEndHour,
+                tractor_start_hour: this.form.value.rpm.trac ? this.form.value.rpm.trac.start_hour : 0,
+                tractor_end_hour: this.form.value.rpm.tracEndHour ? +this.form.value.rpm.tracEndHour : 0,
+                tractor_id: this.form.value.rpm.trac ? +this.form.value.rpm.trac.id : 0,
+                tractor_no: this.form.value.rpm.trac ? this.form.value.rpm.trac.no : '',
                 start: this.rpmSheet.rpm.start,
                 manual: +this.form.value.rpm.manual,
                 end: +this.form.value.rpm.end,
@@ -1095,21 +1163,24 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 total: this.rpmSheet.diesel.total,
                 support: +this.form.value.diesel.support,
                 compressor: +this.form.value.diesel.compressor,
-                lorry: +this.form.value.diesel.lorry
+                lorry: +this.form.value.diesel.lorry,
+                tractor: +this.form.value.diesel.tractor
             },
             service: {
-                tractor_e_oil_service: this.roundValue(this.rpmSheet.service.tractor_e_oil_service + this.tracRunningRpm),
-                tractor_g_oil_service: this.roundValue(this.rpmSheet.service.tractor_g_oil_service + this.tracRunningRpm),
+                tractor_e_oil_service: this.form.get('rpm.trac').value ? this.roundValue(this.form.get('rpm.trac').value.e_oil_service + this.tracRunningRpm) : 0,
+                tractor_g_oil_service: this.form.get('rpm.trac').value ? this.roundValue(this.form.get('rpm.trac').value.g_oil_service + this.tracRunningRpm) : 0,
                 c_air_filter: this.roundValue(this.rpmSheet.service.c_air_filter + this.rpmSheet.rpm.running),
                 c_oil_service: this.roundValue(this.rpmSheet.service.c_oil_service + this.rpmSheet.rpm.running),
-                e_air_filter: this.roundValue(this.rpmSheet.service.c_air_filter + this.rpmSheet.rpm.running),
+                e_air_filter: this.roundValue(this.rpmSheet.service.e_air_filter + this.rpmSheet.rpm.running),
                 e_oil_service: this.roundValue(this.rpmSheet.service.e_oil_service + this.rpmSheet.rpm.running),
                 seperator: this.roundValue(this.rpmSheet.service.seperator + this.rpmSheet.rpm.running)
             },
             depth: {
                 average: 0,
+                bore_type: this.form.value.depth.boreType.type,
                 above: {
                     feet: this.form.value.depth.above.feet,
+                    extra_feet: +this.rpmSheet.depth.above.extra_feet,
                     hrs: this.form.value.depth.above.hrs ? +this.form.value.depth.above.hrs : 0,
                     min: this.form.value.depth.above.min ? +this.form.value.depth.above.min : 0,
                 },
@@ -1147,27 +1218,38 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         };
         this.rpmEntryService.submitRpm(payload).pipe(
             mergeMap((lastRpmEntrySheet) => {
-                return this.rpmEntryService.getAssignedBits(this.selectedVehicle).pipe(map((assignedBits) => {
-                    return { lastRpmEntrySheet, assignedBits }
+
+                const bits$ = this.rpmEntryService.getAssignedBits(this.selectedVehicle);
+                const tractor$ = this.rpmEntryService.getTractors();
+
+                return zip(bits$, tractor$).pipe(map(([assignedBits, tractors]) => {
+                    return { lastRpmEntrySheet, assignedBits, tractors }
                 }));
             }),
-        ).subscribe(({ lastRpmEntrySheet, assignedBits }) => {
+        ).subscribe(({ lastRpmEntrySheet, assignedBits, tractors }) => {
             this.toastr.success('Rpm Saved Successfully', null, { timeOut: 3000 });
-            // this.common.scrollTop();
-            this.openDatePicker()
-            this.resetStockFeets();
+            this.resetAll();
             this.disableAllControls();
             if (assignedBits) {
                 this.assignedBits = assignedBits;
                 this.form.get('bit').reset()
             }
+            if (tractors) {
+                this.tractors = tractors;
+            }
             if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
                 this.resetBook();
+                this.common.scrollTop();
                 this.addBook(true);
                 return;
             }
 
+            this.openDatePicker();
             this.rpmSheet = lastRpmEntrySheet;
+            if (this.rpmSheet.rpm) {
+                this.previousDieselRpm = this.rpmSheet.rpm.prev_diesel_rpm;
+                this.pointDieselRpm = this.rpmSheet.rpm.point_diesel;
+            }
             this.addDepthToSheet();
             this.updatePreviousStockFeet(lastRpmEntrySheet);
         }, () => {
@@ -1256,6 +1338,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.form.get('depth.above.feet').setValue(this.rpmHourFeets[0]);
         });
         this.rpmSheet.depth = {
+            bore_type: this.boreTypes[0].type,
             above: { extra_feet: 0, feet: this.rpmHourFeets[0], hrs: 0, min: 0 },
             average: 0,
             bore: 0,
@@ -1263,12 +1346,21 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    roundValue(value) {
+    roundValue(value, place = 100) {
         if (value) {
-            return Math.round(value * 100) / 100;
+            return Math.round(value * place) / place;
         }
 
         return 0;
+    }
+
+    onTractorChange($event: MatSelectChange) {
+        if ($event.value) {
+            return this.form.get('rpm.tracEndHour').enable();
+        }
+        this.form.get('rpm.tracEndHour').disable();
+        this.form.get('rpm.tracEndHour').reset();
+        this.tracRunningRpm = 0;
     }
 
     tableClick($event: MouseEvent) {

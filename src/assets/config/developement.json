@@ -161,6 +161,26 @@
         {
             "name": "viewBit",
             "url": "bit_list"
+        },
+        {
+            "name": "tractorList",
+            "url": "tractor_list"
+        },
+        {
+            "name": "bitVehicleExchange",
+            "url": "bit_vehicle_exchange"
+        },
+        {
+            "name": "boreTypes",
+            "url": "bore_types"
+        },
+        {
+            "name": "bitData",
+            "url": "get_view_bit_list"
+        },
+        {
+            "name": "bitDataCount",
+            "url": "bit_data_count"
         }
     ],
     "reportGenerateUrls": [

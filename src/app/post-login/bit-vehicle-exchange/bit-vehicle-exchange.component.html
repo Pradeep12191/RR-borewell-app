@@ -1,0 +1,72 @@
+<div class="shift-top-30">
+    <div fxlayout fxLayoutAlign="center center">
+        <div fxFlex="75" fxLayoutGap="25px">
+            <mat-form-field floatLabel="always" fxFlex="30" class="calc-field" (click)="picker.open()">
+                <mat-label>Date</mat-label>
+                <input [(ngModel)]="date" #dateInput placeholder="Select Date" readonly matInput [matDatepicker]="picker">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <div fxLayoutAlign="start center" fxLayoutGap="5px">
+                <div> Bit Quantity</div>
+                <div>:</div>
+                <div class="bold">{{ selectedBits?.length || 0 }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div fxLayout fxLayoutAlign="center center">
+        <transfer-items fxFlex="75" (selectionUpdate)="onTransferSelection($event)" selectAllToolTipMsg="select all bit"
+            [loaderStatus$]="loaderStatus$" [data]="assignedBits" [searchPropName]="['serial_no', 'bit_no']" displayPropName="serial_no" noDataSelectedMsg="No Bits Assigned">
+            <ng-container *ngIf="!selectedFromVehicle">
+                <ng-container *transferItemIntialMsg>
+                    Please select Vehicle
+                </ng-container>
+            </ng-container>
+            <ng-container *transferItemLeftListContent="let data">
+                <div fxLayout>
+                    <div fxFlex>{{ data.serial_no }}</div>
+                    <div fxFlex>{{ data.bit_no }}</div>
+                </div>
+            </ng-container>
+            <transfer-item-left-list-header>
+                <div fxLayout class="bit-list-header" fxLayoutAlign="start center">
+                    <div fxLayoutAlign="start center" fxFlex>Serial No</div>
+                    <div fxLayoutAlign="start center" fxFlex>Bit No</div>
+                </div>
+            </transfer-item-left-list-header>
+            <transfer-item-left-header-content fxFlex>
+                <div fxLayout class="m-t-10">
+                    <mat-form-field class="calc-field" fxFlex="95">
+                        <mat-select #fromVehicleSelect (selectionChange)="onChange()" required [(ngModel)]="selectedFromVehicle"
+                            placeholder="From Vehicle">
+                            <mat-option [value]="vehicle" *ngFor="let vehicle of fromVehicles()">{{ vehicle.regNo }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </transfer-item-left-header-content>
+            <transfer-item-right-header-content style="min-height: inherit">
+                <div fxFlex class="m-t-10" style="min-height: inherit">
+                    <mat-form-field class="calc-field" fxFlex="95">
+                        <mat-select #toVehicleSelect required [(ngModel)]="selectedToVehicle"
+                            placeholder="To Vehicle">
+                            <mat-option [value]="vehicle" *ngFor="let vehicle of toVehicles()">{{ vehicle.regNo }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </transfer-item-right-header-content>
+        </transfer-items>
+    </div>
+    <div fxLayout class="m-t-10" fxLayoutAlign="center center">
+        <mat-form-field [appearance]="appearance" fxFlex="75">
+            <mat-label>Remarks</mat-label>
+            <textarea [(ngModel)]="remarks" matInput cols="30" rows="4"></textarea>
+        </mat-form-field>
+    </div>
+    <div fxLayout class="m-t-16" fxLayoutAlign="center center">
+        <div fxFlex="75" fxLayoutAlign="end end">
+            <button [disabled]="!selectedBits?.length || !selectedToVehicle" mat-raised-button color="primary" (click)="confirm()">CONFIRM</button>
+        </div>
+    </div>
+
+</div>

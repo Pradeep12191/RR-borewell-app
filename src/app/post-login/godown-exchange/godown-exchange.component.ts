@@ -80,7 +80,6 @@ export class GodownExchangeComponent implements OnDestroy, AfterViewInit {
                     this.godownSelect.open();
                     return this.godownSelect.focus();
                 })
-
             }
         }
         if (this.selectedGodown && this.selectedPipe) {

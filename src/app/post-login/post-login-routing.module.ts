@@ -5,6 +5,7 @@ import { PostLoginComponent } from './post-login.component';
 import { S404Component } from '../404/404.component';
 import { HeaderComponent } from '../header/header.component';
 import { UserInfoResolver } from '../guards/resolveGuard/user-info.resolver';
+import { ErrorComponent } from '../error/error.component';
 
 const routes: Routes = [
     {
@@ -18,11 +19,14 @@ const routes: Routes = [
             { path: 'viewBills', loadChildren: () => import('./view-bill/view-bill.module').then(mod => mod.ViewBillModule) },
             { path: 'assignVehicle', loadChildren: () => import('./pipe/assign-vehicle/assign-vehicle.module').then(mod => mod.AssignVehicleModule) },
             { path: 'viewPipeData/:pipeSize/:pipeType', loadChildren: () => import('./pipe/pipe-data/pipe-data.module').then(mod => mod.PipeDataModule) },
+            { path: 'viewBitData/:bitSize/:bitType', loadChildren: () => import('./bits/bit-data/bit-data.module').then(mod => mod.BitDataModule) },
             { path: 'bits', loadChildren: () => import('./bits/bits.module').then(mod => mod.BitsModule) },
             { path: 'bits/viewBit', loadChildren: () => import('./bits/view-bit/view-bit.module').then(mod => mod.ViewBitModule) },
+            { path: 'bitsExchangeVehicle', loadChildren: () => import('./bit-vehicle-exchange/bit-vehicle-exchange.module').then(mod => mod.BitVehicleExchangeModule) },
             { path: 'rpmEntry', loadChildren: () => import('./rpm-entry/rpm-entry.module').then(mod => mod.RpmEntryModule) },
             { path: 'rpmEntry/report', loadChildren: () => import('./rpm-entry-report/rpm-entry-report.module').then(mod => mod.RpmEntryReportModule) },
             { path: 'godownExchange', loadChildren: () => import('./godown-exchange/godown-exchange.module').then(mod => mod.GodownExchangeModule) },
+            { path: 'error', component: ErrorComponent },
             { path: '**', component: S404Component }
         ],
         resolve: {

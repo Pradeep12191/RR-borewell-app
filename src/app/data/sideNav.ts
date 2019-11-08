@@ -47,6 +47,12 @@ export const SIDE_NAV_ITEMS: NavItem[] = [
                 paddingLeft: LEVEL_1_PADDING,
             },
             {
+                name: 'Bit Vehicle Exchange',
+                path: 'bitsExchangeVehicle',
+                level: 1,
+                paddingLeft: LEVEL_1_PADDING,
+            },
+            {
                 name: 'Bit',
                 isLastChild: true,
                 path: 'bits',

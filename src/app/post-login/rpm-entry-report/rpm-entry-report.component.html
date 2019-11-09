@@ -1,11 +1,40 @@
-<div fxLayout="column" class="shift-top-30">
-    <div fxLayout class="m-b-16 header-container" fxLayoutAlign="center center">
-        <h2>RPM Report Data</h2>
+<div [formGroup]="filterForm" fxLayout="column" class="shift-top-30">
+    <div fxLayout fxLayoutGap="10px" class="header-container" fxLayoutAlign="start center">
+        <ng-container formGroupName="rpm">
+            <mat-form-field class="calc-field" fxFlex="15" >
+                <mat-label>From Rpm Sheet</mat-label>
+                <input positiveNumber type="text" matInput formControlName="fromRpmSheetNo">
+            </mat-form-field>
+            <mat-form-field class="calc-field" fxFlex="15">
+                <mat-label>To Rpm Sheet</mat-label>
+                <input type="text" positiveNumber matInput formControlName="toRpmSheetNo">
+            </mat-form-field>
+        </ng-container>
+        <ng-container formGroupName="date">
+            <mat-form-field class="calc-field" floatLabel="always" fxFlex="17" (click)="fromPicker.open()">
+                <mat-label>From Date</mat-label>
+                <input #dateInput placeholder="From Date" readonly matInput [matDatepicker]="fromPicker" formControlName="from">
+                <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+                <mat-datepicker #fromPicker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="calc-field" floatLabel="always" fxFlex="17" (click)="toPicker.open()">
+                <mat-label>To Date</mat-label>
+                <input #dateInput placeholder="To Date" readonly matInput [matDatepicker]="toPicker" formControlName="to">
+                <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+                <mat-datepicker #toPicker></mat-datepicker>
+            </mat-form-field>
+        </ng-container>
+        <month-picker fxFlex="16"></month-picker>
         <button (click)="downloadReport()" mat-raised-button color="primary" class="pdf-btn">Download Pdf</button>
-    </div> 
-    <expand-table [accordionEffect]="false" *ngIf="entries?.length;  else emptyTpl" fxFlex="75"
-        [data]="entries" [columns]="columns"
-        [dataSource]="entriesDatasource">
+    </div>
+    <div *ngIf="filterForm.invalid" class="error-info m-b-16" fxLayoutAlign="start center" fxLayoutGap="16px">
+        <mat-icon>error_outline</mat-icon>
+        <div>
+            {{ getMessage() }}
+        </div>
+    </div>
+    <expand-table [accordionEffect]="false" *ngIf="entries?.length;  else emptyTpl" fxFlex="75" [data]="entries"
+        [columns]="columns" [dataSource]="entriesDatasource">
         <ng-container *expandDetails="let rpmEntry">
             <div fxLayout="column" class="m-b-16" fxFlex>
                 <ng-container *ngTemplateOutlet="rpmSheetTpl; context: { $implicit: rpmEntry }">

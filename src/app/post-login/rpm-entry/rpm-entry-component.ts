@@ -74,7 +74,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     bitSizes: BitSize[];
     rpmHourFeets: ServiceLimit[];
     compressorAirFilterServiceLimits: ServiceLimit[];
+    compressorOilServiceLimits: ServiceLimit[]
     activeCompressorAirFilterLimit: ServiceLimit;
+    activeCompressorOilServiceLimit: ServiceLimit;
     assignedBits: BitSerialNo[];
     bookStartNo;
     bookId;
@@ -165,7 +167,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }),
             depth: this.fb.group({
                 bore: { value: '', disabled: true },
-                boreType: {value: '', disabled: true},
+                boreType: { value: '', disabled: true },
                 pipeErection: { value: '', disabled: true },
                 above: this.fb.group({
                     feet: { value: '', disabled: true },
@@ -188,6 +190,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.bitSizes = data.bits;
             this.rpmHourFeets = data.rpmHourFeets;
             this.compressorAirFilterServiceLimits = data.compressorAirFilterServiceLimits;
+            this.compressorOilServiceLimits = data.compressorOilServiceLimits
             this.tractors = data.tractors;
             this.pipeFlex = this.pipeTotalFlex / this.pipes.length;
             this.pipeFlex = Math.round(this.pipeFlex * 100) / 100;
@@ -754,11 +757,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    onServieLimitSelect(limit: ServiceLimit) {
+    onServieLimitSelect(limit: ServiceLimit, prop) {
         this.loader.showSaveLoader('Loading')
         const services: VehicleServices = {
             ...this.vehicleServiceLimits,
-            c_air_filter: limit.limit,
+            [prop]: limit.limit,
             vehicle_id: +this.selectedVehicle.vehicle_id
         }
         this.rpmEntryService.updateCompressorAirFilter(services).pipe(
@@ -799,6 +802,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.vehicleServiceLimits = serviceLimits;
             this.activeCompressorAirFilterLimit = this.compressorAirFilterServiceLimits
                 .find(c => c.limit === this.vehicleServiceLimits.c_air_filter);
+            this.activeCompressorOilServiceLimit = this.compressorOilServiceLimits
+                .find(c => c.limit === this.vehicleServiceLimits.c_oil_service);
             if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
                 this.resetAll();
                 this.resetBook();

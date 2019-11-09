@@ -10,6 +10,7 @@ import { RpmHourFeetResolver } from '../../guards/resolveGuard/rpm-hour-feet.res
 import { CompressorAirFilterLimitResolver } from '../../guards/resolveGuard/compressor-air-filter-service-limt.resolver';
 import { TractorsResolver } from '../../guards/resolveGuard/tractors.resolver';
 import { BoreTypesResolver } from '../../guards/resolveGuard/bore-types.resolver';
+import { CompressorOilServiceLimitResolver } from '../../guards/resolveGuard/compresso-oil-service-limit.resolver';
 
 const routes: Routes = [
     {
@@ -21,6 +22,7 @@ const routes: Routes = [
             bits: BitSizeListResolver,
             rpmHourFeets: RpmHourFeetResolver,
             compressorAirFilterServiceLimits: CompressorAirFilterLimitResolver,
+            compressorOilServiceLimits: CompressorOilServiceLimitResolver,
             tractors: TractorsResolver,
             boreTypes: BoreTypesResolver
         }

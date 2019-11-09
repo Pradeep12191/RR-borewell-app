@@ -8,7 +8,7 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ConfigService } from '../../../services/config.service';
 import { AuthService } from '../../../services/auth.service';
-import { tap, throttleTime, mergeMap, scan, map, catchError, materialize, reduce, finalize } from 'rxjs/operators';
+import { tap, throttleTime, mergeMap, scan, map, catchError, materialize, reduce, finalize, exhaustMap } from 'rxjs/operators';
 import { FADE_IN_ANIMATION } from '../../../animations';
 import { ToastrService } from 'ngx-toastr';
 import { Vehicle } from '../../../models/Vehicle';
@@ -99,7 +99,7 @@ export class PipeDataComponent implements OnDestroy {
             tap(() => {
                 // console.log('throttle')
             }),
-            mergeMap(n => this.getPipeData(n).pipe(materialize())),
+            exhaustMap(n => this.getPipeData(n).pipe(materialize())),
             tap((next) => {
                 if (next.error) {
                     this.errorOccured = true;

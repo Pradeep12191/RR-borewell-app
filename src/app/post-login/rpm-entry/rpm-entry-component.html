@@ -80,7 +80,7 @@
                 <mat-card-content>
                     <div fxLayout="column">
                         <div fxLayout fxLayoutAlign="start center">
-                            <mat-form-field  fxFlex="30" class="m-r-16">
+                            <mat-form-field fxFlex="30" class="m-r-16">
                                 <mat-select (selectionChange)="onTractorChange($event)" formControlName="trac">
                                     <mat-option value="">Select Tractor</mat-option>
                                     <mat-option *ngFor="let tractor of tractors" [value]="tractor">{{ tractor.no }}</mat-option>
@@ -175,7 +175,8 @@
                             </div>
 
                             <div fxLayoutAlign="end center">
-                                <button [disabled]="!selectedVehicle || !bookId || !date || !date || !form.get('rpm.trac').value" (click)="confirmServiceCompletion('Tractor Engine Oil', 'e_oil_service', 'tractor')"
+                                <button [disabled]="!selectedVehicle || !bookId || !date || !date || !form.get('rpm.trac').value"
+                                    (click)="confirmServiceCompletion('Tractor Engine Oil', 'e_oil_service', 'tractor')"
                                     mat-icon-button color="primary">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
@@ -193,7 +194,8 @@
                             </div>
 
                             <div fxLayoutAlign="end center">
-                                <button [disabled]="!selectedVehicle || !bookId || !date || !form.get('rpm.trac').value" (click)="confirmServiceCompletion('Tractor Gear Oil', 'g_oil_service', 'tractor')"
+                                <button [disabled]="!selectedVehicle || !bookId || !date || !form.get('rpm.trac').value"
+                                    (click)="confirmServiceCompletion('Tractor Gear Oil', 'g_oil_service', 'tractor')"
                                     mat-icon-button color="primary">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
@@ -218,11 +220,18 @@
                             </div>
                         </div>
                         <div fxLayout fxLayoutGap="5px">
-                            <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
+                            <div *ngIf="vehicleServiceLimits?.c_oil_service; else hyphenTpl10" [matMenuTriggerFor]="oilServiceMenu"
+                                fxLayoutAlign="start center" fxFlex="10" class="m-r-16" class="link-label">
+                                <span>
+                                    {{activeCompressorOilServiceLimit.limit}}
+                                </span>
+                                <mat-icon>arrow_drop_down</mat-icon>
+                            </div>
+                            <!-- <div fxLayoutAlign="start center" fxFlex="10" class="m-r-16">
                                 <span *ngIf="vehicleServiceLimits?.c_oil_service; else hyphenTpl">
                                     {{ vehicleServiceLimits?.c_oil_service }}
                                 </span>
-                            </div>
+                            </div> -->
                             <div fxLayoutAlign="start center" fxFlex="45">Compressor Oil Service</div>
                             <div fxLayoutAlign="start center" fxFlex class="bold font-14">
                                 {{ roundValue(rpmSheet?.service?.c_oil_service + rpmSheet?.rpm?.running) }}
@@ -312,8 +321,9 @@
                     <div class="diesel__content">
                         <div fxFlex class="b-r">
                             <div class="input-wrapper h-100" fxFlex>
-                                <input formControlName="compressor" #dieselInput (keydown.enter)="onDieselEnter(0)" (input)="updateTotalDiesel('compressor')"
-                                    type="text" class="h-100" placeholder="Liter" positiveNumber>
+                                <input formControlName="compressor" #dieselInput (keydown.enter)="onDieselEnter(0)"
+                                    (input)="updateTotalDiesel('compressor')" type="text" class="h-100" placeholder="Liter"
+                                    positiveNumber>
                                 <mat-icon class="input-edit-icon">edit</mat-icon>
                                 <!-- <label>Count</label> -->
                                 <span class="focus-border">
@@ -428,14 +438,14 @@
                             <div fxLayoutAlign="start center">Feet</div>
                             <mat-form-field fxFlex="8" class="calc-field">
                                 <mat-label>hrs</mat-label>
-                                <input type="text" (input)="updateFeetAvg()" (keydown.enter)="onDepthEnter(2)" maxlength="2"
-                                    positiveNumber formControlName="hrs" #depthInput matInput>
+                                <input type="text" (input)="updateFeetAvg()" (keydown.enter)="onDepthEnter(2)"
+                                    maxlength="2" positiveNumber formControlName="hrs" #depthInput matInput>
                             </mat-form-field>
                             <div fxLayoutAlign="start center">hrs</div>
                             <mat-form-field fxFlex="8" class="calc-field">
                                 <mat-label>min</mat-label>
-                                <input type="text" (input)="updateFeetAvg()" (keydown.enter)="onDepthEnter(3)"  maxlength="2"
-                                    #depthInput positiveNumber matInput formControlName="min">
+                                <input type="text" (input)="updateFeetAvg()" (keydown.enter)="onDepthEnter(3)"
+                                    maxlength="2" #depthInput positiveNumber matInput formControlName="min">
                             </mat-form-field>
                             <div fxLayoutAlign="start center">min</div>
                         </div>
@@ -679,7 +689,8 @@
                                 <div class="input-wrapper h-100" fxFlex>
                                     <input #expenseFeetInput (keydown)="onInputKeyUp($event, 3, index, ctrl)" type="text"
                                         (input)="validateAndUpdateBalanceStock(+ctrl.get('pipeId').value, ctrl.get('value'))"
-                                        class="h-100" formControlName="value" placeholder="Feet" positiveNumber [allowDecimal]="true">
+                                        class="h-100" formControlName="value" placeholder="Feet" positiveNumber
+                                        [allowDecimal]="true">
                                     <mat-icon class="input-edit-icon">edit</mat-icon>
                                     <!-- <label>Count</label> -->
                                     <span class="focus-border">
@@ -731,7 +742,10 @@
 </div>
 
 <mat-menu #menu="matMenu">
-    <button (click)="onServieLimitSelect(limit)" *ngFor="let limit of compressorAirFilterServiceLimits" mat-menu-item>{{limit.limit}}</button>
+    <button (click)="onServieLimitSelect(limit, 'c_air_filter')" *ngFor="let limit of compressorAirFilterServiceLimits" mat-menu-item>{{limit.limit}}</button>
+</mat-menu>
+<mat-menu #oilServiceMenu="matMenu">
+    <button (click)="onServieLimitSelect(limit, 'c_oil_service')" *ngFor="let limit of compressorOilServiceLimits" mat-menu-item>{{limit.limit}}</button>
 </mat-menu>
 
 <ng-template #hyphenTpl>

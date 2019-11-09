@@ -2,18 +2,19 @@
     <div fxLayout fxLayoutGap="10px" class="header-container" fxLayoutAlign="start center">
         <mat-form-field class="calc-field" fxFlex="15">
             <mat-label>Select Vehicle</mat-label>
-            <mat-select (selectionChange)="onVehicleChange()" placeholder="Select Vehicle" formControlName="vehicle" #vehicleSelect>
+            <mat-select (selectionChange)="onVehicleChange()" placeholder="Select Vehicle" formControlName="vehicle"
+                #vehicleSelect>
                 <mat-option [value]="veh" *ngFor="let veh of vehicles">{{ veh.regNo }}</mat-option>
             </mat-select>
         </mat-form-field>
 
         <mat-form-field class="calc-field" fxFlex="15">
             <mat-label>Search By</mat-label>
-            <mat-select formControlName="searchCriteria">
+            <mat-select formControlName="searchCriteria" (selectionChange)="onCriteriaChange()" formControlName="searchCriteria">
                 <mat-option [value]="criteria.value" *ngFor="let criteria of searchCriterias">{{ criteria.display }}</mat-option>
             </mat-select>
         </mat-form-field>
-        <ng-container formGroupName="rpm">
+        <ng-container *ngIf="filterForm.get('searchCriteria').value === 'rpmSheetNo'" formGroupName="rpm">
             <mat-form-field class="calc-field" fxFlex="15">
                 <mat-label>From Rpm Sheet</mat-label>
                 <input positiveNumber type="text" matInput formControlName="fromRpmSheetNo">
@@ -23,10 +24,11 @@
                 <input type="text" positiveNumber matInput formControlName="toRpmSheetNo">
             </mat-form-field>
         </ng-container>
-        <!-- <ng-container formGroupName="date">
+        <ng-container *ngIf="filterForm.get('searchCriteria').value === 'date'" formGroupName="date">
             <mat-form-field class="calc-field" floatLabel="always" fxFlex="17" (click)="fromPicker.open()">
                 <mat-label>From Date</mat-label>
-                <input #dateInput placeholder="From Date" readonly matInput [matDatepicker]="fromPicker" formControlName="from">
+                <input #dateInput placeholder="From Date" readonly matInput [matDatepicker]="fromPicker"
+                    formControlName="from">
                 <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
                 <mat-datepicker #fromPicker></mat-datepicker>
             </mat-form-field>
@@ -36,8 +38,8 @@
                 <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
                 <mat-datepicker #toPicker></mat-datepicker>
             </mat-form-field>
-        </ng-container> -->
-        <!-- <month-picker fxFlex="16"></month-picker> -->
+        </ng-container>
+        <month-picker *ngIf="filterForm.get('searchCriteria').value === 'month'" fxFlex="16"></month-picker>
         <button (click)="downloadReport()" mat-raised-button color="primary" class="pdf-btn">Download Pdf</button>
     </div>
     <div *ngIf="filterForm.invalid" class="error-info m-b-16" fxLayoutAlign="start center" fxLayoutGap="16px">
@@ -46,15 +48,22 @@
             {{ getMessage() }}
         </div>
     </div>
-    <expand-table [accordionEffect]="false" *ngIf="entries?.length;  else emptyTpl" fxFlex="75" [data]="entries"
-        [columns]="columns" [dataSource]="entriesDatasource">
-        <ng-container *expandDetails="let rpmEntry">
-            <div fxLayout="column" class="m-b-16" fxFlex>
-                <ng-container *ngTemplateOutlet="rpmSheetTpl; context: { $implicit: rpmEntry }">
-                </ng-container>
-            </div>
-        </ng-container>
-    </expand-table>
+    <ng-container *ngIf="!loading; else loadingTpl">
+        <expand-table [accordionEffect]="false" *ngIf="entries?.length;  else emptyTpl" fxFlex="75" [data]="entries"
+            [columns]="columns" [dataSource]="entriesDatasource">
+            <ng-container *expandDetails="let rpmEntry">
+                <div fxLayout="column" class="m-b-16" fxFlex>
+                    <ng-container *ngTemplateOutlet="rpmSheetTpl; context: { $implicit: rpmEntry }">
+                    </ng-container>
+                </div>
+            </ng-container>
+        </expand-table>
+    </ng-container>
+    <ng-template #loadingTpl>
+        <div fxLayoutAlign="center center" class="spinner-container">
+            <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
+        </div>
+    </ng-template>
 </div>
 
 <ng-template #emptyTpl>

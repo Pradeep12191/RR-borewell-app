@@ -32,11 +32,12 @@
 </div>
 
 <div fxLayout fxLayoutAlign="start start" class="container">
-    <div fxLayout fxLayoutGap="25px" fxFlex="80">
+    <div fxLayout fxLayoutGap="25px" fxFlex="85">
         <div class="mat-elevation-z8 table-container">
             <div fxLayout class="header-row">
-                <div class="header-cell" fxLayoutAlign="center center" fxFlex>S.No.</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex="10">S.No.</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Bill No</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Rpm Entry No</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Godown Type</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Pipe Size</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Pipe No</div>
@@ -48,8 +49,9 @@
                     <cdk-virtual-scroll-viewport @fadeIn (scrolledIndexChange)="nextBatch($event, pipes.length)"
                         itemSize="31" fxLayout="column" class="table">
                         <div class="row" *cdkVirtualFor="let pipe of pipes; let i = index; trackBy: trackByFn" fxLayout>
-                            <div fxFlex fxLayoutAlign="center center" class="cell">{{ i + 1 }}</div>
+                            <div fxFlex fxLayoutAlign="center center" fxFlex="10" class="cell">{{ i + 1 }}</div>
                             <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.billno }}</div>
+                            <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.rpm_sheet_no }}</div>
                             <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.gudown_type | uppercase }}</div>
                             <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.pipe_size }}</div>
                             <div fxFlex fxLayoutAlign="center center" class="cell">{{ pipe.serial_no }}</div>

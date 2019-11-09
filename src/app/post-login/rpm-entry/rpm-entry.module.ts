@@ -23,6 +23,7 @@ import { CompressorAirFilterLimitResolver } from '../../guards/resolveGuard/comp
 import { AddDieselPopupComponent } from './add-diesel-popup/add-diesel-popup.component';
 import { ServiceCompleteConfirmDialog } from './service-complete-confirm-dialog/service-complete-confirm-dialog.component';
 import { TractorsResolver } from '../../guards/resolveGuard/tractors.resolver';
+import { CompressorOilServiceLimitResolver } from '../../guards/resolveGuard/compresso-oil-service-limit.resolver';
 
 @NgModule({
     imports: [
@@ -63,6 +64,7 @@ import { TractorsResolver } from '../../guards/resolveGuard/tractors.resolver';
         AddBitService,
         RpmEntryService,
         CompressorAirFilterLimitResolver,
+        CompressorOilServiceLimitResolver,
         TractorsResolver
     ]
 })

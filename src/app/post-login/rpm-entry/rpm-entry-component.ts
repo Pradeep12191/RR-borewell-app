@@ -625,7 +625,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         const dialogRef = this.dialog.open(ServiceCompleteConfirmDialog, {
             data: {
-                message
+                message,
+                title: 'Confirm Service Completion'
             }
         });
         dialogRef.afterClosed().subscribe((res) => {
@@ -640,6 +641,27 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.form.get('rpm.trac').value[propName] = 0;
                 }
 
+            }
+        })
+    }
+
+    finishBit(bit: BitSerialNo) {
+        const message = 'Would you like to Finist Bit ' + bit.bit_no + ' ?'
+        const dialogRef = this.dialog.open(ServiceCompleteConfirmDialog, {
+            data: {
+                title: 'Finish Bit',
+                message
+            }
+        })
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result === 'yes') {
+                this.loader.showSaveLoader('Please wait')
+                this.rpmEntryService.finishBit(bit)
+                    .pipe(finalize(() => this.loader.hideSaveLoader()))
+                    .subscribe((res) => {
+                        console.log(res)
+                    });
             }
         })
     }

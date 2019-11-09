@@ -29,6 +29,7 @@ export class RpmEntryService {
     private assignedBitSerialNoUrl: string;
     private tractorsUrl: string;
     private compressorOilServiceLimitUrl: string;
+    private finishBitUrl: string;
     constructor(
         private http: HttpClient,
         private config: ConfigService,
@@ -48,6 +49,7 @@ export class RpmEntryService {
         this.assignedBitSerialNoUrl = this.config.getAbsoluteUrl('assignedBitSerialNos');
         this.tractorsUrl = this.config.getAbsoluteUrl('tractorList');
         this.compressorOilServiceLimitUrl = this.config.getAbsoluteUrl('compressorOilServiceLimt');
+        this.finishBitUrl = this.config.getAbsoluteUrl('finishBit');
     }
 
     postBook(book: Book) {
@@ -213,8 +215,8 @@ export class RpmEntryService {
     getCompressorAirFilterLimits() {
         return this.http.get<ServiceLimit[]>(this.compressorAirFilterLimitUrl);
     }
-    
-    getCompressorOilServiceLimits(){
+
+    getCompressorOilServiceLimits() {
         return this.http.get<ServiceLimit[]>(this.compressorOilServiceLimitUrl);
     }
 
@@ -235,6 +237,10 @@ export class RpmEntryService {
 
     updateCompressorAirFilter(payload) {
         return this.http.put(this.vehicleServicesUrl, payload)
+    }
+
+    finishBit(bit: BitSerialNo) {
+        return this.http.put(this.finishBitUrl, bit);
     }
 
     buildPointExpenseForm(pipeType) {

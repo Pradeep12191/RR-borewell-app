@@ -4,12 +4,14 @@ import { RpmEntryReportComponent } from './rpm-entry-report.component';
 import { RpmEntryReportResolver } from '../../guards/resolveGuard/rpmEntry/rpm-entry-report.resolve';
 import { PipeSizesResolver } from '../../guards/resolveGuard/select-option/pipe-sizes.resolver';
 import { CompressorAirFilterLimitResolver } from '../../guards/resolveGuard/compressor-air-filter-service-limt.resolver';
+import { VehicleListResolver } from '../../guards/resolveGuard/vehicle/vehicle-list.resolver';
 
 const routes: Routes = [
     {
         path: '', component: RpmEntryReportComponent, resolve: {
             entries: RpmEntryReportResolver,
-            pipes: PipeSizesResolver
+            pipes: PipeSizesResolver,
+            vehicles: VehicleListResolver
         }
     }
 ]

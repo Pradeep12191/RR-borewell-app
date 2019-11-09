@@ -72,6 +72,9 @@
     </div>
 
     <div [formGroup]="form">
+        <div class="m-b-16">
+            <user-details [form]="form.get('user')"></user-details>
+        </div>
         <div fxLayout fxLayoutGap="16px" class="m-b-16">
             <mat-card formGroupName="rpm" fxFlex class="custom-card">
                 <mat-card-header>

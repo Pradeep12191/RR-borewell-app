@@ -152,6 +152,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             outVehicle: ['', Validators.required],
             outRpmNo: ['', Validators.required],
             remarks: { value: '', disabled: false },
+            user: this.fb.group({
+                drillerName: { value: '', disabled: true },
+                place: { value: '', disabled: true },
+                party: { value: '', disabled: true },
+                partyMobile: { value: '', disabled: true },
+                pointManager: { value: '', disabled: true },
+                pointManagerMobile: { value: '', disabled: true },
+            }),
             rpm: this.fb.group({
                 end: { value: '', disabled: true },
                 manual: { value: '', disabled: true },
@@ -976,6 +984,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (!this.date) {
             return;
         }
+        this.form.get('user').enable();
         this.form.get('bit').enable();
         this.form.get('diesel').enable();
         this.form.get('depth.bore').enable();
@@ -1199,6 +1208,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 previous_feet: this.rpmSheet.bit.previous_feet,
                 running_feet: this.rpmSheet.bit.running_feet,
                 total_feet: this.rpmSheet.bit.total_feet
+            },
+            user: {
+                driller_name: this.form.value.user.drillerName,
+                party: this.form.value.user.party,
+                party_mobile: this.form.value.user.partyMobile,
+                place: this.form.value.user.place,
+                point_manager: this.form.value.user.pointManager,
+                point_manager_mobile: this.form.value.user.pointManagerMobile
             }
         }
 

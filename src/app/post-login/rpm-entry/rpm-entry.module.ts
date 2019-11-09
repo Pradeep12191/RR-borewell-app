@@ -24,6 +24,7 @@ import { AddDieselPopupComponent } from './add-diesel-popup/add-diesel-popup.com
 import { ServiceCompleteConfirmDialog } from './service-complete-confirm-dialog/service-complete-confirm-dialog.component';
 import { TractorsResolver } from '../../guards/resolveGuard/tractors.resolver';
 import { CompressorOilServiceLimitResolver } from '../../guards/resolveGuard/compresso-oil-service-limit.resolver';
+import { UserDetailsComponent } from './user-details/user-details.component';
 
 @NgModule({
     imports: [
@@ -45,6 +46,7 @@ import { CompressorOilServiceLimitResolver } from '../../guards/resolveGuard/com
         AssignBitConfirmDialogComponent,
         ServiceCompleteConfirmDialog,
         AddDieselPopupComponent,
+        UserDetailsComponent
         // AddBookPopupComponent
     ],
     entryComponents: [
@@ -53,7 +55,7 @@ import { CompressorOilServiceLimitResolver } from '../../guards/resolveGuard/com
         ServiceCompleteConfirmDialog,
         AssignBitDialogComponent,
         AssignBitConfirmDialogComponent,
-        AddDieselPopupComponent
+        AddDieselPopupComponent,
         // AddBookPopupComponent
     ],
     providers: [

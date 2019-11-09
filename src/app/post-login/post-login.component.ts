@@ -130,13 +130,15 @@ export class PostLoginComponent implements OnInit, OnDestroy {
   }
 
   isExpand(node) {
-    if (node.isMain) {
-      return this.activeMainNode === node ? 'expanded' : 'collapsed'
-    }
-    return this.activeSubNode === node ? 'expanded' : 'collapsed'
+    return node.open ? 'expanded' : 'collapsed'
+    // if (node.isMain) {
+    //   return this.activeMainNode === node ? 'expanded' : 'collapsed'
+    // }
+    // return this.activeSubNode === node ? 'expanded' : 'collapsed'
   }
 
   setActive(node) {
+    node.open = !node.open
     if (node.isMain) {
       this.activeMainNode = this.activeMainNode === node ? null : node;
     }

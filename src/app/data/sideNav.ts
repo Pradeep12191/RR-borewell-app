@@ -13,12 +13,29 @@ export const SIDE_NAV_ITEMS: NavItem[] = [
         paddingLeft: LEVEL_0_PADDING
     },
     {
-        name: 'RPM Entry',
+        name: 'RPM',
         isMain: true,
         icon: 'av_timer',
         path: 'rpmEntry',
         level: 0,
         paddingLeft: LEVEL_0_PADDING,
+        open: true,
+        children: [
+            {
+                name: 'RPM Entry',
+                isFirstChild: true,
+                path: 'rpmEntry',
+                level: 1,
+                paddingLeft: LEVEL_1_PADDING,
+            },
+            {
+                name: 'RPM Report',
+                isLastChild: true,
+                path: 'rpmEntryReport',
+                level: 1,
+                paddingLeft: LEVEL_1_PADDING,
+            },
+        ]
     },
     {
         name: 'Godown Inventory',
@@ -26,6 +43,7 @@ export const SIDE_NAV_ITEMS: NavItem[] = [
         paddingLeft: LEVEL_0_PADDING,
         isMain: true,
         level: 0,
+        open: true,
         children: [
             {
                 name: 'Pipe',

@@ -9,4 +9,5 @@ export interface NavItem{
     path?: string;
     level: number;
     paddingLeft: number;
+    open?: boolean
 }

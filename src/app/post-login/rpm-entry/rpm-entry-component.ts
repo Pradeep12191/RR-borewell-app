@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
-import { Subscription, of } from 'rxjs';
+import { Subscription, of, Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { PipeSize } from '../../models/PipeSize';
 import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl } from '@angular/forms';
@@ -90,6 +90,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     pointDieselRpm;
     tractors: Tractor[];
     boreTypes: BoreType[];
+    dateSelected$ = new Subject();
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
     @ViewChild('inVehicleSelect', { static: false }) inVehicleSelect: MatSelect;
@@ -109,6 +110,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChildren('dieselInput') dieselInputs: QueryList<ElementRef>;
     @ViewChild('aboveFeetSelect', { static: false }) aboveFeetSelect: MatSelect;
     @ViewChild('bitSelect', { static: false }) bitSelect: MatSelect;
+    @ViewChild('tractorSelect', { static: false }) tractorSelect: MatSelect;
     allInputs: QueryList<ElementRef>[] = new Array(5);
 
     get pointExpenseFeetFormArray() {
@@ -248,7 +250,19 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             });
 
+        });
+
+        this.tractorSelect._closedStream.subscribe(() => {
+            const tractor = this.form.get('rpm.trac').value;
+            if (tractor) {
+                setTimeout(() => {
+                    (this.rpmInputs.toArray()[0].nativeElement as HTMLInputElement).focus()
+                })
+            } else {
+                (this.rpmInputs.toArray()[1].nativeElement as HTMLInputElement).focus()
+            }
         })
+
 
         this.bitSelect._closedStream.subscribe(() => {
             // this.moveNextInput(0, -1);
@@ -257,6 +271,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.picker.closedStream.subscribe(() => {
             if (this.date && this.bookId) {
                 this.enableAllControls();
+                setTimeout(() => {
+                    this.dateSelected$.next(true);
+                })
             }
             // this.inVehicleSelect.open();
             // this.inVehicleSelect.focus();
@@ -267,6 +284,13 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.allInputs[3] = this.expenseFeetInputs;
         this.allInputs[4] = this.remarksInput;
 
+    }
+
+    onLastUserEnter() {
+        if (this.tractors && this.tractors.length) {
+            this.tractorSelect.open()
+            this.tractorSelect.focus();
+        }
     }
 
     onRpmInputEnter(currentIndex) {
@@ -808,11 +832,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.loader.hideSaveLoader()
             })
         ).subscribe(() => {
-            if(prop === 'c_air_filter'){
+            if (prop === 'c_air_filter') {
                 this.activeCompressorAirFilterLimit = limit
-               return this.toastr.success('Compressor Air Filter Service Limit updated successfully', null, { timeOut: 2000 })
+                return this.toastr.success('Compressor Air Filter Service Limit updated successfully', null, { timeOut: 2000 })
             }
-            if(prop === 'c_oil_service'){
+            if (prop === 'c_oil_service') {
                 this.activeCompressorOilServiceLimit = limit;
                 return this.toastr.success('Compressor Oil Service Limit updated successfully', null, { timeOut: 2000 })
             }

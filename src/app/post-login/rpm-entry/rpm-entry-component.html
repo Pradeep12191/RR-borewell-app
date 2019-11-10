@@ -73,7 +73,7 @@
 
     <div [formGroup]="form">
         <div class="m-b-16">
-            <user-details [form]="form.get('user')"></user-details>
+            <user-details [dateSelected]="dateSelected$" (lastEnter)="onLastUserEnter($event)" [form]="form.get('user')"></user-details>
         </div>
         <div fxLayout fxLayoutGap="16px" class="m-b-16">
             <mat-card formGroupName="rpm" fxFlex class="custom-card">
@@ -84,7 +84,7 @@
                     <div fxLayout="column">
                         <div fxLayout fxLayoutAlign="start center">
                             <mat-form-field fxFlex="30" class="m-r-16">
-                                <mat-select (selectionChange)="onTractorChange($event)" formControlName="trac">
+                                <mat-select (selectionChange)="onTractorChange($event)" formControlName="trac" #tractorSelect>
                                     <mat-option value="">Select Tractor</mat-option>
                                     <mat-option *ngFor="let tractor of tractors" [value]="tractor">{{ tractor.no }}</mat-option>
                                 </mat-select>

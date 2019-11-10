@@ -73,7 +73,7 @@
 
     <div [formGroup]="form">
         <div class="m-b-16">
-            <user-details [dateSelected]="dateSelected$" (lastEnter)="onLastUserEnter($event)" [form]="form.get('user')"></user-details>
+            <user-details [dateSelected]="dateSelected$" (lastEnter)="onLastUserEnter()" [form]="form.get('user')"></user-details>
         </div>
         <div fxLayout fxLayoutGap="16px" class="m-b-16">
             <mat-card formGroupName="rpm" fxFlex class="custom-card">

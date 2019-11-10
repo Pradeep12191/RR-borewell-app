@@ -6,27 +6,27 @@
         <div fxLayout fxLayoutGap="10px">
             <mat-form-field class="calc-field" fxFlex>
                 <mat-label>Driller Name</mat-label>
-                <input formControlName="drillerName" type="text" matInput autocomplete="off">
+                <input (keydown.enter)="jumpTo(1)" formControlName="drillerName" type="text" matInput autocomplete="off" #user>
             </mat-form-field>
             <mat-form-field class="calc-field" fxFlex>
                 <mat-label>Place</mat-label>
-                <input formControlName="place" type="text" matInput autocomplete="off">
+                <input (keydown.enter)="jumpTo(2)" formControlName="place" type="text" matInput autocomplete="off" #user>
             </mat-form-field>
             <mat-form-field class="calc-field" fxFlex>
                 <mat-label>Party</mat-label>
-                <input type="text" matInput formControlName="party" autocomplete="off">
+                <input (keydown.enter)="jumpTo(3)" type="text" matInput formControlName="party" autocomplete="off" #user>
             </mat-form-field>
             <mat-form-field class="calc-field" fxFlex>
                 <mat-label>Mobile No.</mat-label>
-                <input type="text" matInput positiveNumber formControlName="partyMobile">
+                <input (keydown.enter)="jumpTo(4)" type="text" matInput positiveNumber formControlName="partyMobile" #user>
             </mat-form-field>
             <mat-form-field class="calc-field" fxFlex>
                 <mat-label>Point Manager</mat-label>
-                <input type="text" matInput autocomplete="off" formControlName="pointManager">
+                <input (keydown.enter)="jumpTo(5)" type="text" matInput autocomplete="off" formControlName="pointManager" #user>
             </mat-form-field>
             <mat-form-field class="calc-field" fxFlex>
                 <mat-label>Mobile No.</mat-label>
-                <input type="text" matInput positiveNumber formControlName="pointManagerMobile">
+                <input (keydown.enter)="jumpTo(6)" type="text" matInput positiveNumber formControlName="pointManagerMobile" #user>
             </mat-form-field>
         </div>
     </mat-card-content>

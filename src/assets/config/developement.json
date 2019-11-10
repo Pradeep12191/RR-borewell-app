@@ -188,7 +188,7 @@
         },
         {
             "name": "finishBit",
-            "url": ""
+            "url": "update_bit_status"
         }
     ],
     "reportGenerateUrls": [

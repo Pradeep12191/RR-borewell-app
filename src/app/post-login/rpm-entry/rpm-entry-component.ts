@@ -692,8 +692,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                     vehicle_id: +this.selectedVehicle.vehicle_id
                 })
                     .pipe(finalize(() => this.loader.hideSaveLoader()))
-                    .subscribe((res) => {
-                        console.log(res)
+                    .subscribe((bits) => {
+                        this.assignedBits = bits;
+                        this.form.get('bit').reset();
+                        this.toastr.success('Finish Bit Updated  Sucessfully', null, { timeOut: 2000 })
                     });
             }
         })

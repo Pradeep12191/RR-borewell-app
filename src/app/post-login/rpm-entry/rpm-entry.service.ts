@@ -240,7 +240,7 @@ export class RpmEntryService {
     }
 
     finishBit(bitInfo: any) {
-        return this.http.put(this.finishBitUrl, bitInfo);
+        return this.http.put<BitSerialNo[]>(this.finishBitUrl, bitInfo);
     }
 
     buildPointExpenseForm(pipeType) {

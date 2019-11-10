@@ -239,8 +239,8 @@ export class RpmEntryService {
         return this.http.put(this.vehicleServicesUrl, payload)
     }
 
-    finishBit(bit: BitSerialNo) {
-        return this.http.put(this.finishBitUrl, bit);
+    finishBit(bitInfo: any) {
+        return this.http.put(this.finishBitUrl, bitInfo);
     }
 
     buildPointExpenseForm(pipeType) {

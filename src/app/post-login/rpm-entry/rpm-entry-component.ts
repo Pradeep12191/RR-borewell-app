@@ -656,8 +656,15 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         dialogRef.afterClosed().subscribe((result) => {
             if (result === 'yes') {
-                this.loader.showSaveLoader('Please wait')
-                this.rpmEntryService.finishBit(bit)
+                this.loader.showSaveLoader('Please wait');
+                console.log(JSON.stringify({
+                    ...bit,
+                    ...this.selectedVehicle
+                }, null, 2))
+                this.rpmEntryService.finishBit({
+                    ...bit,
+                    ...this.selectedVehicle
+                })
                     .pipe(finalize(() => this.loader.hideSaveLoader()))
                     .subscribe((res) => {
                         console.log(res)
@@ -799,8 +806,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.loader.hideSaveLoader()
             })
         ).subscribe(() => {
-            this.activeCompressorAirFilterLimit = limit
-            this.toastr.success('Compressor Air Filter Service Limit updated successfully', null, { timeOut: 2000 })
+            if(prop === 'c_air_filter'){
+                this.activeCompressorAirFilterLimit = limit
+               return this.toastr.success('Compressor Air Filter Service Limit updated successfully', null, { timeOut: 2000 })
+            }
+            if(prop === 'c_oil_service'){
+                this.activeCompressorOilServiceLimit = limit;
+                return this.toastr.success('Compressor Oil Service Limit updated successfully', null, { timeOut: 2000 })
+            }
         }, (err) => {
             if (err) {
                 this.toastr.error('Error while updating compressor air filter service limit', null, { timeOut: 2000 })

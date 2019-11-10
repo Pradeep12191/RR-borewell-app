@@ -181,6 +181,14 @@
         {
             "name": "bitDataCount",
             "url": "bit_data_count"
+        },
+        {
+            "name": "compressorOilServiceLimt",
+            "url": "get_compressor_oil_service_limit_list"
+        },
+        {
+            "name": "finishBit",
+            "url": ""
         }
     ],
     "reportGenerateUrls": [

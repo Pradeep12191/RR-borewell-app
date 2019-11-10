@@ -49,7 +49,7 @@ export class RpmEntryReportComponent implements OnDestroy {
     vehicles: Vehicle[]
     filterForm: FormGroup;
     monthPicker: MatDatepicker<any>;
-    loading = false;
+    loading;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
     searchCriterias = [
         { value: 'rpmSheetNo', display: 'Rpm Sheet No' },
@@ -110,6 +110,20 @@ export class RpmEntryReportComponent implements OnDestroy {
                 this.loader.hideSaveLoader()
             })
         ).subscribe()
+    }
+
+    onCriteriaChange() {
+        (this.filterForm.get('rpm') as FormGroup).reset({ fromRpmSheetNo: '', toRpmSheetNo: '' }, { emitEvent: false });
+        (this.filterForm.get('date') as FormGroup).reset({ from: '', to: '' }, { emitEvent: false });
+        (this.filterForm.get('month') as FormGroup).reset('', { emitEvent: false });
+    }
+
+    disableControls() {
+        this.filterForm.disable()
+    }
+
+    enableControls() {
+        this.filterForm.enable()
     }
 
     getMessage() {

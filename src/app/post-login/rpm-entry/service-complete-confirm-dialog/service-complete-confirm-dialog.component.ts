@@ -8,9 +8,11 @@ import { MAT_DIALOG_DATA } from '@angular/material';
 })
 export class ServiceCompleteConfirmDialog {
     message;
+    title;
     constructor(
         @Inject(MAT_DIALOG_DATA) private data
     ) {
         this.message = data.message
+        this.title = data.title
     }
 }

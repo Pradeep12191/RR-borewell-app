@@ -6,6 +6,7 @@ import { Diesel } from './RpmEntry/Diesel';
 import { Depth } from './RpmEntry/Depth';
 import { BitDetail } from './RpmEntry/BitDetail';
 import { RpmVehicleExchage } from './RpmVehicleExchange';
+import { UserDetails } from './UserDetails';
 
 export interface RpmEntrySheet {
     book_id: number;
@@ -24,5 +25,6 @@ export interface RpmEntrySheet {
     remarks?: string;
     date?: string;
     book_page_over?: boolean;
-    rpmTableData?: RpmTableData
+    rpmTableData?: RpmTableData,
+    user: UserDetails
 }

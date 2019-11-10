@@ -74,7 +74,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     bitSizes: BitSize[];
     rpmHourFeets: ServiceLimit[];
     compressorAirFilterServiceLimits: ServiceLimit[];
+    compressorOilServiceLimits: ServiceLimit[]
     activeCompressorAirFilterLimit: ServiceLimit;
+    activeCompressorOilServiceLimit: ServiceLimit;
     assignedBits: BitSerialNo[];
     bookStartNo;
     bookId;
@@ -150,6 +152,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             outVehicle: ['', Validators.required],
             outRpmNo: ['', Validators.required],
             remarks: { value: '', disabled: false },
+            user: this.fb.group({
+                drillerName: { value: '', disabled: true },
+                place: { value: '', disabled: true },
+                party: { value: '', disabled: true },
+                partyMobile: { value: '', disabled: true },
+                pointManager: { value: '', disabled: true },
+                pointManagerMobile: { value: '', disabled: true },
+            }),
             rpm: this.fb.group({
                 end: { value: '', disabled: true },
                 manual: { value: '', disabled: true },
@@ -165,7 +175,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }),
             depth: this.fb.group({
                 bore: { value: '', disabled: true },
-                boreType: {value: '', disabled: true},
+                boreType: { value: '', disabled: true },
                 pipeErection: { value: '', disabled: true },
                 above: this.fb.group({
                     feet: { value: '', disabled: true },
@@ -188,6 +198,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.bitSizes = data.bits;
             this.rpmHourFeets = data.rpmHourFeets;
             this.compressorAirFilterServiceLimits = data.compressorAirFilterServiceLimits;
+            this.compressorOilServiceLimits = data.compressorOilServiceLimits
             this.tractors = data.tractors;
             this.pipeFlex = this.pipeTotalFlex / this.pipes.length;
             this.pipeFlex = Math.round(this.pipeFlex * 100) / 100;
@@ -614,7 +625,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         const dialogRef = this.dialog.open(ServiceCompleteConfirmDialog, {
             data: {
-                message
+                message,
+                title: 'Confirm Service Completion'
             }
         });
         dialogRef.afterClosed().subscribe((res) => {
@@ -629,6 +641,27 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.form.get('rpm.trac').value[propName] = 0;
                 }
 
+            }
+        })
+    }
+
+    finishBit(bit: BitSerialNo) {
+        const message = 'Would you like to Finist Bit ' + bit.bit_no + ' ?'
+        const dialogRef = this.dialog.open(ServiceCompleteConfirmDialog, {
+            data: {
+                title: 'Finish Bit',
+                message
+            }
+        })
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result === 'yes') {
+                this.loader.showSaveLoader('Please wait')
+                this.rpmEntryService.finishBit(bit)
+                    .pipe(finalize(() => this.loader.hideSaveLoader()))
+                    .subscribe((res) => {
+                        console.log(res)
+                    });
             }
         })
     }
@@ -754,11 +787,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    onServieLimitSelect(limit: ServiceLimit) {
+    onServieLimitSelect(limit: ServiceLimit, prop) {
         this.loader.showSaveLoader('Loading')
         const services: VehicleServices = {
             ...this.vehicleServiceLimits,
-            c_air_filter: limit.limit,
+            [prop]: limit.limit,
             vehicle_id: +this.selectedVehicle.vehicle_id
         }
         this.rpmEntryService.updateCompressorAirFilter(services).pipe(
@@ -799,6 +832,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.vehicleServiceLimits = serviceLimits;
             this.activeCompressorAirFilterLimit = this.compressorAirFilterServiceLimits
                 .find(c => c.limit === this.vehicleServiceLimits.c_air_filter);
+            this.activeCompressorOilServiceLimit = this.compressorOilServiceLimits
+                .find(c => c.limit === this.vehicleServiceLimits.c_oil_service);
             if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
                 this.resetAll();
                 this.resetBook();
@@ -971,6 +1006,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (!this.date) {
             return;
         }
+        this.form.get('user').enable();
         this.form.get('bit').enable();
         this.form.get('diesel').enable();
         this.form.get('depth.bore').enable();
@@ -1194,6 +1230,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 previous_feet: this.rpmSheet.bit.previous_feet,
                 running_feet: this.rpmSheet.bit.running_feet,
                 total_feet: this.rpmSheet.bit.total_feet
+            },
+            user: {
+                driller_name: this.form.value.user.drillerName,
+                party: this.form.value.user.party,
+                party_mobile: this.form.value.user.partyMobile,
+                place: this.form.value.user.place,
+                point_manager: this.form.value.user.pointManager,
+                point_manager_mobile: this.form.value.user.pointManagerMobile
             }
         }
 

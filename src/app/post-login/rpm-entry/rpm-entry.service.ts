@@ -28,6 +28,8 @@ export class RpmEntryService {
     private vehicleServicesUrl: string;
     private assignedBitSerialNoUrl: string;
     private tractorsUrl: string;
+    private compressorOilServiceLimitUrl: string;
+    private finishBitUrl: string;
     constructor(
         private http: HttpClient,
         private config: ConfigService,
@@ -45,7 +47,9 @@ export class RpmEntryService {
         this.compressorAirFilterLimitUrl = this.config.getAbsoluteUrl('compresserAirFilterServiceList');
         this.vehicleServicesUrl = this.config.getAbsoluteUrl('getServiceLimits')
         this.assignedBitSerialNoUrl = this.config.getAbsoluteUrl('assignedBitSerialNos');
-        this.tractorsUrl = this.config.getAbsoluteUrl('tractorList')
+        this.tractorsUrl = this.config.getAbsoluteUrl('tractorList');
+        this.compressorOilServiceLimitUrl = this.config.getAbsoluteUrl('compressorOilServiceLimt');
+        this.finishBitUrl = this.config.getAbsoluteUrl('finishBit');
     }
 
     postBook(book: Book) {
@@ -68,6 +72,7 @@ export class RpmEntryService {
             }),
         )
     }
+
 
     getLastRpmEntrySheet(vehicle: Vehicle) {
         const params = new HttpParams()
@@ -211,6 +216,10 @@ export class RpmEntryService {
         return this.http.get<ServiceLimit[]>(this.compressorAirFilterLimitUrl);
     }
 
+    getCompressorOilServiceLimits() {
+        return this.http.get<ServiceLimit[]>(this.compressorOilServiceLimitUrl);
+    }
+
     getServiceLimits(vehicle: Vehicle) {
         const params = new HttpParams().set('user_id', this.auth.userid).append('vehicle_id', vehicle.vehicle_id);
         return this.http.get<VehicleServices>(this.vehicleServicesUrl, { params })
@@ -228,6 +237,10 @@ export class RpmEntryService {
 
     updateCompressorAirFilter(payload) {
         return this.http.put(this.vehicleServicesUrl, payload)
+    }
+
+    finishBit(bit: BitSerialNo) {
+        return this.http.put(this.finishBitUrl, bit);
     }
 
     buildPointExpenseForm(pipeType) {

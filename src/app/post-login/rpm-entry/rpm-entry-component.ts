@@ -659,11 +659,13 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.loader.showSaveLoader('Please wait');
                 console.log(JSON.stringify({
                     ...bit,
-                    ...this.selectedVehicle
+                    ...this.selectedVehicle,
+                    vehicle_id: +this.selectedVehicle.vehicle_id
                 }, null, 2))
                 this.rpmEntryService.finishBit({
                     ...bit,
-                    ...this.selectedVehicle
+                    ...this.selectedVehicle,
+                    vehicle_id: +this.selectedVehicle.vehicle_id
                 })
                     .pipe(finalize(() => this.loader.hideSaveLoader()))
                     .subscribe((res) => {

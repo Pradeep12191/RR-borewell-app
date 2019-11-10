@@ -1,39 +1,33 @@
-<mat-card>
+<mat-card class="custom-card">
+    <mat-card-header>
+        <mat-card-title>Address</mat-card-title>
+    </mat-card-header>
     <mat-card-content [formGroup]="form">
-        <div fxLayout>
-            <div fxFlex="60">
-                <div fxLayout fxLayoutGap="25px">
-                    <mat-form-field fxFlex>
-                        <mat-label>Driller Name</mat-label>
-                        <input formControlName="drillerName" type="text" matInput autocomplete="off">
-                    </mat-form-field>
-                    <mat-form-field fxFlex>
-                        <mat-label>Place</mat-label>
-                        <input formControlName="place" type="text" matInput autocomplete="off">
-                    </mat-form-field>
-                </div>
-                <div fxLayout fxLayoutGap="25px">
-                    <mat-form-field fxFlex>
-                        <mat-label>Party</mat-label>
-                        <input type="text" matInput formControlName="party" autocomplete="off">
-                    </mat-form-field>
-                    <mat-form-field fxFlex>
-                        <mat-label>Mobile No.</mat-label>
-                        <input type="text" matInput positiveNumber formControlName="partyMobile">
-                    </mat-form-field>
-                </div>
-                <div fxLayout fxLayoutGap="25px">
-                    <mat-form-field fxFlex>
-                        <mat-label>Point Manager</mat-label>
-                        <input type="text" matInput autocomplete="off" formControlName="pointManager">
-                    </mat-form-field>
-                    <mat-form-field fxFlex>
-                        <mat-label>Mobile No.</mat-label>
-                        <input type="text" matInput positiveNumber formControlName="pointManagerMobile">
-                    </mat-form-field>
-                </div>
-            </div>
-            <div fxFlex></div>
+        <div fxLayout fxLayoutGap="10px">
+            <mat-form-field class="calc-field" fxFlex>
+                <mat-label>Driller Name</mat-label>
+                <input formControlName="drillerName" type="text" matInput autocomplete="off">
+            </mat-form-field>
+            <mat-form-field class="calc-field" fxFlex>
+                <mat-label>Place</mat-label>
+                <input formControlName="place" type="text" matInput autocomplete="off">
+            </mat-form-field>
+            <mat-form-field class="calc-field" fxFlex>
+                <mat-label>Party</mat-label>
+                <input type="text" matInput formControlName="party" autocomplete="off">
+            </mat-form-field>
+            <mat-form-field class="calc-field" fxFlex>
+                <mat-label>Mobile No.</mat-label>
+                <input type="text" matInput positiveNumber formControlName="partyMobile">
+            </mat-form-field>
+            <mat-form-field class="calc-field" fxFlex>
+                <mat-label>Point Manager</mat-label>
+                <input type="text" matInput autocomplete="off" formControlName="pointManager">
+            </mat-form-field>
+            <mat-form-field class="calc-field" fxFlex>
+                <mat-label>Mobile No.</mat-label>
+                <input type="text" matInput positiveNumber formControlName="pointManagerMobile">
+            </mat-form-field>
         </div>
     </mat-card-content>
 </mat-card>

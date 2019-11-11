@@ -159,8 +159,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 place: { value: '', disabled: true },
                 party: { value: '', disabled: true },
                 partyMobile: { value: '', disabled: true },
-                pointManager: { value: '', disabled: true },
-                pointManagerMobile: { value: '', disabled: true },
+                plumber: { value: '', disabled: true },
+                plumberMobile: { value: '', disabled: true },
             }),
             rpm: this.fb.group({
                 end: { value: '', disabled: true },
@@ -960,6 +960,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('rpm.end').reset('');
         this.form.get('rpm.tracEndHour').reset('');
         this.form.get('rpm.trac').reset('');
+        this.form.get('user').reset({
+            drillerName: '',
+            place: '',
+            party: '',
+            partyMobile: '',
+            plumber: '',
+            plumberMobile: ''
+        })
         this.form.get('diesel.compressor').reset('');
         this.form.get('diesel.lorry').reset('');
         this.form.get('diesel.support').reset('');
@@ -1277,8 +1285,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 party: this.form.value.user.party,
                 party_mobile: this.form.value.user.partyMobile,
                 place: this.form.value.user.place,
-                point_manager: this.form.value.user.pointManager,
-                point_manager_mobile: this.form.value.user.pointManagerMobile
+                plumber: this.form.value.user.plumber,
+                plumber_mobile: this.form.value.user.plumberMobile
             }
         }
 

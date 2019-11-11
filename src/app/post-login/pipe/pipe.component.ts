@@ -25,15 +25,6 @@ const AllGodownOption: Godown = { godown_id: 'all', godownType: 'All' }
 })
 export class PipeComponent {
     items = [];
-    pipeDataSource: MatTableDataSource<any>;
-    public columns: Column[] = [
-        { id: 'S.No.', name: 'COLUMN.SERIAL_NO', type: 'index', width: '10' },
-        { id: 'pipe_type', name: 'Type', type: 'string', width: '15', isCenter: true },
-        { id: 'count', name: 'No. of Pipe Length', type: 'string', width: '30', isCenter: true },
-        { id: 'length', name: 'Feet', type: 'string', width: '25', isCenter: true },
-        { id: 'assignVehicle', name: 'Assign Vehicle', type: 'iconButton', width: '15', isCenter: true, action: 'ASSIGN_VEHICLE', iconName: 'directions_car' },
-        { id: 'viewPipeData', name: 'View Pipe Data', type: 'iconButton', isCenter: true, width: '15', action: 'VIEW_PIPE_DATA', iconName: 'arrow_forward' },
-    ]
     public godownTypes: { godownType: string, godown_id: string }[] = [];
     public selectedGodownId = 'all';
     public godownSelectDisabled;
@@ -151,12 +142,11 @@ export class PipeComponent {
     }
 
     updatePipes(pipes) {
-        this.pipes = pipes;
+        this.pipes = pipes.reverse();
 
         this.pipes.forEach(pipe => {
             pipe['length'] = pipe.count ? (+pipe.count * PIPE_LENGTH).toString() : '0';
         });
-        this.pipeDataSource = new MatTableDataSource(this.pipes)
     }
 
     displayGodown(godownId) {

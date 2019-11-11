@@ -544,7 +544,7 @@
             <mat-card-content>
                 <div class="pipe-header" fxLayout>
                     <div fxFlex="28"></div>
-                    <div [fxFlex]="pipeFlex" fxLayoutAlign="center center" class="header-cell bold" *ngFor="let pipe of pipes">{{
+                    <div [fxFlex]="pipeFlex" fxLayoutAlign="center center" class="header-cell bold" *ngFor="let pipe of reversePipes">{{
                         pipe.type }}</div>
                 </div>
                 <div class="table" (click)="tableClick($event)" fxLayout="column">

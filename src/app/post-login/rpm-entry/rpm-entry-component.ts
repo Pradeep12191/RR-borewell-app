@@ -63,6 +63,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     pipeTotalFlex = 72;
     pipeFlex = 10;
     pipes: PipeSize[];
+    reversePipes: PipeSize[];
     form: FormGroup;
     vehicles: Vehicle[];
     selectedVehicle: Vehicle;
@@ -194,6 +195,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit() {
         this.routeDataSubscription = this.route.data.subscribe((data) => {
             this.pipes = data.pipes;
+            this.reversePipes = [...this.pipes].reverse();
             this.vehicles = data.vehicles;
             this.godowns = data.godowns;
             this.bitGodowns = data.bitGodowns;
@@ -204,9 +206,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.tractors = data.tractors;
             this.pipeFlex = this.pipeTotalFlex / this.pipes.length;
             this.pipeFlex = Math.round(this.pipeFlex * 100) / 100;
-            this.boreTypes = data.boreTypes
+            this.boreTypes = data.boreTypes;
 
-            this.pipes.forEach(pipe => {
+            this.reversePipes.forEach(pipe => {
                 const pipeData: RpmValue = { pipeType: pipe.type, feet: 0, pipeId: +pipe.id, pipeSize: +pipe.size, length: 0 }
                 this.rpmEntryTable.previousStockFeet.push({ ...pipeData });
                 this.rpmEntryTable.rrIncome.push({ ...pipeData });
@@ -809,8 +811,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         dialogRef.afterClosed().subscribe((data: RpmTableData) => {
             if (data) {
-                this.rpmEntryTable.rrIncome = [...data.rrIncome];
-                this.rpmEntryTable.mmIncome = [...data.mmIncome];
+                this.rpmEntryTable.rrIncome = [...data.rrIncome.reverse()];
+                this.rpmEntryTable.mmIncome = [...data.mmIncome.reverse()];
                 this.updateAllPipeStockFeet();
             }
         })
@@ -892,8 +894,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.resetAll();
             // once vehicle is selected enable all controls
             if (incomeData) {
-                this.rpmEntryTable.rrIncome = [...incomeData.rrIncome];
-                this.rpmEntryTable.mmIncome = [...incomeData.mmIncome];
+                this.rpmEntryTable.rrIncome = [...incomeData.rrIncome.reverse()];
+                this.rpmEntryTable.mmIncome = [...incomeData.mmIncome.reverse()];
                 this.updateAllPipeStockFeet()
             }
             this.updatePreviousStockFeet(lastRpmEntrySheet);

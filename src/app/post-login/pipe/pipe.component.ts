@@ -142,7 +142,7 @@ export class PipeComponent {
     }
 
     updatePipes(pipes) {
-        this.pipes = pipes.reverse();
+        this.pipes = pipes;
 
         this.pipes.forEach(pipe => {
             pipe['length'] = pipe.count ? (+pipe.count * PIPE_LENGTH).toString() : '0';

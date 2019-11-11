@@ -3,6 +3,6 @@ export class UserDetails {
     place: string;
     party: string;
     party_mobile: string;
-    point_manager: string;
-    point_manager_mobile: string;
+    plumber: string;
+    plumber_mobile: string;
 }

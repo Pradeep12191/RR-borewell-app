@@ -4,7 +4,7 @@ import { MatTableDataSource, MatDialog, MatSelectChange } from '@angular/materia
 import { AddPipeDialogComponent } from './add-pipe-dialog/add-pipe-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
-import { zip } from 'rxjs';
+import { zip, of } from 'rxjs';
 import { ConfigService } from '../../services/config.service';
 import { FADE_IN_ANIMATION, listStateTrigger } from '../../animations';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -28,8 +28,11 @@ export class PipeComponent {
     public godownTypes: { godownType: string, godown_id: string }[] = [];
     public selectedGodownId = 'all';
     public godownSelectDisabled;
+    updatedGodownId = 'all';
     loading;
     pipes: Pipe[];
+    rrPipes: Pipe[];
+    mmPipes: Pipe[];
     appearance;
     pipeUrl;
     pipeCountUrl;
@@ -56,10 +59,24 @@ export class PipeComponent {
             this.selectedGodownId = data.pipeData.godownId;
             setTimeout(() => {
                 // this.items = [1, 2, 3, 4, 5, 6, 7, 8]
-                this.updatePipes(data.pipeData.pipes);
+                this.updatePipes(data.pipeData.allPipes);
+                this.updatePipes(data.pipeData.rrPipes);
+                this.updatePipes(data.pipeData.mmPipes);
+                this.pipes = data.pipeData.allPipes;
+                this.mmPipes = data.pipeData.mmPipes;
+                this.rrPipes = data.pipeData.rrPipes;
             })
 
         })
+    }
+
+    getCount(godownType, pipeSize) {
+        if (godownType === 'rr') {
+            return this.rrPipes.find(p => p.pipe_size === pipeSize)
+        }
+        if (godownType === 'mm') {
+            return this.mmPipes.find(p => p.pipe_size === pipeSize)
+        }
     }
 
     public onButtonClick($event) {
@@ -86,12 +103,33 @@ export class PipeComponent {
         this.loading = true;
         this.godownSelectDisabled = true;
         this.app.selectedGodownId = $event.value;
-        const params = new HttpParams().set('user_id', this.auth.userid).append('gudown_id', $event.value)
-        this.http.get(this.pipeUrl, { params }).pipe(finalize(() => {
+        const params = new HttpParams().set('user_id', this.auth.userid).append('gudown_id', $event.value);
+        const rrParams = { user_id: this.auth.userid, gudown_id: '2' };
+        const mmParams = { user_id: this.auth.userid, gudown_id: '1' };
+        let all$ = this.http.get<Pipe[]>(this.pipeUrl, { params });
+        let rr$ = of(null);
+        let mm$ = of(null);
+
+        if ($event.value === 'all') {
+            rr$ = this.http.get<Pipe[]>(this.pipeUrl, { params: rrParams });
+            mm$ = this.http.get<Pipe[]>(this.pipeUrl, { params: mmParams });
+        }
+
+
+
+        zip(all$, rr$, mm$).pipe(finalize(() => {
             this.loading = false;
             this.godownSelectDisabled = false;
-        })).subscribe(pipes => {
+        })).subscribe(([pipes, rrPipes, mmPipes]) => {
+            this.updatedGodownId = $event.value;
             this.updatePipes(pipes);
+            this.pipes = pipes;
+            if ($event.value === 'all') {
+                this.updatePipes(rrPipes);
+                this.updatePipes(mmPipes);
+                this.rrPipes = rrPipes;
+                this.mmPipes = mmPipes;
+            }
         }, (err) => {
             if (err) {
                 this.toastr.error('Error while Fetching Pipe Information', null, { timeOut: 2000 })
@@ -123,6 +161,7 @@ export class PipeComponent {
                 dialogRef.afterClosed().subscribe((pipes) => {
                     if (pipes) {
                         this.updatePipes(pipes);
+                        this.pipes = pipes;
                         this.selectedGodownId = this.app.selectedGodownId
                     }
                 });
@@ -142,9 +181,7 @@ export class PipeComponent {
     }
 
     updatePipes(pipes) {
-        this.pipes = pipes;
-
-        this.pipes.forEach(pipe => {
+        pipes.forEach(pipe => {
             pipe['length'] = pipe.count ? (+pipe.count * PIPE_LENGTH).toString() : '0';
         });
     }

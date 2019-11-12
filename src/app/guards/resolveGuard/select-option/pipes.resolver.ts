@@ -3,9 +3,11 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ConfigService } from '../../../services/config.service';
 import { mergeMap, switchMap, map } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, zip } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { AppService } from '../../../services/app.service';
+import { Pipe } from '../../../models/Pipe';
+import { Godown } from '../../../post-login/pipe/Godown';
 
 @Injectable()
 export class PipesResolver implements Resolve<any> {
@@ -22,14 +24,19 @@ export class PipesResolver implements Resolve<any> {
     }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        return this.http.get(this.url).pipe(mergeMap(response => {
+        return this.http.get<Godown[]>(this.url).pipe(mergeMap(response => {
             const goDowns = response;
-            if (!this.app.selectedGodownId) {
-                this.app.selectedGodownId = 'all'
-            }
-            let params = new HttpParams().set('user_id', this.auth.userid).append('gudown_id', this.app.selectedGodownId.toString())
-            return this.http.get(this.pipesUrl, { params }).pipe(map((pipes) => {
-                return { goDowns, pipes, godownId: this.app.selectedGodownId }
+            this.app.selectedGodownId = 'all'
+            // if (!this.app.selectedGodownId) {
+            // }
+            let allParams = new HttpParams().set('user_id', this.auth.userid).append('gudown_id', this.app.selectedGodownId.toString())
+            const rrParams = { user_id: this.auth.userid, gudown_id: '2' };
+            const mmParams = { user_id: this.auth.userid, gudown_id: '1' };
+            const all$ = this.http.get<Pipe[]>(this.pipesUrl, { params: allParams });
+            const rr$ = this.http.get<Pipe[]>(this.pipesUrl, { params: rrParams });
+            const mm$ = this.http.get<Pipe[]>(this.pipesUrl, { params: mmParams });
+            return zip(all$, rr$, mm$).pipe(map(([allPipes, rrPipes, mmPipes]) => {
+                return { goDowns, allPipes, rrPipes, mmPipes, godownId: this.app.selectedGodownId }
             }))
             // return of(response);
         }));

@@ -29,7 +29,7 @@ export class RpmEntryReportService {
 
         const params = new HttpParams().set('user_id', this.auth.userid)
             .append('vehicle_id', vehicleId.toString());
-        return this.http.get<{success: string; filename: string}>(this.reportUrl, { params }).pipe(
+        return this.http.get<{ success: string; filename: string }>(this.reportUrl, { params }).pipe(
             map((response) => {
                 this.toastr.success('Report generated successfully', null, { timeOut: 2000 });
                 window.open(this.pdfDownloadUrl + '/' + response.filename, '_blank');
@@ -39,9 +39,11 @@ export class RpmEntryReportService {
         );
     }
 
-    getRpmEntries(vehicleId) {
-        const params = new HttpParams().set('user_id', this.auth.userid)
-            .append('vehicle_id', vehicleId)
+    getRpmEntries(qParams: { [param: string]: string | string[] }) {
+        const params = {
+            user_id: this.auth.userid,
+            ...qParams
+        }
         return this.http.get<RpmEntrySheet[]>(this.rpmEntryReportUrl, { params }).pipe(map((sheets) => {
 
 

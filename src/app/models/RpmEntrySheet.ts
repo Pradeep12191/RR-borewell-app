@@ -26,5 +26,5 @@ export interface RpmEntrySheet {
     date?: string;
     book_page_over?: boolean;
     rpmTableData?: RpmTableData,
-    user: UserDetails
+    user_address: UserDetails
 }

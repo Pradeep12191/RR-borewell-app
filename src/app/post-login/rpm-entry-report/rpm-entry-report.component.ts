@@ -1,5 +1,5 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { Subscription, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { RpmEntrySheet } from '../../models/RpmEntrySheet';
 import { Column } from '../../expand-table/Column';
@@ -7,7 +7,7 @@ import { MatTableDataSource, MatDatepicker, MatSelect, } from '@angular/material
 import { RpmEntryService } from '../rpm-entry/rpm-entry.service';
 import { RpmEntryReportService } from './rpm-entry-report.service';
 import { LoaderService } from '../../services/loader-service';
-import { finalize } from 'rxjs/operators';
+import { finalize, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -40,7 +40,7 @@ const dateValidation = (control: AbstractControl) => {
     templateUrl: './rpm-entry-report.component.html',
     styleUrls: ['./rpm-entry-report.component.scss']
 })
-export class RpmEntryReportComponent implements OnDestroy {
+export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
     routeDataSubcription: Subscription;
     routeParamSubcription: Subscription;
     entries: RpmEntrySheet[];
@@ -82,24 +82,62 @@ export class RpmEntryReportComponent implements OnDestroy {
                     this.vehicleSelect.open();
                     this.vehicleSelect.focus();
                 } else {
-                    this.filterForm.get('vehicle').setValue(veh)
+                    this.filterForm.get('vehicle').setValue(veh);
+                    this.filterForm.enable({ emitEvent: false })
                 }
             })
-
         })
 
         this.filterForm = this.fb.group({
             vehicle: '',
-            searchCriteria: 'rpmSheetNo',
+            searchCriteria: { value: 'rpmSheetNo', disabled: true },
             rpm: this.fb.group({
-                fromRpmSheetNo: '',
-                toRpmSheetNo: ''
+                fromRpmSheetNo: { value: '', disabled: true },
+                toRpmSheetNo: { value: '', disabled: true }
             }, { validators: sheetNoValidation }),
             date: this.fb.group({
                 from: '',
                 to: ''
             }, { validators: dateValidation }),
-            month: ''
+            month: '',
+            type: ''
+        });
+
+        this.filterForm.get('rpm').valueChanges.pipe(
+            debounceTime(500),
+            distinctUntilChanged(),
+            switchMap((rpmObj) => {
+                const rpmCtrl = this.filterForm.get('rpm');
+                const vehicle_id = this.filterForm.get('vehicle').value.vehicle_id;
+                let from_rpm = '';
+                let to_rpm = ''
+                if (rpmCtrl.valid) {
+                    from_rpm = rpmObj.fromRpmSheetNo || rpmObj.toRpmSheetNo;
+                    to_rpm = rpmObj.toRpmSheetNo || rpmObj.fromRpmSheetNo;
+                    return this.rpmEntryReportService.getRpmEntries({ from_rpm, to_rpm, vehicle_id });
+                }
+                return of(null);
+            })
+        ).subscribe((entries: RpmEntrySheet[]) => {
+            if (entries) {
+                this.entries = entries;
+                this.entriesDatasource = new MatTableDataSource(this.entries);
+            }
+        });
+
+        this.filterForm.get('date').valueChanges.pipe(
+            debounceTime(500),
+            distinctUntilChanged()
+        ).subscribe((dateObj) => {
+            console.log(dateObj)
+        })
+    }
+
+    ngAfterViewInit() {
+        this.vehicleSelect._closedStream.subscribe(() => {
+            if (this.filterForm.value.vehicle) {
+                this.filterForm.enable({ emitEvent: false })
+            }
         })
     }
 
@@ -137,8 +175,8 @@ export class RpmEntryReportComponent implements OnDestroy {
 
     onVehicleChange() {
         this.loading = true;
-        const vehId = this.filterForm.value.vehicle ? this.filterForm.value.vehicle.vehicle_id : ''
-        this.rpmEntryReportService.getRpmEntries(vehId).pipe(finalize(() => this.loading = false)).subscribe((entries) => {
+        const vehicle_id = this.filterForm.value.vehicle ? this.filterForm.value.vehicle.vehicle_id : ''
+        this.rpmEntryReportService.getRpmEntries({ vehicle_id }).pipe(finalize(() => this.loading = false)).subscribe((entries) => {
             this.entries = entries;
             this.entriesDatasource = new MatTableDataSource(this.entries);
         })

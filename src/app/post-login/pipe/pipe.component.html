@@ -7,7 +7,8 @@
             </button>
         </div>
         <div fxFlex fxLayoutAlign="center center" class="header">
-            <h2>{{ displayGodown(selectedGodownId) === 'All' ? displayGodown(selectedGodownId) : (displayGodown(selectedGodownId)  | uppercase) }} Godown Pipe Stock</h2>
+            <h2>{{ displayGodown(selectedGodownId) === 'All' ? displayGodown(selectedGodownId) :
+                (displayGodown(selectedGodownId) | uppercase) }} Godown Pipe Stock</h2>
         </div>
         <div>
             <button (click)="navigateToViewBill()" mat-raised-button color="primary">
@@ -55,22 +56,52 @@
                 </button>
             </div>
             <div fxLayout class="bottom-info" fxLayoutGap="10">
-                <div fxFlex class="pipe-info">
+                <div fxFlex class="pipe-info" *ngIf="updatedGodownId === 'all'; else godownSpecificTpl">
                     <div fxLayout="column" fxLayoutGap="10px">
-                        <div fxLayout fxLayoutGap="10px">
-                            <div fxFlex="50">
-                                Length
-                            </div>
-                            <div fxFlex class="bold">{{ pipe.count }}</div>
+                        <div fxFlex class="font-12 text-right" fxLayout>
+                            <div fxFlex="30"></div>
+                            <div fxFlex>Length</div>
+                            <div fxFlex>Feet</div>
                         </div>
-                        <div fxLayout fxLayoutGap="10px">
-                            <div fxFlex="50">
-                                Feet
-                            </div>
-                            <div fxFlex class="bold">{{ pipe.length }}</div>
+                        <div fxFlex fxLayout>
+                            <div fxFlex="30" class="font-12 font-italic">MM</div>
+                            <div fxFlex class="bold font-14 text-right">{{ getCount('mm', pipe.pipe_size).count }}</div>
+                            <div fxFlex class="bold font-14 text-right">{{ getCount('mm', pipe.pipe_size).length }}</div>
+                        </div>
+                        <div fxFlex fxLayout>
+                            <div fxFlex="30" class="font-12 font-italic">RR</div>
+                            <div fxFlex class="bold font-14 text-right">{{ getCount('rr', pipe.pipe_size).count }}</div>
+                            <div fxFlex class="bold font-14 text-right">{{ getCount('rr', pipe.pipe_size).length }}</div>
+                        </div>
+                        <div fxLayout>
+                            <div fxFlex="30"></div>
+                            <div fxFlex class="dashed-divider"></div>
+                        </div>
+                        <div fxFlex fxLayout>
+                            <div fxFlex="30" class="font-12 font-italic">Total</div>
+                            <div fxFlex class="bold font-14 text-right">{{ pipe.count }}</div>
+                            <div fxFlex class="bold font-14 text-right">{{ pipe.length }}</div>
                         </div>
                     </div>
                 </div>
+                <ng-template #godownSpecificTpl>
+                    <div fxFlex class="pipe-info">
+                        <div fxLayout="column" fxLayoutGap="10px">
+                            <div fxLayout fxLayoutGap="10px">
+                                <div fxFlex="50">
+                                    Length
+                                </div>
+                                <div fxFlex class="bold">{{ pipe.count }}</div>
+                            </div>
+                            <div fxLayout fxLayoutGap="10px">
+                                <div fxFlex="50">
+                                    Feet
+                                </div>
+                                <div fxFlex class="bold">{{ pipe.length }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
                 <!-- <div fxFlex fxLayout fxLayoutAlign="center center" (click)="assignVehicle(pipe, $event)" class="pipe-card-btn">
                     <div fxLayout="column">
                         <div class="pipe-card-btn-title">Assign Vehicle</div>
@@ -84,6 +115,8 @@
         </div>
     </div>
 </div>
+
+
 
 <!-- </div> -->
 

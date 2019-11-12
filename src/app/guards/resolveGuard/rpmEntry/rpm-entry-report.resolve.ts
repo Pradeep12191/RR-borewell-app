@@ -17,7 +17,7 @@ export class RpmEntryReportResolver implements Resolve<RpmEntrySheet[]>{
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Promise<any> | Observable<any> {
-        const vehicleId = route.queryParamMap.get('vehicleId');
-        return this.rpmEntryRerportService.getRpmEntries(vehicleId);
+        const vehicle_id = route.queryParamMap.get('vehicleId');
+        return this.rpmEntryRerportService.getRpmEntries({ vehicle_id });
     }
 }

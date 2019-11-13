@@ -39,7 +39,7 @@
                 <mat-datepicker #toPicker></mat-datepicker>
             </mat-form-field>
         </ng-container>
-        <month-picker *ngIf="filterForm.get('searchCriteria').value === 'month'" fxFlex="16"></month-picker>
+        <month-picker formControlName="month" *ngIf="filterForm.get('searchCriteria').value === 'month'" fxFlex="16"></month-picker>
         <button (click)="downloadReport()" mat-raised-button color="primary" class="pdf-btn">Download Pdf</button>
     </div>
     <div *ngIf="filterForm.invalid" class="error-info m-b-16" fxLayoutAlign="start center" fxLayoutGap="16px">

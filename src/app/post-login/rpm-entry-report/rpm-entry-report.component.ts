@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
-import { Subscription, of } from 'rxjs';
+import { Subscription, of, throwError } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { RpmEntrySheet } from '../../models/RpmEntrySheet';
 import { Column } from '../../expand-table/Column';
@@ -7,7 +7,7 @@ import { MatTableDataSource, MatDatepicker, MatSelect, } from '@angular/material
 import { RpmEntryService } from '../rpm-entry/rpm-entry.service';
 import { RpmEntryReportService } from './rpm-entry-report.service';
 import { LoaderService } from '../../services/loader-service';
-import { finalize, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { finalize, debounceTime, distinctUntilChanged, switchMap, tap, catchError } from 'rxjs/operators';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -104,6 +104,14 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
         });
 
         this.filterForm.get('rpm').valueChanges.pipe(
+            tap(() => {
+                const rpmCtrl = this.filterForm.get('rpm');
+                if (rpmCtrl.valid) {
+                    this.loading = true
+                } else {
+                    this.loading = false;
+                }
+            }),
             debounceTime(500),
             distinctUntilChanged(),
             switchMap((rpmObj) => {
@@ -114,22 +122,101 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                 if (rpmCtrl.valid) {
                     from_rpm = rpmObj.fromRpmSheetNo || rpmObj.toRpmSheetNo;
                     to_rpm = rpmObj.toRpmSheetNo || rpmObj.fromRpmSheetNo;
-                    return this.rpmEntryReportService.getRpmEntries({ from_rpm, to_rpm, vehicle_id });
+                    if (from_rpm || to_rpm) {
+                        return this.rpmEntryReportService.getRpmEntries({ from_rpm, to_rpm, vehicle_id }).pipe(
+                            finalize(() => this.loading = false),
+                            catchError(() => of('Error'))
+                        );
+                    }
+                    return this.rpmEntryReportService.getRpmEntries({ vehicle_id }).pipe(
+                        finalize(() => this.loading = false),
+                        catchError(() => of('Error'))
+                    );
                 }
                 return of(null);
-            })
+            }),
         ).subscribe((entries: RpmEntrySheet[]) => {
-            if (entries) {
+            if (entries && !(entries as any === 'Error')) {
                 this.entries = entries;
                 this.entriesDatasource = new MatTableDataSource(this.entries);
             }
         });
 
         this.filterForm.get('date').valueChanges.pipe(
-            debounceTime(500),
+            tap(() => {
+                const dateCtrl = this.filterForm.get('date');
+                if (dateCtrl.valid) {
+                    this.loading = true
+                } else {
+                    this.loading = false;
+                }
+            }),
+            debounceTime(200),
             distinctUntilChanged()
-        ).subscribe((dateObj) => {
-            console.log(dateObj)
+        ).pipe(
+            switchMap((dateObj) => {
+                const dateCtrl = this.filterForm.get('date');
+                const vehicle_id = this.filterForm.get('vehicle').value.vehicle_id;
+                let from_date: any = '';
+                let to_date: any = ''
+                if (dateCtrl.valid) {
+                    from_date = dateObj.from || dateObj.to;
+                    to_date = dateObj.to || dateObj.from;
+                    from_date = from_date ? (from_date as Moment).format('DD-MM-YYYY') : '';
+                    to_date = to_date ? (to_date as Moment).format('DD-MM-YYYY') : '';
+                    if (from_date || to_date) {
+                        return this.rpmEntryReportService.getRpmEntries({ from_date, to_date, vehicle_id }).pipe(
+                            finalize(() => this.loading = false),
+                            catchError(() => of('Error'))
+                        );
+                    }
+                    return this.rpmEntryReportService.getRpmEntries({ vehicle_id }).pipe(
+                        finalize(() => this.loading = false),
+                        catchError(() => of('Error'))
+                    );
+                }
+                return of(null);
+            })
+        ).subscribe((entries: RpmEntrySheet[]) => {
+            if (entries && !(entries as any === 'Error')) {
+                this.entries = entries;
+                this.entriesDatasource = new MatTableDataSource(this.entries);
+            }
+        })
+
+        this.filterForm.get('month').valueChanges.pipe(
+            tap((value) => {
+                if (value) {
+                    this.loading = true
+                } else { 
+                    this.loading = false
+                }
+            }),
+            // distinctUntilChanged(),
+            switchMap((month) => {
+                const vehicle_id = this.filterForm.get('vehicle').value.vehicle_id;
+                let startOfMonth: any = '';
+                let endOfMonth: any = '';
+                if (month) {
+                    startOfMonth = (month as Moment).startOf('month').format('DD-MM-YYYY');
+                    endOfMonth = (month as Moment).endOf('month').format('DD-MM-YYYY');
+                }
+                if (startOfMonth && endOfMonth) {
+                    return this.rpmEntryReportService.getRpmEntries({ from_date: startOfMonth, to_date: endOfMonth, vehicle_id }).pipe(
+                        finalize(() => this.loading = false),
+                        catchError(() => of('Error'))
+                    );
+                }
+                return this.rpmEntryReportService.getRpmEntries({ vehicle_id }).pipe(
+                    finalize(() => this.loading = false),
+                    catchError(() => of('Error'))
+                );
+            })
+        ).subscribe((entries: RpmEntrySheet[]) => {
+            if (entries && !(entries as any === 'Error')) {
+                this.entries = entries;
+                this.entriesDatasource = new MatTableDataSource(this.entries);
+            }
         })
     }
 

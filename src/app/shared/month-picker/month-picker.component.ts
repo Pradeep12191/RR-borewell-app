@@ -68,7 +68,7 @@ export class MonthPickerComponent implements ControlValueAccessor, OnInit {
     }
 
     registerOnChange(onChange) {
-        this.onChange = onchange
+        this.onChange = onChange
     }
 
     registerOnTouched(fn) {

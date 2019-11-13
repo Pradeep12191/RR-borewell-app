@@ -25,7 +25,6 @@ export class RpmEntryReportSheetComponent implements OnDestroy {
             this.pipes = data.pipes
             this.pipeFlex = this.pipeTotalFlex / this.pipes.length;
             this.pipeFlex = Math.round(this.pipeFlex * 100) / 100;
-            console.log(data.entries.rpmTableData)
         })
     }
 

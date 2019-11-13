@@ -70,9 +70,11 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
         private fb: FormBuilder
     ) {
         this.routeDataSubcription = this.route.data.subscribe((data) => {
-            this.entries = data.entries;
+            if (data.entries) {
+                this.entries = data.entries;
+                this.entriesDatasource = new MatTableDataSource(this.entries);
+            }
             this.vehicles = data.vehicles
-            this.entriesDatasource = new MatTableDataSource(this.entries);
         });
         this.routeParamSubcription = this.route.queryParamMap.subscribe((params) => {
             this.vehicleId = params.get('vehicleId');
@@ -100,7 +102,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                 to: ''
             }, { validators: dateValidation }),
             month: '',
-            type: ''
+            type: 'list'
         });
 
         this.filterForm.get('rpm').valueChanges.pipe(
@@ -117,18 +119,19 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
             switchMap((rpmObj) => {
                 const rpmCtrl = this.filterForm.get('rpm');
                 const vehicle_id = this.filterForm.get('vehicle').value.vehicle_id;
+                const type = this.filterForm.get('type').value
                 let from_rpm = '';
                 let to_rpm = ''
                 if (rpmCtrl.valid) {
                     from_rpm = rpmObj.fromRpmSheetNo || rpmObj.toRpmSheetNo;
                     to_rpm = rpmObj.toRpmSheetNo || rpmObj.fromRpmSheetNo;
                     if (from_rpm || to_rpm) {
-                        return this.rpmEntryReportService.getRpmEntries({ from_rpm, to_rpm, vehicle_id }).pipe(
+                        return this.rpmEntryReportService.getRpmEntries({ from_rpm, to_rpm, vehicle_id, type }).pipe(
                             finalize(() => this.loading = false),
                             catchError(() => of('Error'))
                         );
                     }
-                    return this.rpmEntryReportService.getRpmEntries({ vehicle_id }).pipe(
+                    return this.rpmEntryReportService.getRpmEntries({ vehicle_id, type }).pipe(
                         finalize(() => this.loading = false),
                         catchError(() => of('Error'))
                     );
@@ -157,6 +160,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
             switchMap((dateObj) => {
                 const dateCtrl = this.filterForm.get('date');
                 const vehicle_id = this.filterForm.get('vehicle').value.vehicle_id;
+                const type = this.filterForm.get('type').value;
                 let from_date: any = '';
                 let to_date: any = ''
                 if (dateCtrl.valid) {
@@ -165,12 +169,12 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                     from_date = from_date ? (from_date as Moment).format('DD-MM-YYYY') : '';
                     to_date = to_date ? (to_date as Moment).format('DD-MM-YYYY') : '';
                     if (from_date || to_date) {
-                        return this.rpmEntryReportService.getRpmEntries({ from_date, to_date, vehicle_id }).pipe(
+                        return this.rpmEntryReportService.getRpmEntries({ from_date, to_date, vehicle_id, type }).pipe(
                             finalize(() => this.loading = false),
                             catchError(() => of('Error'))
                         );
                     }
-                    return this.rpmEntryReportService.getRpmEntries({ vehicle_id }).pipe(
+                    return this.rpmEntryReportService.getRpmEntries({ vehicle_id, type }).pipe(
                         finalize(() => this.loading = false),
                         catchError(() => of('Error'))
                     );
@@ -188,13 +192,14 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
             tap((value) => {
                 if (value) {
                     this.loading = true
-                } else { 
+                } else {
                     this.loading = false
                 }
             }),
             // distinctUntilChanged(),
             switchMap((month) => {
                 const vehicle_id = this.filterForm.get('vehicle').value.vehicle_id;
+                const type = this.filterForm.get('type').value;
                 let startOfMonth: any = '';
                 let endOfMonth: any = '';
                 if (month) {
@@ -202,12 +207,12 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                     endOfMonth = (month as Moment).endOf('month').format('DD-MM-YYYY');
                 }
                 if (startOfMonth && endOfMonth) {
-                    return this.rpmEntryReportService.getRpmEntries({ from_date: startOfMonth, to_date: endOfMonth, vehicle_id }).pipe(
+                    return this.rpmEntryReportService.getRpmEntries({ from_date: startOfMonth, to_date: endOfMonth, vehicle_id, type }).pipe(
                         finalize(() => this.loading = false),
                         catchError(() => of('Error'))
                     );
                 }
-                return this.rpmEntryReportService.getRpmEntries({ vehicle_id }).pipe(
+                return this.rpmEntryReportService.getRpmEntries({ vehicle_id, type }).pipe(
                     finalize(() => this.loading = false),
                     catchError(() => of('Error'))
                 );
@@ -263,7 +268,45 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
     onVehicleChange() {
         this.loading = true;
         const vehicle_id = this.filterForm.value.vehicle ? this.filterForm.value.vehicle.vehicle_id : ''
-        this.rpmEntryReportService.getRpmEntries({ vehicle_id }).pipe(finalize(() => this.loading = false)).subscribe((entries) => {
+        const type = this.filterForm.value.type;
+        let params: any = { vehicle_id, type };
+        const rpmObj = this.filterForm.value.rpm;
+        const dateObj = this.filterForm.value.date;
+        const searchCriteria = this.filterForm.value.searchCriteria;
+
+        switch (searchCriteria) {
+            case 'rpmSheetNo':
+                if (this.filterForm.get('rpm').valid) {
+                    const from_rpm = rpmObj.fromRpmSheetNo || rpmObj.toRpmSheetNo;
+                    const to_rpm = rpmObj.toRpmSheetNo || rpmObj.fromRpmSheetNo;
+                    if (from_rpm || to_rpm) {
+                        params = { ...params, from_rpm, to_rpm }
+                    }
+                }
+                break;
+            case 'date':
+                if (this.filterForm.get('date').valid) {
+                    let from_date = dateObj.from || dateObj.to;
+                    let to_date = dateObj.to || dateObj.from;
+                    from_date = from_date ? (from_date as Moment).format('DD-MM-YYYY') : '';
+                    to_date = to_date ? (to_date as Moment).format('DD-MM-YYYY') : '';
+                    if (from_date || to_date) {
+                        params = { ...params, from_date, to_date }
+                    }
+                }
+                break;
+            case 'month':
+                const month = this.filterForm.value.month;
+                if (month) {
+                    const startOfMonth = (month as Moment).startOf('month').format('DD-MM-YYYY');
+                    const endOfMonth = (month as Moment).endOf('month').format('DD-MM-YYYY');
+                    params = { ...params, from_date: startOfMonth, to_date: endOfMonth }
+                }
+                break;
+            default:
+                break;
+        }
+        this.rpmEntryReportService.getRpmEntries(params).pipe(finalize(() => this.loading = false)).subscribe((entries) => {
             this.entries = entries;
             this.entriesDatasource = new MatTableDataSource(this.entries);
         })

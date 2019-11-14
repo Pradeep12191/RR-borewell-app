@@ -1263,7 +1263,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 seperator: this.roundValue(this.rpmSheet.service.seperator + this.rpmSheet.rpm.running)
             },
             depth: {
-                average: 0,
+                average: this.rpmSheet.depth.average,
                 bore_type: this.form.value.depth.boreType.type,
                 above: {
                     feet: this.form.value.depth.above.feet,

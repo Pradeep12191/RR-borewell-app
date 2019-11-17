@@ -166,7 +166,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                 if (dateCtrl.valid) {
                     from_date = dateObj.from || dateObj.to;
                     to_date = dateObj.to || dateObj.from;
-                    from_date = from_date ? (from_date as Moment).format('YYY-MM-DD') : '';
+                    from_date = from_date ? (from_date as Moment).format('YYYY-MM-DD') : '';
                     to_date = to_date ? (to_date as Moment).format('YYYY-MM-DD') : '';
                     if (from_date || to_date) {
                         return this.rpmEntryReportService.getRpmEntries({ from_date, to_date, vehicle_id, type }).pipe(

@@ -166,8 +166,8 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                 if (dateCtrl.valid) {
                     from_date = dateObj.from || dateObj.to;
                     to_date = dateObj.to || dateObj.from;
-                    from_date = from_date ? (from_date as Moment).format('DD-MM-YYYY') : '';
-                    to_date = to_date ? (to_date as Moment).format('DD-MM-YYYY') : '';
+                    from_date = from_date ? (from_date as Moment).format('YYY-MM-DD') : '';
+                    to_date = to_date ? (to_date as Moment).format('YYYY-MM-DD') : '';
                     if (from_date || to_date) {
                         return this.rpmEntryReportService.getRpmEntries({ from_date, to_date, vehicle_id, type }).pipe(
                             finalize(() => this.loading = false),
@@ -203,8 +203,8 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                 let startOfMonth: any = '';
                 let endOfMonth: any = '';
                 if (month) {
-                    startOfMonth = (month as Moment).startOf('month').format('DD-MM-YYYY');
-                    endOfMonth = (month as Moment).endOf('month').format('DD-MM-YYYY');
+                    startOfMonth = (month as Moment).startOf('month').format('YYYY-MM-DD');
+                    endOfMonth = (month as Moment).endOf('month').format('YYYY-MM-DD');
                 }
                 if (startOfMonth && endOfMonth) {
                     return this.rpmEntryReportService.getRpmEntries({ from_date: startOfMonth, to_date: endOfMonth, vehicle_id, type }).pipe(
@@ -288,8 +288,8 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                 if (this.filterForm.get('date').valid) {
                     let from_date = dateObj.from || dateObj.to;
                     let to_date = dateObj.to || dateObj.from;
-                    from_date = from_date ? (from_date as Moment).format('DD-MM-YYYY') : '';
-                    to_date = to_date ? (to_date as Moment).format('DD-MM-YYYY') : '';
+                    from_date = from_date ? (from_date as Moment).format('YYYY-MM-DD') : '';
+                    to_date = to_date ? (to_date as Moment).format('YYYY-MM-DD') : '';
                     if (from_date || to_date) {
                         params = { ...params, from_date, to_date }
                     }
@@ -298,8 +298,8 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
             case 'month':
                 const month = this.filterForm.value.month;
                 if (month) {
-                    const startOfMonth = (month as Moment).startOf('month').format('DD-MM-YYYY');
-                    const endOfMonth = (month as Moment).endOf('month').format('DD-MM-YYYY');
+                    const startOfMonth = (month as Moment).startOf('month').format('YYYY-MM-DD');
+                    const endOfMonth = (month as Moment).endOf('month').format('YYYY-MM-DD');
                     params = { ...params, from_date: startOfMonth, to_date: endOfMonth }
                 }
                 break;

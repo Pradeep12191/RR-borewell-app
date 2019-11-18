@@ -59,6 +59,7 @@
         </div>
     </div>
     <ng-container *ngIf="!loading; else loadingTpl">
+        <ng-container *ngIf="filterForm.get('type').value === 'list'"></ng-container>
         <expand-table [accordionEffect]="false" *ngIf="entries?.length;  else emptyTpl" fxFlex="75" [data]="entries"
             [columns]="columns" [dataSource]="entriesDatasource">
             <ng-container *expandDetails="let rpmEntry">

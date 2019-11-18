@@ -13,6 +13,7 @@ import { RpmEntryReportService } from './rpm-entry-report.service';
 import { ExpandTableModule } from '../../expand-table/expand-table.module';
 import { PipesModule } from '../../pipes/pipes.module';
 import { RpmEntryReportSheetComponent } from './rpm-entry-report-sheet/rpm-entry-report-sheet.component';
+import { RpmEntryCountReportComponent } from './rpm-entry-count-report/rpm-entry-count-report.component';
 
 @NgModule({
     imports: [
@@ -30,7 +31,8 @@ import { RpmEntryReportSheetComponent } from './rpm-entry-report-sheet/rpm-entry
     ],
     declarations: [
         RpmEntryReportComponent,
-        RpmEntryReportSheetComponent
+        RpmEntryReportSheetComponent,
+        RpmEntryCountReportComponent
     ],
     providers: [
         RpmEntryReportResolver,

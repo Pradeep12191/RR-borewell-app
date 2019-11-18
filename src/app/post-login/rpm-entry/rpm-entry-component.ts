@@ -753,6 +753,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.openDatePicker();
                 this.enableAllControls();
                 this.addDepthToSheet();
+                this.updatePreviousStockFeet(rpmSheet);
             }
         })
     };
@@ -937,25 +938,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 const balanceStock = this.rpmEntryTable.balanceStockFeet.find(ps => ps.pipeId === rd.pipe_id);
                 previousStock.feet = rd.previous_stock_feet ? +rd.previous_stock_feet : 0;
                 // available stock feet is already calculated by updateAllPipeStock()
-                // - which is only rrincome (previous stock wil be missing) from table data url
+                // - which is only rrincome and mmincome (previous stock wil be missing) from table data url
                 // so add ly previous stock to avaliable stock.
                 // in general rr / mmIncome will be added with avialble stock at updateAllPipeStock()
                 // and previous stock will be added here
                 availableStock.feet = availableStock.feet + previousStock.feet
                 balanceStock.feet = availableStock.feet;
-            })
-        } else {
-            this.rpmEntryTable.availableStockFeet.forEach(as => {
-                as.feet = 0;
-                as.length = 0;
-            });
-            this.rpmEntryTable.previousStockFeet.forEach(ps => {
-                ps.feet = 0;
-                ps.length = 0;
-            });
-            this.rpmEntryTable.balanceStockFeet.forEach(bs => {
-                bs.length = 0;
-                bs.feet = 0;
             })
         }
     }
@@ -968,6 +956,18 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.bookStartNo = null;
         this.rpmEntryNo = null;
         this.bookRequired = true;
+        this.rpmEntryTable.availableStockFeet.forEach(as => {
+            as.feet = 0;
+            as.length = 0;
+        });
+        this.rpmEntryTable.previousStockFeet.forEach(ps => {
+            ps.feet = 0;
+            ps.length = 0;
+        });
+        this.rpmEntryTable.balanceStockFeet.forEach(bs => {
+            bs.length = 0;
+            bs.feet = 0;
+        })
     }
 
     private resetAll() {

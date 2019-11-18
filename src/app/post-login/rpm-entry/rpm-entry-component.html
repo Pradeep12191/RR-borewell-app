@@ -84,7 +84,8 @@
                     <div fxLayout="column">
                         <div fxLayout fxLayoutAlign="start center">
                             <mat-form-field fxFlex="30" class="m-r-16">
-                                <mat-select (selectionChange)="onTractorChange($event)" formControlName="trac" #tractorSelect>
+                                <mat-select (selectionChange)="onTractorChange($event)" formControlName="trac"
+                                    #tractorSelect>
                                     <mat-option value="">Select Tractor</mat-option>
                                     <mat-option *ngFor="let tractor of tractors" [value]="tractor">{{ tractor.no }}</mat-option>
                                 </mat-select>
@@ -103,6 +104,9 @@
                                 <input (input)="onTracEndInput()" (keydown.enter)="onRpmInputEnter(0)" #rpmInput
                                     formControlName="tracEndHour" [allowDecimal]="true" (input)="onRpmEndInput()" type="text"
                                     matInput positiveNumber>
+                                <mat-error *ngIf="form.get('rpm.tracEndHour').hasError('tracError')">
+                                    End hour Should be greater than start hour
+                                </mat-error>
                             </mat-form-field>
                         </div>
                         <div fxLayout fxLayoutAlign="start center">
@@ -119,6 +123,9 @@
                                 <mat-label>RPM</mat-label>
                                 <input formControlName="end" [allowDecimal]="true" (keydown.enter)="onRpmInputEnter(1)"
                                     #rpmInput (input)="onRpmEndInput()" type="text" matInput positiveNumber>
+                                <mat-error *ngIf="form.get('rpm.end').hasError('rpmError')">
+                                    End Rpm should be greater than Start Rpm
+                                </mat-error>
                             </mat-form-field>
                         </div>
                         <div fxLayout fxLayoutAlign="start center">
@@ -473,9 +480,11 @@
                                 </mat-select>
                             </mat-form-field>
                             <div fxLayoutAlign="start center">Bit No</div>
-                            <div fxFlex class="font-16 bold" fxLayoutAlign="start center">{{ form.get('bit').value?.bit_no }}</div>
+                            <div fxFlex class="font-16 bold" fxLayoutAlign="start center">{{
+                                form.get('bit').value?.bit_no }}</div>
                             <div>
-                                <button [disabled]="!form.get('bit').value" (click)="finishBit(form.get('bit').value)" mat-raised-button color="primary">Finish Bit</button>
+                                <button [disabled]="!form.get('bit').value" (click)="finishBit(form.get('bit').value)"
+                                    mat-raised-button color="primary">Finish Bit</button>
                             </div>
                         </div>
                         <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
@@ -740,18 +749,20 @@
         </mat-card>
         <div fxLayoutAlign="end" class="m-t-25">
             <div>
-                <button [disabled]="!selectedVehicle || !bookId || !date || pointExpenseFeetFormArray.invalid" (click)="submit()"
-                    mat-raised-button color="primary" type="button">SUBMIT</button>
+                <button [disabled]="!selectedVehicle || !bookId || !date || pointExpenseFeetFormArray.invalid || form.get('rpm.end').invalid || form.get('rpm.tracEndHour').invalid"
+                    (click)="submit()" mat-raised-button color="primary" type="button">SUBMIT</button>
             </div>
         </div>
     </div>
 </div>
 
 <mat-menu #menu="matMenu">
-    <button (click)="onServieLimitSelect(limit, 'c_air_filter')" *ngFor="let limit of compressorAirFilterServiceLimits" mat-menu-item>{{limit.limit}}</button>
+    <button (click)="onServieLimitSelect(limit, 'c_air_filter')" *ngFor="let limit of compressorAirFilterServiceLimits"
+        mat-menu-item>{{limit.limit}}</button>
 </mat-menu>
 <mat-menu #oilServiceMenu="matMenu">
-    <button (click)="onServieLimitSelect(limit, 'c_oil_service')" *ngFor="let limit of compressorOilServiceLimits" mat-menu-item>{{limit.limit}}</button>
+    <button (click)="onServieLimitSelect(limit, 'c_oil_service')" *ngFor="let limit of compressorOilServiceLimits"
+        mat-menu-item>{{limit.limit}}</button>
 </mat-menu>
 
 <ng-template #hyphenTpl>

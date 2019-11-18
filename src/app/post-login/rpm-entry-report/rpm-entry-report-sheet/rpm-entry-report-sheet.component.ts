@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnDestroy, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { RpmTableData } from '../../../models/RpmTableData';
 import { PipeSize } from '../../../models/PipeSize';
 import { Subscription } from 'rxjs';
@@ -12,23 +12,18 @@ import { RpmEntrySheet } from '../../../models/RpmEntrySheet';
     styleUrls: ['./rpm-entry-report-sheet.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RpmEntryReportSheetComponent implements OnDestroy {
+export class RpmEntryReportSheetComponent implements OnInit {
     @Input() rpmEntry: RpmEntrySheet;
-    pipes: PipeSize[];
-    routeDataSubscription: Subscription;
+    @Input() pipes: PipeSize[];
     pipeTotalFlex = 80;
     pipeFlex = 10;
     constructor(
-        private route: ActivatedRoute
     ) {
-        this.routeDataSubscription = this.route.data.subscribe((data) => {
-            this.pipes = data.pipes
-            this.pipeFlex = this.pipeTotalFlex / this.pipes.length;
-            this.pipeFlex = Math.round(this.pipeFlex * 100) / 100;
-        })
+
     }
 
-    ngOnDestroy() {
-        if (this.routeDataSubscription) { this.routeDataSubscription.unsubscribe(); }
+    ngOnInit() {
+        this.pipeFlex = this.pipeTotalFlex / this.pipes.length;
+        this.pipeFlex = Math.round(this.pipeFlex * 100) / 100;
     }
 }

@@ -12,6 +12,7 @@ import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { Vehicle } from '../../models/Vehicle';
+import { PipeSize } from '../../models/PipeSize';
 
 const sheetNoValidation = (control: AbstractControl) => {
     const fromSheetNo = +control.get('fromRpmSheetNo').value;
@@ -46,7 +47,8 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
     entries: RpmEntrySheet[];
     entriesDatasource: MatTableDataSource<RpmEntrySheet>;
     vehicleId;
-    vehicles: Vehicle[]
+    vehicles: Vehicle[];
+    pipes: PipeSize[];
     filterForm: FormGroup;
     monthPicker: MatDatepicker<any>;
     loading;
@@ -73,7 +75,8 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
             if (data.entries) {
                 this.entries = data.entries;
                 this.entriesDatasource = new MatTableDataSource(this.entries);
-            }
+            };
+            this.pipes = data.pipes.reverse();
             this.vehicles = data.vehicles
         });
         this.routeParamSubcription = this.route.queryParamMap.subscribe((params) => {

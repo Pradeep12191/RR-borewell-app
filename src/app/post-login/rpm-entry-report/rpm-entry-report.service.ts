@@ -53,7 +53,7 @@ export class RpmEntryReportService {
                     mmIncome: [], rrIncome: [], pointExpenseFeet: [],
                     previousStockFeet: [], vehicleExIn: [], vehicleExOut: []
                 }
-                for (const rpm of sheet.f_rpm_table_data) {
+                for (const rpm of sheet.f_rpm_table_data.reverse()) {
                     const pipeData = {
                         pipeId: rpm.pipe_id,
                         pipeSize: rpm.pipe_size,

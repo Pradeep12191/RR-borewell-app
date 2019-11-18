@@ -12,6 +12,7 @@ import { DirectiveModule } from '../../directives/directive.module';
 import { PipesResolver } from '../../guards/resolveGuard/select-option/pipes.resolver';
 import { AddPipeComponent } from './add-pipe-dialog/add-pipe/add-pipe.component';
 import { ConfirmPipeComponent } from './add-pipe-dialog/confirm-pipe/confirm-pipe.component';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -23,7 +24,8 @@ import { ConfirmPipeComponent } from './add-pipe-dialog/confirm-pipe/confirm-pip
         FlexLayoutModule,
         PipeRoutingModule,
         ExpandTableModule,
-        DirectiveModule
+        DirectiveModule,
+        PipesModule
     ],
     declarations: [
         PipeComponent,

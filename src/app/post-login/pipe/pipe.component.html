@@ -47,7 +47,7 @@
 <!-- <div class="m-t-16"></div>  -->
 
 <div fxLayout="row wrap" fxLayoutGap="40px" class="widget-container" *ngIf="pipes?.length; else emptyTpl" [@listState]="pipes?.length">
-    <div fxFlex="calc(25% - 40px)" class="m-b-32 pipe" *ngFor="let pipe of pipes">
+    <div fxFlex="calc(25% - 40px)" class="m-b-32 pipe" *ngFor="let pipe of pipes | reverse">
         <div class="pipe-card" (click)="viewPipeData(pipe)">
             <div fxLayout class="pipe-title" fxLayout fxLayoutAlign="center center">
                 {{ pipe.pipe_type}}

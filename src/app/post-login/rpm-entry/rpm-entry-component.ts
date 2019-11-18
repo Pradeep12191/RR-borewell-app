@@ -34,6 +34,7 @@ import { ServiceCompleteConfirmDialog } from './service-complete-confirm-dialog/
 import { AssignBit } from '../bits/view-bit/AssignBit';
 import { Tractor } from '../../models/Tractor';
 import { BoreType } from '../../models/BoreType';
+import { RpmDetails } from '../../models/RpmEntry/RpmDetails';
 
 interface VehicleChangeData {
     lastRpmEntrySheet: RpmEntrySheet;
@@ -41,6 +42,7 @@ interface VehicleChangeData {
     assignedBits: BitSerialNo[];
     incomeData: RpmTableData
 }
+
 
 @Component({
     templateUrl: './rpm-entry-component.html',
@@ -164,9 +166,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 plumberMobile: { value: '', disabled: true },
             }),
             rpm: this.fb.group({
-                end: { value: '', disabled: true },
+                end: [{ value: '', disabled: true }, this.endValueValidator('start', 'rpmError').bind(this)],
                 manual: { value: '', disabled: true },
-                tracEndHour: { value: '', disabled: true },
+                tracEndHour: [{ value: '', disabled: true }, this.endValueValidator('tractor_start_hour', 'tracError').bind(this)],
                 trac: { value: '', disabled: true },
                 // isManual: false
             }),
@@ -292,6 +294,20 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.tractors && this.tractors.length) {
             this.tractorSelect.open()
             this.tractorSelect.focus();
+        }
+    }
+
+
+    endValueValidator(propName, errorName) {
+        return (control: AbstractControl) => {
+            const end = +control.value;
+            const start = this.rpmSheet ? +this.rpmSheet.rpm[propName] : 0;
+    
+            if (end && end < start) {
+                return {
+                    [errorName]: true
+                }
+            }
         }
     }
 
@@ -1233,12 +1249,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             f_rpm_table_data: [],
             rpm: {
                 tractor_start_hour: this.form.value.rpm.trac ? this.form.value.rpm.trac.start_hour : 0,
-                tractor_end_hour: this.form.value.rpm.tracEndHour ? +this.form.value.rpm.tracEndHour : 0,
+                tractor_end_hour: this.form.value.rpm.tracEndHour ? +this.form.value.rpm.tracEndHour : this.form.value.rpm.trac.start_hour,
                 tractor_id: this.form.value.rpm.trac ? +this.form.value.rpm.trac.id : 0,
                 tractor_no: this.form.value.rpm.trac ? this.form.value.rpm.trac.no : '',
                 start: this.rpmSheet.rpm.start,
                 manual: +this.form.value.rpm.manual,
-                end: +this.form.value.rpm.end,
+                end: +this.form.value.rpm.end ? this.form.value.rpm.end : this.rpmSheet.rpm.start,
                 running: this.rpmSheet.rpm.running,
                 point_diesel: this.rpmSheet.rpm.point_diesel,
                 total: this.rpmSheet.rpm.total,
@@ -1451,6 +1467,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onTractorChange($event: MatSelectChange) {
         if ($event.value) {
+            this.rpmSheet.rpm.tractor_start_hour = $event.value.start_hour ? +$event.value.start_hour : 0;
             return this.form.get('rpm.tracEndHour').enable();
         }
         this.form.get('rpm.tracEndHour').disable();

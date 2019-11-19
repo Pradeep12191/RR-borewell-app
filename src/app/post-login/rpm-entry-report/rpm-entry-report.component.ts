@@ -45,6 +45,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
     routeDataSubcription: Subscription;
     routeParamSubcription: Subscription;
     entries: RpmEntrySheet[];
+    rpmEntry: RpmEntrySheet;
     entriesDatasource: MatTableDataSource<RpmEntrySheet>;
     vehicleId;
     vehicles: Vehicle[];
@@ -105,8 +106,25 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                 to: ''
             }, { validators: dateValidation }),
             month: '',
-            type: 'list'
+            type: 'count'
         });
+
+        this.filterForm.get('type').valueChanges.pipe(
+            switchMap((type) => {
+                const searchCriteria = this.filterForm.get('searchCriteria').value;
+                let params = {};
+                this.loading = true
+
+                params = this.getParams(searchCriteria);
+                params = { ...params, type }
+                return this.rpmEntryReportService.getRpmEntries(params).pipe(
+                    finalize(() => this.loading = false),
+                    catchError((err) => of(null))
+                )
+            })
+        ).subscribe((entries) => {
+            this.bindData(entries)
+        })
 
         this.filterForm.get('rpm').valueChanges.pipe(
             tap(() => {
@@ -131,21 +149,18 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                     if (from_rpm || to_rpm) {
                         return this.rpmEntryReportService.getRpmEntries({ from_rpm, to_rpm, vehicle_id, type }).pipe(
                             finalize(() => this.loading = false),
-                            catchError(() => of('Error'))
+                            catchError(() => of(null))
                         );
                     }
                     return this.rpmEntryReportService.getRpmEntries({ vehicle_id, type }).pipe(
                         finalize(() => this.loading = false),
-                        catchError(() => of('Error'))
+                        catchError(() => of(null))
                     );
                 }
                 return of(null);
             }),
         ).subscribe((entries: RpmEntrySheet[]) => {
-            if (entries && !(entries as any === 'Error')) {
-                this.entries = entries;
-                this.entriesDatasource = new MatTableDataSource(this.entries);
-            }
+            this.bindData(entries);
         });
 
         this.filterForm.get('date').valueChanges.pipe(
@@ -174,21 +189,18 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                     if (from_date || to_date) {
                         return this.rpmEntryReportService.getRpmEntries({ from_date, to_date, vehicle_id, type }).pipe(
                             finalize(() => this.loading = false),
-                            catchError(() => of('Error'))
+                            catchError(() => of(null))
                         );
                     }
                     return this.rpmEntryReportService.getRpmEntries({ vehicle_id, type }).pipe(
                         finalize(() => this.loading = false),
-                        catchError(() => of('Error'))
+                        catchError(() => of(null))
                     );
                 }
                 return of(null);
             })
         ).subscribe((entries: RpmEntrySheet[]) => {
-            if (entries && !(entries as any === 'Error')) {
-                this.entries = entries;
-                this.entriesDatasource = new MatTableDataSource(this.entries);
-            }
+            this.bindData(entries);
         })
 
         this.filterForm.get('month').valueChanges.pipe(
@@ -212,19 +224,16 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                 if (startOfMonth && endOfMonth) {
                     return this.rpmEntryReportService.getRpmEntries({ from_date: startOfMonth, to_date: endOfMonth, vehicle_id, type }).pipe(
                         finalize(() => this.loading = false),
-                        catchError(() => of('Error'))
+                        catchError(() => of(null))
                     );
                 }
                 return this.rpmEntryReportService.getRpmEntries({ vehicle_id, type }).pipe(
                     finalize(() => this.loading = false),
-                    catchError(() => of('Error'))
+                    catchError(() => of(null))
                 );
             })
         ).subscribe((entries: RpmEntrySheet[]) => {
-            if (entries && !(entries as any === 'Error')) {
-                this.entries = entries;
-                this.entriesDatasource = new MatTableDataSource(this.entries);
-            }
+            this.bindData(entries);
         })
     }
 
@@ -270,13 +279,21 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
 
     onVehicleChange() {
         this.loading = true;
+        let params = {};
+        const searchCriteria = this.filterForm.value.searchCriteria;
+        params = this.getParams(searchCriteria);
+
+        this.rpmEntryReportService.getRpmEntries(params).pipe(finalize(() => this.loading = false)).subscribe((entries) => {
+            this.bindData(entries);
+        })
+    }
+
+    private getParams(searchCriteria) {
         const vehicle_id = this.filterForm.value.vehicle ? this.filterForm.value.vehicle.vehicle_id : ''
         const type = this.filterForm.value.type;
         let params: any = { vehicle_id, type };
         const rpmObj = this.filterForm.value.rpm;
         const dateObj = this.filterForm.value.date;
-        const searchCriteria = this.filterForm.value.searchCriteria;
-
         switch (searchCriteria) {
             case 'rpmSheetNo':
                 if (this.filterForm.get('rpm').valid) {
@@ -309,10 +326,21 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
             default:
                 break;
         }
-        this.rpmEntryReportService.getRpmEntries(params).pipe(finalize(() => this.loading = false)).subscribe((entries) => {
-            this.entries = entries;
-            this.entriesDatasource = new MatTableDataSource(this.entries);
-        })
+        return params;
+    }
+
+    private bindData(entries: RpmEntrySheet[]) {
+        const type = this.filterForm.get('type').value;
+        if (type === 'count') {
+            this.rpmEntry = entries[0];
+        }
+        if (type === 'list') {
+            if (entries) {
+                this.entries = entries;
+                this.entriesDatasource = new MatTableDataSource(this.entries);
+            }
+        }
+        
     }
 
 

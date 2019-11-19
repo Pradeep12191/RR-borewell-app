@@ -59,16 +59,17 @@
         </div>
     </div>
     <ng-container *ngIf="!loading; else loadingTpl">
-        <ng-container *ngIf="filterForm.get('type').value === 'list'"></ng-container>
-        <expand-table [accordionEffect]="false" *ngIf="entries?.length;  else emptyTpl" fxFlex="75" [data]="entries"
-            [columns]="columns" [dataSource]="entriesDatasource">
-            <ng-container *expandDetails="let rpmEntry">
-                <div fxLayout="column" class="m-b-16" fxFlex>
-                    <ng-container *ngTemplateOutlet="rpmSheetTpl; context: { $implicit: rpmEntry }">
-                    </ng-container>
-                </div>
-            </ng-container>
-        </expand-table>
+        <ng-container *ngIf="filterForm.get('type').value === 'list'; else countTpl">
+            <expand-table [accordionEffect]="false" *ngIf="entries?.length;  else emptyTpl" fxFlex="75" [data]="entries"
+                [columns]="columns" [dataSource]="entriesDatasource">
+                <ng-container *expandDetails="let rpmEntry">
+                    <div fxLayout="column" class="m-b-16" fxFlex>
+                        <ng-container *ngTemplateOutlet="rpmSheetTpl; context: { $implicit: rpmEntry }">
+                        </ng-container>
+                    </div>
+                </ng-container>
+            </expand-table>
+        </ng-container>
     </ng-container>
     <ng-template #loadingTpl>
         <div fxLayoutAlign="center center" class="spinner-container">
@@ -76,6 +77,14 @@
         </div>
     </ng-template>
 </div>
+
+<ng-template #countTpl>
+    <ng-container *ngIf="!loading; else loadingTpl">
+        <ng-container *ngIf="rpmEntry; else emptyTpl">
+            <rpm-entry-report-count [pipes]="pipes" [rpmEntry]="rpmEntry"></rpm-entry-report-count>
+        </ng-container>
+    </ng-container>
+</ng-template>
 
 <ng-template #emptyTpl>
     <mat-card>

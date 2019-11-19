@@ -1,1 +1,129 @@
-rpm count
+<mat-card class="custom-card">
+    <mat-card-header>
+        <mat-card-title>Report Count Summary</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div fxLayout fxLayoutGap="16px">
+            <div fxFlex="22">
+                <div fxLayout="column" fxLayoutGap="5px">
+                    <div fxLayout fxLayoutGap="16px">
+                        <div fxFlex="50">Start Rpm</div>
+                        <div>:</div>
+                        <div>{{ rpmEntry?.rpm.start || 0 }}</div>
+                    </div>
+                    <div fxLayout fxLayoutGap="16px">
+                        <div fxFlex="50">End Rpm</div>
+                        <div>:</div>
+                        <div>{{ rpmEntry?.rpm.end || 0 }}</div>
+                    </div>
+                    <div fxLayout fxLayoutGap="16px">
+                        <div fxFlex="50">Running Rpm</div>
+                        <div>:</div>
+                        <div>{{ rpmEntry?.rpm.running || 0 }}</div>
+                    </div>
+
+                </div>
+            </div>
+            <div fxFlex="30">
+                <div fxLayout="column" fxLayoutGap="5px">
+                    <div fxLayout fxLayoutGap="16px">
+                        <div fxFlex="41">Manual Rpm</div>
+                        <div>:</div>
+                        <div>{{ rpmEntry?.rpm.manual || 0 }}</div>
+                    </div>
+                    <div fxLayout fxLayoutGap="16px">
+                        <div>Above Feet Rpm</div>
+                        <div>:</div>
+                        <div>{{ rpmEntry?.depth.above.hrs | convertHours: rpmEntry?.depth.above.min }}</div>
+                    </div>
+                </div>
+            </div>
+            <div fxFlex>
+                <div fxFlex fxLayout="column" fxLayoutGap="10px">
+                    <div fxLayout class="font-12">
+                        <div fxFlex class="text-center bold">Compressor</div>
+                        <div fxFlex class="text-center bold">Lorry</div>
+                        <div fxFlex class="text-center bold">Support</div>
+                        <div fxFlex class="text-center bold">Tractor</div>
+                        <div fxFlex class="text-center bold">Total</div>
+                    </div>
+                    <div fxLayout class="diesel-row">
+                        <div fxFlex> {{ rpmEntry?.diesel.compressor || 0}} </div>
+                        <div fxFlex> {{ rpmEntry?.diesel.lorry || 0}} </div>
+                        <div fxFlex> {{ rpmEntry?.diesel.support || 0}} </div>
+                        <div fxFlex> {{ rpmEntry?.diesel.tractor || 0}} </div>
+                        <div fxFlex> {{ rpmEntry?.diesel.total || 0}} </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div fxLayout *ngIf="false">
+            <div class="m-b-16 m-t-16 white" fxFlex>
+                <div fxLayout="column" class="table m-t-16">
+                    <div class="pipe-header" fxLayout>
+                        <div fxFlex="20"></div>
+                        <div [fxFlex]="pipeFlex" fxLayoutAlign="center center" class="header-cell bold" *ngFor="let pipe of pipes">{{pipe.type}}</div>
+                    </div>
+                    <div class="table" fxLayout="column">
+                        <div class="row" fxLayout>
+                            <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 b-t-0 p-l-10 b-b-0 bold bg-grey">RR
+                                Income</div>
+                            <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let rrIncome of rpmEntry?.rpmTableData.rrIncome; let last = last"
+                                class="cell b-t-0 b-b-0" [class.added]="rrIncome.feet" [class.b-r-0]="!last">{{
+                                rrIncome.feet
+                                || ''}}</div>
+                        </div>
+                        <div class="row" fxLayout>
+                            <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">MM
+                                Income</div>
+                            <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let mmIncome of rpmEntry?.rpmTableData.mmIncome; let last = last"
+                                class="cell b-b-0" [class.added]="mmIncome.feet" [class.b-r-0]="!last">{{ mmIncome.feet
+                                || ''
+                                }}</div>
+                        </div>
+                        <div class="row" fxLayout>
+                            <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Vehicle
+                                Exchange
+                                In</div>
+                            <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let vehicleExIn of rpmEntry?.rpmTableData.vehicleExIn; let last = last"
+                                class="cell b-b-0" [class.added]="vehicleExIn.feet" [class.b-r-0]="!last">{{
+                                vehicleExIn.feet
+                                || ''
+                                }}</div>
+                        </div>
+                        <div class="row" fxLayout>
+                            <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Vehicle
+                                Exchange
+                                Out</div>
+                            <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let vehicleExOut of rpmEntry?.rpmTableData.vehicleExOut; let last = last"
+                                class="cell b-b-0" [class.removed]="vehicleExOut.feet" [class.b-r-0]="!last">{{
+                                vehicleExOut.feet
+                                || '' }}</div>
+                        </div>
+                        <div class="row" fxLayout>
+                            <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 bold b-b-0 bg-grey">Damage
+                                Feet</div>
+                            <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let damageFeet of rpmEntry?.rpmTableData.damageFeet; let last = last"
+                                class="cell b-b-0" [class.removed]="damageFeet.feet" [class.b-r-0]="!last">{{
+                                damageFeet.feet
+                                || ''
+                                }}</div>
+                        </div>
+                        <div class="row" fxLayout>
+                            <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 bold b-b-0 bg-grey">Point
+                                Expense Feet</div>
+                            <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" *ngFor="let pointExpenseFeet of rpmEntry?.rpmTableData.pointExpenseFeet; let last = last"
+                                class="cell b-b-0" [class.removed]="pointExpenseFeet.feet" [class.b-r-0]="!last">{{
+                                pointExpenseFeet.feet || '' }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- <pre>
+            {{ rpmEntry | json }}
+        </pre> -->
+    </mat-card-content>
+</mat-card>

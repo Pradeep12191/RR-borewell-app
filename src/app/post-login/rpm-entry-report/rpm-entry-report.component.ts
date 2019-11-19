@@ -106,7 +106,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                 to: ''
             }, { validators: dateValidation }),
             month: '',
-            type: 'count'
+            type: 'list'
         });
 
         this.filterForm.get('type').valueChanges.pipe(

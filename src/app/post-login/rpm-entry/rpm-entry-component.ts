@@ -43,6 +43,14 @@ interface VehicleChangeData {
     incomeData: RpmTableData
 }
 
+// 1. bore depth - m_depth + bore_depth (type: bore depth)
+// 2. running rpm - m_rpm + running_rpm
+// 3. average- (bore_depth + m_depth) - (extra_feet + m_extra_feet) / ( m_rpm + running rpm) - (m_extra_hrs + extra hrs)
+// 4. diesel - m_diesel + compressor
+// 5. diesel_avg - (m_diesel + compressor) / (running_rpm + m_rpm)
+// 6. m_extra_feet - extra_feet + m_extra_feet,
+// 7. m_extra_hrs, m_extra_min - hrs, min running total
+
 
 @Component({
     templateUrl: './rpm-entry-component.html',
@@ -302,13 +310,124 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         return (control: AbstractControl) => {
             const end = +control.value;
             const start = this.rpmSheet ? +this.rpmSheet.rpm[propName] : 0;
-    
+
             if (end && end < start) {
                 return {
                     [errorName]: true
                 }
             }
         }
+    }
+
+    displayMonthDepth() {
+        let m_depth = 0;
+        const boreDepth = +this.form.get('depth.bore').value;
+        const boreType = this.form.get('depth.boreType').value;
+        if (boreType.type === 'Bore Depth') {
+            if (this.rpmSheet && this.rpmSheet.month_data) {
+                m_depth = this.rpmSheet.month_data.m_depth || 0;
+            }
+            return this.roundValue(m_depth + boreDepth);
+        }
+        return 0;
+    }
+
+    displayRunningRpm() {
+        let rpm = 0;
+        let m_rpm = 0;
+        if (this.rpmSheet && this.rpmSheet.rpm) {
+            rpm = this.rpmSheet.rpm.running;
+        }
+        if (this.rpmSheet && this.rpmSheet.month_data) {
+            m_rpm = this.rpmSheet.month_data.m_rpm || 0;
+        }
+
+        return this.roundValue(m_rpm + rpm);
+    }
+
+    displayDieselTotal() {
+        const compressorDiesel = +this.form.get('diesel.compressor').value;
+        let m_diesel = 0;
+
+        if (this.rpmSheet && this.rpmSheet.month_data) {
+            m_diesel = this.rpmSheet.month_data.m_diesel
+        }
+        return this.roundValue(m_diesel + compressorDiesel);
+    }
+
+    displayDieselAvg() {
+        // 5. diesel_avg - (m_diesel + compressor) / (running_rpm + m_rpm)
+        const currentTotalDiesel = this.displayDieselTotal();
+        const currentTotalRpm = this.displayRunningRpm();
+
+        if (currentTotalDiesel && currentTotalRpm) {
+            return this.roundValue(currentTotalDiesel / currentTotalRpm);
+        }
+        return 0;
+    }
+
+    displayAverageDepth() {
+        // 3. average- (bore_depth + m_depth)** above feet** - (extra_feet + m_extra_feet) / ( m_rpm + running rpm) - (m_extra_hrs + extra hrs)
+        const currentTotalBoreDepth = this.displayMonthDepth();
+        const currentTotalRunningRpm = this.displayRunningRpm();
+        let extra_feet = 0;
+        let m_extra_feet = 0;
+        let total_extra_feet = 0;
+        const hrs = +this.form.get('depth.above.hrs').value;
+        const min = +this.form.get('depth.above.min').value;
+        let m_hrs = 0;
+        let total_hrs = 0;
+
+        let m_min = 0;
+        let total_min = 0;
+
+        if (this.rpmSheet && this.rpmSheet.depth) {
+            extra_feet = +this.rpmSheet.depth.above.extra_feet;
+        }
+
+        if (this.rpmSheet && this.rpmSheet.month_data) {
+            m_extra_feet = this.rpmSheet.month_data.m_extra_feet || 0;
+            m_hrs = this.rpmSheet.month_data.m_extra_hour || 0;
+            m_min = this.rpmSheet.month_data.m_extra_min || 0;
+        }
+        const total_extra_hours = this.convertToRpm(hrs + m_hrs, min + m_min);
+        total_extra_feet = extra_feet + m_extra_feet;
+
+        const numerator = currentTotalBoreDepth - total_extra_feet;
+        const denominator = currentTotalRunningRpm - total_extra_hours;
+
+        if (numerator && denominator && denominator > 0 && numerator > 0) {
+            return this.roundValue(numerator / denominator);
+        }
+        return 0;
+
+    }
+
+    getExtraFeet() {
+        let m_extra_feet = 0;
+        let extra_feet = 0;
+
+        if (this.rpmSheet.month_data) {
+            m_extra_feet = this.rpmSheet.month_data.m_extra_feet;
+        }
+        if (this.rpmSheet.depth) {
+            extra_feet = this.rpmSheet.depth.above.extra_feet
+        }
+
+        return m_extra_feet + extra_feet;
+    }
+
+    getExtraTime() {
+        const hrs = +this.form.get('depth.above.hrs').value;
+        const min = +this.form.get('depth.above.min').value;
+        let actualHrs = 0;
+        let actualMin = 0;
+        const totalMin = (hrs * 60) + min;
+        if (totalMin) {
+            actualHrs = Math.floor(totalMin / 60);
+            actualMin = totalMin % 60;
+        }
+        return { hrs: actualHrs, min: actualMin };
     }
 
     onRpmInputEnter(currentIndex) {
@@ -1290,6 +1409,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 bore: +this.form.value.depth.bore,
                 pipe_erection: +this.form.value.depth.pipeErection
             },
+            month_data: {
+                m_depth: this.displayMonthDepth(),
+                m_diesel: this.displayDieselTotal(),
+                m_rpm: this.displayRunningRpm(),
+                m_extra_feet: this.getExtraFeet(),
+                m_extra_hour: this.getExtraTime().hrs,
+                m_extra_min: this.getExtraTime().min,
+            },
             bit: {
                 ...this.form.value.bit,
                 hammer: this.rpmSheet.bit.hammer + this.rpmSheet.bit.running_feet,
@@ -1371,6 +1498,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     private buildPointExpenseForm(pipeType, pipeId, pipeSize) {
         return this.fb.group({ pipeType, pipeId, pipeSize, value: { value: '', disabled: true } })
     }
+
+
+
 
 
     // feet avg will be above feet / running rpm - extra feet rpm (if have extra feet)

@@ -7,6 +7,7 @@ import { Depth } from './RpmEntry/Depth';
 import { BitDetail } from './RpmEntry/BitDetail';
 import { RpmVehicleExchage } from './RpmVehicleExchange';
 import { UserDetails } from './UserDetails';
+import { MonthDetails } from './MonthDetails';
 
 export interface RpmEntrySheet {
     book_id: number;
@@ -14,6 +15,7 @@ export interface RpmEntrySheet {
     start: number;
     rpm_sheet_no: number;
     f_rpm_table_data: RpmEntry[],
+    month_data?: MonthDetails,
     vehicle_id: number;
     rpm_vehicle_exchange? : RpmVehicleExchage;
     bit?: BitDetail;

@@ -373,6 +373,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         let extra_feet = 0;
         let m_extra_feet = 0;
         let total_extra_feet = 0;
+        let numerator = 0
         const hrs = +this.form.get('depth.above.hrs').value;
         const min = +this.form.get('depth.above.min').value;
         let m_hrs = 0;
@@ -393,7 +394,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         const total_extra_hours = this.convertToRpm(hrs + m_hrs, min + m_min);
         total_extra_feet = extra_feet + m_extra_feet;
 
-        const numerator = currentTotalBoreDepth - total_extra_feet;
+        if (hrs || min) {
+            numerator = currentTotalBoreDepth - total_extra_feet;
+        } else {
+            numerator = currentTotalBoreDepth;
+        }
+
         const denominator = currentTotalRunningRpm - total_extra_hours;
 
         if (numerator && denominator && denominator > 0 && numerator > 0) {

@@ -189,6 +189,14 @@
         {
             "name": "finishBit",
             "url": "update_bit_status"
+        },
+        {
+            "name": "hammers",
+            "url": "bits_count"
+        },
+        {
+            "name": "hammerGodowns",
+            "url": "get_bit_godown_types"
         }
     ],
     "reportGenerateUrls": [

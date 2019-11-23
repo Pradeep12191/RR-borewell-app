@@ -1,0 +1,34 @@
+<div fxLayout="row wrap" fxLayoutGap="40px" class="widget-container" *ngIf="hammers?.length; else emptyTpl"
+    [@listState]="hammers?.length">
+    <div fxFlex="calc(25% - 40px)" class="m-b-32 pipe" *ngFor="let hammer of hammers">
+        <div class="pipe-card" (click)="viewHammerData(hammer)">
+            <div fxLayout class="pipe-title" fxLayout fxLayoutAlign="center center">
+                {{ hammer.type}}
+                <button mat-icon-button class="pipe-arrow-button">
+                    <mat-icon>arrow_forward</mat-icon>
+                </button>
+            </div>
+            <div fxLayout class="bottom-info" fxLayoutGap="10">
+                <div fxFlex class="pipe-info">
+                    <div fxLayout="column" fxLayoutGap="10px">
+                        <div fxLayout fxLayoutGap="10px">
+                            <div fxFlex="50">
+                                Stock
+                            </div>
+                            <div fxFlex class="bold">{{ hammer.count }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <ng-template #emptyTpl>
+        <mat-card>
+            <mat-card-content>No Hammers Found.</mat-card-content>
+        </mat-card>
+    </ng-template>
+</div>

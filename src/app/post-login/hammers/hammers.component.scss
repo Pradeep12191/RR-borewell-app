@@ -1,0 +1,89 @@
+.header{
+    h2{
+        margin: 0;
+    }
+    
+    // margin-left: -15%;
+}
+
+.widget-container{
+    margin-right: -40px;
+}
+
+.pipe:last-child{
+    margin-right: 40px;
+}
+
+.pipe-card{
+    width: 100%;
+    box-shadow: 1px 2px 2px 1px #ccc;
+    cursor: pointer;
+    transition: all ease-in-out 300ms;
+    transform: translateY(0px);
+    position: relative;
+    &:last-of-type{
+        margin-right: 35px;
+    }
+    &:hover{
+        transform: translateY(-8px);
+        box-shadow: 1px 3px 5px 1px darken(#ccc, 25%);
+    }
+    .pipe-title{
+        padding: 32px 0px;
+        transition: all ease-in-out 0.3s 300ms;
+        font-size: 22px;
+        border-bottom: 1px solid #ccc;
+        background: #eee;
+        // background: #ffb347;  /* fallback for old browsers */
+        // background: -webkit-linear-gradient(to right, #ffcc33, #ffb347);  /* Chrome 10-25, Safari 5.1-6 */
+        // background: linear-gradient(to right, #ffcc33, #ffb347); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    .bottom-info{
+        .pipe-info{
+            padding: 20px 10px;
+            background: #606c88;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #3f4c6b, #606c88);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            color: white;            
+        }
+        
+    }
+
+    .pipe-arrow-button{
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .pipe-card-btn{
+        // margin-top: -10px;
+        // margin-right: -10px;
+        // margin-bottom: -10px;
+        &:hover{
+            transform: scale(1.1);
+        }
+        transition: all linear 0.3s;
+        color: white;
+        background: #614385;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #516395, #614385);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #516395, #614385); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        .pipe-card-btn-title{
+            font-size: 11px;
+            /* font-weight: bold; */
+            letter-spacing: 2px;
+            margin-top: 0px;
+            text-align: center;
+            text-transform: uppercase;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+    }
+}
+.spinner-container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -20px;
+    margin-left: -20px;
+}

@@ -812,6 +812,27 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         })
     }
 
+    confirmResetTotal() {
+        const dialogRef = this.dialog.open(ServiceCompleteConfirmDialog, {
+            data: {
+                message: 'Would you like to Reset Total ?',
+                title: 'Confirm Reset Total'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe((res) => {
+            if (res === 'yes') {
+                if (this.rpmSheet.month_data) {
+                    this.rpmSheet.month_data.m_depth = 0;
+                    this.rpmSheet.month_data.m_diesel = 0;
+                    this.rpmSheet.month_data.m_rpm = 0;
+                    this.rpmSheet.month_data.m_extra_hour = 0;
+                    this.rpmSheet.month_data.m_extra_min = 0;
+                }
+            }
+        })
+    }
+
     finishBit(bit: BitSerialNo) {
         const message = 'Would you like to Finist Bit ' + bit.bit_no + ' ?'
         const dialogRef = this.dialog.open(ServiceCompleteConfirmDialog, {

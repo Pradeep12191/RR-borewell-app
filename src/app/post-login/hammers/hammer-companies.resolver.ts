@@ -1,12 +1,12 @@
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { AppState } from '../../store/reducer';
-import { areHammersLoaded } from './store/selectors';
+import { areCompaniesLoaded } from './store/selectors';
 import { tap, filter, take, finalize, first } from 'rxjs/operators';
 import { HammerActions } from './store/actions-types';
 
 
-export class HammersResolver implements Resolve<any> {
+export class HammerCompaniesResolver implements Resolve<any> {
     loading = false;
 
     constructor(
@@ -20,14 +20,14 @@ export class HammersResolver implements Resolve<any> {
         state: RouterStateSnapshot
     ) {
         return this.store.pipe(
-            select(areHammersLoaded),
-            tap(hammersLoaded => {
-                if (!this.loading && !hammersLoaded) {
+            select(areCompaniesLoaded),
+            tap(companiesLoaded => {
+                if (!this.loading && !companiesLoaded) {
                     this.loading = true;
-                    this.store.dispatch(HammerActions.loadAllHammers({}))
+                    this.store.dispatch(HammerActions.loadCompanies())
                 }
             }),
-            filter(hammersLoaded => hammersLoaded),
+            filter(companiesLoaded => companiesLoaded),
             first(),
             finalize(() => this.loading = false)
         )

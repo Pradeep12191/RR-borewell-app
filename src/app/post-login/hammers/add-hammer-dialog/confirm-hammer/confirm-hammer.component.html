@@ -1,0 +1,58 @@
+<div fxLayout="column" class="m-b-16" fxLayoutGap="10px">
+    <div fxLayout fxLayoutGap="25px">
+        <div fxLayout fxFlex="50" fxLayoutGap="10px">
+            <div fxFlex="45" class="bold">Bit Size</div>
+            <div class="bold">:</div>
+            <div>{{ hammerData?.hammer?.type }}</div>
+        </div>
+        <div fxLayout fxFlex="25" fxLayoutGap="10px">
+            <div fxFlex="60" class="bold">Bit Quantity</div>
+            <div class="bold">:</div>
+            <div>{{ hammerData?.quantity }}</div>
+        </div>
+        <div fxLayout fxFlex="25" fxLayoutGap="10px">
+            <div fxFlex="60" class="bold">Date</div>
+            <div class="bold">:</div>
+            <div>{{ hammerData?.date | date: 'dd/MM/yyyy' }}</div>
+        </div>
+    </div>
+    <div fxLayout fxLayoutGap="25px">
+        <div fxLayout fxFlex="50" fxLayoutGap="10px">
+            <div  fxFlex="45" class="bold">Godown Type</div>
+            <div class="bold">:</div>
+            <div>{{ godown?.godownType | uppercase }}</div>
+        </div>
+        <div fxLayout fxFlex="25" fxLayoutGap="10px">
+            <div fxFlex="60" class="bold">Company</div>
+            <div class="bold">:</div>
+            <div>{{ hammerData?.company?.name }}</div>
+        </div>
+        <div fxFlex="25"></div>
+    </div>
+</div>
+
+<div class="card m-b-16">
+    <div class="section-title m-b-16 contact-title">
+        Hammer Information
+    </div>
+    <div fxLayout="column" fxLayoutGap="10px">
+        <div class="p-b-5 line" fxLayout fxLayoutGap="5px">
+            <div fxFlex class="text-center bold">
+                HAMMER SERIAL NO
+            </div>
+            <div fxFlex class="text-center bold">
+                HAMMER SIZE
+            </div>
+            <div fxFlex class="text-center bold">
+                COMPANY NAME
+            </div>
+        </div>
+        <div fxLayout *ngFor="let hammer of serialNos">
+            <div fxFlex class="text-center">{{ hammer.serialNo }}</div>
+            <div fxFlex class="bold text-center">{{ hammer.hammer.type }}</div>
+            <div fxFlex class="bold text-center">{{ hammer.company.name }}</div>
+        </div>
+    </div>
+</div>
+<div class="m-b-5 font-italic bold">Remarks</div>
+<div class="font-italic" [innerHTML]="bitData?.remarks | newLine"></div>

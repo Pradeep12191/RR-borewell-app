@@ -10,7 +10,7 @@
             <h2>{{ selectedGodown?.godownType | uppercase }} Godown Bit Stock</h2>
         </div>
         <div>
-            <button (click)="navigateToViewBit()" mat-raised-button color="primary">
+            <button (click)="navigateToViewHammer()" mat-raised-button color="primary">
                 <mat-icon class="m-r-5">visibility</mat-icon>
                 VIEW
             </button>
@@ -18,14 +18,11 @@
     </div>
     <div fxLayout class="m-t-16" fxLayoutGap="25px">
         <mat-form-field fxFlex="25" [appearance]="appearance">
-            <mat-select [disabled]="godownSelectDisabled" [(ngModel)]="selectedGodown" (selectionChange)="godownChange($event)">
+            <mat-select [disabled]="godownSelectDisabled" [(ngModel)]="selectedGodown">
                 <mat-option [value]="godown" *ngFor="let godown of godowns">{{ godown.godownType |
                     uppercase }}</mat-option>
             </mat-select>
         </mat-form-field>
-        <div fxLayout="column" fxLayoutAlign="center center" *ngIf="loading">
-            <mat-spinner diameter="25" strokeWidth="2"></mat-spinner>
-        </div>
     </div>
     <div fxLayout="row wrap" fxLayoutGap="40px" class="widget-container" *ngIf="hammers?.length; else emptyTpl"
         [@listState]="hammers?.length">

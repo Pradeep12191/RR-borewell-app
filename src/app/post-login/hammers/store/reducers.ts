@@ -24,13 +24,13 @@ export const initialHammerState: HammerState = {
     allCompaniesLoaded: false
 }
 
-export const hammerReducer = createReducer(
+const hammerReducer = createReducer(
     initialHammerState,
     on(HammerActions.allHammersLoaded, (state, action) => {
         return {
             ...state,
             hammers: action.hammers,
-            godowns: action.godowns ? action.godowns: state.godowns,
+            godowns: action.godowns ? action.godowns : state.godowns,
             allHammersLoaded: true
         }
     }),
@@ -61,4 +61,4 @@ export const hammerReducer = createReducer(
 
 export function reducer(state: HammerState | undefined, action: Action) {
     return hammerReducer(state, action);
-  }
+}

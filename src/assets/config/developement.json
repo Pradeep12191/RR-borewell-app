@@ -192,11 +192,27 @@
         },
         {
             "name": "hammers",
-            "url": "bits_count"
+            "url": "hammers_count"
         },
         {
             "name": "hammerGodowns",
-            "url": "get_bit_godown_types"
+            "url": "get_hammer_godown_types"
+        },
+        {
+            "name": "lastHammerSerialNo",
+            "url": "hammer_last_serial_no"
+        },
+        {
+            "name": "hammerCompanies",
+            "url": "hammers_company_list"
+        },
+        {
+            "name": "addHammerCompany",
+            "url": "add_hammer_company"
+        },
+        {
+            "name": "addHammer",
+            "url": "addhammer"
         }
     ],
     "reportGenerateUrls": [

@@ -12,7 +12,7 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ConfigService } from './services/config.service';
 import { LoaderService } from './services/loader-service';
-import { MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatProgressBarModule } from '@angular/material';
+import { MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatProgressBarModule, MatDialogModule } from '@angular/material';
 import { AuthInterceptorService } from './interceptors/auth-interceptor.service';
 import { AuthService } from './services/auth.service';
 import { ToastrModule } from 'ngx-toastr';
@@ -62,6 +62,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatButtonModule,
     MatIconModule,
     MatProgressBarModule,
+    MatDialogModule,
     ToastrModule.forRoot({ preventDuplicates: true }),
     StoreModule.forRoot(fromApp.redcuers, {
       runtimeChecks: {

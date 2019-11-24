@@ -1,28 +1,61 @@
-<div fxLayout="row wrap" fxLayoutGap="40px" class="widget-container" *ngIf="hammers?.length; else emptyTpl"
-    [@listState]="hammers?.length">
-    <div fxFlex="calc(25% - 40px)" class="m-b-32 pipe" *ngFor="let hammer of hammers">
-        <div class="pipe-card" (click)="viewHammerData(hammer)">
-            <div fxLayout class="pipe-title" fxLayout fxLayoutAlign="center center">
-                {{ hammer.type}}
-                <button mat-icon-button class="pipe-arrow-button">
-                    <mat-icon>arrow_forward</mat-icon>
-                </button>
-            </div>
-            <div fxLayout class="bottom-info" fxLayoutGap="10">
-                <div fxFlex class="pipe-info">
-                    <div fxLayout="column" fxLayoutGap="10px">
-                        <div fxLayout fxLayoutGap="10px">
-                            <div fxFlex="50">
-                                Stock
+<div class="shift-top-30">
+    <div fxLayout fxLayoutAlign="space-between">
+        <div>
+            <button (click)="openAddHammer()" mat-raised-button color="primary">
+                <mat-icon class="m-r-5">add</mat-icon> Hammer
+            </button>
+        </div>
+
+        <div fxFlex fxLayoutAlign="center center" class="header">
+            <h2>{{ selectedGodown?.godownType | uppercase }} Godown Bit Stock</h2>
+        </div>
+        <div>
+            <button (click)="navigateToViewBit()" mat-raised-button color="primary">
+                <mat-icon class="m-r-5">visibility</mat-icon>
+                VIEW
+            </button>
+        </div>
+    </div>
+    <div fxLayout class="m-t-16" fxLayoutGap="25px">
+        <mat-form-field fxFlex="25" [appearance]="appearance">
+            <mat-select [disabled]="godownSelectDisabled" [(ngModel)]="selectedGodown" (selectionChange)="godownChange($event)">
+                <mat-option [value]="godown" *ngFor="let godown of godowns">{{ godown.godownType |
+                    uppercase }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div fxLayout="column" fxLayoutAlign="center center" *ngIf="loading">
+            <mat-spinner diameter="25" strokeWidth="2"></mat-spinner>
+        </div>
+    </div>
+    <div fxLayout="row wrap" fxLayoutGap="40px" class="widget-container" *ngIf="hammers?.length; else emptyTpl"
+        [@listState]="hammers?.length">
+        <div fxFlex="calc(25% - 40px)" class="m-b-32 pipe" *ngFor="let hammer of hammers">
+            <div class="pipe-card" (click)="viewHammerData(hammer)">
+                <div fxLayout class="pipe-title" fxLayout fxLayoutAlign="center center">
+                    {{ hammer.type}}
+                    <button mat-icon-button class="pipe-arrow-button">
+                        <mat-icon>arrow_forward</mat-icon>
+                    </button>
+                </div>
+                <div fxLayout class="bottom-info" fxLayoutGap="10">
+                    <div fxFlex class="pipe-info">
+                        <div fxLayout="column" fxLayoutGap="10px">
+                            <div fxLayout fxLayoutGap="10px">
+                                <div fxFlex="50">
+                                    Stock
+                                </div>
+                                <div fxFlex class="bold">{{ hammer.count }}</div>
                             </div>
-                            <div fxFlex class="bold">{{ hammer.count }}</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div fxFlex="calc(25% - 40px)"></div>
+        <div fxFlex="calc(25% - 40px)"></div>
     </div>
 </div>
+
 
 
 <div>

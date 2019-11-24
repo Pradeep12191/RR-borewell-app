@@ -1,0 +1,38 @@
+<mat-toolbar color="primary">
+    <div fxFlex fxLayoutAlign="center center">
+        <div>Add Hammer - {{ selectedGodown?.godownType | uppercase }}</div>
+    </div>
+    <button mat-icon-button (click)="updateAndClose()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</mat-toolbar>
+
+<div mat-dialog-content cdkScrollable [ngClass]="{'add-bit-step': stepIndex === 0, 'confirm-bit-step': stepIndex === 1}">
+    <mat-horizontal-stepper (selectionChange)="stepIndex = $event.selectedIndex" [linear]="true" labelPosition="bottom"
+        #stepper>
+        <mat-step label="Add Hammer" [stepControl]="form">
+            <add-hammer [form]="form" [notifyReset]="notifyReset" (quantityChange)="onQuantityChange($event)"></add-hammer>
+            <div fxLayout fxLayoutAlign="end">
+                <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="stepper.next()">CONFIRM</button>
+            </div>
+        </mat-step>
+        <mat-step label="Confirm Hammer">
+            <confirm-hammer [formValue]="form.value" [serialNos]="serialNos" [godown]="selectedGodown"></confirm-hammer>
+        </mat-step>
+    </mat-horizontal-stepper>
+</div>
+
+<div mat-dialog-actions *ngIf="stepIndex === 1; else doneTpl">
+    <div fxFlex fxLayout fxLayoutAlign="space-between">
+        <button mat-raised-button color="primary" (click)="stepper.previous()">EDIT</button>
+        <button mat-raised-button color="primary" (click)="saveBit()">SAVE AND ADD NEXT HAMMERS</button>
+    </div>
+</div>
+
+<ng-template #doneTpl>
+    <div mat-dialog-actions>
+        <div fxFlex fxLayout fxLayoutAlign="space-between">
+            <button mat-raised-button color="primary" (click)="updateAndClose()">DONE</button>
+        </div>
+    </div>
+</ng-template>

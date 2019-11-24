@@ -1,0 +1,69 @@
+<form [formGroup]="form">
+    <div fxLayout fxLayoutAlign="space-between" fxLayoutGap="25px">
+        <mat-form-field fxFlex (click)="picker.open()" [appearance]="appearance">
+            <mat-label>Date</mat-label>
+            <input (dateChange)="enableQuantity()" formControlName="date" #dateInput readonly matInput [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field [appearance]="appearance">
+            <mat-label>Company Name</mat-label>
+            <mat-select (selectionChange)="onCompanyChange(); enableQuantity()" formControlName="company"
+                #companySelect>
+                <mat-option [value]="company" *ngFor="let company of companies$ | async">{{ company.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div fxLayoutAlign="end center" class="shift-t-18">
+            <button type="button" #addCompanyBtn (click)="addCompany()" mat-raised-button color="primary">
+                <mat-icon class="m-r-5">add</mat-icon> COMPANY
+            </button>
+        </div>
+
+    </div>
+    <div fxLayout fxLayoutGap="15px" class="m-b-15">
+        <mat-form-field class="calc-field" fxFlex="30" [appearance]="appearance">
+            <mat-label>Select Hammer</mat-label>
+            <mat-select (selectionChange)="onHammerChange(); enableQuantity()" formControlName="hammer" #hammerSelect>
+                <mat-option [value]="hammer" *ngFor="let hammer of hammers$ | async">{{ hammer.type }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field (click)="showInfo()" class="calc-field" fxFlex="30" [appearance]="appearance">
+            <mat-label>
+                Enter Quantity
+            </mat-label>
+            <input positiveNumber formControlName="quantity" matInput
+                (input)="onHammerInput($event)" #quantityInput="matInput">
+        </mat-form-field>
+        <div class="m-l-16" fxLayout="column" fxFlex fxLayoutGap="10px">
+            <div class="font-12">Previous No</div>
+            <div class="bold font-20">{{ lastHammerSerialNo$ | async }}</div>
+        </div>
+    </div>
+    <div fxLayout="column" fxLayoutGap="20px" class="m-b-16 field-set">
+        <div class="field-set-label" style="margin: 0 !important">Hammer Details</div>
+        <div fxLayout>
+            <div fxFlex class="bold font-12 text-center">HAMMER SERIAL NO.</div>
+            <div fxFlex class="bold font-12 text-center">HAMMER SIZE</div>
+            <div fxFlex class="bold font-12 text-center">COMPANY NAME</div>
+        </div>
+        <ng-container *ngIf="hammerSerialNos.length; else emptyMsgTpl">
+            <div fxLayout fxLayoutAlign="start center" class="control-item" *ngFor="let hammer of hammerSerialNos">
+                <div fxLayout fxLayoutAlign="center center" fxFlex class="text-center">{{
+                    hammer.serialNo }}</div>
+                <div fxLayout fxLayoutAlign="center center" fxFlex class="text-center">{{
+                    hammer.hammer?.type }}</div>
+                <div fxLayout fxLayoutAlign="center center" fxFlex class="text-center">{{
+                    hammer.company?.name }}</div>
+            </div>
+        </ng-container>
+
+        <ng-template #emptyMsgTpl>
+            <div class="empty-msg" fxLayout fxLayoutAlign="center center">Please Enter Quantity</div>
+        </ng-template>
+    </div>
+    <mat-form-field [appearance]="appearance" style="width: 100%">
+        <mat-label>Remarks</mat-label>
+        <textarea id="remarks" focusIndex="10" name="" id="" cols="30" rows="3" matInput formControlName="remarks"
+            #remarks="matInput"></textarea>
+    </mat-form-field>
+</form>

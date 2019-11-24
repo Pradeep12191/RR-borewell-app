@@ -62,7 +62,7 @@ export class HammersComponent implements OnInit, OnDestroy {
         this.actionsSubscription = this.actions.pipe(
             ofType(HammerActions.setLastHammerSerial),
             tap(() => {
-               this.dialog.open(AddHammerDialogComponent, {
+                this.dialog.open(AddHammerDialogComponent, {
                     width: '60vw',
                     position: { top: '0px' },
                     maxHeight: '100vh',
@@ -82,6 +82,10 @@ export class HammersComponent implements OnInit, OnDestroy {
         if (this.actionsSubscription) { this.actionsSubscription.unsubscribe() };
     }
 
+    navigateToViewHammer() {
+
+    }
+    
     openAddHammer() {
         this.loader.showSaveLoader('Loading ...');
         this.store.dispatch(HammerActions.loadLastHammerSerial());

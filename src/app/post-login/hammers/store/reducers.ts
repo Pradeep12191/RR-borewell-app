@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { createReducer, on, State, Action } from '@ngrx/store';
 import { HammerActions } from './actions-types';
 import { Godown } from '../../pipe/Godown';
 import { Company } from '../../bits/Company';
@@ -58,3 +58,7 @@ export const hammerReducer = createReducer(
         }
     })
 )
+
+export function reducer(state: HammerState | undefined, action: Action) {
+    return hammerReducer(state, action);
+  }

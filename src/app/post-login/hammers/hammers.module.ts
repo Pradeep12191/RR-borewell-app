@@ -13,7 +13,7 @@ import { HammersComponent } from './hammers.component';
 import { HammersRoutingModule } from './hammers-routing,module';
 import { StoreModule } from '@ngrx/store';
 import { A11yModule } from '@angular/cdk/a11y';
-import { hammerReducer } from './store/reducers';
+import * as fromHammer from './store/reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { HammerEffects } from './store/effects';
 import { HammersService } from './hammers.service';
@@ -37,7 +37,7 @@ import { AddHammerCompanyPopup } from './add-hammer-dialog/add-hammer/add-hammer
         PipesModule,
         A11yModule,
         HammersRoutingModule,
-        StoreModule.forFeature('hammerState', hammerReducer),
+        StoreModule.forFeature('hammerState', fromHammer.reducer),
         EffectsModule.forFeature([HammerEffects])
     ],
     declarations: [

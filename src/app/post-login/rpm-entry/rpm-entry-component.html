@@ -100,9 +100,24 @@
                     </div>
                 </div>
                 <div fxLayoutAlign="center center" fxFlex="7">
-                    <button (click)="confirmResetTotal()" mat-icon-button [disabled]="!selectedVehicle || !bookId || !date || !date" color="primary">
+                    <button (click)="confirmResetTotal()" mat-icon-button [disabled]="!selectedVehicle || !bookId || !date || !date"
+                        color="primary">
                         <mat-icon>refresh</mat-icon>
                     </button>
+                </div>
+            </div>
+            <div class="m-t-16" fxLayoutAlign="end">
+                <div fxLayout fxLayoutGap="25px">
+                    <div fxLayout fxLayoutGap="5px" class="font-12">
+                        <div class="bold">Last Reset Rpm</div>
+                        <div class="bold">:</div>
+                        <div>{{ lastResetRpmNo || '-' }}</div>
+                    </div>
+                    <div fxLayout fxLayoutGap="5px" class="font-12">
+                        <div class="bold">Last Reset Date</div>
+                        <div class="bold">:</div>
+                        <div>{{ lastResetDate || '-' }}</div>
+                    </div>
                 </div>
             </div>
         </mat-card>

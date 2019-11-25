@@ -27,6 +27,7 @@ const routes: Routes = [
             { path: 'rpmEntryReport', loadChildren: () => import('./rpm-entry-report/rpm-entry-report.module').then(mod => mod.RpmEntryReportModule) },
             { path: 'godownExchange', loadChildren: () => import('./godown-exchange/godown-exchange.module').then(mod => mod.GodownExchangeModule) },
             { path: 'hammers', loadChildren: () => import('./hammers/hammers.module').then(mod => mod.HammersModule) },
+            { path: 'hammers/viewHammers', loadChildren: () => import('./hammers/view-hammers/view-hammers.module').then(mod => mod.ViewHammersModule) },
             { path: 'error', component: ErrorComponent },
             { path: '**', component: S404Component }
         ],

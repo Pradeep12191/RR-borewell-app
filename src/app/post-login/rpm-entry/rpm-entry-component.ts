@@ -40,7 +40,8 @@ interface VehicleChangeData {
     lastRpmEntrySheet: RpmEntrySheet;
     serviceLimits: VehicleServices;
     assignedBits: BitSerialNo[];
-    incomeData: RpmTableData
+    incomeData: RpmTableData;
+    lastReset: any
 }
 
 // 1. bore depth - m_depth + bore_depth (type: bore depth)
@@ -101,6 +102,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     pointDieselRpm;
     tractors: Tractor[];
     boreTypes: BoreType[];
+    lastResetDate;
+    lastResetRpmNo;
     dateSelected$ = new Subject();
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
@@ -823,11 +826,24 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         dialogRef.afterClosed().subscribe((res) => {
             if (res === 'yes') {
                 if (this.rpmSheet.month_data) {
-                    this.rpmSheet.month_data.m_depth = 0;
-                    this.rpmSheet.month_data.m_diesel = 0;
-                    this.rpmSheet.month_data.m_rpm = 0;
-                    this.rpmSheet.month_data.m_extra_hour = 0;
-                    this.rpmSheet.month_data.m_extra_min = 0;
+                    this.loader.showSaveLoader('Reseting ...');
+                    this.rpmEntryService.resetTotal({
+                        date: (this.date as Moment).format('DD-MM-YYYY'),
+                        rpm_no: this.rpmEntryNo,
+                        vehicle_id: +this.selectedVehicle.vehicle_id,
+                        vehicle_no: this.selectedVehicle.regNo
+                    }).pipe(
+                        finalize(() => this.loader.hideSaveLoader())
+                    ).subscribe((resetData) => {
+                        this.toastr.success('Total Reseted successfully');
+                        this.rpmSheet.month_data.m_depth = 0;
+                        this.rpmSheet.month_data.m_diesel = 0;
+                        this.rpmSheet.month_data.m_rpm = 0;
+                        this.rpmSheet.month_data.m_extra_hour = 0;
+                        this.rpmSheet.month_data.m_extra_min = 0;
+                        this.lastResetDate = resetData.date;
+                        this.lastResetRpmNo = resetData.rpm_no;
+                    })
                 }
             }
         })
@@ -1019,27 +1035,30 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         const lastRpmSheet$ = this.rpmEntryService.getLastRpmEntrySheet(this.selectedVehicle);
         const vehicleServiceLimit$ = this.rpmEntryService.getServiceLimits(this.selectedVehicle);
         const assingedBit$ = this.rpmEntryService.getAssignedBits(this.selectedVehicle);
+        const lastResetInfo$ = this.rpmEntryService.getLastResetInfo(this.selectedVehicle.vehicle_id);
         this.disableAllControls();
-        zip(lastRpmSheet$, vehicleServiceLimit$, assingedBit$).pipe(
+        zip(lastRpmSheet$, vehicleServiceLimit$, assingedBit$, lastResetInfo$).pipe(
             finalize(() => {
                 this.loader.hideSaveLoader();
             }),
-            mergeMap(([lastRpmEntrySheet, serviceLimits, assignedBits]) => {
+            mergeMap(([lastRpmEntrySheet, serviceLimits, assignedBits, lastReset]) => {
                 if (lastRpmEntrySheet.book_page_over) {
-                    return of<VehicleChangeData>({ lastRpmEntrySheet, serviceLimits, assignedBits, incomeData: null });
+                    return of<VehicleChangeData>({ lastRpmEntrySheet, serviceLimits, assignedBits, incomeData: null, lastReset });
                 }
                 return this.rpmEntryService.getRpmTableData(this.selectedVehicle, lastRpmEntrySheet.rpm_sheet_no).pipe(
                     map((incomeData) => {
-                        return { lastRpmEntrySheet, serviceLimits, assignedBits, incomeData }
+                        return { lastRpmEntrySheet, serviceLimits, assignedBits, incomeData, lastReset }
                     })
                 );
             })
-        ).subscribe(({ lastRpmEntrySheet, serviceLimits, assignedBits, incomeData }) => {
+        ).subscribe(({ lastRpmEntrySheet, serviceLimits, assignedBits, incomeData, lastReset }) => {
             this.vehicleServiceLimits = serviceLimits;
             this.activeCompressorAirFilterLimit = this.compressorAirFilterServiceLimits
                 .find(c => c.limit === this.vehicleServiceLimits.c_air_filter);
             this.activeCompressorOilServiceLimit = this.compressorOilServiceLimits
                 .find(c => c.limit === this.vehicleServiceLimits.c_oil_service);
+                this.lastResetDate = lastReset.date;
+                this.lastResetRpmNo = lastReset.rpm_no;
             if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
                 this.resetAll();
                 this.resetBook();

@@ -213,6 +213,14 @@
         {
             "name": "addHammer",
             "url": "addhammer"
+        },
+        {
+            "name": "viewHammer",
+            "url": "hammer_list"
+        },
+        {
+            "name": "rpmTotalReset",
+            "url": "rpm_avg_reset_data"
         }
     ],
     "reportGenerateUrls": [

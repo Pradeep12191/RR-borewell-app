@@ -15,6 +15,7 @@ export class HammersService {
     companiesUrl: string;
     addCompanyUrl: string;
     addHammersUrl: string;
+    viewHammersUrl: string;
     constructor(
         private config: ConfigService,
         private http: HttpClient,
@@ -26,6 +27,7 @@ export class HammersService {
         this.companiesUrl = this.config.getAbsoluteUrl('hammerCompanies');
         this.addCompanyUrl = this.config.getAbsoluteUrl('addHammerCompany');
         this.addHammersUrl = this.config.getAbsoluteUrl('addHammer');
+        this.viewHammersUrl = this.config.getAbsoluteUrl('viewHammer');
     }
     getAll(godown_id) {
         const params = { user_id: this.auth.userid, godown_id }
@@ -52,5 +54,9 @@ export class HammersService {
 
     saveHammer(payload) {
         return this.http.post<number>(this.addHammersUrl, payload)
+    };
+
+    getHammersViewData() {
+        return this.http.get<any[]>(this.viewHammersUrl, { params: { user_id: this.auth.userid } })
     }
 }

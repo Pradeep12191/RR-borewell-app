@@ -213,6 +213,10 @@
         {
             "name": "addHammer",
             "url": "addhammer"
+        },
+        {
+            "name": "viewHammer",
+            "url": "hammer_list"
         }
     ],
     "reportGenerateUrls": [

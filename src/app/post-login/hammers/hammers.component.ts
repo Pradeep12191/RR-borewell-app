@@ -83,7 +83,7 @@ export class HammersComponent implements OnInit, OnDestroy {
     }
 
     navigateToViewHammer() {
-
+        // this.ro
     }
     
     openAddHammer() {

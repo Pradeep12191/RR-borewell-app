@@ -15,6 +15,7 @@ import { AppState } from '../../../store/reducer';
 import { Store } from '@ngrx/store';
 import { HammerActions } from '../store/actions-types';
 import { Actions, ofType } from '@ngrx/effects';
+import { ViewHammersActions } from '../view-hammers/store/action-types';
 
 @Component({
     templateUrl: './add-hammer-dialog.component.html',
@@ -64,8 +65,9 @@ export class AddHammerDialogComponent implements OnInit, OnDestroy {
                     this.notifyReset.next();
                 }
                 if (action.type === HammerActions.closeDialog.type) {
-                    this.loader.hideSaveLoader()
+                    this.loader.hideSaveLoader();
                     this.dialogRef.close();
+                    this.store.dispatch(ViewHammersActions.ViewHammersResetLoad({hammersLoaded: false}))
                 }
             })
         ).subscribe(noop)

@@ -30,6 +30,7 @@ export class RpmEntryService {
     private tractorsUrl: string;
     private compressorOilServiceLimitUrl: string;
     private finishBitUrl: string;
+    private rpmTotalResetUrl: string;
     constructor(
         private http: HttpClient,
         private config: ConfigService,
@@ -50,6 +51,7 @@ export class RpmEntryService {
         this.tractorsUrl = this.config.getAbsoluteUrl('tractorList');
         this.compressorOilServiceLimitUrl = this.config.getAbsoluteUrl('compressorOilServiceLimt');
         this.finishBitUrl = this.config.getAbsoluteUrl('finishBit');
+        this.rpmTotalResetUrl = this.config.getAbsoluteUrl('rpmTotalReset');
     }
 
     postBook(book: Book) {
@@ -245,5 +247,14 @@ export class RpmEntryService {
 
     buildPointExpenseForm(pipeType) {
         return this.fb.group({ pipeType, value: '' })
+    };
+
+    resetTotal(payload) {
+        return this.http.put<any>(this.rpmTotalResetUrl, payload);
+    }
+
+    getLastResetInfo(vehicle_id) {
+        const params = { user_id: this.auth.userid, vehicle_id }
+        return this.http.get<any>(this.rpmTotalResetUrl, { params });
     }
 }

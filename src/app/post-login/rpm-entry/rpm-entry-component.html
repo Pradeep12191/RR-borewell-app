@@ -459,7 +459,7 @@
                         <div fxLayout fxLayoutGap="25px">
                             <div fxLayoutAlign="start center" fxFlex="25">
                                 <mat-form-field class="calc-field" fxFlex>
-                                    <mat-select formControlName="boreType">
+                                    <mat-select (selectionChange)="onBoreTypeChange()" formControlName="boreType">
                                         <mat-option [value]="bore" *ngFor="let bore of boreTypes">{{ bore.type }}</mat-option>
                                     </mat-select>
                                 </mat-form-field>

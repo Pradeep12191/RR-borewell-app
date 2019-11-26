@@ -326,13 +326,13 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         let m_depth = 0;
         const boreDepth = +this.form.get('depth.bore').value;
         const boreType = this.form.get('depth.boreType').value;
+        if (this.rpmSheet && this.rpmSheet.month_data) {
+            m_depth = this.rpmSheet.month_data.m_depth || 0;
+        }
         if (boreType.type === 'Bore Depth') {
-            if (this.rpmSheet && this.rpmSheet.month_data) {
-                m_depth = this.rpmSheet.month_data.m_depth || 0;
-            }
             return this.roundValue(m_depth + boreDepth);
         }
-        return 0;
+        return m_depth;
     }
 
     displayRunningRpm() {
@@ -371,14 +371,16 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     displayAverageDepth() {
         // 3. average- (bore_depth + m_depth)** above feet** - (extra_feet + m_extra_feet) / ( m_rpm + running rpm) - (m_extra_hrs + extra hrs)
-        const currentTotalBoreDepth = this.displayMonthDepth();
-        const currentTotalRunningRpm = this.displayRunningRpm();
+        let currentTotalBoreDepth = this.displayMonthDepth();
+        let currentTotalRunningRpm = this.displayRunningRpm();
         let extra_feet = 0;
         let m_extra_feet = 0;
         let total_extra_feet = 0;
         let numerator = 0
         const hrs = +this.form.get('depth.above.hrs').value;
         const min = +this.form.get('depth.above.min').value;
+        const boreType = this.form.get('depth.boreType').value;
+        const boreDepth = this.form.get('depth.bore').value;
         let m_hrs = 0;
         let total_hrs = 0;
 
@@ -389,20 +391,29 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             extra_feet = +this.rpmSheet.depth.above.extra_feet;
         }
 
+        if (boreType.type !== 'Bore Depth') {
+            if (this.rpmSheet && this.rpmSheet.month_data) {
+                currentTotalBoreDepth = this.rpmSheet.month_data.m_depth;
+                currentTotalRunningRpm = this.rpmSheet.month_data.m_rpm;
+            }
+        }
+        if (this.rpmSheet && !boreDepth) {
+            currentTotalRunningRpm = this.rpmSheet && this.rpmSheet.month_data && this.rpmSheet.month_data.m_rpm;
+        }
+
         if (this.rpmSheet && this.rpmSheet.month_data) {
             m_extra_feet = this.rpmSheet.month_data.m_extra_feet || 0;
             m_hrs = this.rpmSheet.month_data.m_extra_hour || 0;
             m_min = this.rpmSheet.month_data.m_extra_min || 0;
         }
         const total_extra_hours = this.convertToRpm(hrs + m_hrs, min + m_min);
-        total_extra_feet = extra_feet + m_extra_feet;
-
         if (hrs || min) {
-            numerator = currentTotalBoreDepth - total_extra_feet;
+            total_extra_feet = extra_feet + m_extra_feet;
         } else {
-            numerator = currentTotalBoreDepth;
+            total_extra_feet = m_extra_feet;
         }
 
+        numerator = currentTotalBoreDepth - total_extra_feet;
         const denominator = currentTotalRunningRpm - total_extra_hours;
 
         if (numerator && denominator && denominator > 0 && numerator > 0) {
@@ -429,9 +440,15 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     getExtraTime() {
         const hrs = +this.form.get('depth.above.hrs').value;
         const min = +this.form.get('depth.above.min').value;
+        let m_extra_hrs = 0;
+        let m_extra_mins = 0;
+        if (this.rpmSheet.month_data) {
+            m_extra_hrs = this.rpmSheet.month_data.m_extra_hour;
+            m_extra_mins = this.rpmSheet.month_data.m_extra_min;
+        }
         let actualHrs = 0;
         let actualMin = 0;
-        const totalMin = (hrs * 60) + min;
+        const totalMin = ((hrs + m_extra_hrs) * 60) + (min + m_extra_mins);
         if (totalMin) {
             actualHrs = Math.floor(totalMin / 60);
             actualMin = totalMin % 60;
@@ -841,6 +858,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.rpmSheet.month_data.m_rpm = 0;
                         this.rpmSheet.month_data.m_extra_hour = 0;
                         this.rpmSheet.month_data.m_extra_min = 0;
+                        this.rpmSheet.month_data.m_extra_feet = 0;
                         this.lastResetDate = resetData.date;
                         this.lastResetRpmNo = resetData.rpm_no;
                     })
@@ -1057,8 +1075,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 .find(c => c.limit === this.vehicleServiceLimits.c_air_filter);
             this.activeCompressorOilServiceLimit = this.compressorOilServiceLimits
                 .find(c => c.limit === this.vehicleServiceLimits.c_oil_service);
-                this.lastResetDate = lastReset.date;
-                this.lastResetRpmNo = lastReset.rpm_no;
+            this.lastResetDate = lastReset.date;
+            this.lastResetRpmNo = lastReset.rpm_no;
             if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
                 this.resetAll();
                 this.resetBook();
@@ -1351,6 +1369,20 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.updateExtraFeet();
     }
 
+    onBoreTypeChange() {
+        const boreType = this.form.get('depth.boreType').value;
+
+        if (boreType.type !== 'Bore Depth') {
+            this.form.get('depth.bore').reset();
+            this.form.get('depth.bore').disable();
+            this.updateFeetAvg();
+            this.updateExtraFeet();
+        }else{
+            this.form.get('depth.bore').enable();
+        }
+        
+    }
+
     updateBitTotalFeet(bit: BitSerialNo) {
         const boreDepth = +this.form.get('depth.bore').value;
         const pipeErectionDepth = +this.form.get('depth.pipeErection').value;
@@ -1577,7 +1609,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 diffRpm = runningRpm - extraRpm;
             }
             if (diffRpm > 0) {
-                feetAvg = aboveFeet.limit / diffRpm;
+                feetAvg = extraFeet / diffRpm;
             }
             this.rpmSheet.depth.average = Math.floor(feetAvg);
         }

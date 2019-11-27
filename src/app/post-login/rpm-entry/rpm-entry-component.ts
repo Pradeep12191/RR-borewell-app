@@ -1377,10 +1377,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.form.get('depth.bore').disable();
             this.updateFeetAvg();
             this.updateExtraFeet();
-        }else{
+        } else {
             this.form.get('depth.bore').enable();
         }
-        
+
     }
 
     updateBitTotalFeet(bit: BitSerialNo) {
@@ -1583,35 +1583,33 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // feet avg will be above feet / running rpm - extra feet rpm (if have extra feet)
     // if bore depth is less than above feet(no extra feet and rpm), so feet avg will be bore depth / running rpm
+    // bore depth - extra feet (above feet) / running rpm - extra rpm
     updateFeetAvg() {
         const hrs = +this.form.get('depth.above.hrs').value;
         const min = +this.form.get('depth.above.min').value;
         const boreDepth = +this.form.get('depth.bore').value;
         const aboveFeet: ServiceLimit = this.form.get('depth.above.feet').value;
+        let totalDepth = 0; // numerator
+        let totalRpm = 0; // denominator
+        let feetAvg = 0;
+
         if (this.rpmSheet.depth) {
             const extraFeet = +this.rpmSheet.depth.above.extra_feet;
             const runningRpm = +this.rpmSheet.rpm.running;
-            let feetAvg = 0;
 
-            if (!(extraFeet && (hrs || min))) {
-                if (boreDepth && runningRpm) {
-                    feetAvg = boreDepth / runningRpm;
-                    this.rpmSheet.depth.average = Math.floor(feetAvg);
-                } else {
-                    this.rpmSheet.depth.average = 0;
-                }
-                return;
+            if (extraFeet && (hrs || min)) {
+                const extraRpm = this.convertToRpm(hrs, min);
+                totalDepth = boreDepth - extraFeet;
+                totalRpm = runningRpm - extraRpm;
+            } else {
+                totalDepth = boreDepth;
+                totalRpm = runningRpm;
             }
 
-            const extraRpm = this.convertToRpm(hrs, min);
-            let diffRpm = extraRpm;
-            if (runningRpm) {
-                diffRpm = runningRpm - extraRpm;
+            if (totalDepth > 0 && totalRpm > 0) {
+                feetAvg = totalDepth / totalRpm;
+                this.rpmSheet.depth.average = Math.floor(feetAvg);
             }
-            if (diffRpm > 0) {
-                feetAvg = extraFeet / diffRpm;
-            }
-            this.rpmSheet.depth.average = Math.floor(feetAvg);
         }
     }
 

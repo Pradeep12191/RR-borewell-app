@@ -363,13 +363,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         const currentTotalDiesel = this.displayDieselTotal();
         let previousRunningRpm = 0;
         let m_diesel_avg = 0;
+        let currentCompressorDiesel = +this.form.get('diesel.compressor').value;
 
         if (this.rpmSheet && this.rpmSheet.month_data) {
             previousRunningRpm = this.rpmSheet.month_data.m_rpm;
             m_diesel_avg = this.rpmSheet.month_data.m_diesel_avg
         }
 
-        if (currentTotalDiesel && previousRunningRpm && this.rpmSheet && this.rpmSheet.diesel.compressor) {
+        if (currentTotalDiesel && previousRunningRpm && currentCompressorDiesel) {
             return this.roundValue(currentTotalDiesel / previousRunningRpm);
         }
         return m_diesel_avg;

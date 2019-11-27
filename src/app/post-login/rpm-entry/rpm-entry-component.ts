@@ -361,12 +361,18 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     displayDieselAvg() {
         // 5. diesel_avg - (m_diesel + compressor) / (running_rpm + m_rpm)
         const currentTotalDiesel = this.displayDieselTotal();
-        const currentTotalRpm = this.displayRunningRpm();
+        let previousRunningRpm = 0;
+        let m_diesel_avg = 0;
 
-        if (currentTotalDiesel && currentTotalRpm) {
-            return this.roundValue(currentTotalDiesel / currentTotalRpm);
+        if (this.rpmSheet && this.rpmSheet.month_data) {
+            previousRunningRpm = this.rpmSheet.month_data.m_rpm;
+            m_diesel_avg = this.rpmSheet.month_data.m_diesel_avg
         }
-        return 0;
+
+        if (currentTotalDiesel && previousRunningRpm && this.rpmSheet && this.rpmSheet.diesel.compressor) {
+            return this.roundValue(currentTotalDiesel / previousRunningRpm);
+        }
+        return m_diesel_avg;
     }
 
     displayAverageDepth() {
@@ -1494,6 +1500,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 m_extra_feet: this.getExtraFeet(),
                 m_extra_hour: this.getExtraTime().hrs,
                 m_extra_min: this.getExtraTime().min,
+                m_diesel_avg: this.displayDieselAvg()
             },
             bit: {
                 ...this.form.value.bit,

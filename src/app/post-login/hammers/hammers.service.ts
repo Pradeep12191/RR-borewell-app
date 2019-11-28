@@ -34,6 +34,10 @@ export class HammersService {
         return this.http.get<HammerSize[]>(this.hammersUrl, { params })
     }
 
+    getHammerSizes() {
+
+    }
+
     getGodowns() {
         return this.http.get<Godown[]>(this.godownUrl);
     }

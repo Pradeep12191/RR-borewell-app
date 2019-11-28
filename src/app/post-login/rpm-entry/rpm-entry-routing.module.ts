@@ -11,6 +11,7 @@ import { CompressorAirFilterLimitResolver } from '../../guards/resolveGuard/comp
 import { TractorsResolver } from '../../guards/resolveGuard/tractors.resolver';
 import { BoreTypesResolver } from '../../guards/resolveGuard/bore-types.resolver';
 import { CompressorOilServiceLimitResolver } from '../../guards/resolveGuard/compresso-oil-service-limit.resolver';
+import { HammerListResolver } from 'src/app/guards/resolveGuard/hammer/hammer-list.resolver';
 
 const routes: Routes = [
     {
@@ -24,7 +25,8 @@ const routes: Routes = [
             compressorAirFilterServiceLimits: CompressorAirFilterLimitResolver,
             compressorOilServiceLimits: CompressorOilServiceLimitResolver,
             tractors: TractorsResolver,
-            boreTypes: BoreTypesResolver
+            boreTypes: BoreTypesResolver,
+            hammers: HammerListResolver
         }
     }
 ]

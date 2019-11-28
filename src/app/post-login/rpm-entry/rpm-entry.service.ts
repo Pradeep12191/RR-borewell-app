@@ -14,6 +14,7 @@ import { BitSerialNo } from '../../models/BitSerialNo';
 import { ServiceLimit } from '../../models/Limit';
 import { VehicleServices } from '../../models/VehicleServices';
 import { Tractor } from '../../models/Tractor';
+import { HammerSerial } from '../hammers/add-hammer-dialog/add-hammer/add-hammer.component';
 
 @Injectable()
 export class RpmEntryService {
@@ -21,12 +22,14 @@ export class RpmEntryService {
     private getLastRpmEntrySheetUrl: string;
     private postAssignVehicleUrl: string;
     private putAssignVehicleBitUrl: string;
+    private putAssignVehicleHammerUrl: string;
     private rpmTableDataurl: string;
     private submitRpmUrl: string;
     private rpmHourFeetUrl: string;
     private compressorAirFilterLimitUrl: string;
     private vehicleServicesUrl: string;
     private assignedBitSerialNoUrl: string;
+    private assignedHammerSerialNoUrl: string;
     private tractorsUrl: string;
     private compressorOilServiceLimitUrl: string;
     private finishBitUrl: string;
@@ -42,6 +45,7 @@ export class RpmEntryService {
         this.getLastRpmEntrySheetUrl = this.config.getAbsoluteUrl('vehicleLastRpmEntry');
         this.postAssignVehicleUrl = this.config.getAbsoluteUrl('AssignPipeToVehicle');
         this.putAssignVehicleBitUrl = this.config.getAbsoluteUrl('assignVehicleBit');
+        this.putAssignVehicleHammerUrl = this.config.getAbsoluteUrl('assignVehicleHammer');
         this.rpmTableDataurl = this.config.getAbsoluteUrl('rpmTableData');
         this.submitRpmUrl = this.config.getAbsoluteUrl('submitRpmEntry');
         this.rpmHourFeetUrl = this.config.getAbsoluteUrl('rpmHourFeets');
@@ -52,6 +56,7 @@ export class RpmEntryService {
         this.compressorOilServiceLimitUrl = this.config.getAbsoluteUrl('compressorOilServiceLimt');
         this.finishBitUrl = this.config.getAbsoluteUrl('finishBit');
         this.rpmTotalResetUrl = this.config.getAbsoluteUrl('rpmTotalReset');
+        this.assignedHammerSerialNoUrl = this.config.getAbsoluteUrl('assignedHammerSerialNos');
     }
 
     postBook(book: Book) {
@@ -107,6 +112,22 @@ export class RpmEntryService {
     updateAssignBit(payload: any, vehicle: Vehicle) {
         console.log(JSON.stringify(payload, null, 2));
         return this.http.put<BitSerialNo[]>(this.putAssignVehicleBitUrl, payload).pipe(
+            map((pipes) => {
+                this.toastr.success('Bits assigned to vehicle ' + vehicle.regNo + ' successfully')
+                return pipes
+            }),
+            catchError((err) => {
+                if (err) {
+                    this.toastr.error('Error while assinging Bit', null, { timeOut: 2000 })
+                }
+                return throwError(err);
+            })
+        )
+    }
+
+    updateAssignHammer(payload: any, vehicle: Vehicle) {
+        console.log(JSON.stringify(payload, null, 2));
+        return this.http.put<HammerSerial[]>(this.putAssignVehicleHammerUrl, payload).pipe(
             map((pipes) => {
                 this.toastr.success('Bits assigned to vehicle ' + vehicle.regNo + ' successfully')
                 return pipes
@@ -235,6 +256,11 @@ export class RpmEntryService {
     getAssignedBits(vehicle: Vehicle) {
         const params = new HttpParams().set('user_id', this.auth.userid).append('vehicle_id', vehicle.vehicle_id);
         return this.http.get<BitSerialNo[]>(this.assignedBitSerialNoUrl, { params })
+    }
+
+    getAssignedHammers(vehicle: Vehicle) {
+        const params = new HttpParams().set('user_id', this.auth.userid).append('vehicle_id', vehicle.vehicle_id);
+        return this.http.get<BitSerialNo[]>(this.assignedHammerSerialNoUrl, { params })
     }
 
     updateCompressorAirFilter(payload) {

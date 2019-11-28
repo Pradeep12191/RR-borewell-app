@@ -35,6 +35,8 @@ import { AssignBit } from '../bits/view-bit/AssignBit';
 import { Tractor } from '../../models/Tractor';
 import { BoreType } from '../../models/BoreType';
 import { RpmDetails } from '../../models/RpmEntry/RpmDetails';
+import { AssignHammerDialogComponent } from './assing-hammer-dialog/assign-hammer-dialog.component';
+import { HammerSize } from '../hammers/hammer-size.model';
 
 interface VehicleChangeData {
     lastRpmEntrySheet: RpmEntrySheet;
@@ -84,6 +86,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     godowns: Godown[];
     bitGodowns: Godown[];
     bitSizes: BitSize[];
+    hammers: HammerSize[];
     rpmHourFeets: ServiceLimit[];
     compressorAirFilterServiceLimits: ServiceLimit[];
     compressorOilServiceLimits: ServiceLimit[]
@@ -213,6 +216,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.godowns = data.godowns;
             this.bitGodowns = data.bitGodowns;
             this.bitSizes = data.bits;
+            this.hammers = data.hammers
             this.rpmHourFeets = data.rpmHourFeets;
             this.compressorAirFilterServiceLimits = data.compressorAirFilterServiceLimits;
             this.compressorOilServiceLimits = data.compressorOilServiceLimits
@@ -521,6 +525,23 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.form.get('bit').reset();
                 this.assignedBits = res;
             }
+        })
+    }
+
+    openAssignHammer() {
+        this.dialog.open(AssignHammerDialogComponent, {
+            data: {
+                hammers: this.hammers,
+                bitGodowns: this.bitGodowns,
+                vehicle: this.selectedVehicle,
+                date: this.date,
+                rpmEntryNo: this.rpmEntryNo
+            },
+            width: '1000px',
+            position: { top: '0px' },
+            maxHeight: '100vh',
+            height: '100vh',
+            disableClose: true
         })
     }
 

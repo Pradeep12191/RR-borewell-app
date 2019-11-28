@@ -1,0 +1,29 @@
+mat-toolbar{
+    margin-top: -25px;
+    margin-left: -25px;
+    margin-bottom: 19px;
+    width: calc(100% + 49px);
+}
+
+.header{
+    color: white;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.container{
+    border: 1px solid #eee;
+}
+.table-content{
+    max-height: 200px;
+    overflow: auto;
+}
+
+.mat-dialog-content[mat-dialog-content]{
+    max-height: 70vh;
+}
+
+.mat-dialog-actions[mat-dialog-actions]{
+    min-height: 68px;
+    box-sizing: border-box;
+}

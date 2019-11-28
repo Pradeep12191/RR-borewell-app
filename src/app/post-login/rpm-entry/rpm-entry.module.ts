@@ -25,6 +25,11 @@ import { ServiceCompleteConfirmDialog } from './service-complete-confirm-dialog/
 import { TractorsResolver } from '../../guards/resolveGuard/tractors.resolver';
 import { CompressorOilServiceLimitResolver } from '../../guards/resolveGuard/compresso-oil-service-limit.resolver';
 import { UserDetailsComponent } from './user-details/user-details.component';
+import { StoreModule } from '@ngrx/store';
+import { HammersService } from '../hammers/hammers.service';
+import { HammerListResolver } from 'src/app/guards/resolveGuard/hammer/hammer-list.resolver';
+import { AssignHammerDialogComponent } from './assing-hammer-dialog/assign-hammer-dialog.component';
+import { AssignHammerConfirmDialogComponent } from './assing-hammer-dialog/assign-hammer-confirm-dialog/assign-hammer-confirm-dialog.component';
 
 @NgModule({
     imports: [
@@ -44,10 +49,11 @@ import { UserDetailsComponent } from './user-details/user-details.component';
         RpmConfirmAssignVehicleDialogComponent,
         AssignBitDialogComponent,
         AssignBitConfirmDialogComponent,
+        AssignHammerDialogComponent,
+        AssignHammerConfirmDialogComponent,
         ServiceCompleteConfirmDialog,
         AddDieselPopupComponent,
         UserDetailsComponent
-        // AddBookPopupComponent
     ],
     entryComponents: [
         AssignVehicleDialogComponent,
@@ -55,6 +61,8 @@ import { UserDetailsComponent } from './user-details/user-details.component';
         ServiceCompleteConfirmDialog,
         AssignBitDialogComponent,
         AssignBitConfirmDialogComponent,
+        AssignHammerDialogComponent,
+        AssignHammerConfirmDialogComponent,
         AddDieselPopupComponent,
         // AddBookPopupComponent
     ],
@@ -67,7 +75,9 @@ import { UserDetailsComponent } from './user-details/user-details.component';
         RpmEntryService,
         CompressorAirFilterLimitResolver,
         CompressorOilServiceLimitResolver,
-        TractorsResolver
+        TractorsResolver,
+        HammersService,
+        HammerListResolver
     ]
 })
 export class RpmEntryModule {

@@ -219,8 +219,24 @@
             "url": "hammer_list"
         },
         {
+            "name": "hammerSizes",
+            "url": "hammer_size_list"
+        },
+        {
             "name": "rpmTotalReset",
             "url": "rpm_avg_reset_data"
+        },
+        {
+            "name": "unassignedHammerSerialNos",
+            "url": "get_unassigned_sno_hammer"
+        },
+        {
+            "name": "assignVehicleHammer",
+            "url": "assign_vehicle_hammer"
+        },
+        {
+            "name": "assignedHammerSerialNos",
+            "url": "get_assigned_sno_hammer"
         }
     ],
     "reportGenerateUrls": [

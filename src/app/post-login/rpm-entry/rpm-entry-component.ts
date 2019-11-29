@@ -1512,7 +1512,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                     hrs: this.form.value.depth.above.hrs ? +this.form.value.depth.above.hrs : 0,
                     min: this.form.value.depth.above.min ? +this.form.value.depth.above.min : 0,
                 },
-                bore: +this.form.value.depth.bore,
+                bore: +this.form.value.depth.bore || 0,
                 pipe_erection: +this.form.value.depth.pipeErection
             },
             month_data: {

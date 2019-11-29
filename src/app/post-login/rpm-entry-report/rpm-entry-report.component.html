@@ -1,21 +1,21 @@
 <div [formGroup]="filterForm" fxLayout="column" class="shift-top-30">
     <div fxLayout class="header-container" fxLayoutAlign="start center">
         <div fxLayout fxLayoutGap="10px" fxFlex>
-            <mat-form-field class="calc-field" fxFlex="15">
+            <mat-form-field class="calc-field" fxFlex="22">
                 <mat-label>Select Vehicle</mat-label>
                 <mat-select (selectionChange)="onChange()" placeholder="Select Vehicle" formControlName="vehicle"
                     #vehicleSelect>
                     <mat-option [value]="veh" *ngFor="let veh of vehicles">{{ veh.regNo }}</mat-option>
                 </mat-select>
             </mat-form-field>
-            <mat-form-field class="calc-field" fxFlex="20">
+            <mat-form-field *ngIf="false" class="calc-field" fxFlex="20">
                 <mat-label>Bore Type</mat-label>
                 <mat-select formControlName="boreType" (selectionChange)="onChange()">
                     <mat-option [value]="boreType" *ngFor="let boreType of boreTypes">{{ boreType.type
                         }}</mat-option>
                 </mat-select>
             </mat-form-field>
-            <mat-form-field class="calc-field" fxFlex="15">
+            <mat-form-field class="calc-field" fxFlex="22">
                 <mat-label>Search By</mat-label>
                 <mat-select formControlName="searchCriteria" (selectionChange)="onCriteriaChange()"
                     formControlName="searchCriteria">

@@ -8,6 +8,7 @@ import { BitDetail } from './RpmEntry/BitDetail';
 import { RpmVehicleExchage } from './RpmVehicleExchange';
 import { UserDetails } from './UserDetails';
 import { MonthDetails } from './MonthDetails';
+import { Air } from './Air';
 
 export interface RpmEntrySheet {
     book_id: number;

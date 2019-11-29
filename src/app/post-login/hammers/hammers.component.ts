@@ -38,7 +38,6 @@ export class HammersComponent implements OnInit, OnDestroy {
         private cdr: ChangeDetectorRef,
         private config: ConfigService,
         private loader: LoaderService,
-        private hammerService: HammersService,
         private actions: Actions,
         private dialog: MatDialog
     ) {
@@ -82,10 +81,10 @@ export class HammersComponent implements OnInit, OnDestroy {
         if (this.actionsSubscription) { this.actionsSubscription.unsubscribe() };
     }
 
-    navigateToViewHammer() {
-        // this.ro
+    viewHammerData() {
+
     }
-    
+
     openAddHammer() {
         this.loader.showSaveLoader('Loading ...');
         this.store.dispatch(HammerActions.loadLastHammerSerial());

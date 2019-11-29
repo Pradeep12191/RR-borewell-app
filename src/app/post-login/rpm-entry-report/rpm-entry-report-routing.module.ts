@@ -5,13 +5,15 @@ import { RpmEntryReportResolver } from '../../guards/resolveGuard/rpmEntry/rpm-e
 import { PipeSizesResolver } from '../../guards/resolveGuard/select-option/pipe-sizes.resolver';
 import { CompressorAirFilterLimitResolver } from '../../guards/resolveGuard/compressor-air-filter-service-limt.resolver';
 import { VehicleListResolver } from '../../guards/resolveGuard/vehicle/vehicle-list.resolver';
+import { BoreTypesResolver } from 'src/app/guards/resolveGuard/bore-types.resolver';
 
 const routes: Routes = [
     {
         path: '', component: RpmEntryReportComponent, resolve: {
             entries: RpmEntryReportResolver,
             pipes: PipeSizesResolver,
-            vehicles: VehicleListResolver
+            vehicles: VehicleListResolver,
+            boreTypes: BoreTypesResolver
         }
     }
 ]

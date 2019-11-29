@@ -3,7 +3,7 @@ import { Subscription, of, throwError } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { RpmEntrySheet } from '../../models/RpmEntrySheet';
 import { Column } from '../../expand-table/Column';
-import { MatTableDataSource, MatDatepicker, MatSelect, } from '@angular/material';
+import { MatTableDataSource, MatDatepicker, MatSelect, MatSelectChange, } from '@angular/material';
 import { RpmEntryService } from '../rpm-entry/rpm-entry.service';
 import { RpmEntryReportService } from './rpm-entry-report.service';
 import { LoaderService } from '../../services/loader-service';
@@ -13,6 +13,7 @@ import { Moment } from 'moment';
 import * as moment from 'moment';
 import { Vehicle } from '../../models/Vehicle';
 import { PipeSize } from '../../models/PipeSize';
+import { BoreType } from 'src/app/models/BoreType';
 
 const sheetNoValidation = (control: AbstractControl) => {
     const fromSheetNo = +control.get('fromRpmSheetNo').value;
@@ -28,7 +29,6 @@ const sheetNoValidation = (control: AbstractControl) => {
 const dateValidation = (control: AbstractControl) => {
     const fromDate = control.get('from').value as Moment;
     const toDate = control.get('to').value as Moment;
-    console.log(fromDate, toDate)
     if (fromDate && toDate && fromDate.isAfter(toDate)) {
         return {
             dateGreater: true
@@ -53,6 +53,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
     filterForm: FormGroup;
     monthPicker: MatDatepicker<any>;
     loading;
+    boreTypes: BoreType[];
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
     searchCriterias = [
         { value: 'rpmSheetNo', display: 'Rpm Sheet No' },
@@ -78,7 +79,11 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                 this.entriesDatasource = new MatTableDataSource(this.entries);
             };
             this.pipes = data.pipes.reverse();
-            this.vehicles = data.vehicles
+            this.vehicles = data.vehicles;
+            this.boreTypes = data.boreTypes;
+            setTimeout(() => {
+                this.filterForm.get('boreType').setValue(this.boreTypes[0])
+            });
         });
         this.routeParamSubcription = this.route.queryParamMap.subscribe((params) => {
             this.vehicleId = params.get('vehicleId');
@@ -97,6 +102,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
         this.filterForm = this.fb.group({
             vehicle: '',
             searchCriteria: { value: 'rpmSheetNo', disabled: true },
+            boreType: '',
             rpm: this.fb.group({
                 fromRpmSheetNo: { value: '', disabled: true },
                 toRpmSheetNo: { value: '', disabled: true }
@@ -130,7 +136,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
             tap(() => {
                 const rpmCtrl = this.filterForm.get('rpm');
                 if (rpmCtrl.valid) {
-                    this.loading = true
+                    this.loading = true;
                 } else {
                     this.loading = false;
                 }
@@ -140,14 +146,15 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
             switchMap((rpmObj) => {
                 const rpmCtrl = this.filterForm.get('rpm');
                 const vehicle_id = this.filterForm.get('vehicle').value.vehicle_id;
-                const type = this.filterForm.get('type').value
+                const type = this.filterForm.get('type').value;
+                const bore_type = this.filterForm.get('boreType').value.type;
                 let from_rpm = '';
                 let to_rpm = ''
                 if (rpmCtrl.valid) {
                     from_rpm = rpmObj.fromRpmSheetNo || rpmObj.toRpmSheetNo;
                     to_rpm = rpmObj.toRpmSheetNo || rpmObj.fromRpmSheetNo;
                     if (from_rpm || to_rpm) {
-                        return this.rpmEntryReportService.getRpmEntries({ from_rpm, to_rpm, vehicle_id, type }).pipe(
+                        return this.rpmEntryReportService.getRpmEntries({ from_rpm, to_rpm, vehicle_id, type, bore_type }).pipe(
                             finalize(() => this.loading = false),
                             catchError(() => of(null))
                         );
@@ -179,6 +186,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                 const dateCtrl = this.filterForm.get('date');
                 const vehicle_id = this.filterForm.get('vehicle').value.vehicle_id;
                 const type = this.filterForm.get('type').value;
+                const bore_type = this.filterForm.get('boreType').value.type;
                 let from_date: any = '';
                 let to_date: any = ''
                 if (dateCtrl.valid) {
@@ -187,7 +195,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                     from_date = from_date ? (from_date as Moment).format('YYYY-MM-DD') : '';
                     to_date = to_date ? (to_date as Moment).format('YYYY-MM-DD') : '';
                     if (from_date || to_date) {
-                        return this.rpmEntryReportService.getRpmEntries({ from_date, to_date, vehicle_id, type }).pipe(
+                        return this.rpmEntryReportService.getRpmEntries({ from_date, to_date, vehicle_id, type, bore_type }).pipe(
                             finalize(() => this.loading = false),
                             catchError(() => of(null))
                         );
@@ -215,6 +223,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
             switchMap((month) => {
                 const vehicle_id = this.filterForm.get('vehicle').value.vehicle_id;
                 const type = this.filterForm.get('type').value;
+                const bore_type = this.filterForm.get('boreType').value.type;
                 let startOfMonth: any = '';
                 let endOfMonth: any = '';
                 if (month) {
@@ -222,7 +231,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                     endOfMonth = (month as Moment).endOf('month').format('YYYY-MM-DD');
                 }
                 if (startOfMonth && endOfMonth) {
-                    return this.rpmEntryReportService.getRpmEntries({ from_date: startOfMonth, to_date: endOfMonth, vehicle_id, type }).pipe(
+                    return this.rpmEntryReportService.getRpmEntries({ from_date: startOfMonth, to_date: endOfMonth, vehicle_id, type, bore_type }).pipe(
                         finalize(() => this.loading = false),
                         catchError(() => of(null))
                     );
@@ -277,7 +286,11 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
         }
     }
 
-    onVehicleChange() {
+    onChange(event: MatSelectChange) {
+        this.loadData()
+    }
+
+    private loadData() {
         this.loading = true;
         let params = {};
         const searchCriteria = this.filterForm.value.searchCriteria;
@@ -291,7 +304,8 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
     private getParams(searchCriteria) {
         const vehicle_id = this.filterForm.value.vehicle ? this.filterForm.value.vehicle.vehicle_id : ''
         const type = this.filterForm.value.type;
-        let params: any = { vehicle_id, type };
+        const bore_type = this.filterForm.value.boreType.type
+        let params: any = { vehicle_id, type, bore_type };
         const rpmObj = this.filterForm.value.rpm;
         const dateObj = this.filterForm.value.date;
         switch (searchCriteria) {
@@ -332,7 +346,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
     private bindData(entries: RpmEntrySheet[]) {
         const type = this.filterForm.get('type').value;
         if (type === 'count') {
-            this.rpmEntry = entries[0];
+            this.rpmEntry = entries ? entries[0] : null;
         }
         if (type === 'list') {
             if (entries) {
@@ -340,7 +354,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                 this.entriesDatasource = new MatTableDataSource(this.entries);
             }
         }
-        
+
     }
 
 

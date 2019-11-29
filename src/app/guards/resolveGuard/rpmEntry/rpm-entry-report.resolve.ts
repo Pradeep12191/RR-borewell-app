@@ -19,7 +19,7 @@ export class RpmEntryReportResolver implements Resolve<RpmEntrySheet[]>{
     ): Promise<any> | Observable<any> {
         const vehicle_id = route.queryParamMap.get('vehicleId');
         if (vehicle_id) {
-            return this.rpmEntryRerportService.getRpmEntries({ vehicle_id, type: 'list' });
+            return this.rpmEntryRerportService.getRpmEntries({ vehicle_id, type: 'list', bore_type: 'Bore Depth' });
         }
         return of(null)
     }

@@ -499,21 +499,21 @@
                             </ng-container>
                             <ng-template #airTpl>
                                 <div fxFlex="50" formGroupName="air" fxLayoutGap="10px">
-                                    <mat-form-field class="cal-field" fxFlex="calc(25% - 10px)">
+                                    <mat-form-field class="calc-field" fxFlex="calc(25% - 10px)">
                                         <mat-label>In / Out</mat-label>
                                         <mat-select #airInoutSelect formControlName="inOut">
                                             <mat-option value="In">In</mat-option>
                                             <mat-option value="Out">Out</mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <mat-form-field class="cal-field" fxFlex="calc(41% - 10px)">
+                                    <mat-form-field class="calc-field" fxFlex="calc(41% - 10px)">
                                         <mat-label>Vehicle</mat-label>
                                         <mat-select formControlName="vehicle" #airVehicle>
                                             <mat-option [value]="vehicle" *ngFor="let vehicle of toVehicles()">
                                                 {{ vehicle.regNo }}</mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <mat-form-field class="cal-field" fxFlex="calc(33% - 10px)">
+                                    <mat-form-field class="calc-field" fxFlex="calc(33% - 10px)">
                                         <mat-label>Rpm No</mat-label>
                                         <input type="text" matInput (keydown.enter)="onDepthEnter(-1)" formControlName="rpmNo" #airRpmNoInput="matInput">
                                     </mat-form-field>

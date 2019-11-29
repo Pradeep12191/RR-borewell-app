@@ -1,4 +1,5 @@
 import { AboveFeet } from './AboveFeet';
+import { Air } from '../Air';
 
 export interface Depth {
     average: number;
@@ -6,4 +7,5 @@ export interface Depth {
     pipe_erection: number;
     bore_type: string;
     above: AboveFeet;
+    air: Air
 }

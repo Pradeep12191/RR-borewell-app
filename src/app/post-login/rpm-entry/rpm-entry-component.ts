@@ -128,6 +128,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('aboveFeetSelect', { static: false }) aboveFeetSelect: MatSelect;
     @ViewChild('bitSelect', { static: false }) bitSelect: MatSelect;
     @ViewChild('tractorSelect', { static: false }) tractorSelect: MatSelect;
+    @ViewChild('airVehicle', { static: false }) airVehicle: MatSelect;
+    @ViewChild('airInoutSelect', { static: false }) airInoutSelect: MatSelect;
+    @ViewChild('airRpmNoInput', { static: false }) airRpmNoInput: MatSelect;
     allInputs: QueryList<ElementRef>[] = new Array(5);
 
     get pointExpenseFeetFormArray() {
@@ -200,7 +203,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                     feet: { value: '', disabled: true },
                     hrs: { value: '', disabled: true },
                     min: { value: '', disabled: true }
-                })
+                }),
+                air: this.fb.group({
+                    inOut: '',
+                    vehicle: '',
+                    rpmNo: ''
+                }),
             }),
             bit: { value: '', disabled: true }
         })
@@ -1076,6 +1084,13 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
+    toVehicles() {
+        if (this.selectedVehicle) {
+            return this.vehicles.filter(v => v.vehicle_id !== this.selectedVehicle.vehicle_id)
+        }
+        return this.vehicles;
+    }
+
     onVehicleChange() {
         this.loader.showSaveLoader('Loading ...');
         const lastRpmSheet$ = this.rpmEntryService.getLastRpmEntrySheet(this.selectedVehicle);
@@ -1398,13 +1413,27 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onBoreTypeChange() {
-        const boreType = this.form.get('depth.boreType').value;
+        const boreType: BoreType = this.form.get('depth.boreType').value;
 
-        if (boreType.type !== 'Bore Depth') {
+        this.form.get('depth.air').enable();
+        this.form.get('depth.air').reset();
+
+        if (boreType.type !== 'Bore Depth' || boreType.id === 0) {
             this.form.get('depth.bore').reset();
             this.form.get('depth.bore').disable();
             this.updateFeetAvg();
             this.updateExtraFeet();
+            if (boreType.type === 'Air' || boreType.id === 3) {
+                setTimeout(() => {
+                    this.airInoutSelect.open();
+                    this.airInoutSelect._closedStream.subscribe(() => {
+                        this.airVehicle.open();
+                    });
+                    this.airVehicle._closedStream.subscribe(() => {
+                        this.airRpmNoInput.focus();
+                    })
+                });
+            }
         } else {
             this.form.get('depth.bore').enable();
         }
@@ -1513,7 +1542,13 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                     min: this.form.value.depth.above.min ? +this.form.value.depth.above.min : 0,
                 },
                 bore: +this.form.value.depth.bore || 0,
-                pipe_erection: +this.form.value.depth.pipeErection
+                pipe_erection: +this.form.value.depth.pipeErection,
+                air: {
+                    in_out: this.form.value.depth.air? this.form.value.depth.air.inOut : '',
+                    rpm_entry_no: (this.form.value.depth.air && this.form.value.depth.air.rpmNo) || 0,
+                    vehicle_number: (this.form.value.depth.air && this.form.value.depth.air.vehicle && this.form.value.depth.air.vehicle.regNo) || '',
+                    vehicle_id: (this.form.value.depth.air && this.form.value.depth.air.vehicle && +this.form.value.depth.air.vehicle.vehicle_id) || 0
+                }
             },
             month_data: {
                 m_depth: this.displayMonthDepth(),
@@ -1688,7 +1723,13 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             above: { extra_feet: 0, feet: this.rpmHourFeets[0], hrs: 0, min: 0 },
             average: 0,
             bore: 0,
-            pipe_erection: 0
+            pipe_erection: 0,
+            air: {
+                in_out: '',
+                rpm_entry_no: 0,
+                vehicle_id: 0,
+                vehicle_number: ''
+            }
         }
     }
 

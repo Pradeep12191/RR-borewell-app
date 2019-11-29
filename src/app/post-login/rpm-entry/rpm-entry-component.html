@@ -490,11 +490,36 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-                            <mat-form-field fxFlex="50">
-                                <mat-label>Feet</mat-label>
-                                <input #depthInput type="text" (keydown.enter)="onDepthEnter(0)"
-                                    (input)="onDepthInput()" matInput positiveNumber formControlName="bore">
-                            </mat-form-field>
+                            <ng-container *ngIf="form.get('depth.boreType').value.type !== 'Air'; else airTpl">
+                                <mat-form-field fxFlex="50">
+                                    <mat-label>Feet</mat-label>
+                                    <input #depthInput type="text" (keydown.enter)="onDepthEnter(0)"
+                                        (input)="onDepthInput()" matInput positiveNumber formControlName="bore">
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-template #airTpl>
+                                <div fxFlex="50" formGroupName="air" fxLayoutGap="10px">
+                                    <mat-form-field class="cal-field" fxFlex="calc(25% - 10px)">
+                                        <mat-label>In / Out</mat-label>
+                                        <mat-select #airInoutSelect formControlName="inOut">
+                                            <mat-option value="In">In</mat-option>
+                                            <mat-option value="Out">Out</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field class="cal-field" fxFlex="calc(41% - 10px)">
+                                        <mat-label>Vehicle</mat-label>
+                                        <mat-select formControlName="vehicle" #airVehicle>
+                                            <mat-option [value]="vehicle" *ngFor="let vehicle of toVehicles()">
+                                                {{ vehicle.regNo }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field class="cal-field" fxFlex="calc(33% - 10px)">
+                                        <mat-label>Rpm No</mat-label>
+                                        <input type="text" matInput (keydown.enter)="onDepthEnter(-1)" formControlName="rpmNo" #airRpmNoInput="matInput">
+                                    </mat-form-field>
+                                </div>
+                            </ng-template>
+
                         </div>
                         <div fxLayout fxLayoutGap="25px">
                             <div fxLayoutAlign="start center" fxFlex="25">Pipe Erection Feet</div>

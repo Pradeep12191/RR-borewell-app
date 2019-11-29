@@ -1,26 +1,34 @@
 <div [formGroup]="filterForm" fxLayout="column" class="shift-top-30">
     <div fxLayout class="header-container" fxLayoutAlign="start center">
         <div fxLayout fxLayoutGap="10px" fxFlex>
-            <mat-form-field class="calc-field" fxFlex="22">
+            <mat-form-field class="calc-field" fxFlex="15">
                 <mat-label>Select Vehicle</mat-label>
-                <mat-select (selectionChange)="onVehicleChange()" placeholder="Select Vehicle" formControlName="vehicle"
+                <mat-select (selectionChange)="onChange()" placeholder="Select Vehicle" formControlName="vehicle"
                     #vehicleSelect>
                     <mat-option [value]="veh" *ngFor="let veh of vehicles">{{ veh.regNo }}</mat-option>
                 </mat-select>
             </mat-form-field>
-            <mat-form-field class="calc-field" fxFlex="22">
+            <mat-form-field class="calc-field" fxFlex="20">
+                <mat-label>Bore Type</mat-label>
+                <mat-select formControlName="boreType" (selectionChange)="onChange()">
+                    <mat-option [value]="boreType" *ngFor="let boreType of boreTypes">{{ boreType.type
+                        }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="calc-field" fxFlex="15">
                 <mat-label>Search By</mat-label>
-                <mat-select formControlName="searchCriteria" (selectionChange)="onCriteriaChange()" formControlName="searchCriteria">
+                <mat-select formControlName="searchCriteria" (selectionChange)="onCriteriaChange()"
+                    formControlName="searchCriteria">
                     <mat-option [value]="criteria.value" *ngFor="let criteria of searchCriterias">{{ criteria.display
                         }}</mat-option>
                 </mat-select>
             </mat-form-field>
             <ng-container *ngIf="filterForm.get('searchCriteria').value === 'rpmSheetNo'" formGroupName="rpm">
-                <mat-form-field class="calc-field" fxFlex="23">
+                <mat-form-field class="calc-field" fxFlex="20">
                     <mat-label>From Rpm Sheet</mat-label>
                     <input positiveNumber type="text" matInput formControlName="fromRpmSheetNo">
                 </mat-form-field>
-                <mat-form-field class="calc-field" fxFlex="23">
+                <mat-form-field class="calc-field" fxFlex="20">
                     <mat-label>To Rpm Sheet</mat-label>
                     <input type="text" positiveNumber matInput formControlName="toRpmSheetNo">
                 </mat-form-field>
@@ -41,15 +49,18 @@
                     <mat-datepicker #toPicker></mat-datepicker>
                 </mat-form-field>
             </ng-container>
-            <month-picker formControlName="month" *ngIf="filterForm.get('searchCriteria').value === 'month'" fxFlex="25"></month-picker>
+            <month-picker formControlName="month" *ngIf="filterForm.get('searchCriteria').value === 'month'"
+                fxFlex="25"></month-picker>
         </div>
 
         <div fxLayout fxLayoutGap="10px">
-            <mat-radio-group fxLayoutAlign="start center" aria-label="Select an option" formControlName="type" color="primary">
+            <mat-radio-group fxLayoutAlign="start center" aria-label="Select an option" formControlName="type"
+                color="primary">
                 <mat-radio-button class="m-r-10" value="list">List</mat-radio-button>
                 <mat-radio-button value="count">Count</mat-radio-button>
             </mat-radio-group>
-            <button (click)="downloadReport()" mat-raised-button color="primary" fxFlexAlign="end center">Download Pdf</button>
+            <button (click)="downloadReport()" mat-raised-button color="primary" fxFlexAlign="end center">Download
+                Pdf</button>
         </div>
     </div>
     <div *ngIf="filterForm.invalid" class="error-info m-b-16" fxLayoutAlign="start center" fxLayoutGap="16px">

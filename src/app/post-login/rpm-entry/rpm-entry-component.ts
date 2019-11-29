@@ -1470,7 +1470,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             remarks: this.form.value.remarks,
             vehicle_no: this.selectedVehicle.regNo,
-            date: this.date ? (this.date as Moment).format('DD-MM-YYYY') : '',
+            date: this.date ? (this.date as Moment).format('YYYY-MM-DD') : '',
             f_rpm_table_data: [],
             rpm: {
                 tractor_start_hour: this.form.value.rpm.trac ? this.form.value.rpm.trac.start_hour : 0,

@@ -1,3 +1,4 @@
 export interface BoreType {
-    type: string
+    id: number;
+    type: string;
 }

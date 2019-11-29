@@ -42,7 +42,8 @@ export class RpmEntryReportService {
     getRpmEntries(qParams: { [param: string]: string | string[] }) {
         const params = {
             user_id: this.auth.userid,
-            ...qParams
+            ...qParams,
+            bore_type: 'Bore Depth'
         }
         return this.http.get<RpmEntrySheet[]>(this.rpmEntryReportUrl, { params }).pipe(map((sheets) => {
 
@@ -54,6 +55,7 @@ export class RpmEntryReportService {
                     previousStockFeet: [], vehicleExIn: [], vehicleExOut: []
                 }
                 for (const rpm of sheet.f_rpm_table_data.reverse()) {
+                    if (!rpm) continue;
                     const pipeData = {
                         pipeId: rpm.pipe_id,
                         pipeSize: rpm.pipe_size,

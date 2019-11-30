@@ -241,6 +241,14 @@
         {
             "name": "finishHammer",
             "url": "update_hammer_status"
+        },
+        {
+            "name": "hammerData",
+            "url": "get_view_hammer_list"
+        },
+        {
+            "name": "hammerDataCount",
+            "url": "hammer_data_count"
         }
     ],
     "reportGenerateUrls": [

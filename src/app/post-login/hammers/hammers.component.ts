@@ -15,6 +15,7 @@ import { tap, map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { AddHammerDialogComponent } from './add-hammer-dialog/add-hammer-dialog.component';
 import { HammerSize } from './hammer-size.model';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './hammers.component.html',
@@ -39,7 +40,8 @@ export class HammersComponent implements OnInit, OnDestroy {
         private config: ConfigService,
         private loader: LoaderService,
         private actions: Actions,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private router: Router
     ) {
         this.appearance = this.config.getConfig('formAppearance');
     }
@@ -81,8 +83,8 @@ export class HammersComponent implements OnInit, OnDestroy {
         if (this.actionsSubscription) { this.actionsSubscription.unsubscribe() };
     }
 
-    viewHammerData() {
-
+    viewHammerData(hammer: Hammer) {
+        this.router.navigate(['postlogin/viewHammerData', hammer.size, hammer.type])
     }
 
     openAddHammer() {

@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ConfigService } from '../../services/config.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Hammer } from './hammer.model';
 import { AuthService } from '../../services/auth.service';
 import { Godown } from '../pipe/Godown';
 import { Company } from '../bits/Company';
 import { HammerSize } from './hammer-size.model';
+import { HammerData } from './models/hammer-data.model';
 
 @Injectable()
 export class HammersService {
@@ -16,6 +17,8 @@ export class HammersService {
     addCompanyUrl: string;
     addHammersUrl: string;
     viewHammersUrl: string;
+    hammerDataUrl: string;
+    hammerDataCountUrl: string;
     constructor(
         private config: ConfigService,
         private http: HttpClient,
@@ -28,10 +31,32 @@ export class HammersService {
         this.addCompanyUrl = this.config.getAbsoluteUrl('addHammerCompany');
         this.addHammersUrl = this.config.getAbsoluteUrl('addHammer');
         this.viewHammersUrl = this.config.getAbsoluteUrl('viewHammer');
+        this.hammerDataUrl = this.config.getAbsoluteUrl('hammerData');
+        this.hammerDataCountUrl = this.config.getAbsoluteUrl('hammerDataCount');
     }
     getAll(godown_id) {
         const params = { user_id: this.auth.userid, godown_id }
         return this.http.get<HammerSize[]>(this.hammersUrl, { params })
+    }
+
+    getHammerData(hammerSize, vehicleId, serial_no, start = '0', end = '100') {
+        const params = new HttpParams()
+            .set('user_id', this.auth.userid)
+            .append('vehicle_id', vehicleId)
+            .append('bit_size', hammerSize)
+            .append('start', start.toString())
+            .append('end', end.toString())
+            .append('serial_no', serial_no.toString());
+        return this.http.get<HammerData[]>(this.hammerDataUrl, { params })
+    }
+
+    getHammerDataCount(hammerSize, vehicleId, serial_no) {
+        const params = new HttpParams()
+            .set('user_id', this.auth.userid)
+            .append('vehicle_id', vehicleId)
+            .append('bit_size', hammerSize)
+            .append('serial_no', serial_no.toString());
+        return this.http.get(this.hammerDataCountUrl, { params })
     }
 
     getGodowns() {

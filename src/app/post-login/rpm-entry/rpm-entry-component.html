@@ -515,7 +515,7 @@
                                     </mat-form-field>
                                     <mat-form-field class="calc-field" fxFlex="calc(33% - 10px)">
                                         <mat-label>Rpm No</mat-label>
-                                        <input type="text" matInput (keydown.enter)="onDepthEnter(-1)" formControlName="rpmNo" #airRpmNoInput="matInput">
+                                        <input type="text" matInput positiveNumber (keydown.enter)="onDepthEnter(-1)" formControlName="rpmNo" #airRpmNoInput="matInput">
                                     </mat-form-field>
                                 </div>
                             </ng-template>

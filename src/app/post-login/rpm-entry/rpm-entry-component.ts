@@ -31,17 +31,17 @@ import { BitSerialNo } from '../../models/BitSerialNo';
 import { ToastrService } from 'ngx-toastr';
 import { AddDieselPopupComponent } from './add-diesel-popup/add-diesel-popup.component';
 import { ServiceCompleteConfirmDialog } from './service-complete-confirm-dialog/service-complete-confirm-dialog.component';
-import { AssignBit } from '../bits/view-bit/AssignBit';
 import { Tractor } from '../../models/Tractor';
 import { BoreType } from '../../models/BoreType';
-import { RpmDetails } from '../../models/RpmEntry/RpmDetails';
 import { AssignHammerDialogComponent } from './assing-hammer-dialog/assign-hammer-dialog.component';
 import { HammerSize } from '../hammers/hammer-size.model';
+import { HammerSerialNo } from 'src/app/models/HammerSerialNo';
 
 interface VehicleChangeData {
     lastRpmEntrySheet: RpmEntrySheet;
     serviceLimits: VehicleServices;
     assignedBits: BitSerialNo[];
+    assignedHammers: HammerSerialNo[];
     incomeData: RpmTableData;
     lastReset: any
 }
@@ -93,6 +93,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     activeCompressorAirFilterLimit: ServiceLimit;
     activeCompressorOilServiceLimit: ServiceLimit;
     assignedBits: BitSerialNo[];
+    assignedHammers: HammerSerialNo[];
     bookStartNo;
     bookId;
     bookEndNo;
@@ -210,7 +211,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                     rpmNo: ''
                 }),
             }),
-            bit: { value: '', disabled: true }
+            bit: { value: '', disabled: true },
+            hammer: { value: '', disable: true }
         })
         this.appearance = this.config.getConfig('formAppearance');
     }
@@ -537,7 +539,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     openAssignHammer() {
-        this.dialog.open(AssignHammerDialogComponent, {
+        const dialogRef = this.dialog.open(AssignHammerDialogComponent, {
             data: {
                 hammers: this.hammers,
                 bitGodowns: this.bitGodowns,
@@ -550,6 +552,13 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             maxHeight: '100vh',
             height: '100vh',
             disableClose: true
+        });
+
+        dialogRef.afterClosed().subscribe((res) => {
+            if (res) {
+                this.form.get('hammer').reset('');
+                this.assignedHammers = res;
+            }
         })
     }
 
@@ -935,6 +944,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         })
     }
 
+    finishHammer(hammer: HammerSerialNo) {
+
+    }
 
     addBook(isRequired = false) {
         if (this.bookPopupRef) {
@@ -1095,24 +1107,25 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loader.showSaveLoader('Loading ...');
         const lastRpmSheet$ = this.rpmEntryService.getLastRpmEntrySheet(this.selectedVehicle);
         const vehicleServiceLimit$ = this.rpmEntryService.getServiceLimits(this.selectedVehicle);
-        const assingedBit$ = this.rpmEntryService.getAssignedBits(this.selectedVehicle);
+        const assignedBit$ = this.rpmEntryService.getAssignedBits(this.selectedVehicle);
+        const assignedHammer$ = this.rpmEntryService.getAssignedHammers(this.selectedVehicle);
         const lastResetInfo$ = this.rpmEntryService.getLastResetInfo(this.selectedVehicle.vehicle_id);
         this.disableAllControls();
-        zip(lastRpmSheet$, vehicleServiceLimit$, assingedBit$, lastResetInfo$).pipe(
+        zip(lastRpmSheet$, vehicleServiceLimit$, assignedBit$, lastResetInfo$, assignedHammer$).pipe(
             finalize(() => {
                 this.loader.hideSaveLoader();
             }),
-            mergeMap(([lastRpmEntrySheet, serviceLimits, assignedBits, lastReset]) => {
+            mergeMap(([lastRpmEntrySheet, serviceLimits, assignedBits, lastReset, assignedHammers]) => {
                 if (lastRpmEntrySheet.book_page_over) {
-                    return of<VehicleChangeData>({ lastRpmEntrySheet, serviceLimits, assignedBits, incomeData: null, lastReset });
+                    return of<VehicleChangeData>({ lastRpmEntrySheet, serviceLimits, assignedBits, incomeData: null, lastReset, assignedHammers });
                 }
                 return this.rpmEntryService.getRpmTableData(this.selectedVehicle, lastRpmEntrySheet.rpm_sheet_no).pipe(
                     map((incomeData) => {
-                        return { lastRpmEntrySheet, serviceLimits, assignedBits, incomeData, lastReset }
+                        return { lastRpmEntrySheet, serviceLimits, assignedBits, incomeData, lastReset, assignedHammers }
                     })
                 );
             })
-        ).subscribe(({ lastRpmEntrySheet, serviceLimits, assignedBits, incomeData, lastReset }) => {
+        ).subscribe(({ lastRpmEntrySheet, serviceLimits, assignedBits, incomeData, lastReset, assignedHammers }) => {
             this.vehicleServiceLimits = serviceLimits;
             this.activeCompressorAirFilterLimit = this.compressorAirFilterServiceLimits
                 .find(c => c.limit === this.vehicleServiceLimits.c_air_filter);
@@ -1128,6 +1141,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
             this.bookRequired = false;
             this.assignedBits = assignedBits;
+            this.assignedHammers = assignedHammers;
             this.rpmEntryNo = lastRpmEntrySheet.rpm_sheet_no;
             this.bookEndNo = lastRpmEntrySheet.end;
             this.bookStartNo = lastRpmEntrySheet.start;
@@ -1223,6 +1237,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('depth.above.min').reset('');
         this.form.get('depth.boreType').reset(this.boreTypes[0]);
         this.form.get('bit').reset('');
+        this.form.get('hammer').reset('');
         this.form.get('inVehicle').reset();
         this.form.get('outVehicle').reset();
         this.form.get('inRpmNo').reset();
@@ -1408,7 +1423,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onDepthInput() {
         const bit: BitSerialNo = this.form.get('bit').value;
+        const hammer: BitSerialNo = this.form.get('hammer').value;
         this.updateBitTotalFeet(bit);
+        this.updateHammerTotalFeet(hammer);
         this.updateExtraFeet();
     }
 
@@ -1437,9 +1454,16 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.form.get('depth.bore').enable();
         }
-
     }
 
+
+    /**
+     * 
+     * @param bit 
+     * calulate running feet and total feet
+     * running feet bore depth - pipe erection depth
+     * total feet - bit previous running feet + running feet
+     */
     updateBitTotalFeet(bit: BitSerialNo) {
         const boreDepth = +this.form.get('depth.bore').value;
         const pipeErectionDepth = +this.form.get('depth.pipeErection').value;
@@ -1462,6 +1486,37 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.rpmSheet && this.rpmSheet.bit) {
             this.rpmSheet.bit.running_feet = runningFeet;
             this.rpmSheet.bit.total_feet = runningFeet + bitPreviousFeet;
+        }
+    }
+    /**
+     * 
+     * @param hammer 
+     * calulate running feet and total feet
+     * running feet bore depth - pipe erection depth
+     * total feet - bit previous running feet + running feet
+     */
+    updateHammerTotalFeet(hammer: HammerSerialNo) {
+        const boreDepth = +this.form.get('depth.bore').value;
+        const pipeErectionDepth = +this.form.get('depth.pipeErection').value;
+
+        let runningFeet = 0;
+        let hammerPreviousFeet = 0;
+
+        if (hammer) {
+            hammerPreviousFeet = +hammer.previous_feet;
+        } else {
+            return;
+        }
+
+        if (pipeErectionDepth && (boreDepth >= pipeErectionDepth)) {
+            runningFeet = boreDepth - pipeErectionDepth
+        } else {
+            runningFeet = 0;
+        }
+
+        if (this.rpmSheet && this.rpmSheet.hammer) {
+            this.rpmSheet.hammer.running_feet = runningFeet;
+            this.rpmSheet.hammer.total_feet = runningFeet + hammerPreviousFeet;
         }
     }
 
@@ -1544,7 +1599,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 bore: +this.form.value.depth.bore || 0,
                 pipe_erection: +this.form.value.depth.pipeErection,
                 air: {
-                    in_out: this.form.value.depth.air? this.form.value.depth.air.inOut : '',
+                    in_out: this.form.value.depth.air ? this.form.value.depth.air.inOut : '',
                     rpm_entry_no: (this.form.value.depth.air && +this.form.value.depth.air.rpmNo) || 0,
                     vehicle_number: (this.form.value.depth.air && this.form.value.depth.air.vehicle && this.form.value.depth.air.vehicle.regNo) || '',
                     vehicle_id: (this.form.value.depth.air && this.form.value.depth.air.vehicle && +this.form.value.depth.air.vehicle.vehicle_id) || 0
@@ -1563,9 +1618,13 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 ...this.form.value.bit,
                 hammer: this.rpmSheet.bit.hammer + this.rpmSheet.bit.running_feet,
                 piston: this.rpmSheet.bit.piston + this.rpmSheet.bit.running_feet,
-                previous_feet: this.rpmSheet.bit.previous_feet,
                 running_feet: this.rpmSheet.bit.running_feet,
                 total_feet: this.rpmSheet.bit.total_feet
+            },
+            hammer: {
+                ...this.form.value.hammer,
+                running_feet: this.rpmSheet.hammer.running_feet,
+                total_feet: this.rpmSheet.hammer.total_feet
             },
             user_address: {
                 driller_name: this.form.value.user.drillerName,

@@ -51,8 +51,8 @@ export class AssignHammerConfirmDialogComponent {
             data['rpm_sheet_no'] = this.rpmEntryNo
             return data;
         });
-        this.rpmEntryService.updateAssignHammer({assignedBits: payload}, this.vehicle).subscribe((bits) => {
-            this.dialogRef.close(bits)
+        this.rpmEntryService.updateAssignHammer({assignedBits: payload}, this.vehicle).subscribe((hammers) => {
+            this.dialogRef.close(hammers)
         }, () => {})
     }
 }

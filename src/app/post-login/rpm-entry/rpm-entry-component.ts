@@ -1545,7 +1545,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 pipe_erection: +this.form.value.depth.pipeErection,
                 air: {
                     in_out: this.form.value.depth.air? this.form.value.depth.air.inOut : '',
-                    rpm_entry_no: (this.form.value.depth.air && this.form.value.depth.air.rpmNo) || 0,
+                    rpm_entry_no: (this.form.value.depth.air && +this.form.value.depth.air.rpmNo) || 0,
                     vehicle_number: (this.form.value.depth.air && this.form.value.depth.air.vehicle && this.form.value.depth.air.vehicle.regNo) || '',
                     vehicle_id: (this.form.value.depth.air && this.form.value.depth.air.vehicle && +this.form.value.depth.air.vehicle.vehicle_id) || 0
                 }

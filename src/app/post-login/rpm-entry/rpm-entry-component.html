@@ -476,13 +476,13 @@
                 <mat-card-content>
                     <div fxLayout="column">
                         <div fxLayout fxLayoutGap="25px" class="label-row">
-                            <div fxFlex="25" fxLayoutAlign="start center">Feet Avg</div>
+                            <div fxFlex="35" fxLayoutAlign="start center">Feet Avg</div>
                             <div>
                                 <div class="label-container">{{ rpmSheet?.depth?.average }}</div>
                             </div>
                         </div>
                         <div fxLayout fxLayoutGap="25px">
-                            <div fxLayoutAlign="start center" fxFlex="25">
+                            <div fxLayoutAlign="start center" fxFlex="35">
                                 <mat-form-field class="calc-field" fxFlex>
                                     <mat-select (selectionChange)="onBoreTypeChange()" formControlName="boreType">
                                         <mat-option [value]="bore" *ngFor="let bore of boreTypes">{{ bore.type }}
@@ -491,14 +491,14 @@
                                 </mat-form-field>
                             </div>
                             <ng-container *ngIf="form.get('depth.boreType').value.type !== 'Air'; else airTpl">
-                                <mat-form-field fxFlex="50">
+                                <mat-form-field fxFlex="60">
                                     <mat-label>Feet</mat-label>
                                     <input #depthInput type="text" (keydown.enter)="onDepthEnter(0)"
                                         (input)="onDepthInput()" matInput positiveNumber formControlName="bore">
                                 </mat-form-field>
                             </ng-container>
                             <ng-template #airTpl>
-                                <div fxFlex="50" formGroupName="air" fxLayoutGap="10px">
+                                <div fxFlex="60" formGroupName="air" fxLayoutGap="10px">
                                     <mat-form-field class="calc-field" fxFlex="calc(25% - 10px)">
                                         <mat-label>In / Out</mat-label>
                                         <mat-select #airInoutSelect formControlName="inOut">
@@ -515,15 +515,16 @@
                                     </mat-form-field>
                                     <mat-form-field class="calc-field" fxFlex="calc(33% - 10px)">
                                         <mat-label>Rpm No</mat-label>
-                                        <input type="text" matInput positiveNumber (keydown.enter)="onDepthEnter(-1)" formControlName="rpmNo" #airRpmNoInput="matInput">
+                                        <input type="text" matInput positiveNumber (keydown.enter)="onDepthEnter(-1)"
+                                            formControlName="rpmNo" #airRpmNoInput="matInput">
                                     </mat-form-field>
                                 </div>
                             </ng-template>
 
                         </div>
                         <div fxLayout fxLayoutGap="25px">
-                            <div fxLayoutAlign="start center" fxFlex="25">Pipe Erection Feet</div>
-                            <mat-form-field fxFlex="50">
+                            <div fxLayoutAlign="start center" fxFlex="35">Pipe Erection Feet</div>
+                            <mat-form-field fxFlex="60">
                                 <mat-label>Feet</mat-label>
                                 <input (input)="onDepthInput()" (keydown.enter)="onDepthEnter(1)" #depthInput
                                     formControlName="pipeErection" type="text" matInput positiveNumber>
@@ -569,7 +570,7 @@
                     <div fxLayout="column">
                         <div fxLayout fxLayoutGap="15px">
                             <div fxLayoutAlign="start center">TCD no</div>
-                            <mat-form-field fxFlex="25">
+                            <mat-form-field class="calc-field" fxFlex="25">
                                 <mat-label>Serial no</mat-label>
                                 <mat-select placeholder="Select serial no" #bitSelect
                                     (selectionChange)="updateBitTotalFeet($event.value)" formControlName="bit">
@@ -587,10 +588,10 @@
                             </div>
                         </div>
                         <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
-                            <div fxFlex="30">Bit Running Feet</div>
+                            <div fxFlex="40">Bit Running Feet</div>
                             <div class="bold font-16">
                                 <ng-container
-                                    *ngIf="this.form.get('depth.pipeErection').value && form.get('bit').value; else hyphenTpl">
+                                    *ngIf="form.get('depth.pipeErection').value && form.get('bit').value; else hyphenTpl">
                                     <div
                                         *ngIf="rpmSheet?.bit?.running_feet ||rpmSheet?.bit?.running_feet === 0; else hyphenTpl">
                                         {{ rpmSheet?.bit?.running_feet }}
@@ -599,7 +600,7 @@
                             </div>
                         </div>
                         <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
-                            <div fxLayoutAlign="start center" fxFlex="30">Bit Previous Feet</div>
+                            <div fxLayoutAlign="start center" fxFlex="40">Bit Previous Feet</div>
                             <div class="bold font-16">
                                 <div *ngIf="form.get('bit').value; else hyphenTpl">
                                     {{ form.get('bit').value?.previous_feet }}
@@ -607,10 +608,10 @@
                             </div>
                         </div>
                         <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
-                            <div fxLayoutAlign="start center" fxFlex="30">Total Feet</div>
+                            <div fxLayoutAlign="start center" fxFlex="40">Total Feet</div>
                             <div class="bold font-16">
                                 <ng-container
-                                    *ngIf="this.form.get('depth.pipeErection').value && form.get('bit').value; else hyphenTpl">
+                                    *ngIf="form.get('depth.pipeErection').value && form.get('bit').value; else hyphenTpl">
                                     <div
                                         *ngIf="rpmSheet?.bit?.total_feet || rpmSheet?.bit?.running_feet === 0; else hyphenTpl">
                                         {{ rpmSheet?.bit?.total_feet }}
@@ -619,7 +620,7 @@
                             </div>
                         </div>
                         <div fxLayout fxLayoutGap="15px">
-                            <div fxLayoutAlign="start center" fxFlex="30">Hammer</div>
+                            <div fxLayoutAlign="start center" fxFlex="40">Hammer</div>
                             <div fxLayoutAlign="start center" class="bold font-16">
                                 <div *ngIf="rpmSheet?.bit?.hammer || rpmSheet?.bit?.hammer === 0; else hyphenTpl">
                                     {{ roundValue(rpmSheet?.bit?.hammer + rpmSheet?.bit?.running_feet) }}
@@ -631,7 +632,7 @@
                             </button>
                         </div>
                         <div fxLayout fxLayoutGap="15px">
-                            <div fxLayoutAlign="start center" fxFlex="30">Piston</div>
+                            <div fxLayoutAlign="start center" fxFlex="40">Piston</div>
                             <div fxLayoutAlign="start center" class="bold font-16">
                                 <div *ngIf="rpmSheet?.bit?.piston || rpmSheet?.bit?.piston === 0; else hyphenTpl">
                                     {{ roundValue(rpmSheet?.bit?.piston + rpmSheet?.bit?.running_feet) }}
@@ -641,6 +642,60 @@
                                 color="primary" [disabled]="!selectedVehicle || !bookId || !date">
                                 <mat-icon>refresh</mat-icon>
                             </button>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card fxFlex class="custom-card">
+                <mat-card-header>
+                    <mat-card-title>Hammer Details</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div fxLayout fxLayoutGap="15px">
+                        <div fxLayoutAlign="start center">TCD no</div>
+                        <mat-form-field class="calc-field" fxFlex="40">
+                            <mat-select formControlName="hammer" (selectionChange)="updateHammerTotalFeet($event.value)">
+                                <mat-option value="">Select Hammer</mat-option>
+                                <mat-option [value]="hammer" *ngFor="let hammer of assignedHammers">
+                                    {{ hammer.serial_no }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div fxFlex></div>
+                        <div>
+                            <button [disabled]="!form.get('hammer').value" (click)="finishBit(form.get('hammer').value)"
+                                mat-raised-button color="primary">Finish Hammer</button>
+                        </div>
+                    </div>
+                    <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
+                        <div fxFlex="40">Hammer Running Feet</div>
+                        <div class="bold font-16">
+                            <ng-container
+                                *ngIf="form.get('depth.pipeErection').value && form.get('hammer').value; else hyphenTpl">
+                                <div
+                                    *ngIf="rpmSheet?.hammer?.running_feet ||rpmSheet?.hammer?.running_feet === 0; else hyphenTpl">
+                                    {{ rpmSheet?.hammer?.running_feet }}
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
+                        <div fxLayoutAlign="start center" fxFlex="40">Hammer Previous Feet</div>
+                        <div class="bold font-16">
+                            <div *ngIf="form.get('hammer').value; else hyphenTpl">
+                                {{ form.get('hammer').value?.previous_feet }}
+                            </div>
+                        </div>
+                    </div>
+                    <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
+                        <div fxLayoutAlign="start center" fxFlex="40">Total Feet</div>
+                        <div class="bold font-16">
+                            <ng-container
+                                *ngIf="form.get('depth.pipeErection').value && form.get('hammer').value; else hyphenTpl">
+                                <div
+                                    *ngIf="rpmSheet?.hammer?.total_feet || rpmSheet?.hammer?.running_feet === 0; else hyphenTpl">
+                                    {{ rpmSheet?.hammer?.total_feet }}
+                                </div>
+                            </ng-container>
                         </div>
                     </div>
                 </mat-card-content>

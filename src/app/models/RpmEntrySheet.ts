@@ -9,6 +9,7 @@ import { RpmVehicleExchage } from './RpmVehicleExchange';
 import { UserDetails } from './UserDetails';
 import { MonthDetails } from './MonthDetails';
 import { Air } from './Air';
+import { HammerDetail } from './RpmEntry/HammerDetail';
 
 export interface RpmEntrySheet {
     book_id: number;
@@ -20,6 +21,7 @@ export interface RpmEntrySheet {
     vehicle_id: number;
     rpm_vehicle_exchange? : RpmVehicleExchage;
     bit?: BitDetail;
+    hammer?: HammerDetail
     rpm?: RpmDetails,
     service?: VehicleServices;
     diesel?: Diesel;

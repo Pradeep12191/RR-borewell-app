@@ -237,6 +237,10 @@
         {
             "name": "assignedHammerSerialNos",
             "url": "get_assigned_sno_hammer"
+        },
+        {
+            "name": "finishHammer",
+            "url": "update_hammer_status"
         }
     ],
     "reportGenerateUrls": [

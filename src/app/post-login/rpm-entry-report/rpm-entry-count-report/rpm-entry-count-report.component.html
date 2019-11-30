@@ -82,6 +82,14 @@
                                 }}</div>
                         </div>
                         <div class="row" fxLayout>
+                            <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Total
+                                Income</div>
+                            <div fxLayoutAlign="center center" fxFlex *ngFor="let totalIncome of rpmEntry?.rpmTableData?.totalIncome; let last = last"
+                                class="cell b-b-0" [class.added]="totalIncome.feet" [class.b-r-0]="!last">{{ totalIncome.feet
+                                || ''
+                                }}</div>
+                        </div>
+                        <div class="row" fxLayout>
                             <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Vehicle
                                 Exchange
                                 In</div>

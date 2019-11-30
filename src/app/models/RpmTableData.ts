@@ -4,6 +4,7 @@ export interface RpmTableData {
     previousStockFeet?: RpmValue[],
     rrIncome?: RpmValue[],
     mmIncome?: RpmValue[],
+    totalIncome?: RpmValue[],
     availableStockFeet?: RpmValue[],
     pointExpenseFeet?: RpmValue[],
     balanceStockFeet?: RpmValue[],

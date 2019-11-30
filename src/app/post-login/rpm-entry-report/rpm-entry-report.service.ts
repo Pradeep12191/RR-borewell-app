@@ -51,7 +51,7 @@ export class RpmEntryReportService {
             for (const sheet of sheets) {
                 const rpmData: RpmTableData = {
                     availableStockFeet: [], balanceStockFeet: [], damageFeet: [],
-                    mmIncome: [], rrIncome: [], pointExpenseFeet: [],
+                    mmIncome: [], rrIncome: [], pointExpenseFeet: [], totalIncome: [],
                     previousStockFeet: [], vehicleExIn: [], vehicleExOut: []
                 }
                 for (const rpm of sheet.f_rpm_table_data.reverse()) {
@@ -77,7 +77,12 @@ export class RpmEntryReportService {
                         ...pipeData,
                         length: rpm.rr_income,
                         feet: rpm.rr_income ? rpm.rr_income * 20 : 0
-                    })
+                    });
+                    rpmData.totalIncome.push({
+                        ...pipeData,
+                        length: rpm.mm_income + rpm.rr_income,
+                        feet: ((rpm.mm_income ? rpm.mm_income * 20 : 0) + (rpm.rr_income ? rpm.rr_income * 20 : 0))
+                    });
 
                     sheet['rpmTableData'] = rpmData;
                 }

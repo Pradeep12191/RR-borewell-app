@@ -8,7 +8,7 @@
                 Bit Quantity :&nbsp;&nbsp;<span class="bold">{{ count || 0 }}</span>
             </div>
             <mat-form-field class="calc-field" fxFlex="17">
-                <mat-label>BIt Size</mat-label>
+                <mat-label>Bit Size</mat-label>
                 <mat-select (selectionChange)="change()" [(ngModel)]="selectedBit" placeholder="Select Bit">
                     <mat-option [value]="bit" *ngFor="let bit of bits">{{ bit.type }}</mat-option>
                 </mat-select>

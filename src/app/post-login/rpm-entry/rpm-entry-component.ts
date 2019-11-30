@@ -945,7 +945,30 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     finishHammer(hammer: HammerSerialNo) {
+        const message = 'Would you like to Finist Hammer ' + hammer.serial_no + ' ?'
+        const dialogRef = this.dialog.open(ServiceCompleteConfirmDialog, {
+            data: {
+                title: 'Finish Hammer',
+                message
+            }
+        })
 
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result === 'yes') {
+                this.loader.showSaveLoader('Please wait');
+                this.rpmEntryService.finishHammer({
+                    ...hammer,
+                    ...this.selectedVehicle,
+                    vehicle_id: +this.selectedVehicle.vehicle_id
+                })
+                    .pipe(finalize(() => this.loader.hideSaveLoader()))
+                    .subscribe((hammers) => {
+                        this.assignedHammers = hammers;
+                        this.form.get('hammer').reset('');
+                        this.toastr.success('Finish Hammer Updated  Sucessfully', null, { timeOut: 2000 })
+                    });
+            }
+        })
     }
 
     addBook(isRequired = false) {
@@ -1672,7 +1695,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.disableAllControls();
             if (assignedBits) {
                 this.assignedBits = assignedBits;
-                this.form.get('bit').reset()
+                this.form.get('bit').reset();
             }
             if (hammers) {
                 this.assignedHammers = hammers;

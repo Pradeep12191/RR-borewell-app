@@ -33,6 +33,7 @@ export class RpmEntryService {
     private tractorsUrl: string;
     private compressorOilServiceLimitUrl: string;
     private finishBitUrl: string;
+    private finishHammerUrl: string;
     private rpmTotalResetUrl: string;
     constructor(
         private http: HttpClient,
@@ -55,6 +56,7 @@ export class RpmEntryService {
         this.tractorsUrl = this.config.getAbsoluteUrl('tractorList');
         this.compressorOilServiceLimitUrl = this.config.getAbsoluteUrl('compressorOilServiceLimt');
         this.finishBitUrl = this.config.getAbsoluteUrl('finishBit');
+        this.finishHammerUrl = this.config.getAbsoluteUrl('finishHammer');
         this.rpmTotalResetUrl = this.config.getAbsoluteUrl('rpmTotalReset');
         this.assignedHammerSerialNoUrl = this.config.getAbsoluteUrl('assignedHammerSerialNos');
     }
@@ -269,6 +271,10 @@ export class RpmEntryService {
 
     finishBit(bitInfo: any) {
         return this.http.put<BitSerialNo[]>(this.finishBitUrl, bitInfo);
+    }
+
+    finishHammer(hammerInfo: any) {
+        return this.http.put<BitSerialNo[]>(this.finishHammerUrl, hammerInfo);
     }
 
     buildPointExpenseForm(pipeType) {

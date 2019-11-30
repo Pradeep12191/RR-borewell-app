@@ -1659,7 +1659,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             mergeMap((lastRpmEntrySheet) => {
 
                 const bits$ = this.rpmEntryService.getAssignedBits(this.selectedVehicle);
-                const hammers$ = this.rpmEntryService.getAssignedBits(this.selectedVehicle);
+                const hammers$ = this.rpmEntryService.getAssignedHammers(this.selectedVehicle);
                 const tractor$ = this.rpmEntryService.getTractors();
 
                 return zip(bits$, tractor$, hammers$).pipe(map(([assignedBits, tractors, hammers]) => {

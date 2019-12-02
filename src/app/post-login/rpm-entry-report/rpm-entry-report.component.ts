@@ -286,7 +286,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
         }
     }
 
-    onChange(event: MatSelectChange) {
+    onChange() {
         this.loadData()
     }
 

@@ -21,6 +21,16 @@
                         <div>:</div>
                         <div>{{ rpmEntry?.rpm.running || 0 }}</div>
                     </div>
+                    <div fxLayout fxLayoutGap="16px">
+                        <div fxFlex="50">Depth</div>
+                        <div>:</div>
+                        <div>{{ rpmEntry?.depth.bore || 0 }}</div>
+                    </div>
+                    <div fxLayout fxLayoutGap="16px">
+                        <div fxFlex="50">Extra Feet</div>
+                        <div>:</div>
+                        <div>{{ rpmEntry?.depth.above.extra_feet || 0 }}</div>
+                    </div>
 
                 </div>
             </div>
@@ -30,6 +40,16 @@
                         <div fxFlex="41">Manual Rpm</div>
                         <div>:</div>
                         <div>{{ rpmEntry?.rpm.manual || 0 }}</div>
+                    </div>
+                    <div fxLayout fxLayoutGap="16px">
+                        <div fxFlex="41">Pipe Erection Feet</div>
+                        <div>:</div>
+                        <div>{{ rpmEntry?.depth.pipe_erection || 0 }}</div>
+                    </div>
+                    <div fxLayout fxLayoutGap="16px">
+                        <div fxFlex="41">Feet Average</div>
+                        <div>:</div>
+                        <div>{{ rpmEntry?.depth.average || 0 }}</div>
                     </div>
                     <div fxLayout fxLayoutGap="16px">
                         <div fxFlex="41">Above Feet Rpm</div>
@@ -46,6 +66,7 @@
                         <div fxFlex class="text-center bold">Support</div>
                         <div fxFlex class="text-center bold">Tractor</div>
                         <div fxFlex class="text-center bold">Total</div>
+                        <div fxFlex class="text-center bold">Average</div>
                     </div>
                     <div fxLayout class="diesel-row">
                         <div fxFlex> {{ rpmEntry?.diesel.compressor || 0}} </div>
@@ -53,6 +74,7 @@
                         <div fxFlex> {{ rpmEntry?.diesel.support || 0}} </div>
                         <div fxFlex> {{ rpmEntry?.diesel.tractor || 0}} </div>
                         <div fxFlex> {{ rpmEntry?.diesel.total || 0}} </div>
+                        <div fxFlex> {{ rpmEntry?.diesel.avgerage || 0}} </div>
                     </div>
                 </div>
             </div>

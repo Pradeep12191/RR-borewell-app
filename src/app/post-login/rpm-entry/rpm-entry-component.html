@@ -87,15 +87,45 @@
             </user-details>
         </div>
         <mat-card class="m-b-16">
+            <div class="m-b-16">
+                <div fxLayout fxLayoutGap="25px">
+                    <div fxLayout fxLayoutGap="5px" class="font-12">
+                        <div class="bold">Last Reset Rpm</div>
+                        <div class="bold">:</div>
+                        <div>{{ lastResetRpmNo || '-' }}</div>
+                    </div>
+                    <div fxLayout fxLayoutGap="5px" class="font-12">
+                        <div class="bold">Last Reset Date</div>
+                        <div class="bold">:</div>
+                        <div>{{ lastResetDate || '-' }}</div>
+                    </div>
+                </div>
+            </div>
             <div>
                 <div fxFlex fxLayoutAlign="space-between" class="m-r-16">
-                    <div fxLayout="column" fxLayoutGap="5px">
-                        <div class="font-12">Total Depth</div>
-                        <div class="bold">{{ displayMonthDepth() }}</div>
+                    <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
+                        <div fxLayout fxLayoutGap="10px" class="font-12">
+                            <div fxFlex="33">Depth</div>
+                            <div fxFlex="33">Other Depth</div>
+                            <div fxFlex="33">Total Depth</div>
+                        </div>
+                        <div fxLayout fxLayoutGap="10px" class="bold">
+                            <div fxFlex="33">{{ displayMonthDepth() }}</div>
+                            <div fxFlex="33">{{ getExtraFeet()  }}</div>
+                            <div fxFlex="33">{{ roundValue(displayMonthDepth() + getExtraFeet()) }}</div>
+                        </div>
                     </div>
-                    <div fxLayout="column" fxLayoutGap="5px">
-                        <div class="font-12">Total Running Rpm</div>
-                        <div class="bold">{{ displayRunningRpm() }}</div>
+                    <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
+                        <div fxLayout fxLayoutGap="10px" class="font-12">
+                            <div fxFlex="33">RPM</div>
+                            <div fxFlex="33">Other RPM</div>
+                            <div fxFlex="33">Total RPm</div>
+                        </div>
+                        <div fxLayout fxLayoutGap="10px" class="bold">
+                            <div fxFlex="33">{{ displayRunningRpm() }}</div>
+                            <div fxFlex="33">{{ getExtraRpm() }}</div>
+                            <div fxFlex="33">{{ roundValue(displayRunningRpm() + getExtraRpm()) }}</div>
+                        </div>
                     </div>
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div class="font-12">Average Depth</div>
@@ -115,20 +145,6 @@
                         [disabled]="!selectedVehicle || !bookId || !date || !date" color="primary">
                         <mat-icon>refresh</mat-icon>
                     </button>
-                </div>
-            </div>
-            <div class="m-t-16" fxLayoutAlign="end">
-                <div fxLayout fxLayoutGap="25px">
-                    <div fxLayout fxLayoutGap="5px" class="font-12">
-                        <div class="bold">Last Reset Rpm</div>
-                        <div class="bold">:</div>
-                        <div>{{ lastResetRpmNo || '-' }}</div>
-                    </div>
-                    <div fxLayout fxLayoutGap="5px" class="font-12">
-                        <div class="bold">Last Reset Date</div>
-                        <div class="bold">:</div>
-                        <div>{{ lastResetDate || '-' }}</div>
-                    </div>
                 </div>
             </div>
         </mat-card>
@@ -531,11 +547,11 @@
                             </mat-form-field>
                         </div>
                         <div formGroupName="above" fxFlex fxLayout fxLayoutGap="15px">
-                            <div fxLayoutAlign="start center">
+                            <!-- <div fxLayoutAlign="start center">
                                 Above
-                            </div>
-                            <mat-form-field fxFlex="15" class="calc-field">
-                                <mat-label>Feet</mat-label>
+                            </div> -->
+                            <mat-form-field fxFlex="30" class="calc-field">
+                                <mat-label>Above Feet</mat-label>
                                 <mat-select formControlName="feet" (selectionChange)="updateExtraFeet()"
                                     #aboveFeetSelect>
                                     <mat-option [value]="rpmHourFeet" *ngFor="let rpmHourFeet of rpmHourFeets">{{
@@ -654,7 +670,8 @@
                     <div fxLayout fxLayoutGap="15px">
                         <div fxLayoutAlign="start center">TCD no</div>
                         <mat-form-field class="calc-field" fxFlex="40">
-                            <mat-select formControlName="hammer" (selectionChange)="updateHammerTotalFeet($event.value)">
+                            <mat-select formControlName="hammer"
+                                (selectionChange)="updateHammerTotalFeet($event.value)">
                                 <mat-option value="">Select Hammer</mat-option>
                                 <mat-option [value]="hammer" *ngFor="let hammer of assignedHammers">
                                     {{ hammer.serial_no }}</mat-option>
@@ -662,8 +679,9 @@
                         </mat-form-field>
                         <div fxFlex></div>
                         <div>
-                            <button [disabled]="!form.get('hammer').value" (click)="finishHammer(form.get('hammer').value)"
-                                mat-raised-button color="primary">Finish Hammer</button>
+                            <button [disabled]="!form.get('hammer').value"
+                                (click)="finishHammer(form.get('hammer').value)" mat-raised-button
+                                color="primary">Finish Hammer</button>
                         </div>
                     </div>
                     <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">

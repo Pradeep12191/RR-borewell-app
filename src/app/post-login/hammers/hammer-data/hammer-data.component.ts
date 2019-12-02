@@ -8,13 +8,15 @@ import { HammersService } from '../hammers.service';
 import { ToastrService } from 'ngx-toastr';
 import { LoaderService } from 'src/app/services/loader-service';
 import { distinctUntilChanged, debounceTime, switchMap, throttleTime, tap, exhaustMap, materialize, map } from 'rxjs/operators';
+import { FADE_IN_ANIMATION } from 'src/app/animations';
 
 const ALL_VEHICLE_OPTION: Vehicle = { regNo: 'All Vehicle', type: '', vehicle_id: 'all' }
 const UNASSIGNED_PIPES_OPTION: Vehicle = { regNo: 'Hammers in Stock', type: '', vehicle_id: 'unassigned' }
 
 @Component({
     templateUrl: './hammer-data.component.html',
-    styleUrls: ['./hammer-data.component.scss']
+    styleUrls: ['./hammer-data.component.scss'],
+    animations: [FADE_IN_ANIMATION]
 })
 export class HammerDataComponent implements OnDestroy {
     // pipes: PipeData[];

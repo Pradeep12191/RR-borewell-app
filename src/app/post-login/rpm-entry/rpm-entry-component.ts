@@ -448,10 +448,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         let m_extra_feet = 0;
         let extra_feet = 0;
 
-        if (this.rpmSheet.month_data) {
+        if (this.rpmSheet && this.rpmSheet.month_data) {
             m_extra_feet = this.rpmSheet.month_data.m_extra_feet;
         }
-        if (this.rpmSheet.depth) {
+        if (this.rpmSheet && this.rpmSheet.depth) {
             extra_feet = this.rpmSheet.depth.above.extra_feet
         }
 
@@ -463,7 +463,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         const min = +this.form.get('depth.above.min').value;
         let m_extra_hrs = 0;
         let m_extra_mins = 0;
-        if (this.rpmSheet.month_data) {
+        if (this.rpmSheet && this.rpmSheet.month_data) {
             m_extra_hrs = this.rpmSheet.month_data.m_extra_hour;
             m_extra_mins = this.rpmSheet.month_data.m_extra_min;
         }
@@ -475,6 +475,16 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             actualMin = totalMin % 60;
         }
         return { hrs: actualHrs, min: actualMin };
+    }
+
+    getExtraRpm() {
+        const extraTime = this.getExtraTime();
+        if (extraTime.hrs || extraTime.min) {
+            const totalMin = (extraTime.hrs * 60) + extraTime.min;
+            const extraRpm = this.roundValue(totalMin / 60);
+            return extraRpm;
+        }
+        return 0;
     }
 
     onRpmInputEnter(currentIndex) {

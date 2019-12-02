@@ -236,4 +236,8 @@ export class BitDataComponent implements OnDestroy {
             })
         )
     }
+
+    navigateToViewBitLife(serial_no) {
+        this.router.navigate(['/postlogin/bits/bitLife', serial_no])
+    }
 }

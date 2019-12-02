@@ -1,0 +1,15 @@
+@import '~@angular/material/theming';
+
+@mixin link-theme($theme) {
+    $primary: map-get($theme, primary);
+    $color: mat-color($primary);
+    .link{
+        color: mat-color($primary);
+        cursor: pointer;
+        &:hover{
+            text-decoration: underline;
+            color: darken($color, 5%);
+            font-weight: bold;
+        }
+    }
+}

@@ -23,6 +23,7 @@ const routes: Routes = [
             { path: 'viewHammerData/:hammerSize/:hammerType', loadChildren: () => import('./hammers/hammer-data/hammer-data.module').then(mod => mod.HammerDataModule) },
             { path: 'bits', loadChildren: () => import('./bits/bits.module').then(mod => mod.BitsModule) },
             { path: 'bits/viewBit', loadChildren: () => import('./bits/view-bit/view-bit.module').then(mod => mod.ViewBitModule) },
+            { path: 'bits/bitLife/:serialNo', loadChildren: () => import('./bits/bit-life/bit-life.module').then(mod => mod.BitLifeModule) },
             { path: 'bitsExchangeVehicle', loadChildren: () => import('./bit-vehicle-exchange/bit-vehicle-exchange.module').then(mod => mod.BitVehicleExchangeModule) },
             { path: 'rpmEntry', loadChildren: () => import('./rpm-entry/rpm-entry.module').then(mod => mod.RpmEntryModule) },
             { path: 'rpmEntryReport', loadChildren: () => import('./rpm-entry-report/rpm-entry-report.module').then(mod => mod.RpmEntryReportModule) },

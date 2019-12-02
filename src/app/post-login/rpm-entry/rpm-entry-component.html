@@ -103,33 +103,33 @@
             </div>
             <div>
                 <div fxFlex fxLayoutAlign="space-between" class="m-r-16">
-                    <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
-                        <div fxLayout fxLayoutGap="10px" class="font-12">
-                            <div fxFlex="33">Depth</div>
-                            <div fxFlex="33">Other Depth</div>
-                            <div fxFlex="33">Total Depth</div>
-                        </div>
-                        <div fxLayout fxLayoutGap="10px" class="bold">
-                            <div fxFlex="33">{{ displayMonthDepth() }}</div>
-                            <div fxFlex="33">{{ getExtraFeet()  }}</div>
-                            <div fxFlex="33">{{ roundValue(displayMonthDepth() + getExtraFeet()) }}</div>
-                        </div>
+                    <div fxLayout="column" fxLayoutGap="5px">
+                        <div class="font-12">Depth</div>
+                        <div class="bold">{{ displayMonthDepth() }}</div>
                     </div>
-                    <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
-                        <div fxLayout fxLayoutGap="10px" class="font-12">
-                            <div fxFlex="33">RPM</div>
-                            <div fxFlex="33">Other RPM</div>
-                            <div fxFlex="33">Total RPm</div>
-                        </div>
-                        <div fxLayout fxLayoutGap="10px" class="bold">
-                            <div fxFlex="33">{{ displayRunningRpm() }}</div>
-                            <div fxFlex="33">{{ getExtraRpm() }}</div>
-                            <div fxFlex="33">{{ roundValue(displayRunningRpm() + getExtraRpm()) }}</div>
-                        </div>
+                    <div fxLayout="column" fxLayoutGap="5px">
+                        <div class="font-12">Other Depth</div>
+                        <div class="bold">{{ getExtraFeet() }}</div>
+                    </div>
+                    <div fxLayout="column" fxLayoutGap="5px">
+                        <div class="font-12">Total Depth</div>
+                        <div class="bold">{{ roundValue(displayMonthDepth() + getExtraFeet()) }}</div>
                     </div>
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div class="font-12">Average Depth</div>
                         <div class="bold">{{ displayAverageDepth() }}</div>
+                    </div>
+                    <div fxLayout="column" fxLayoutGap="5px">
+                        <div class="font-12">RPM</div>
+                        <div class="bold">{{ displayRunningRpm() }}</div>
+                    </div>
+                    <div fxLayout="column" fxLayoutGap="5px">
+                        <div class="font-12">Other RPM</div>
+                        <div class="bold">{{ getExtraRpm() }}</div>
+                    </div>
+                    <div fxLayout="column" fxLayoutGap="5px">
+                        <div class="font-12">Total RPM</div>
+                        <div class="bold">{{ roundValue(displayRunningRpm() + getExtraRpm()) }}</div>
                     </div>
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div class="font-12">Total Diesel</div>

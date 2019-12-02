@@ -585,7 +585,7 @@
                 <mat-card-content>
                     <div fxLayout="column">
                         <div fxLayout fxLayoutGap="15px">
-                            <div fxLayoutAlign="start center">TCD no</div>
+                            <!-- <div fxLayoutAlign="start center">TCD no</div> -->
                             <mat-form-field class="calc-field" fxFlex="25">
                                 <mat-label>Serial no</mat-label>
                                 <mat-select placeholder="Select serial no" #bitSelect
@@ -668,8 +668,9 @@
                 </mat-card-header>
                 <mat-card-content>
                     <div fxLayout fxLayoutGap="15px">
-                        <div fxLayoutAlign="start center">TCD no</div>
+                        <!-- <div fxLayoutAlign="start center">TCD no</div> -->
                         <mat-form-field class="calc-field" fxFlex="40">
+                            <mat-label>Serial no</mat-label>
                             <mat-select formControlName="hammer"
                                 (selectionChange)="updateHammerTotalFeet($event.value)">
                                 <mat-option value="">Select Hammer</mat-option>
@@ -685,7 +686,7 @@
                         </div>
                     </div>
                     <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
-                        <div fxFlex="40">Hammer Running Feet</div>
+                        <div fxFlex="50">Hammer Running Feet</div>
                         <div class="bold font-16">
                             <ng-container
                                 *ngIf="form.get('depth.pipeErection').value && form.get('hammer').value; else hyphenTpl">
@@ -697,7 +698,7 @@
                         </div>
                     </div>
                     <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
-                        <div fxLayoutAlign="start center" fxFlex="40">Hammer Previous Feet</div>
+                        <div fxLayoutAlign="start center" fxFlex="50">Hammer Previous Feet</div>
                         <div class="bold font-16">
                             <div *ngIf="form.get('hammer').value; else hyphenTpl">
                                 {{ form.get('hammer').value?.previous_feet }}
@@ -705,7 +706,7 @@
                         </div>
                     </div>
                     <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
-                        <div fxLayoutAlign="start center" fxFlex="40">Total Feet</div>
+                        <div fxLayoutAlign="start center" fxFlex="50">Total Feet</div>
                         <div class="bold font-16">
                             <ng-container
                                 *ngIf="form.get('depth.pipeErection').value && form.get('hammer').value; else hyphenTpl">

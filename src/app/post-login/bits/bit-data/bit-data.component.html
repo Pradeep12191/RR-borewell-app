@@ -35,13 +35,14 @@
     <div fxLayout fxLayoutGap="25px" fxFlex>
         <div class="mat-elevation-z8 table-container">
             <div fxLayout class="header-row">
-                <div class="header-cell" fxLayoutAlign="center center" fxFlex>S.No.</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex="7">S.No.</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Bit Size</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Bit No</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Bit Serial No</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Bit Usage</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Company Name</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Vehicle No</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Assigned Date</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Assigned Date</div>
             </div>
             <ng-container *ngIf="infinite | async as bits; else initialLoader">
@@ -51,7 +52,7 @@
                             itemSize="31" fxLayout="column" class="table">
                             <div class="row" *cdkVirtualFor="let bit of bits; let i = index; trackBy: trackByFn"
                                 fxLayout>
-                                <div fxFlex fxLayoutAlign="center center" class="cell">{{ i + 1 }}</div>
+                                <div fxFlex="7" fxLayoutAlign="center center" class="cell">{{ i + 1 }}</div>
                                 <div fxFlex fxLayoutAlign="center center" class="cell">{{ bit.bit_type }}</div>
                                 <div fxFlex fxLayoutAlign="center center" class="cell">{{ bit.no }}</div>
                                 <div fxFlex fxLayoutAlign="center center" class="cell">{{ bit.serial_no }}</div>

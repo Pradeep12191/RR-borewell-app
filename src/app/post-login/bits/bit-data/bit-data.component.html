@@ -43,7 +43,7 @@
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Company Name</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Vehicle No</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Assigned Date</div>
-                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Assigned Date</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Bit Life</div>
             </div>
             <ng-container *ngIf="infinite | async as bits; else initialLoader">
                 <ng-container *ngIf="!mainLoading; else initialLoader">
@@ -60,6 +60,7 @@
                                 <div fxFlex fxLayoutAlign="center center" class="cell">{{ bit.company_name }}</div>
                                 <div fxFlex fxLayoutAlign="center center" class="cell">{{ bit.vehicle_no }}</div>
                                 <div fxFlex fxLayoutAlign="center center" class="cell">{{ bit.date }}</div>
+                                <div fxFlex fxLayoutAlign="center center" class="cell"> <span (click)="navigateToViewBitLife(bit.serial_no)" class="link">view</span></div>
                             </div>
                             <div *ngIf="loading" class="batch-spinner">
                                 <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>

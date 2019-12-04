@@ -24,6 +24,7 @@
             <div fxLayout class="header-row">
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex="10">S.No.</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Vehicle No</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>RPM no</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Running Feet</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Total Feet</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Date</div>
@@ -32,6 +33,7 @@
             <div class="row" *ngFor="let life of bitLifes; let i = index" fxLayout>
                 <div fxFlex="10" fxLayoutAlign="center center" class="cell">{{ i + 1 }}</div>
                 <div fxFlex fxLayoutAlign="center center" class="cell">{{ life.vehicle_no }}</div>
+                <div fxFlex fxLayoutAlign="center center" class="cell">{{ life.rpm_no }}</div>
                 <div fxFlex fxLayoutAlign="center center" class="cell">{{ life.running_feet }}</div>
                 <div fxFlex fxLayoutAlign="center center" class="cell">{{ life.total_feet }}</div>
                 <div fxFlex fxLayoutAlign="center center" class="cell">{{ life.date | date: 'd-MM-yyyy' }}</div>

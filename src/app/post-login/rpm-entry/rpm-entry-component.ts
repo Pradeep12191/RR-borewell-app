@@ -373,7 +373,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     displayDieselAvg() {
-        // 5. diesel_avg - (m_diesel + compressor) / (running_rpm + m_rpm)
+        // 5. diesel_avg - (m_diesel + compressor) - displayDieselTotal()  / m_rpm
         const currentTotalDiesel = this.displayDieselTotal();
         let previousRunningRpm = 0;
         let m_diesel_avg = 0;
@@ -910,6 +910,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.toastr.success('Total Reseted successfully');
                         this.rpmSheet.month_data.m_depth = 0;
                         this.rpmSheet.month_data.m_diesel = 0;
+                        this.rpmSheet.month_data.m_diesel_avg = 0;
                         this.rpmSheet.month_data.m_rpm = 0;
                         this.rpmSheet.month_data.m_extra_hour = 0;
                         this.rpmSheet.month_data.m_extra_min = 0;

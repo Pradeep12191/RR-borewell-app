@@ -1167,6 +1167,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 .find(c => c.limit === this.vehicleServiceLimits.c_oil_service);
             this.lastResetDate = lastReset.date;
             this.lastResetRpmNo = lastReset.rpm_no;
+            this.assignedBits = assignedBits;
+            this.assignedHammers = assignedHammers;
             if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
                 this.resetAll();
                 this.resetBook();
@@ -1174,8 +1176,6 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }
 
             this.bookRequired = false;
-            this.assignedBits = assignedBits;
-            this.assignedHammers = assignedHammers;
             this.rpmEntryNo = lastRpmEntrySheet.rpm_sheet_no;
             this.bookEndNo = lastRpmEntrySheet.end;
             this.bookStartNo = lastRpmEntrySheet.start;

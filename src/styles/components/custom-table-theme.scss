@@ -1,0 +1,39 @@
+@mixin custom-table-theme($theme){
+    $primary: map-get($theme, primary);
+    $color: mat-color($primary);
+
+    .header-row{
+        min-height: 56px;
+        background-color: $color;
+        color: white;
+        font-size: 14px;
+        font-weight: 500;
+        border-bottom: 1px solid black;
+    }
+
+    .row{
+        min-height: 32px;
+        border-bottom: 1px solid black;
+        background-color: white;
+    }
+    .cell{
+        &:first-child{
+            border-left: 1px solid black;
+        }
+        border-right: 1px solid black;
+    }
+
+    .header-cell{
+        &:last-of-type{
+            padding-right: 16px;
+        }
+    }
+    
+    .header-cell, .cell{
+        // &:first-of-type{
+        //     padding-left: 24px;
+        // }
+    
+        text-align: center;
+    }
+}

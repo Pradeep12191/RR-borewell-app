@@ -3,12 +3,14 @@ import { ConfigService } from '../../services/config.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { BitData } from './BitData';
+import { BitLife } from 'src/app/models/BitLife';
 
 @Injectable()
 export class BitService {
 
     private bitDataUrl;
     private bitDataCountUrl;
+    private bitLifeUrl;
     constructor(
         private config: ConfigService,
         private http: HttpClient,
@@ -16,6 +18,7 @@ export class BitService {
     ) {
         this.bitDataUrl = this.config.getAbsoluteUrl('bitData');
         this.bitDataCountUrl = this.config.getAbsoluteUrl('bitDataCount');
+        this.bitLifeUrl = this.config.getAbsoluteUrl('bitLife');
     }
 
     getBitData(bitSize, vehicleId, serial_no, start = '0', end = '100') {
@@ -36,5 +39,10 @@ export class BitService {
             .append('bit_size', bitSize)
             .append('serial_no', serial_no.toString());
         return this.http.get(this.bitDataCountUrl, { params })
+    };
+
+    getBitLife(serial_no) {
+        const user_id = this.auth.userid;
+        return this.http.get<BitLife>(this.bitLifeUrl, { params: { serial_no, user_id } })
     }
 }

@@ -9,6 +9,8 @@ import { ViewBitResolver } from '../../../guards/resolveGuard/bit/view-bit.resol
 import { PipesModule } from '../../../pipes/pipes.module';
 import { BitLifeRoutingModule } from './bit-life-routing.module';
 import { BitLifeComponent } from './bit-life.component';
+import { BitService } from '../bit.service';
+import { BitLifeResolver } from 'src/app/guards/resolveGuard/bit/bit-life.resolver';
 
 @NgModule({
     imports: [
@@ -24,6 +26,8 @@ import { BitLifeComponent } from './bit-life.component';
         BitLifeComponent
     ],
     providers: [
+        BitService,
+        BitLifeResolver
     ]
 })
 export class BitLifeModule {

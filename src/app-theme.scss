@@ -60,6 +60,7 @@ $bore-well-theme: mat-light-theme($bore-well-primary, $bore-well-accent, $bore-w
 @include mat-table-theme($bore-well-theme);
 @include input-theme($bore-well-theme);
 @include link-theme($bore-well-theme);
+@include custom-table-theme($bore-well-theme);
 
 
 

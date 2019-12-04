@@ -249,6 +249,10 @@
         {
             "name": "hammerDataCount",
             "url": "hammer_data_count"
+        },
+        {
+            "name": "bitLife",
+            "url": "bit_life"
         }
     ],
     "reportGenerateUrls": [

@@ -1,1 +1,48 @@
-bit life works
+<button mat-mini-fab class="back-btn" (click)="backToBit()" color="primary">
+    <mat-icon>arrow_back</mat-icon>
+</button>
+
+<div fxLayoutAlign="center start" *ngIf="bitLifes?.length; else emptyTpl" class="shift-top-30">
+    <div fxFlex="75">
+        <div fxLayout fxLayoutGap="35px" *ngIf="bitLifes" class="m-b-16">
+            <div fxLayout fxLayoutGap="10px">
+                <div class="bold">Bit No</div>
+                <div class="bold">:</div>
+                <div>{{ bitLifes[0]?.bit_no }}</div>
+            </div>
+            <div fxLayout fxLayoutGap="10px">
+                <div class="bold">Bit Serial No</div>
+                <div class="bold">:</div>
+                <div>{{ bitLifes[0]?.serial_no }}</div>
+            </div>
+            <div class="right">
+                <button mat-raised-button color="primary">Download Pdf</button>
+            </div>
+        </div>
+
+        <div class="mat-elevation-z8">
+            <div fxLayout class="header-row">
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex="10">S.No.</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Vehicle No</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Running Feet</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Total Feet</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>Date</div>
+            </div>
+
+            <div class="row" *ngFor="let life of bitLifes; let i = index" fxLayout>
+                <div fxFlex="10" fxLayoutAlign="center center" class="cell">{{ i + 1 }}</div>
+                <div fxFlex fxLayoutAlign="center center" class="cell">{{ life.vehicle_no }}</div>
+                <div fxFlex fxLayoutAlign="center center" class="cell">{{ life.running_feet }}</div>
+                <div fxFlex fxLayoutAlign="center center" class="cell">{{ life.total_feet }}</div>
+                <div fxFlex fxLayoutAlign="center center" class="cell">{{ life.date | date: 'd-MM-yyyy' }}</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<ng-template #emptyTpl>
+    <mat-card class="m-t-16">
+        <mat-card-content fxLayoutAlign="center center">No record found.</mat-card-content>
+    </mat-card>
+</ng-template>

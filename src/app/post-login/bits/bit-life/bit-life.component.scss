@@ -1,4 +1,17 @@
 .right{
     margin-left: auto;
+}
+.btn-container{
+    position: sticky;
+    top: 10px;
+    .back-btn{
+        position: absolute ;
+        left: -47px;
+        top: 16px;
+    }
+};
 
+.header-row{
+    position: sticky;
+    top: 0px;
 }

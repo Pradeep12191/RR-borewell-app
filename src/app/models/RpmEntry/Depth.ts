@@ -6,6 +6,7 @@ export interface Depth {
     bore: number;
     pipe_erection: number;
     bore_type: string;
+    bore_id: number;
     above: AboveFeet;
     air: Air
 }

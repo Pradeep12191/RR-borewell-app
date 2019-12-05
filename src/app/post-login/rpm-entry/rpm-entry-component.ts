@@ -1624,6 +1624,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             depth: {
                 average: this.rpmSheet.depth.average,
                 bore_type: this.form.value.depth.boreType.type,
+                bore_id: +this.form.value.depth.boreType.id,
                 above: {
                     feet: this.form.value.depth.above.feet,
                     extra_feet: +this.rpmSheet.depth.above.extra_feet,
@@ -1818,6 +1819,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         this.rpmSheet.depth = {
             bore_type: this.boreTypes[0].type,
+            bore_id: +this.boreTypes[0].id,
             above: { extra_feet: 0, feet: this.rpmHourFeets[0], hrs: 0, min: 0 },
             average: 0,
             bore: 0,

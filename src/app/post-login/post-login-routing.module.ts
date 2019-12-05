@@ -30,6 +30,7 @@ const routes: Routes = [
             { path: 'godownExchange', loadChildren: () => import('./godown-exchange/godown-exchange.module').then(mod => mod.GodownExchangeModule) },
             { path: 'hammers', loadChildren: () => import('./hammers/hammers.module').then(mod => mod.HammersModule) },
             { path: 'hammers/viewHammers', loadChildren: () => import('./hammers/view-hammers/view-hammers.module').then(mod => mod.ViewHammersModule) },
+            { path: 'hammers/hammerLife/:serialNo', loadChildren: () => import('./hammers/hammer-life/hammer-life.module').then(mod => mod.HammerLifeModule) },
             { path: 'error', component: ErrorComponent },
             { path: '**', component: S404Component }
         ],

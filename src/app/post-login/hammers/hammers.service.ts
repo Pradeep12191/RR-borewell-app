@@ -7,6 +7,7 @@ import { Godown } from '../pipe/Godown';
 import { Company } from '../bits/Company';
 import { HammerSize } from './hammer-size.model';
 import { HammerData } from './models/hammer-data.model';
+import { BitLife } from 'src/app/models/BitLife';
 
 @Injectable()
 export class HammersService {
@@ -19,6 +20,7 @@ export class HammersService {
     viewHammersUrl: string;
     hammerDataUrl: string;
     hammerDataCountUrl: string;
+    hammerLifeUrl: string;
     constructor(
         private config: ConfigService,
         private http: HttpClient,
@@ -33,6 +35,7 @@ export class HammersService {
         this.viewHammersUrl = this.config.getAbsoluteUrl('viewHammer');
         this.hammerDataUrl = this.config.getAbsoluteUrl('hammerData');
         this.hammerDataCountUrl = this.config.getAbsoluteUrl('hammerDataCount');
+        this.hammerLifeUrl = this.config.getAbsoluteUrl('hammerLife');
     }
     getAll(godown_id) {
         const params = { user_id: this.auth.userid, godown_id }
@@ -83,5 +86,10 @@ export class HammersService {
 
     getHammersViewData() {
         return this.http.get<any[]>(this.viewHammersUrl, { params: { user_id: this.auth.userid } })
+    }
+
+    getHammerLife(serial_no) {
+        const user_id = this.auth.userid;
+        return this.http.get<BitLife>(this.hammerLifeUrl, { params: { serial_no, user_id } })
     }
 }

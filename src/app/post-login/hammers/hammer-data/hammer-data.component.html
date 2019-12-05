@@ -42,6 +42,7 @@
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Company Name</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Vehicle No</div>
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Assigned Date</div>
+                <div class="header-cell" fxLayoutAlign="center center" fxFlex>View</div>
             </div>
             <ng-container *ngIf="infinite | async as hammers; else initialLoader">
                 <ng-container *ngIf="!mainLoading; else initialLoader">
@@ -57,6 +58,7 @@
                                 <div fxFlex fxLayoutAlign="center center" class="cell">{{ hammer.company_name }}</div>
                                 <div fxFlex fxLayoutAlign="center center" class="cell">{{ hammer.vehicle_no }}</div>
                                 <div fxFlex fxLayoutAlign="center center" class="cell">{{ hammer.date }}</div>
+                                <div fxFlex fxLayoutAlign="center center" class="cell"> <span (click)="navigateToViewHammerLife(hammer.serial_no)" class="link">view</span></div>
                             </div>
                             <div *ngIf="loading" class="batch-spinner">
                                 <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>

@@ -5,38 +5,33 @@
 </div>
 
 
-<div fxLayoutAlign="center start" *ngIf="bitLifes?.length; else emptyTpl" class="shift-top-25">
+<div fxLayoutAlign="center start" *ngIf="hammerLifes?.length; else emptyTpl" class="shift-top-25">
     <div fxFlex="95">
-        <div fxLayout fxLayoutGap="40px" *ngIf="bitLifes" class="m-b-16 font-14">
+        <div fxLayout fxLayoutGap="40px" *ngIf="hammerLifes" class="m-b-16 font-14">
             <div fxLayout fxLayoutAlign="start center" fxLayoutGap="5px">
-                <div class="bold">Bit No</div>
+                <div class="bold">Hammer Serial No</div>
                 <div class="bold">:</div>
-                <div>{{ bitLifes[0]?.bit_no }}</div>
+                <div>{{ hammerLifes[0]?.serial_no }}</div>
             </div>
             <div fxLayout fxLayoutAlign="start center" fxLayoutGap="5px">
-                <div class="bold">Bit Serial No</div>
+                <div class="bold">Hammer Type</div>
                 <div class="bold">:</div>
-                <div>{{ bitLifes[0]?.serial_no }}</div>
-            </div>
-            <div fxLayout fxLayoutAlign="start center" fxLayoutGap="5px">
-                <div class="bold">Bit Type</div>
-                <div class="bold">:</div>
-                <div>{{ bitLifes[0]?.bit_type }}</div>
+                <div>{{ hammerLifes[0]?.bit_type }}</div>
             </div>
             <div fxLayout fxLayoutAlign="start center" fxLayoutGap="5px">
                 <div class="bold">Company Name</div>
                 <div class="bold">:</div>
-                <div>{{ bitLifes[0]?.company_name }}</div>
+                <div>{{ hammerLifes[0]?.company_name }}</div>
             </div>
             <div fxLayout fxLayoutAlign="start center" fxLayoutGap="5px">
                 <div class="bold">Status</div>
                 <div class="bold">:</div>
                 <div fxLayout fxLayoutGap="5px" fxLayoutAlign="start center">
                     <div>
-                        {{ bitLifes[0]?.status ? 'Completed': 'Not Completed' }}
+                        {{ hammerLifes[0]?.status ? 'Completed': 'Not Completed' }}
                     </div>
                     <svg height="12" width="12">
-                        <circle cx="6" cy="6" r="5" [attr.fill]="bitLifes[0]?.status ? 'red': 'lightgreen'" />
+                        <circle cx="6" cy="6" r="5" [attr.fill]="hammerLifes[0]?.status ? 'red': 'lightgreen'" />
                     </svg>
                 </div>
             </div>
@@ -55,7 +50,7 @@
                 <div class="header-cell" fxLayoutAlign="center center" fxFlex>Date</div>
             </div>
 
-            <div class="row" *ngFor="let life of bitLifes; let i = index" fxLayout>
+            <div class="row" *ngFor="let life of hammerLifes; let i = index" fxLayout>
                 <div fxFlex="10" fxLayoutAlign="center center" class="cell">{{ i + 1 }}</div>
                 <div fxFlex fxLayoutAlign="center center" class="cell">{{ life.vehicle_no }}</div>
                 <div fxFlex fxLayoutAlign="center center" class="cell">{{ life.rpm_no }}</div>

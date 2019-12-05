@@ -253,6 +253,10 @@
         {
             "name": "bitLife",
             "url": "bit_life"
+        },
+        {
+            "name": "hammerLife",
+            "url": "hammer_life"
         }
     ],
     "reportGenerateUrls": [

@@ -234,4 +234,8 @@ export class HammerDataComponent implements OnDestroy {
             })
         )
     }
+
+    navigateToViewHammerLife(serial_no) {
+        this.router.navigate(['postlogin/hammers/hammerLife', serial_no])
+    }
 }

@@ -269,17 +269,35 @@
                     </ng-container>
                 </div>
             </div>
-            <div fxLayout fxLayoutAlign="start center" fxLayoutGap="15px">
-                <div fxFlex="30">{{ rpmEntry?.depth?.bore_type }}</div>
-                <div>:</div>
-                <div class="font-14">
-                    <!-- <ng-container *ngIf="rpmEntry?.depth.bore"> -->
+            <div fxLayout fxLayoutAlign="start center"
+                *ngIf="rpmEntry?.depth.bore_type === 'Air' || rpmEntry?.depth.bore_id === 3; else depthTpl"
+                fxLayoutGap="15px">
+                <ng-container *hyphen="rpmEntry?.depth.air?.in_out; else hyphen">
+                    <div fxLayout fxLayoutGap="10px">
+                        <div>{{ rpmEntry?.depth?.bore_type }}</div>
+                        <div>
+                            {{ rpmEntry?.depth.air.in_out }}
+                        </div>
+                        <div>
+                            <span>Vehicle Number:&nbsp;</span> {{ rpmEntry?.depth.air.vehicle_number }}
+                        </div>
+                        <div>
+                            <span>Rpm No:&nbsp;</span>{{ rpmEntry?.depth.air.rpm_entry_no }}
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+            <ng-template #depthTpl>
+                <div fxLayout fxLayoutAlign="start center" fxLayoutGap="15px">
+                    <div fxFlex="30">{{ rpmEntry?.depth?.bore_type }}</div>
+                    <div>:</div>
+                    <div class="font-14">
                         <ng-container *hyphen="rpmEntry?.depth.bore; else hyphen">
                             {{ rpmEntry?.depth.bore }}
                         </ng-container>
-                    <!-- </ng-container> -->
+                    </div>
                 </div>
-            </div>
+            </ng-template>
             <div fxLayout fxLayoutAlign="start center" fxLayoutGap="15px">
                 <div fxFlex="30">Pipe Erection Feet</div>
                 <div>:</div>

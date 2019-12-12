@@ -506,7 +506,7 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-                            <ng-container *ngIf="form.get('depth.boreType').value.type !== 'Air'; else airTpl">
+                            <ng-container *ngIf="form.get('depth.boreType').value.type !== 'Air' && form.get('depth.boreType').value.id !== 3; else airTpl">
                                 <mat-form-field fxFlex="60">
                                     <mat-label>Feet</mat-label>
                                     <input #depthInput type="text" (keydown.enter)="onDepthEnter(0)"
@@ -762,7 +762,7 @@
                         <div fxFlex="28" fxLayoutAlign="start center" fxLayoutGap="10px"
                             class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">
                             <div fxLayout="column" fxFlex>
-                                <div [class.m-t-10]="form.get('isInVehicle').value" fxFlex="40">
+                                <div [class.m-t-10]="form.get('isInVehicle').value" fxLayout fxFlex="40">
                                     <mat-checkbox color="primary" formControlName="isInVehicle"
                                         (change)="onCheckChange($event, 'in')">
                                         Vehicle Exchange In
@@ -812,7 +812,7 @@
                         <div fxFlex="28" fxLayoutAlign="start center" fxLayoutGap="10px"
                             class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">
                             <div fxLayout="column" fxFlex>
-                                <div [class.m-t-10]="form.get('isOutVehicle').value" fxFlex="40">
+                                <div [class.m-t-10]="form.get('isOutVehicle').value" fxFlex="40" fxLayout>
                                     <mat-checkbox color="primary" formControlName="isOutVehicle"
                                         (change)="onCheckChange($event, 'out')">
                                         Vehicle Exchange Out

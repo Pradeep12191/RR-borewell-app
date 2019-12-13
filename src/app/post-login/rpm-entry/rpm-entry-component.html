@@ -125,11 +125,11 @@
                     </div>
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div class="font-12">Other RPM</div>
-                        <div class="bold">{{ getExtraRpm() }}</div>
+                        <div class="bold">{{ getExtraRpm() +  getOtherRpm() }}</div>
                     </div>
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div class="font-12">Total RPM</div>
-                        <div class="bold">{{ roundValue(displayRunningRpm() + getExtraRpm()) }}</div>
+                        <div class="bold">{{ roundValue(displayRunningRpm() + getExtraRpm() + getOtherRpm()) }}</div>
                     </div>
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div class="font-12">Total Diesel</div>

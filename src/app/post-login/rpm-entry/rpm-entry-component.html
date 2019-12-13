@@ -109,11 +109,11 @@
                     </div>
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div class="font-12">Other Depth</div>
-                        <div class="bold">{{ getExtraFeet() }}</div>
+                        <div class="bold">{{ getExtraFeet() + getReboreDepth() }}</div>
                     </div>
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div class="font-12">Total Depth</div>
-                        <div class="bold">{{ roundValue(displayMonthDepth() + getExtraFeet()) }}</div>
+                        <div class="bold">{{ roundValue(displayMonthDepth() + getExtraFeet() +  getReboreDepth()) }}</div>
                     </div>
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div class="font-12">Average Depth</div>

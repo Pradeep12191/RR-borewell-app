@@ -109,7 +109,7 @@
                     </div>
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div class="font-12">Other Depth</div>
-                        <div class="bold">{{ getExtraFeet() + getReboreDepth() }}</div>
+                        <div class="bold">{{ roundValue(getExtraFeet() + getReboreDepth()) }}</div>
                     </div>
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div class="font-12">Total Depth</div>
@@ -125,7 +125,7 @@
                     </div>
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div class="font-12">Other RPM</div>
-                        <div class="bold">{{ getExtraRpm() +  getOtherRpm() }}</div>
+                        <div class="bold">{{ roundValue(getExtraRpm() +  getOtherRpm()) }}</div>
                     </div>
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div class="font-12">Total RPM</div>

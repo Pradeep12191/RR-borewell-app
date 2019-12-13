@@ -1459,10 +1459,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         const bit: BitSerialNo = this.form.get('bit').value;
         const hammer: BitSerialNo = this.form.get('hammer').value;
         const boreType: BoreType = this.form.get('depth.boreType').value;
-        if (boreType.type === 'Bore Depth' || boreType.id === 0) {
+        if (boreType.type === 'Bore Depth' || boreType.type === 'Rebore' || boreType.id === 0 || boreType.id === 4) {
             this.updateBitTotalFeet(bit);
             this.updateHammerTotalFeet(hammer);
-            this.updateExtraFeet();
+            if (boreType.type === 'Bore Depth' || boreType.id === 0) {
+                this.updateExtraFeet();
+            }
         }
     }
 
@@ -1471,6 +1473,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.form.get('depth.air').enable();
         this.form.get('depth.air').reset();
+        this.form.get('depth.bore').enable();
+
+        
+        this.form.get('depth.above.hrs').enable();
+        this.form.get('depth.above.min').enable();
 
         if (boreType.type === 'Air' || boreType.id === 3) {
             setTimeout(() => {
@@ -1484,13 +1491,18 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
 
-        if (boreType.type === 'Bore Depth' || boreType.id === 0) {
-            // this.form.get('depth.bore').reset();
-            // this.form.get('depth.bore').disable();
-            // this.updateFeetAvg();
+        if (boreType.type === 'Bore Depth' || boreType.id === 0 || boreType.type === 'Rebore' || boreType.id === 4) {
+            if (boreType.type === 'Rebore' || boreType.id === 4) {
+                this.resetExtraFeet();
+            }
             this.onDepthInput();
         } else {
             // reset hammer, bit details, feet avg, extra feet
+            // will be hose cleaning or air
+            if (boreType.type === 'Hose Cleaning' || boreType.id === 2) {
+                this.form.get('depth.bore').reset();
+                this.form.get('depth.bore').disable();
+            }
             this.resetDepth();
         }
     }
@@ -1499,19 +1511,38 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
      * reset depth releated details
      */
     resetDepth() {
+        const bit = this.form.get('bit').value;
+        const hammer = this.form.get('hammer').value;
+        let bitPreviousFeet = 0;
+        let hammerPreviousFeet = 0;
+
+        if (bit) {
+            bitPreviousFeet = +bit.previous_feet
+        }
+        if (hammer) {
+            hammerPreviousFeet = +hammer.previous_feet
+        }
+        this.resetExtraFeet();
+        if (this.rpmSheet && this.rpmSheet.bit) {
+            this.rpmSheet.bit.running_feet = 0;
+            this.rpmSheet.bit.total_feet = bitPreviousFeet;
+        }
+        if (this.rpmSheet && this.rpmSheet.hammer) {
+            this.rpmSheet.hammer.running_feet = 0;
+            this.rpmSheet.hammer.total_feet = hammerPreviousFeet;
+        }
+    }
+
+    resetExtraFeet() {
+        this.form.get('depth.above.hrs').disable();
+        this.form.get('depth.above.min').disable();
+        this.form.get('depth.above.hrs').reset();
+        this.form.get('depth.above.min').reset();
         if (this.rpmSheet.depth && this.rpmSheet.depth.above) {
             this.rpmSheet.depth.above.extra_feet = 0;
         }
         if (this.rpmSheet.depth) {
             this.rpmSheet.depth.average = 0;
-        }
-        if (this.rpmSheet && this.rpmSheet.bit) {
-            this.rpmSheet.bit.running_feet = 0;
-            this.rpmSheet.bit.total_feet = 0;
-        }
-        if (this.rpmSheet && this.rpmSheet.hammer) {
-            this.rpmSheet.hammer.running_feet = 0;
-            this.rpmSheet.hammer.total_feet = 0;
         }
     }
 
@@ -1531,7 +1562,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         let runningFeet = 0;
         let bitPreviousFeet = 0;
 
-        if (boreType.type !== 'Bore Depth' && boreType.id !== 0) {
+        if ((boreType.type !== 'Bore Depth' && boreType.id !== 0) && (boreType.type !== 'Rebore' && boreType.id !== 4)) {
+            this.resetDepth();
             return;
         }
 
@@ -1567,7 +1599,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         let runningFeet = 0;
         let hammerPreviousFeet = 0;
 
-        if (boreType.type !== 'Bore Depth' && boreType.id !== 0) {
+        if ((boreType.type !== 'Bore Depth' && boreType.id !== 0) && (boreType.type !== 'Rebore' && boreType.id !== 4)) {
             return;
         }
 

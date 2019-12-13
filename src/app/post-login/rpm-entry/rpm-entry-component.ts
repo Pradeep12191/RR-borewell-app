@@ -343,7 +343,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.rpmSheet && this.rpmSheet.month_data) {
             m_depth = this.rpmSheet.month_data.m_depth || 0;
         }
-        if (boreType.type === 'Bore Depth') {
+        if (boreType.type === 'Bore Depth' || boreType.id === 0) {
             return this.roundValue(m_depth + boreDepth);
         }
         return m_depth;
@@ -456,6 +456,20 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         return m_extra_feet + extra_feet;
+    }
+
+    getReboreDepth() {
+        const depth = +this.form.get('depth.bore').value;
+        const boreType: BoreType = this.form.get('depth.boreType').value;
+        let m_rebore_feet = 0;
+
+        if (this.rpmSheet && this.rpmSheet.month_data) {
+            m_rebore_feet = this.rpmSheet.month_data.m_rebore_feet;
+        }
+        if (boreType.type === 'Rebore' || boreType.id === 4) {
+            return m_rebore_feet + depth
+        }
+        return m_rebore_feet;
     }
 
     getExtraTime() {
@@ -1475,7 +1489,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('depth.air').reset();
         this.form.get('depth.bore').enable();
 
-        
+
         this.form.get('depth.above.hrs').enable();
         this.form.get('depth.above.min').enable();
 
@@ -1714,7 +1728,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 m_extra_feet: this.getExtraFeet(),
                 m_extra_hour: this.getExtraTime().hrs,
                 m_extra_min: this.getExtraTime().min,
-                m_diesel_avg: this.displayDieselAvg()
+                m_diesel_avg: this.displayDieselAvg(),
+                m_rebore_feet: this.getReboreDepth()
             },
             bit: {
                 ...this.form.value.bit,

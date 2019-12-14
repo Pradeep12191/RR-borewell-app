@@ -2,7 +2,7 @@ import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, BehaviorSubject, Observable, Subject } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { tap, throttleTime, map, materialize, exhaustMap, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { tap, throttleTime, map, materialize, exhaustMap, debounceTime, distinctUntilChanged, switchMap, finalize } from 'rxjs/operators';
 import { FADE_IN_ANIMATION } from '../../../animations';
 import { ToastrService } from 'ngx-toastr';
 import { Vehicle } from '../../../models/Vehicle';
@@ -10,6 +10,9 @@ import { LoaderService } from '../../../services/loader-service';
 import { BitData } from '../BitData';
 import { BitSize } from '../BitSize';
 import { BitService } from '../bit.service';
+import { ConfigService } from 'src/app/services/config.service';
+import { HttpParams, HttpClient } from '@angular/common/http';
+import { AuthService } from 'src/app/services/auth.service';
 
 const ALL_VEHICLE_OPTION: Vehicle = { regNo: 'All Vehicle', type: '', vehicle_id: 'all' }
 const UNASSIGNED_PIPES_OPTION: Vehicle = { regNo: 'Bits in Stock', type: '', vehicle_id: 'unassigned' }
@@ -52,6 +55,9 @@ export class BitDataComponent implements OnDestroy {
         private bitService: BitService,
         private toastr: ToastrService,
         private loader: LoaderService,
+        private config: ConfigService,
+        private auth: AuthService,
+        private http: HttpClient
     ) {
         // this.pipeDataBatchUrl = this.config.getAbsoluteUrl('PipeData');
         // this.pipeDataCountUrl = this.config.getAbsoluteUrl('pipeDataCount');
@@ -148,31 +154,27 @@ export class BitDataComponent implements OnDestroy {
     }
 
     downloadPdf() {
-        // const pipeDataurl = this.config.getReportGenerateUrl('pipeData');
-        // const reportDownloadUrl = this.config.getReportDownloadUrl();
-        // const params = new HttpParams()
-        //     .set('user_id', this.auth.userid)
-        //     .append('godown_type', this.selectedGodown.godownType)
-        //     .append('godown_id', this.selectedGodown.godown_id)
-        //     .append('vehicle_id', this.selectedVehicle.vehicle_id)
-        //     .append('vehicle_no', this.selectedVehicle.regNo)
-        //     .append('pipe_size', this.selectedPipe.size)
-        //     .append('pipe_type', this.selectedPipe.type)
-        //     .append('mm_count', this.count.mm_count)
-        //     .append('rr_count', this.count.rr_count)
-        //     .append('total_count', this.count.total_count)
-        //     .append('start', '0')
-        //     .append('end', '10000')
-        // this.loader.showSaveLoader('Generating report ...')
-        // this.http.get<{ filename: string }>(pipeDataurl, { params: params }).pipe(finalize(() => {
-        //     this.loader.hideSaveLoader()
-        // })).subscribe(({ filename }) => {
-        //     this.toastr.success('Report generated successfully', null, { timeOut: 2000 });
-        //     console.log(filename);
-        //     window.open(reportDownloadUrl + '/' + filename, '_blank');
-        // }, (err) => {
-        //     this.toastr.error('Error while generating report', null, { timeOut: 2000 });
-        // })
+        const bitDataUrl = this.config.getReportGenerateUrl('bitData');
+        const reportDownloadUrl = this.config.getReportDownloadUrl();
+        const params = new HttpParams()
+            .set('user_id', this.auth.userid)
+            .append('bit_type', this.selectedBit.type)
+            .append('bit_size', this.selectedBit.size.toString())
+            .append('vehicle_id', this.selectedVehicle.vehicle_id)
+            .append('vehicle_no', this.selectedVehicle.regNo)
+            .append('total_count', this.count)
+            .append('start', '0')
+            .append('end', '10000')
+        this.loader.showSaveLoader('Generating report ...')
+        this.http.get<{ filename: string }>(bitDataUrl, { params: params }).pipe(finalize(() => {
+            this.loader.hideSaveLoader()
+        })).subscribe(({ filename }) => {
+            this.toastr.success('Report generated successfully', null, { timeOut: 2000 });
+            console.log(filename);
+            window.open(reportDownloadUrl + '/' + filename, '_blank');
+        }, (err) => {
+            this.toastr.error('Error while generating report', null, { timeOut: 2000 });
+        })
     }
 
     onSerialNoSearch(e) {

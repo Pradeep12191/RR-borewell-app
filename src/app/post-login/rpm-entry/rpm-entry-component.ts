@@ -417,7 +417,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             extra_feet = +this.rpmSheet.depth.above.extra_feet;
         }
 
-        if (boreType.type !== 'Bore Depth' &&  boreType.id !== 1) {
+        if (boreType.type !== 'Bore Depth' && boreType.id !== 1) {
             if (this.rpmSheet && this.rpmSheet.month_data) {
                 currentTotalBoreDepth = this.rpmSheet.month_data.m_depth;
                 currentTotalRunningRpm = this.rpmSheet.month_data.m_rpm;
@@ -466,13 +466,18 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     getReboreDepth() {
         const depth = +this.form.get('depth.bore').value;
         const boreType: BoreType = this.form.get('depth.boreType').value;
+        const pipeErection = +this.form.get('depth.pipeErection').value;
         let m_rebore_feet = 0;
+        let rebore_depth = 0;
 
         if (this.rpmSheet && this.rpmSheet.month_data) {
             m_rebore_feet = this.rpmSheet.month_data.m_rebore_feet;
         }
-        if (boreType.type === 'Rebore' || boreType.id === 4) {
-            return m_rebore_feet + depth
+        if (pipeErection && depth && depth >= pipeErection) {
+            rebore_depth = this.roundValue(depth - pipeErection);
+        }
+        if ((boreType.type === 'Rebore' || boreType.id === 4) && rebore_depth) {
+            return m_rebore_feet + rebore_depth;
         }
         return m_rebore_feet;
     }
@@ -490,8 +495,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             m_other_rpm = this.rpmSheet.month_data.m_other_rpm;
         }
         if (boreType.type === 'Rebore' || boreType.id === 4
-        || boreType.type === 'Hose Cleaning' || boreType.id === 2 
-        || boreType.type === 'Air' || boreType.id === 3 ) {
+            || boreType.type === 'Hose Cleaning' || boreType.id === 2
+            || boreType.type === 'Air' || boreType.id === 3) {
             return m_other_rpm + rpm
         }
         return m_other_rpm;

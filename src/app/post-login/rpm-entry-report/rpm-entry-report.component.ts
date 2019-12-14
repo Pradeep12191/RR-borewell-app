@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
-import { Subscription, of, throwError } from 'rxjs';
+import { Subscription, of, throwError, noop } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { RpmEntrySheet } from '../../models/RpmEntrySheet';
 import { Column } from '../../expand-table/Column';
@@ -255,12 +255,14 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
     }
 
     downloadReport() {
+        const searchCriteria = this.filterForm.value.searchCriteria;
+        const params = this.getParams(searchCriteria);
         this.loader.showSaveLoader('Generating Report ...')
-        this.rpmEntryReportService.downloadPdf(this.vehicleId).pipe(
+        this.rpmEntryReportService.downloadPdf(params).pipe(
             finalize(() => {
                 this.loader.hideSaveLoader()
             })
-        ).subscribe()
+        ).subscribe(noop)
     }
 
     onCriteriaChange() {

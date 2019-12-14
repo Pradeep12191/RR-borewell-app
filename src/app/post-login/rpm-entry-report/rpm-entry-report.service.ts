@@ -25,17 +25,19 @@ export class RpmEntryReportService {
         this.pdfDownloadUrl = this.config.getReportDownloadUrl();
     }
 
-    downloadPdf(vehicleId: number) {
+    downloadPdf(inputParams) {
 
-        const params = new HttpParams().set('user_id', this.auth.userid)
-            .append('vehicle_id', vehicleId.toString());
+        const params = {...inputParams, user_id: this.auth.userid}
         return this.http.get<{ success: string; filename: string }>(this.reportUrl, { params }).pipe(
             map((response) => {
                 this.toastr.success('Report generated successfully', null, { timeOut: 2000 });
                 window.open(this.pdfDownloadUrl + '/' + response.filename, '_blank');
                 return response;
             }),
-            catchError((err) => throwError(err))
+            catchError((err) => {
+                this.toastr.error('Error while generating report')
+                return throwError(err)
+            })
         );
     }
 

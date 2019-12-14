@@ -954,6 +954,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.rpmSheet.month_data.m_extra_hour = 0;
                         this.rpmSheet.month_data.m_extra_min = 0;
                         this.rpmSheet.month_data.m_extra_feet = 0;
+                        this.rpmSheet.month_data.m_rebore_feet = 0;
+                        this.rpmSheet.month_data.m_other_rpm = 0;
                         this.lastResetDate = resetData.date;
                         this.lastResetRpmNo = resetData.rpm_no;
                     })

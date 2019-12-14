@@ -256,7 +256,7 @@
 </div>
 
 <div fxLayout fxLayoutGap="16px">
-    <div class="m-t-16 white" fxFlex>
+    <div class="m-t-16" fxFlex>
         <!-- <div class="section-title m-b-16 contact-title">
             DEPTH DETAILS
         </div> -->
@@ -330,7 +330,7 @@
             </div>
         </div>
     </div>
-    <div class="m-t-16 white" fxFlex>
+    <div class="m-t-16" fxFlex>
         <!-- <div class="section-title m-b-16 contact-title">
             BIT DETAILS
         </div> -->
@@ -350,9 +350,8 @@
                     </ng-container>
                 </div>
             </div>
-
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
-                <div fxFlex="30">Bit Running Feet</div>
+                <div fxFlex="40">Bit Running Feet</div>
                 <div>:</div>
                 <div class="font-14">
                     <ng-container *hyphen="rpmEntry?.bit.running_feet; else hyphen">
@@ -361,7 +360,7 @@
                 </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
-                <div fxFlex="30">Bit Previous Feet</div>
+                <div fxFlex="40">Bit Previous Feet</div>
                 <div>:</div>
                 <div class="font-14">
                     <ng-container *hyphen="rpmEntry?.bit.previous_feet; else hyphen">
@@ -370,7 +369,7 @@
                 </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
-                <div fxFlex="30">Total Feet</div>
+                <div fxFlex="40">Total Feet</div>
                 <div>:</div>
                 <div class="font-14">
                     <ng-container *hyphen="rpmEntry?.bit.total_feet; else hyphen">
@@ -379,7 +378,7 @@
                 </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
-                <div fxFlex="30">Hammer</div>
+                <div fxFlex="40">Hammer</div>
                 <div>:</div>
                 <div class="font-14">
                     <ng-container *hyphen="rpmEntry?.bit.hammer; else hyphen">
@@ -388,7 +387,7 @@
                 </div>
             </div>
             <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
-                <div fxFlex="30">Piston</div>
+                <div fxFlex="40">Piston</div>
                 <div>:</div>
                 <div class="font-14">
                     <ng-container *hyphen="rpmEntry?.bit.piston; else hyphen">
@@ -398,8 +397,40 @@
             </div>
         </div>
     </div>
-    <div fxFlex class="m-t-16">
-        Hammer
+    <div class="m-t-16" fxFlex>
+        <div fxLayout="column" fxLayoutGap="10px" class="m-t-16">
+            <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
+                <div fxFlex="50">Hammer Serial No</div>
+                <div>:</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEntry?.bit.serial_no; else hyphen">
+                        {{ rpmEntry?.hammer.serial_no }}
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div fxLayout="column" fxLayoutGap="10px" class="m-t-16">
+            <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
+                <div fxFlex="50">Hammer Running Feet</div>
+                <div>:</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEntry?.hammer.running_feet; else hyphen">
+                        {{ rpmEntry?.hammer.running_feet }}
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div fxLayout="column" fxLayoutGap="10px" class="m-t-16">
+            <div fxLayout fxLayoutGap="15px" fxLayoutAlign="start center">
+                <div fxFlex="50">Hammer Total Feet</div>
+                <div>:</div>
+                <div class="font-14">
+                    <ng-container *hyphen="rpmEntry?.bit.total_feet; else hyphen">
+                        {{ rpmEntry?.hammer.total_feet }}
+                    </ng-container>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

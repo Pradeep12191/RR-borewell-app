@@ -1,5 +1,8 @@
 export interface BitLife {
     bit_no: number,
+    bit_type: string,
+    company_name: string,
+    status: number,
     date: string,
     id: number,
     rpm_no: number,

@@ -269,6 +269,22 @@
             "url": "pipe-data-report"
         },
         {
+            "name": "bitData",
+            "url": "bit-data-report"
+        },
+        {
+            "name": "hammerData",
+            "url": "hammer-data-report"
+        },
+        {
+            "name": "bitLife",
+            "url": "bit-life-report"
+        },
+        {
+            "name": "hammerLife",
+            "url": "hammer-life-report"
+        },
+        {
             "name": "rpmEntry",
             "url": "rpm-entry-report"
         }

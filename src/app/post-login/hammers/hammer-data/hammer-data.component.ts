@@ -7,8 +7,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HammersService } from '../hammers.service';
 import { ToastrService } from 'ngx-toastr';
 import { LoaderService } from 'src/app/services/loader-service';
-import { distinctUntilChanged, debounceTime, switchMap, throttleTime, tap, exhaustMap, materialize, map } from 'rxjs/operators';
+import { distinctUntilChanged, debounceTime, switchMap, throttleTime, tap, exhaustMap, materialize, map, finalize } from 'rxjs/operators';
 import { FADE_IN_ANIMATION } from 'src/app/animations';
+import { ConfigService } from 'src/app/services/config.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 const ALL_VEHICLE_OPTION: Vehicle = { regNo: 'All Vehicle', type: '', vehicle_id: 'all' }
 const UNASSIGNED_PIPES_OPTION: Vehicle = { regNo: 'Hammers in Stock', type: '', vehicle_id: 'unassigned' }
@@ -50,6 +53,9 @@ export class HammerDataComponent implements OnDestroy {
         private hammersService: HammersService,
         private toastr: ToastrService,
         private loader: LoaderService,
+        private config: ConfigService,
+        private auth: AuthService,
+        private http: HttpClient
     ) {
         // this.pipeDataBatchUrl = this.config.getAbsoluteUrl('PipeData');
         // this.pipeDataCountUrl = this.config.getAbsoluteUrl('pipeDataCount');
@@ -146,31 +152,27 @@ export class HammerDataComponent implements OnDestroy {
     }
 
     downloadPdf() {
-        // const pipeDataurl = this.config.getReportGenerateUrl('pipeData');
-        // const reportDownloadUrl = this.config.getReportDownloadUrl();
-        // const params = new HttpParams()
-        //     .set('user_id', this.auth.userid)
-        //     .append('godown_type', this.selectedGodown.godownType)
-        //     .append('godown_id', this.selectedGodown.godown_id)
-        //     .append('vehicle_id', this.selectedVehicle.vehicle_id)
-        //     .append('vehicle_no', this.selectedVehicle.regNo)
-        //     .append('pipe_size', this.selectedPipe.size)
-        //     .append('pipe_type', this.selectedPipe.type)
-        //     .append('mm_count', this.count.mm_count)
-        //     .append('rr_count', this.count.rr_count)
-        //     .append('total_count', this.count.total_count)
-        //     .append('start', '0')
-        //     .append('end', '10000')
-        // this.loader.showSaveLoader('Generating report ...')
-        // this.http.get<{ filename: string }>(pipeDataurl, { params: params }).pipe(finalize(() => {
-        //     this.loader.hideSaveLoader()
-        // })).subscribe(({ filename }) => {
-        //     this.toastr.success('Report generated successfully', null, { timeOut: 2000 });
-        //     console.log(filename);
-        //     window.open(reportDownloadUrl + '/' + filename, '_blank');
-        // }, (err) => {
-        //     this.toastr.error('Error while generating report', null, { timeOut: 2000 });
-        // })
+        const hammerDataurl = this.config.getReportGenerateUrl('hammerData');
+        const reportDownloadUrl = this.config.getReportDownloadUrl();
+        const params = new HttpParams()
+            .set('user_id', this.auth.userid)
+            .append('hammer_size', this.selectedHammer.size.toString())
+            .append('hammer_type', this.selectedHammer.type)
+            .append('vehicle_id', this.selectedVehicle.vehicle_id)
+            .append('vehicle_no', this.selectedVehicle.regNo)
+            .append('total_count', this.count)
+            .append('start', '0')
+            .append('end', '10000')
+        this.loader.showSaveLoader('Generating report ...')
+        this.http.get<{ filename: string }>(hammerDataurl, { params: params }).pipe(finalize(() => {
+            this.loader.hideSaveLoader()
+        })).subscribe(({ filename }) => {
+            this.toastr.success('Report generated successfully', null, { timeOut: 2000 });
+            console.log(filename);
+            window.open(reportDownloadUrl + '/' + filename, '_blank');
+        }, (err) => {
+            this.toastr.error('Error while generating report', null, { timeOut: 2000 });
+        })
     }
 
     onSerialNoSearch(e) {

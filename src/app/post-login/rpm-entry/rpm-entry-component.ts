@@ -370,29 +370,37 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     displayDieselTotal() {
         const compressorDiesel = +this.form.get('diesel.compressor').value;
         let m_diesel = 0;
+        let previousRunningRpm = 0;
 
         if (this.rpmSheet && this.rpmSheet.month_data) {
             m_diesel = this.rpmSheet.month_data.m_diesel
         }
-        return this.roundValue(m_diesel + compressorDiesel);
+        if (this.rpmSheet && this.rpmSheet.month_data) {
+            previousRunningRpm = this.rpmSheet.month_data.m_rpm;
+        }
+        if (previousRunningRpm) {
+            return this.roundValue(m_diesel + compressorDiesel);
+        }
+        return 0;
+
     }
 
     displayDieselAvg() {
         // 5. diesel_avg - (m_diesel + compressor) - displayDieselTotal()  / m_rpm
         const currentTotalDiesel = this.displayDieselTotal();
         let previousRunningRpm = 0;
-        let m_diesel_avg = 0;
+        // let m_diesel_avg = 0;
         let currentCompressorDiesel = +this.form.get('diesel.compressor').value;
 
         if (this.rpmSheet && this.rpmSheet.month_data) {
             previousRunningRpm = this.rpmSheet.month_data.m_rpm;
-            m_diesel_avg = this.rpmSheet.month_data.m_diesel_avg
+            // m_diesel_avg = this.rpmSheet.month_data.m_diesel_avg
         }
 
         if (currentTotalDiesel && previousRunningRpm && currentCompressorDiesel) {
             return this.roundValue(currentTotalDiesel / previousRunningRpm);
         }
-        return m_diesel_avg;
+        return 0;
     }
 
     displayAverageDepth() {

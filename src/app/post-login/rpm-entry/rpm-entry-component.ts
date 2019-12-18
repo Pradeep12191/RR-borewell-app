@@ -338,8 +338,17 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     displayMonthDepth() {
         let m_depth = 0;
-        const boreDepth = +this.form.get('depth.bore').value;
+        let boreDepth = +this.form.get('depth.bore').value;
         const boreType = this.form.get('depth.boreType').value;
+        let extra_feet = 0;
+        if (this.rpmSheet && this.rpmSheet.depth) {
+            extra_feet = this.rpmSheet.depth.above.extra_feet
+        }
+
+        if (extra_feet) {
+            boreDepth = boreDepth - extra_feet
+        }
+
         if (this.rpmSheet && this.rpmSheet.month_data) {
             m_depth = this.rpmSheet.month_data.m_depth || 0;
         }
@@ -353,8 +362,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         let rpm = 0;
         let m_rpm = 0;
         const boreType: BoreType = this.form.get('depth.boreType').value;
+        const extraRpm = this.getCurrentExtraRpm();
         if (this.rpmSheet && this.rpmSheet.rpm) {
             rpm = this.rpmSheet.rpm.running;
+        }
+        if (extraRpm && extraRpm < rpm) {
+            rpm = rpm - extraRpm
         }
         if (this.rpmSheet && this.rpmSheet.month_data) {
             m_rpm = this.rpmSheet.month_data.m_rpm || 0;
@@ -1897,6 +1910,20 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.rpmSheet.depth.average = Math.floor(feetAvg);
             }
         }
+    }
+
+    private getCurrentExtraRpm() {
+        const hrs = +this.form.get('depth.above.hrs').value;
+        const min = +this.form.get('depth.above.min').value;
+        const boreType: BoreType = this.form.get('depth.boreType').value;
+        let extraRpm = 0;
+        if (this.rpmSheet && this.rpmSheet.depth && (boreType.type === 'BoreDepth' || boreType.id === 1)) {
+            const extraFeet = +this.rpmSheet.depth.above.extra_feet;
+            if (extraFeet && (hrs || min)) {
+                extraRpm = this.convertToRpm(hrs, min);
+            }
+        }
+        return extraRpm
     }
 
     private convertToRpm(h = 0, m = 0) {

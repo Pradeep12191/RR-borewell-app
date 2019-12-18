@@ -460,8 +460,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             total_extra_feet = m_extra_feet;
         }
 
-        numerator = currentTotalBoreDepth - total_extra_feet;
-        const denominator = currentTotalRunningRpm - total_extra_hours;
+        numerator = currentTotalBoreDepth;
+        const denominator = currentTotalRunningRpm;
 
         if (numerator && denominator && denominator > 0 && numerator > 0) {
             return this.roundValue(numerator / denominator);

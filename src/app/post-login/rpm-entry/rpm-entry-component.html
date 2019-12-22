@@ -113,7 +113,8 @@
                     </div>
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div class="font-12">Total Depth</div>
-                        <div class="bold">{{ roundValue(displayMonthDepth() + getExtraFeet() +  getReboreDepth()) }}</div>
+                        <div class="bold">{{ roundValue(displayMonthDepth() + getExtraFeet() +  getReboreDepth()) }}
+                        </div>
                     </div>
                     <div fxLayout="column" fxLayoutGap="5px">
                         <div class="font-12">Average Depth</div>
@@ -506,13 +507,31 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-                            <ng-container *ngIf="form.get('depth.boreType').value.type !== 'Air' && form.get('depth.boreType').value.id !== 3; else airTpl">
-                                <mat-form-field fxFlex="60">
-                                    <mat-label>Feet</mat-label>
-                                    <input #depthInput type="text" (keydown.enter)="onDepthEnter(0)"
-                                        (input)="onDepthInput()" matInput positiveNumber formControlName="bore">
-                                </mat-form-field>
-                            </ng-container>
+                            <div fxLayout fxLayoutGap="10px" fxFlex>
+                                <ng-container
+                                    *ngIf="form.get('depth.boreType').value.type !== 'Air' && form.get('depth.boreType').value.id !== 3; else airTpl">
+                                    <mat-form-field
+                                        [fxFlex]="form.get('depth.boreType').value.type === 'Rebore' || form.get('depth.boreType').value.id === 4 ? '30' : '100'">
+                                        <mat-label>Feet</mat-label>
+                                        <input #depthInput type="text" (keydown.enter)="onDepthEnter(0)"
+                                            (input)="onDepthInput()" matInput positiveNumber formControlName="bore">
+                                    </mat-form-field>
+                                    <ng-container
+                                        *ngIf="form.get('depth.boreType').value.type === 'Rebore' || form.get('depth.boreType').value.id === 4">
+                                        <mat-form-field class="calc-field" fxFlex="25">
+                                            <mat-label>Hrs</mat-label>
+                                            <input maxlength="2" type="text" matInput positiveNumber
+                                                formControlName="boreHrs">
+                                        </mat-form-field>
+                                        <mat-form-field class="calc-field" fxFlex="25">
+                                            <mat-label>Mins</mat-label>
+                                            <input maxlength="2" type="text" matInput positiveNumber
+                                                formControlName="boreMins">
+                                        </mat-form-field>
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+
                             <ng-template #airTpl>
                                 <div fxFlex="60" formGroupName="air" fxLayoutGap="10px">
                                     <mat-form-field class="calc-field" fxFlex="calc(25% - 10px)">

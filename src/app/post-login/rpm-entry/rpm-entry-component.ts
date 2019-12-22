@@ -365,25 +365,17 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         let m_rpm = 0;
         const boreType: BoreType = this.form.get('depth.boreType').value;
         const extraRpm = this.getCurrentExtraRpm();
-        const reboreRpm = this.getReboreRpm();
         if (this.rpmSheet && this.rpmSheet.rpm) {
             rpm = this.rpmSheet.rpm.running;
         }
         if (extraRpm && extraRpm < rpm) {
             rpm = rpm - extraRpm
         }
-        if (reboreRpm && reboreRpm < rpm) {
-            rpm = rpm - reboreRpm
-        }
         if (this.rpmSheet && this.rpmSheet.month_data) {
             m_rpm = this.rpmSheet.month_data.m_rpm || 0;
         }
 
-        if (
-            boreType.type === 'Bore Depth' || boreType.id === 1 
-            ||
-            boreType.type === 'Rebore' || boreType.id === 4
-            ) {
+        if (boreType.type === 'Bore Depth' || boreType.id === 1) {
             return this.roundValue(m_rpm + rpm);
         }
 
@@ -519,6 +511,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     getOtherRpm() {
         const boreType: BoreType = this.form.get('depth.boreType').value;
+        const reboreRpm = this.getReboreRpm();
         let m_other_rpm = 0;
         let rpm = 0;
 
@@ -529,8 +522,16 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.rpmSheet && this.rpmSheet.month_data) {
             m_other_rpm = this.rpmSheet.month_data.m_other_rpm;
         }
-        if (boreType.type === 'Hose Cleaning' || boreType.id === 2
-            || boreType.type === 'Air' || boreType.id === 3) {
+        if (
+            boreType.type === 'Rebore' || boreType.id === 4 ||
+            boreType.type === 'Hose Cleaning' || boreType.id === 2
+            || boreType.type === 'Air' || boreType.id === 3
+        ) {
+            if (boreType.type === 'Rebore' || boreType.id === 4) {
+                if (reboreRpm && reboreRpm < rpm) {
+                    rpm = rpm - reboreRpm
+                }
+            }
             return m_other_rpm + rpm
         }
         return m_other_rpm;
@@ -1825,7 +1826,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 m_extra_min: this.getExtraTime().min,
                 m_diesel_avg: this.displayDieselAvg(),
                 m_rebore_feet: this.getReboreDepth(),
-                m_other_rpm: this.roundValue(this.getOtherRpm() + this.getReboreRpm())
+                m_other_rpm: this.getOtherRpm()
             },
             bit: {
                 ...this.form.value.bit,
@@ -1983,6 +1984,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     updateExtraFeet() {
         const aboveFeet: ServiceLimit = this.form.get('depth.above.feet').value;
+        const boreType: BoreType = this.form.get('depth.boreType').value;
         const boreDepth = +this.form.get('depth.bore').value;
         let extraFeet = 0;
 
@@ -1990,9 +1992,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (this.rpmSheet.depth) {
             if (extraFeet > 0) {
-                this.rpmSheet.depth.above.extra_feet = extraFeet;
-                this.form.get('depth.above.hrs').enable();
-                this.form.get('depth.above.min').enable();
+                if (boreType.type === 'Bore Depth' || boreType.id === 1) {
+                    this.rpmSheet.depth.above.extra_feet = extraFeet;
+                    this.form.get('depth.above.hrs').enable();
+                    this.form.get('depth.above.min').enable();
+                }
             } else {
                 this.form.get('depth.above.hrs').reset();
                 this.form.get('depth.above.min').reset();

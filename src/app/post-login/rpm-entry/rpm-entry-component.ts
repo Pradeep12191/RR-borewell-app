@@ -198,6 +198,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }),
             depth: this.fb.group({
                 bore: { value: '', disabled: true },
+                boreHrs: { value: '', disabled: true },
+                boreMins: { value: '', disabled: true },
                 boreType: { value: '', disabled: true },
                 pipeErection: { value: '', disabled: true },
                 above: this.fb.group({
@@ -363,17 +365,25 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         let m_rpm = 0;
         const boreType: BoreType = this.form.get('depth.boreType').value;
         const extraRpm = this.getCurrentExtraRpm();
+        const reboreRpm = this.getReboreRpm();
         if (this.rpmSheet && this.rpmSheet.rpm) {
             rpm = this.rpmSheet.rpm.running;
         }
         if (extraRpm && extraRpm < rpm) {
             rpm = rpm - extraRpm
         }
+        if (reboreRpm && reboreRpm < rpm) {
+            rpm = rpm - reboreRpm
+        }
         if (this.rpmSheet && this.rpmSheet.month_data) {
             m_rpm = this.rpmSheet.month_data.m_rpm || 0;
         }
 
-        if (boreType.type === 'Bore Depth' || boreType.id === 1) {
+        if (
+            boreType.type === 'Bore Depth' || boreType.id === 1 
+            ||
+            boreType.type === 'Rebore' || boreType.id === 4
+            ) {
             return this.roundValue(m_rpm + rpm);
         }
 
@@ -519,8 +529,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.rpmSheet && this.rpmSheet.month_data) {
             m_other_rpm = this.rpmSheet.month_data.m_other_rpm;
         }
-        if (boreType.type === 'Rebore' || boreType.id === 4
-            || boreType.type === 'Hose Cleaning' || boreType.id === 2
+        if (boreType.type === 'Hose Cleaning' || boreType.id === 2
             || boreType.type === 'Air' || boreType.id === 3) {
             return m_other_rpm + rpm
         }
@@ -554,6 +563,18 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             return extraRpm;
         }
         return 0;
+    }
+    getReboreRpm() {
+        const hrs = +this.form.get('depth.boreHrs').value;
+        const min = +this.form.get('depth.boreMins').value;
+        const boreType: BoreType = this.form.get('depth.boreType').value;
+        let extraRpm = 0;
+        if (this.rpmSheet && this.rpmSheet.depth && (boreType.type === 'Rebore' || boreType.id === 4)) {
+            if (hrs || min) {
+                extraRpm = this.convertToRpm(hrs, min);
+            }
+        }
+        return extraRpm;
     }
 
     onRpmInputEnter(currentIndex) {
@@ -1337,6 +1358,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('diesel.tractor').reset('');
         this.form.get('depth.pipeErection').reset('');
         this.form.get('depth.bore').reset('');
+        this.form.get('depth.boreHrs').reset('');
+        this.form.get('depth.boreMins').reset('');
         this.form.get('depth.above.feet').reset('');
         this.form.get('depth.above.hrs').reset('');
         this.form.get('depth.above.min').reset('');
@@ -1369,6 +1392,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         this.form.get('depth.above.hrs').disable();
         this.form.get('depth.above.min').disable();
+        this.form.get('depth.boreHrs').disable();
+        this.form.get('depth.boreMins').disable();
 
         this.rpmEntryTable.rrIncome.forEach(r => {
             r.feet = 0;
@@ -1530,11 +1555,22 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         const bit: BitSerialNo = this.form.get('bit').value;
         const hammer: BitSerialNo = this.form.get('hammer').value;
         const boreType: BoreType = this.form.get('depth.boreType').value;
+        const pipeErection = this.form.get('depth.pipeErection').value;
+        const depth = this.form.get('depth.bore').value;
         if (boreType.type === 'Bore Depth' || boreType.type === 'Rebore' || boreType.id === 1 || boreType.id === 4) {
             this.updateBitTotalFeet(bit);
             this.updateHammerTotalFeet(hammer);
             if (boreType.type === 'Bore Depth' || boreType.id === 1) {
                 this.updateExtraFeet();
+            }
+            if ((boreType.type === 'Rebore' || boreType.id === 4) && pipeErection && depth) {
+                this.form.get('depth.boreHrs').enable();
+                this.form.get('depth.boreMins').enable();
+            } else {
+                this.form.get('depth.boreHrs').disable();
+                this.form.get('depth.boreMins').disable();
+                this.form.get('depth.boreHrs').reset();
+                this.form.get('depth.boreMins').reset();
             }
         }
     }
@@ -1763,6 +1799,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 average: this.rpmSheet.depth.average,
                 bore_type: this.form.value.depth.boreType.type,
                 bore_id: +this.form.value.depth.boreType.id,
+                rebore_hrs: +this.form.value.depth.boreHrs,
+                rebore_mins: +this.form.value.depth.boreMins,
                 above: {
                     feet: this.form.value.depth.above.feet,
                     extra_feet: +this.rpmSheet.depth.above.extra_feet,
@@ -1787,7 +1825,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 m_extra_min: this.getExtraTime().min,
                 m_diesel_avg: this.displayDieselAvg(),
                 m_rebore_feet: this.getReboreDepth(),
-                m_other_rpm: this.getOtherRpm()
+                m_other_rpm: this.roundValue(this.getOtherRpm() + this.getReboreRpm())
             },
             bit: {
                 ...this.form.value.bit,
@@ -1978,6 +2016,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             average: 0,
             bore: 0,
             pipe_erection: 0,
+            rebore_hrs: 0,
+            rebore_mins: 0,
             air: {
                 in_out: '',
                 rpm_entry_no: 0,

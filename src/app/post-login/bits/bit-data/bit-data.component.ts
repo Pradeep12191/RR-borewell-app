@@ -13,6 +13,7 @@ import { BitService } from '../bit.service';
 import { ConfigService } from 'src/app/services/config.service';
 import { HttpParams, HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/services/auth.service';
+import { AppService } from 'src/app/services/app.service';
 
 const ALL_VEHICLE_OPTION: Vehicle = { regNo: 'All Vehicle', type: '', vehicle_id: 'all' }
 const UNASSIGNED_PIPES_OPTION: Vehicle = { regNo: 'Bits in Stock', type: '', vehicle_id: 'unassigned' }
@@ -31,7 +32,7 @@ export class BitDataComponent implements OnDestroy {
     bitSize;
     theEnd = false;
     batch = 100;
-    offset = new BehaviorSubject(null);
+    offset = new Subject();
     infinite: Observable<any>;
     pipeDataCountUrl;
     bitData = [];
@@ -57,7 +58,8 @@ export class BitDataComponent implements OnDestroy {
         private loader: LoaderService,
         private config: ConfigService,
         private auth: AuthService,
-        private http: HttpClient
+        private http: HttpClient,
+        private app: AppService
     ) {
         // this.pipeDataBatchUrl = this.config.getAbsoluteUrl('PipeData');
         // this.pipeDataCountUrl = this.config.getAbsoluteUrl('pipeDataCount');
@@ -68,17 +70,32 @@ export class BitDataComponent implements OnDestroy {
         });
 
         this.routeDataSubscription = this.route.data.subscribe((data) => {
+
+            let selectedVehicle = null;
+            let selectedBit = null;
             this.vehicles = data.vehicles;
             this.bits = data.bits;
             this.vehicles.unshift(UNASSIGNED_PIPES_OPTION);
             this.vehicles.unshift(ALL_VEHICLE_OPTION);
-            this.selectedVehicle = this.vehicles[0];
-            this.selectedBit = this.bits.find(pipe => pipe.size == this.bitSize);
+
+            // set Search Data from app state
+            if (this.app.bitDataSearch.vehicleId) {
+                selectedVehicle = this.vehicles.find(v => v.vehicle_id === this.app.bitDataSearch.vehicleId);
+            }
+            if (this.app.bitDataSearch.bitSizeId) {
+                selectedBit = this.bits.find(b => b.id === this.app.bitDataSearch.bitSizeId);
+            }
+            this.searchSerialNo = this.app.bitDataSearch.serialNo || ''
+
+            this.selectedVehicle = selectedVehicle || this.vehicles[0];
+            this.selectedBit = selectedBit || this.bits.find(pipe => pipe.size == this.bitSize);
+
             this.bitService.getBitDataCount(
                 this.selectedBit.size,
                 this.selectedVehicle.vehicle_id,
                 this.searchSerialNo
             ).subscribe((count) => {
+                this.offset.next(null);
                 this.count = count
             })
         })
@@ -144,6 +161,8 @@ export class BitDataComponent implements OnDestroy {
     change() {
         this.mainLoading = true;
         this.offset.next(null);
+        this.app.bitDataSearch.vehicleId = this.selectedVehicle.vehicle_id;
+        this.app.bitDataSearch.bitSizeId = this.selectedBit.id;
         this.bitService.getBitDataCount(
             this.selectedBit.size,
             this.selectedVehicle.vehicle_id,
@@ -179,7 +198,8 @@ export class BitDataComponent implements OnDestroy {
 
     onSerialNoSearch(e) {
         this.mainLoading = true;
-        this.searchSerialNo = e.target.value
+        this.searchSerialNo = e.target.value;
+        this.app.bitDataSearch.serialNo = this.searchSerialNo;
         this.input$.next(e.target.value)
     }
 

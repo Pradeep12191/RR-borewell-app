@@ -8,6 +8,11 @@ export class AppService {
     selectedGodownId;
     previousUrl;
     boreTypesUrl: string;
+    bitDataSearch = {
+        bitSizeId: null,
+        vehicleId: null,
+        serialNo: null
+    };
 
     constructor(
         private config: ConfigService,
@@ -19,4 +24,6 @@ export class AppService {
     getBoreTypes() {
         return this.http.get<BoreType[]>(this.boreTypesUrl)
     }
+
+
 }

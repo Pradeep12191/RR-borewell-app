@@ -22,7 +22,7 @@
             </mat-form-field>
             <mat-form-field class="calc-field" fxFlex="17">
                 <mat-label>Search serial No.</mat-label>
-                <input type="text" positiveNumber matInput (input)="onSerialNoSearch($event)">
+                <input type="text" [value]="searchSerialNo" positiveNumber matInput (input)="onSerialNoSearch($event)">
             </mat-form-field>
             <div fxFlexAlign="center">
                 <button (click)="downloadPdf()" mat-raised-button color="primary">Download Pdf</button>

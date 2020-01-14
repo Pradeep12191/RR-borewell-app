@@ -36,6 +36,7 @@ import { BoreType } from '../../models/BoreType';
 import { AssignHammerDialogComponent } from './assing-hammer-dialog/assign-hammer-dialog.component';
 import { HammerSize } from '../hammers/hammer-size.model';
 import { HammerSerialNo } from 'src/app/models/HammerSerialNo';
+import { AppService } from 'src/app/services/app.service';
 
 interface VehicleChangeData {
     lastRpmEntrySheet: RpmEntrySheet;
@@ -161,6 +162,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         private loader: LoaderService,
         private common: CommonService,
         private toastr: ToastrService,
+        private app: AppService
     ) {
         this.form = this.fb.group({
             pointExpenseFeet: this.fb.array([]),
@@ -228,7 +230,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.godowns = data.godowns;
             this.bitGodowns = data.bitGodowns;
             this.bitSizes = data.bits;
-            this.hammers = data.hammers
+            this.hammers = data.hammers;
             this.rpmHourFeets = data.rpmHourFeets;
             this.compressorAirFilterServiceLimits = data.compressorAirFilterServiceLimits;
             this.compressorOilServiceLimits = data.compressorOilServiceLimits
@@ -251,13 +253,23 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.damageFeetFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
             });
             this.form.get('depth.boreType').setValue(this.boreTypes[0]);
-        })
+            // ---data set
+            this.setAppData();
+            if (this.app.rpmEntryData.formValue) {
+                console.log(this.app.rpmEntryData.formValue);
+                this.form.patchValue(this.app.rpmEntryData.formValue);
+                this.setDropDownData();
+            }
+            // ---
+        });
     }
 
     ngAfterViewInit() {
         setTimeout(() => {
-            this.vehicleSelect.open();
-            this.vehicleSelect.focus();
+            if (!this.selectedVehicle) {
+                this.vehicleSelect.open();
+                this.vehicleSelect.focus();
+            }
         });
 
         this.aboveFeetSelect._closedStream.subscribe(() => {
@@ -300,14 +312,17 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         })
 
         this.picker.closedStream.subscribe(() => {
+            // date set for app.
+            if (this.date) {
+                this.app.rpmEntryData.date = this.date;
+            }
+            //
             if (this.date && this.bookId) {
                 this.enableAllControls();
                 setTimeout(() => {
                     this.dateSelected$.next(true);
                 })
             }
-            // this.inVehicleSelect.open();
-            // this.inVehicleSelect.focus();
         });
         this.allInputs[0] = this.inFeetInputs;
         this.allInputs[1] = this.outFeetInputs;
@@ -315,6 +330,77 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.allInputs[3] = this.expenseFeetInputs;
         this.allInputs[4] = this.remarksInput;
 
+    }
+
+    setAppData() {
+        // set bore type as it is dropdown
+        if (this.app.rpmEntryData.selectedVehcileId) {
+            this.selectedVehicle = this.vehicles.find(v => v.vehicle_id === this.app.rpmEntryData.selectedVehcileId);
+        }
+        if (this.app.rpmEntryData.date) {
+            this.date = this.app.rpmEntryData.date;
+        }
+        if (this.date && this.selectedVehicle) {
+            this.enableAllControls();
+        }
+        if (this.app.rpmEntryData.rpmEntryNo) {
+            this.rpmEntryNo = this.app.rpmEntryData.rpmEntryNo
+        }
+        if (this.app.rpmEntryData.bookStartNo) {
+            this.bookStartNo = this.app.rpmEntryData.bookStartNo;
+        }
+        if (this.app.rpmEntryData.bookEndNo) {
+            this.bookEndNo = this.app.rpmEntryData.bookEndNo;
+        }
+        if (this.app.rpmEntryData.bookId) {
+            this.bookId = this.app.rpmEntryData.bookId;
+        }
+        if (this.app.rpmEntryData.rpmSheet) {
+            this.rpmSheet = this.app.rpmEntryData.rpmSheet;
+        }
+        if (this.app.rpmEntryData.lastResetDate) {
+            this.lastResetDate = this.app.rpmEntryData.lastResetDate;
+        }
+        if (this.app.rpmEntryData.lastResetRpmNo) {
+            this.lastResetRpmNo = this.app.rpmEntryData.lastResetRpmNo;
+        }
+        if (this.app.rpmEntryData.tracRunningRpm) {
+            this.tracRunningRpm = this.app.rpmEntryData.tracRunningRpm
+        }
+        if (this.app.rpmEntryData.previousDieselRpm) {
+            this.previousDieselRpm = this.app.rpmEntryData.previousDieselRpm
+        }
+        if (this.app.rpmEntryData.pointDieselRpm) {
+            this.pointDieselRpm = this.app.rpmEntryData.pointDieselRpm
+        }
+        if (this.app.rpmEntryData.vehicleServiceLimits) {
+            this.vehicleServiceLimits = this.app.rpmEntryData.vehicleServiceLimits;
+            if (this.app.rpmEntryData.activeCompressorOilServiceLimit) {
+                this.activeCompressorOilServiceLimit = this.app.rpmEntryData.activeCompressorOilServiceLimit
+            }
+            if (this.app.rpmEntryData.activeCompressorAirFilterLimit) {
+                this.activeCompressorAirFilterLimit = this.app.rpmEntryData.activeCompressorAirFilterLimit
+            }
+        }
+        if(this.app.rpmEntryData.tractors && this.app.rpmEntryData.tractors.length){
+            this.tractors = this.app.rpmEntryData.tractors;
+            console.log('[tractors set]')
+        }
+    }
+
+    setDropDownData() {
+        // bore type
+        if (this.app.rpmEntryData.formValue.depth.boreType) {
+            const selectedBoreType = this.boreTypes.find(b => b.id === this.app.rpmEntryData.formValue.depth.boreType.id);
+            this.form.get('depth.boreType').setValue(selectedBoreType);
+        }
+        // tractor
+        if (this.app.rpmEntryData.formValue.rpm.trac) {
+            const selectedTractor = this.tractors.find(t => t.id === this.app.rpmEntryData.formValue.rpm.trac.id);
+            console.log('[selected tractor]', this.tractors === this.app.rpmEntryData.tractors);
+            this.form.get('rpm.trac').setValue(selectedTractor);
+            this.form.get('rpm.tracEndHour').enable();
+        }
     }
 
     onLastUserEnter() {
@@ -945,6 +1031,26 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnDestroy() {
+        this.app.rpmEntryData.formValue = this.form.value;
+        this.app.rpmEntryData.rpmEntryNo = this.rpmEntryNo; // set
+        this.app.rpmEntryData.bookId = this.bookId; //set
+        this.app.rpmEntryData.bookStartNo = this.bookStartNo; //set
+        this.app.rpmEntryData.bookEndNo = this.bookEndNo; //set
+        this.app.rpmEntryData.date = this.date; //set
+        this.app.rpmEntryData.lastResetDate = this.lastResetDate; //set
+        this.app.rpmEntryData.lastResetRpmNo = this.lastResetRpmNo; //set
+        this.app.rpmEntryData.tracRunningRpm = this.tracRunningRpm; //set
+        this.app.rpmEntryData.pointDieselRpm = this.pointDieselRpm; // set
+        this.app.rpmEntryData.previousDieselRpm = this.previousDieselRpm; //set
+        this.app.rpmEntryData.rpmEntryTable = this.rpmEntryTable;
+        this.app.rpmEntryData.rpmSheet = this.rpmSheet;
+        this.app.rpmEntryData.selectedVehcileId = this.selectedVehicle ? this.selectedVehicle.vehicle_id : null;
+        this.app.rpmEntryData.vehicleServiceLimits = this.vehicleServiceLimits;
+        this.app.rpmEntryData.compressorAirFilterServiceLimits = this.compressorAirFilterServiceLimits;
+        this.app.rpmEntryData.compressorOilServiceLimits = this.compressorOilServiceLimits;
+        this.app.rpmEntryData.activeCompressorAirFilterLimit = this.activeCompressorAirFilterLimit;
+        this.app.rpmEntryData.activeCompressorOilServiceLimit = this.activeCompressorOilServiceLimit;
+        this.app.rpmEntryData.tractors = this.tractors;
         if (this.routeDataSubscription) { this.routeDataSubscription.unsubscribe() }
     }
 
@@ -1209,7 +1315,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             })
         ).subscribe(() => {
             if (prop === 'c_air_filter') {
-                this.activeCompressorAirFilterLimit = limit
+                this.activeCompressorAirFilterLimit = limit;
                 return this.toastr.success('Compressor Air Filter Service Limit updated successfully', null, { timeOut: 2000 })
             }
             if (prop === 'c_oil_service') {
@@ -1231,6 +1337,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onVehicleChange() {
+        this.app.rpmEntryData.selectedVehcileId = this.selectedVehicle.vehicle_id;
         this.loader.showSaveLoader('Loading ...');
         const lastRpmSheet$ = this.rpmEntryService.getLastRpmEntrySheet(this.selectedVehicle);
         const vehicleServiceLimit$ = this.rpmEntryService.getServiceLimits(this.selectedVehicle);

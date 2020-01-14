@@ -14,6 +14,31 @@ export class AppService {
         serialNo: null
     };
 
+    rpmEntryData = {
+        formValue: null,
+        selectedVehcileId: null,
+        date: null,
+        bookId: null,
+        bookStartNo: null,
+        bookEndNo: null,
+        lastResetDate: null,
+        lastResetRpmNo: null,
+        assignedBits: [],
+        assignedHammers: [],
+        rpmSheet: null,
+        rpmEntryNo: null,
+        rpmEntryTable: null,
+        previousDieselRpm: null,
+        pointDieselRpm: null,
+        vehicleServiceLimits: null,
+        compressorAirFilterServiceLimits: null,
+        compressorOilServiceLimits: null,
+        activeCompressorAirFilterLimit: null,
+        activeCompressorOilServiceLimit: null,
+        tracRunningRpm: null,
+        tractors: [] // stored as need to work on reset
+    };
+
     constructor(
         private config: ConfigService,
         private http: HttpClient

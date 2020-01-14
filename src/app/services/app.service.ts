@@ -36,7 +36,7 @@ export class AppService {
         activeCompressorAirFilterLimit: null,
         activeCompressorOilServiceLimit: null,
         tracRunningRpm: null,
-        tractors: [] // stored as need to work on reset
+        tractors: [] // use app tractors refereence as reset of tractor gear oil service/ tractor engine oil service happens directly on tractors
     };
 
     constructor(

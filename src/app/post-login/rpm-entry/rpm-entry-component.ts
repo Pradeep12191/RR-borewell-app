@@ -382,9 +382,17 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.activeCompressorAirFilterLimit = this.app.rpmEntryData.activeCompressorAirFilterLimit
             }
         }
-        if(this.app.rpmEntryData.tractors && this.app.rpmEntryData.tractors.length){
+        if (this.app.rpmEntryData.tractors && this.app.rpmEntryData.tractors.length) {
             this.tractors = this.app.rpmEntryData.tractors;
-            console.log('[tractors set]')
+        }
+        if (this.app.rpmEntryData.assignedBits && this.app.rpmEntryData.assignedBits.length) {
+            this.assignedBits = this.app.rpmEntryData.assignedBits;
+        }
+        if (this.app.rpmEntryData.assignedHammers && this.app.rpmEntryData.assignedHammers.length) {
+            this.assignedHammers = this.app.rpmEntryData.assignedHammers;
+        }
+        if (this.app.rpmEntryData.rpmEntryTable) {
+            this.rpmEntryTable = this.app.rpmEntryData.rpmEntryTable;
         }
     }
 
@@ -392,20 +400,56 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         // bore type
         if (this.app.rpmEntryData.formValue.depth.boreType) {
             const selectedBoreType = this.boreTypes.find(b => b.id === this.app.rpmEntryData.formValue.depth.boreType.id);
+            const pipeErection = this.form.get('depth.pipeErection').value;
+            const depth = this.form.get('depth.bore').value;
             this.form.get('depth.boreType').setValue(selectedBoreType);
+            if (selectedBoreType && selectedBoreType.id === 2) {
+                // hose keeping
+                this.form.get('depth.bore').disable();
+            }
+            if (selectedBoreType && selectedBoreType.id === 4) {
+                // rebore
+                if (depth && pipeErection) {
+                    this.form.get('depth.boreHrs').enable();
+                    this.form.get('depth.boreMins').enable();
+                }
+            }
         }
         // tractor
         if (this.app.rpmEntryData.formValue.rpm.trac) {
             const selectedTractor = this.tractors.find(t => t.id === this.app.rpmEntryData.formValue.rpm.trac.id);
-            console.log('[selected tractor]', this.tractors === this.app.rpmEntryData.tractors);
             this.form.get('rpm.trac').setValue(selectedTractor);
             this.form.get('rpm.tracEndHour').enable();
+        }
+        // tractor
+        if (this.app.rpmEntryData.formValue.bit) {
+            const selectedBit = this.assignedBits.find(t => t.serial_no === this.app.rpmEntryData.formValue.bit.serial_no);
+            this.form.get('bit').setValue(selectedBit);
+        }
+        if (this.app.rpmEntryData.formValue.hammer) {
+            const selectedHammer = this.assignedHammers.find(t => t.serial_no === this.app.rpmEntryData.formValue.bit.serial_no);
+            this.form.get('hammer').setValue(selectedHammer);
+        }
+        // air vehicle
+        if (this.app.rpmEntryData.formValue.depth.air && this.app.rpmEntryData.formValue.depth.air.vehicle) {
+            const selectedAirVehicle = this.toVehicles().find(v => v.vehicle_id === this.app.rpmEntryData.formValue.depth.air.vehicle.vehicle_id);
+            this.form.get('depth.air.vehicle').setValue(selectedAirVehicle);
+        }
+        // above feet
+        if (this.app.rpmEntryData.formValue.depth.above.feet) {
+            const selectedAboveFeet = this.rpmHourFeets.find(f => f.limit === this.app.rpmEntryData.formValue.depth.above.feet.limit);
+            this.form.get('depth.above.feet').setValue(selectedAboveFeet);
+            if (this.app.rpmEntryData.rpmSheet.depth.above.extra_feet > 0) {
+                this.form.get('depth.above.hrs').enable();
+                this.form.get('depth.above.min').enable();
+            }
+
         }
     }
 
     onLastUserEnter() {
         if (this.tractors && this.tractors.length) {
-            this.tractorSelect.open()
+            this.tractorSelect.open();
             this.tractorSelect.focus();
         }
     }
@@ -1051,6 +1095,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.app.rpmEntryData.activeCompressorAirFilterLimit = this.activeCompressorAirFilterLimit;
         this.app.rpmEntryData.activeCompressorOilServiceLimit = this.activeCompressorOilServiceLimit;
         this.app.rpmEntryData.tractors = this.tractors;
+        this.app.rpmEntryData.assignedBits = this.assignedBits;
+        this.app.rpmEntryData.assignedHammers = this.assignedHammers;
         if (this.routeDataSubscription) { this.routeDataSubscription.unsubscribe() }
     }
 

@@ -1696,7 +1696,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
      * 
      * @param hammer 
      * calulate running feet and total feet
-     * running feet bore depth - pipe erection depth
+     * will be calculated only for bore depth and re-bore
+     * running feet = bore depth - pipe erection depth
      * total feet - bit previous running feet + running feet
      */
     updateHammerTotalFeet(hammer: HammerSerialNo) {

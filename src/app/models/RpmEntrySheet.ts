@@ -10,6 +10,7 @@ import { UserDetails } from './UserDetails';
 import { MonthDetails } from './MonthDetails';
 import { Air } from './Air';
 import { HammerDetail } from './RpmEntry/HammerDetail';
+import { VehicleExOut } from './VehicleExOut';
 
 export interface RpmEntrySheet {
     book_id: number;
@@ -31,5 +32,6 @@ export interface RpmEntrySheet {
     date?: string;
     book_page_over?: boolean;
     rpmTableData?: RpmTableData,
-    user_address: UserDetails
+    user_address: UserDetails,
+    vehicle_ex_out: VehicleExOut[]
 }

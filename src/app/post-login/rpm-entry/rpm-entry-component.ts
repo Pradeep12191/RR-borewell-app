@@ -1986,7 +1986,13 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 place: this.form.value.user.place,
                 plumber: this.form.value.user.plumber,
                 plumber_mobile: this.form.value.user.plumberMobile
-            }
+            },
+            vehicle_ex_out: this.form.value.vehicleExOut.map(vExOut => (
+                {
+                    ...vExOut,
+                    pipes: vExOut.pipes.map(p => ({id: +p.pipeId, type: p.pipeType, feet: +p.value, size: +p.pipeSize}))
+                }
+            ))
         }
 
         for (const pipe of this.pipes) {

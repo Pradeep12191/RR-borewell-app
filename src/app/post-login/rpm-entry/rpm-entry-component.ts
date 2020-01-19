@@ -2007,7 +2007,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                     rpm_no: vEx.rpmNo,
                     feet: vEx.pipes.find(p => +p.pipeId === +pipe.id).value || 0
                 })),
-                vehicle_ex_in: +this.form.value.vehicleExIn.find(p => +p.pipeId === +pipe.id).value || 0,
+                vehicle_ex_in: 0,
                 point_expenses_feet: +this.form.value.pointExpenseFeet.find(p => +p.pipeId === +pipe.id).value || 0,
             }
             payload.f_rpm_table_data.push(rpmEntry);

@@ -16,6 +16,7 @@ export class AppService {
 
     rpmEntryData = {
         formValue: null,
+        isOutVehicleFormValue: null,
         selectedVehcileId: null,
         date: null,
         bookId: null,

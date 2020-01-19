@@ -345,6 +345,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.app.rpmEntryData.selectedVehcileId) {
             this.selectedVehicle = this.vehicles.find(v => v.vehicle_id === this.app.rpmEntryData.selectedVehcileId);
         }
+        if (this.app.rpmEntryData.isOutVehicleFormValue !== null) {
+            this.isOutVehicle.setValue(this.app.rpmEntryData.isOutVehicleFormValue)
+        }
         if (this.app.rpmEntryData.date) {
             this.date = this.app.rpmEntryData.date;
         }
@@ -429,11 +432,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.form.get('rpm.trac').setValue(selectedTractor);
             this.form.get('rpm.tracEndHour').enable();
         }
-        // tractor
+        // bit
         if (this.app.rpmEntryData.formValue.bit) {
             const selectedBit = this.assignedBits.find(t => t.serial_no === this.app.rpmEntryData.formValue.bit.serial_no);
             this.form.get('bit').setValue(selectedBit);
         }
+        // hammer
         if (this.app.rpmEntryData.formValue.hammer) {
             const selectedHammer = this.assignedHammers.find(t => t.serial_no === this.app.rpmEntryData.formValue.bit.serial_no);
             this.form.get('hammer').setValue(selectedHammer);
@@ -451,7 +455,30 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.form.get('depth.above.hrs').enable();
                 this.form.get('depth.above.min').enable();
             }
-
+        }
+        // ex out vehicles
+        const selectedOutVehicles = [];
+        if (this.app.rpmEntryData.formValue.vehicleExOut && this.app.rpmEntryData.formValue.vehicleExOut.length) {
+            this.app.rpmEntryData.formValue.vehicleExOut.forEach((vExOut, index) => {
+                if (index !== 0) {
+                    // not first control, as first control value is set by patchValue
+                    this.veicleExOutFormArray.push(this.buildVehicleExchangeOutForm(vExOut.rpmNo));
+                    this.reversePipes.forEach(pipe => {
+                        const currentPipe = vExOut.pipes.find(p => +p.pipeId === +pipe.id);
+                        (this.veicleExOutFormArray.controls[index].get('pipes') as FormArray)
+                            .push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size, currentPipe.value));
+                    });
+                }
+                if (vExOut.vehicle) {
+                    const selectedVehicle = this.vehicles.find(v => v.vehicle_id === vExOut.vehicle.vehicle_id);
+                    if (selectedVehicle) {
+                        this.veicleExOutFormArray.controls[index].get('vehicle').setValue(selectedVehicle);
+                        if (selectedVehicle && vExOut.rpmNo) {
+                            this.veicleExOutFormArray.controls[index].get('pipes').enable();
+                        }
+                    }
+                }
+            })
         }
     }
 
@@ -932,16 +959,23 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             // remove all vehicle ex out control except first, 
             // first control reset and disable
-            while (this.veicleExOutFormArray.controls.length > 1) {
-                this.veicleExOutFormArray.removeAt(this.veicleExOutFormArray.controls.length - 1);
-            }
-            this.veicleExOutFormArray.controls[0].get('vehicle').reset('');
-            this.veicleExOutFormArray.controls[0].get('rpmNo').reset('');
-            (this.veicleExOutFormArray.controls[0].get('pipes') as FormArray).controls.forEach((ctrl) => {
-                ctrl.get('value').reset('');
-                ctrl.get('value').disable();
-            });
+            this.resetExOutControls();
+            this.updateAllPipeStockFeet();
         }
+    }
+
+    resetExOutControls() {
+        // remove all vehicle ex out control except first, 
+        // first control reset and disable
+        while (this.veicleExOutFormArray.controls.length > 1) {
+            this.veicleExOutFormArray.removeAt(this.veicleExOutFormArray.controls.length - 1);
+        }
+        this.veicleExOutFormArray.controls[0].get('vehicle').reset('');
+        this.veicleExOutFormArray.controls[0].get('rpmNo').reset('');
+        (this.veicleExOutFormArray.controls[0].get('pipes') as FormArray).controls.forEach((ctrl) => {
+            ctrl.get('value').reset('');
+            ctrl.get('value').disable();
+        });
     }
 
     onDamageCheckChange(event: MatCheckboxChange) {
@@ -1030,6 +1064,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     removeVehicleOut(ctrlIndex) {
         this.veicleExOutFormArray.removeAt(ctrlIndex);
+        this.updateAllPipeStockFeet();
     }
 
     onExOutVehicleChange(ctrl: FormGroup, rpmInputEl: MatInput) {
@@ -1052,6 +1087,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             pipesFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
             pipesFormArray.controls.forEach(ctrl => ctrl.get('value').reset(''));
+            this.updateAllPipeStockFeet();
         }
     }
 
@@ -1071,6 +1107,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnDestroy() {
         this.app.rpmEntryData.formValue = this.form.value;
+        this.app.rpmEntryData.isOutVehicleFormValue = this.isOutVehicle.value;
         this.app.rpmEntryData.rpmEntryNo = this.rpmEntryNo; // set
         this.app.rpmEntryData.bookId = this.bookId; //set
         this.app.rpmEntryData.bookStartNo = this.bookStartNo; //set
@@ -1526,6 +1563,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         //     ctrl.get('value').reset();
         //     ctrl.get('value').disable();
         // })
+        this.resetExOutControls();
         this.damageFeetFormArray.controls.forEach(ctrl => {
             ctrl.get('value').reset();
             ctrl.get('value').disable();
@@ -1987,7 +2025,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             new_vehicle_out: this.form.value.vehicleExOut.map(vExOut => (
                 {
                     ...vExOut,
-                    pipes: vExOut.pipes.map(p => ({id: +p.pipeId, type: p.pipeType, feet: +p.value, size: +p.pipeSize}))
+                    pipes: vExOut.pipes.map(p => ({ id: +p.pipeId, type: p.pipeType, feet: +p.value, size: +p.pipeSize }))
                 }
             ))
         }
@@ -2062,12 +2100,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         // })
     }
 
-    private buildPointExpenseForm(pipeType, pipeId, pipeSize) {
-        return this.fb.group({ pipeType, pipeId, pipeSize, value: { value: '', disabled: true } })
+    private buildPointExpenseForm(pipeType, pipeId, pipeSize, value = '') {
+        return this.fb.group({ pipeType, pipeId, pipeSize, value: { value, disabled: true } })
     }
 
-    private buildVehicleExchangeOutForm() {
-        return this.fb.group({ vehicle: ['', Validators.required], rpmNo: ['', Validators.required], pipes: this.fb.array([]) })
+    private buildVehicleExchangeOutForm(rpmNo = '') {
+        return this.fb.group({ vehicle: ['', Validators.required], rpmNo: [rpmNo, Validators.required], pipes: this.fb.array([]) })
     }
 
 

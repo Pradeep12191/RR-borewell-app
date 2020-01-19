@@ -33,5 +33,5 @@ export interface RpmEntrySheet {
     book_page_over?: boolean;
     rpmTableData?: RpmTableData,
     user_address: UserDetails,
-    vehicle_ex_out: VehicleExOut[]
+    new_vehicle_out: VehicleExOut[]
 }

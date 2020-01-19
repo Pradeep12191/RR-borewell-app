@@ -973,17 +973,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         let vehicleOutExchange = +this.form.value.vehicleExOut.reduce((acc, cur) => {
             return acc + (cur.pipes.find(p => +p.pipeId === pipeId).value ? +cur.pipes.find(p => +p.pipeId === pipeId).value : 0);
         }, 0);
-        console.log(vehicleOutExchange);
         // vehicle in exchange comes from rpmEntryTable
         // let vehicleInExchange = this.veicleExInFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value').value;
-        // let vehicleOutExchange = this.veicleExOutFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value').value;
         let damageFeet = this.damageFeetFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value').value;
         // vehicleInExchange = vehicleInExchange ? +vehicleInExchange : 0;
-        // vehicleOutExchange = vehicleOutExchange ? +vehicleOutExchange : 0;
         damageFeet = damageFeet ? +damageFeet : 0;
 
         // const availableStockFeet = (rrIncome + mmIncome + previousStockFeet + vehicleInExchange) - (vehicleOutExchange + damageFeet);
-        const availableStockFeet = (rrIncome + mmIncome + previousStockFeet + vehicleInExchangeFeet) - (damageFeet);
+        const availableStockFeet = (rrIncome + mmIncome + previousStockFeet + vehicleInExchangeFeet) - (vehicleOutExchange + damageFeet);
         if (availableStockFeet > 0) {
             availableStock.feet = this.roundValue(availableStockFeet, 10);
         } else {
@@ -1987,7 +1984,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 plumber: this.form.value.user.plumber,
                 plumber_mobile: this.form.value.user.plumberMobile
             },
-            vehicle_ex_out: this.form.value.vehicleExOut.map(vExOut => (
+            new_vehicle_out: this.form.value.vehicleExOut.map(vExOut => (
                 {
                     ...vExOut,
                     pipes: vExOut.pipes.map(p => ({id: +p.pipeId, type: p.pipeType, feet: +p.value, size: +p.pipeSize}))

@@ -127,6 +127,12 @@ body{
 }
 
 @for $i from 1 through 100{
+    .m-l-n-#{$i} {
+        margin-left: -#{$i}px
+    }
+}
+
+@for $i from 1 through 100{
     .p-t-#{$i} {
         padding-top: #{$i}px
     }

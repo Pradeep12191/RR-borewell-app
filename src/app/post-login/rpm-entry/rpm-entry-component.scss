@@ -1,6 +1,9 @@
 
 .row{
     min-height: 42px;
+    &.no-border{
+        border: 0px;
+    }
 }
 
 .shift-top-30{
@@ -169,4 +172,22 @@
 
 .sub-title{
     color: orange;
+}
+
+.small-icon{
+    height: 32px;
+    width: 32px;
+    line-height: 32px;
+    mat-icon{
+        line-height: 18px;
+        height: 18px;
+        width: 18px;
+        font-size: 18px;
+    }
+
+    &.delete{
+        mat-icon{
+            color: red;
+        }
+    }
 }

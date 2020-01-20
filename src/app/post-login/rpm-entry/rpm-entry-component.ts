@@ -119,10 +119,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('outRpmInput', { static: false }) outRpmNoInput: MatInput;
     @ViewChild('picker', { static: false }) picker: MatDatepicker<any>;
     @ViewChild('dateInput', { static: false }) dateInput: ElementRef;
-    @ViewChildren('inFeetInput') inFeetInputs: QueryList<ElementRef>;
-    @ViewChildren('outFeetInput') outFeetInputs: QueryList<ElementRef>;
-    @ViewChildren('damageFeetInput') damageFeetInputs: QueryList<ElementRef>;
-    @ViewChildren('expenseFeetInput') expenseFeetInputs: QueryList<ElementRef>;
+    @ViewChildren('feetInput') feetInputs: QueryList<ElementRef>;
     @ViewChildren('remarksInput', { read: ElementRef }) remarksInput: QueryList<ElementRef>;
     @ViewChild('compressorInput', { static: false }) diselCompEl: ElementRef;
     @ViewChildren('rpmInput') rpmInputs: QueryList<ElementRef>;
@@ -130,11 +127,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChildren('dieselInput') dieselInputs: QueryList<ElementRef>;
     @ViewChild('aboveFeetSelect', { static: false }) aboveFeetSelect: MatSelect;
     @ViewChild('bitSelect', { static: false }) bitSelect: MatSelect;
+    @ViewChild('hammerSelect', { static: false }) hammerSelect: MatSelect;
     @ViewChild('tractorSelect', { static: false }) tractorSelect: MatSelect;
     @ViewChild('airVehicle', { static: false }) airVehicle: MatSelect;
     @ViewChild('airInoutSelect', { static: false }) airInoutSelect: MatSelect;
     @ViewChild('airRpmNoInput', { static: false }) airRpmNoInput: MatSelect;
-    allInputs: QueryList<ElementRef>[] = new Array(5);
 
     get pointExpenseFeetFormArray() {
         return this.form.get('pointExpenseFeet') as FormArray
@@ -292,7 +289,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.bitSelect.focus();
                     } else {
                         this.snackBar.open('No Bits available, so skipping bit', null, { duration: 2000 });
-                        this.moveNextInput(0, -1);
+                        this.moveNextInput(-1);
                     }
                 }
             });
@@ -311,8 +308,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         })
 
 
-        this.bitSelect._closedStream.subscribe(() => {
-            // this.moveNextInput(0, -1);
+        this.hammerSelect._closedStream.subscribe(() => {
+            this.moveNextInput(-1);
         })
 
         this.picker.closedStream.subscribe(() => {
@@ -328,11 +325,6 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 })
             }
         });
-        this.allInputs[0] = this.inFeetInputs;
-        this.allInputs[1] = this.outFeetInputs;
-        this.allInputs[2] = this.damageFeetInputs;
-        this.allInputs[3] = this.expenseFeetInputs;
-        this.allInputs[4] = this.remarksInput;
 
     }
 
@@ -775,7 +767,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.bitSelect.focus();
             } else {
                 this.snackBar.open('No Bits available, so skipping bit', null, { duration: 2000 });
-                this.moveNextInput(0, -1);
+                // this.moveNextInput(0, -1);
             }
         }
     }
@@ -833,7 +825,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onInputKeyUp(event: KeyboardEvent, rowIndex, colIndex, ctrl?: AbstractControl) {
-        const validKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter']
+        const validKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'];
+        const inputPos = (rowIndex * 8) + colIndex;
         if (validKeys.indexOf(event.key) !== -1) {
             const trigger = (event.target as HTMLInputElement);
             const curPos = trigger.selectionStart;
@@ -841,59 +834,54 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             if (event.key === 'Enter' || event.key === 'ArrowRight') {
                 if (event.key === 'ArrowRight') {
                     if (curPos === length) {
-                        this.moveNextInput(rowIndex, colIndex);
+                        this.moveNextInput(inputPos);
                     }
                 } else {
                     if (ctrl && ctrl.invalid) {
                         return;
                     }
-                    this.moveNextInput(rowIndex, colIndex);
+                    this.moveNextInput(inputPos);
                 }
             }
             if (event.key === 'ArrowLeft') {
                 if (curPos === 0) {
-                    this.movePrevInput(rowIndex, colIndex);
+                    this.movePrevInput(inputPos);
                 }
             }
 
             if (event.key === 'ArrowUp') {
                 // go upto one level enabled row, and focus the input as same index of current row;
-                let prevRow: QueryList<ElementRef> = null;
-                for (let i = rowIndex - 1; i >= 0; i--) {
-                    prevRow = this.allInputs[i];
-                    const lastInput = prevRow.toArray()[prevRow.length - 1].nativeElement as HTMLInputElement;
-                    if (lastInput && !lastInput.disabled) {
+                let upInput: HTMLInputElement= null;
+                for (let i = inputPos - 8; i >= 0; i-=8) {
+                    upInput = this.feetInputs.toArray()[i].nativeElement as HTMLInputElement;
+                    if (upInput && !upInput.disabled) {
                         break;
                     }
                 }
-                if (prevRow) {
-                    const sameLevelInput = prevRow.toArray()[colIndex].nativeElement as HTMLInputElement;
-                    sameLevelInput.focus();
+                if (upInput) {
+                    upInput.focus();
                 }
             }
 
             if (event.key === 'ArrowDown') {
                 // go upto one level enabled row, and focus the input as same index of current row;
-                let nextRow: QueryList<ElementRef> = null;
-                for (let i = rowIndex + 1; i < this.allInputs.length; i++) {
-                    nextRow = this.allInputs[i];
-                    const firstInput = nextRow.toArray()[0].nativeElement as HTMLInputElement;
-                    if (firstInput && !firstInput.disabled) {
+                let downInput: HTMLInputElement = null;
+                for (let i = inputPos + 8; i < this.feetInputs.length; i+=8) {
+                    downInput = this.feetInputs.toArray()[i].nativeElement as HTMLInputElement;
+                    if (downInput && !downInput.disabled) {
                         break;
                     }
                 }
-                if (nextRow) {
-                    const firstInput = nextRow.toArray()[colIndex].nativeElement as HTMLInputElement;
-                    firstInput.focus();
+                if (downInput) {
+                    downInput.focus();
                 }
             }
 
         }
     }
 
-    moveNextInput(rowIndex, colIndex) {
-        const queryList = this.allInputs[rowIndex];
-        const nextElRef = queryList.toArray()[colIndex + 1];
+    moveNextInput(inputPos) {
+        const nextElRef = this.feetInputs.toArray()[inputPos + 1];
         if (nextElRef && !(nextElRef.nativeElement as HTMLInputElement).disabled) {
             const input = nextElRef.nativeElement as HTMLInputElement;
             setTimeout(() => {
@@ -902,29 +890,26 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             })
 
         } else {
-            // focus currently at last input, try traversing to next enabled control
-            let nextRow: QueryList<ElementRef> = null;
-            for (let i = rowIndex + 1; i < this.allInputs.length; i++) {
-                nextRow = this.allInputs[i];
-                const firstInput = nextRow.toArray()[0].nativeElement as HTMLInputElement;
-                if (firstInput && !firstInput.disabled) {
+            // focus currently at last input, try traversing to next enabled control - 8 cells in a row
+            let nextInputRef: HTMLInputElement = null;
+            for (let i = inputPos + 9; i < this.feetInputs.length; i += 8) {
+                nextInputRef = this.feetInputs.toArray()[i].nativeElement as HTMLInputElement;
+                if (nextInputRef && !nextInputRef.disabled) {
                     break;
                 }
             }
-            if (nextRow) {
-                const firstInput = nextRow.toArray()[0].nativeElement as HTMLInputElement;
+            if (nextInputRef) {
                 setTimeout(() => {
-                    firstInput.focus();
-                    firstInput.setSelectionRange(0, 0);
+                    nextInputRef.focus();
+                    nextInputRef.setSelectionRange(0, 0);
                 })
             }
         }
     }
 
-    movePrevInput(rowIndex, colIndex) {
-        const queryList = this.allInputs[rowIndex];
-        const prevElRef = queryList.toArray()[colIndex - 1];
-        if (prevElRef) {
+    movePrevInput(inputPos) {
+        const prevElRef = this.feetInputs.toArray()[inputPos - 1];
+        if (prevElRef && !(prevElRef.nativeElement as HTMLInputElement).disabled) {
             const input = prevElRef.nativeElement as HTMLInputElement;
             setTimeout(() => {
                 input.focus();
@@ -932,19 +917,17 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             })
         } else {
             // focus currently at first input, try traversing to previous row enabled control
-            let prevRow: QueryList<ElementRef> = null;
-            for (let i = rowIndex - 1; i >= 0; i--) {
-                prevRow = this.allInputs[i];
-                const lastInput = prevRow.toArray()[prevRow.length - 1].nativeElement as HTMLInputElement;
-                if (lastInput && !lastInput.disabled) {
+            let prevInput: HTMLInputElement = null;
+            for (let i = inputPos - 9; i >= 0; i-=8) {
+                prevInput = this.feetInputs.toArray()[i].nativeElement as HTMLInputElement;
+                if (prevInput && !prevInput.disabled) {
                     break;
                 }
             }
-            if (prevRow) {
-                const lastInput = prevRow.toArray()[prevRow.length - 1].nativeElement as HTMLInputElement;
+            if (prevInput) {
                 setTimeout(() => {
-                    lastInput.focus();
-                    lastInput.setSelectionRange(lastInput.value.length, lastInput.value.length);
+                    prevInput.focus();
+                    prevInput.setSelectionRange(prevInput.value.length, prevInput.value.length);
                 })
             }
         }
@@ -979,11 +962,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onDamageCheckChange(event: MatCheckboxChange) {
-
+        const damageFeetRowIndex = this.veicleExOutFormArray.controls.length;
+        const firstDamageFeetPos = damageFeetRowIndex * 8;
         if (event.checked) {
             this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
             setTimeout(() => {
-                const firstDamageFeet = this.damageFeetInputs.toArray()[0].nativeElement as HTMLInputElement;
+                const firstDamageFeet = this.feetInputs.toArray()[firstDamageFeetPos].nativeElement as HTMLInputElement;
                 if (firstDamageFeet && !firstDamageFeet.disabled) {
                     firstDamageFeet.focus();
                 }
@@ -991,6 +975,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').setValue(''));
             this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
+            this.updateAllPipeStockFeet();
         }
     }
 
@@ -1091,15 +1076,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    onExRpmNoEnter(type: 'in' | 'out') {
-        if (type === 'in') {
-            const firstInFeetInput = this.inFeetInputs.toArray()[0].nativeElement as HTMLInputElement;
-            if (!firstInFeetInput.disabled) {
-                firstInFeetInput.focus();
-            }
-            return;
-        }
-        const firstOutFeetInput = this.outFeetInputs.toArray()[0].nativeElement as HTMLInputElement;
+    onExOutRpmNoEnter(outCtrlIndex) {
+        const inputPos = (outCtrlIndex * 8);
+        const firstOutFeetInput = this.feetInputs.toArray()[inputPos].nativeElement as HTMLInputElement;
         if (firstOutFeetInput && !firstOutFeetInput.disabled) {
             firstOutFeetInput.focus();
         }
@@ -1558,11 +1537,6 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('remarks').reset('');
         this.date = null;
         this.isOutVehicle.reset();
-        // REDO
-        // this.veicleExOutFormArray.controls.forEach(ctrl => {
-        //     ctrl.get('value').reset();
-        //     ctrl.get('value').disable();
-        // })
         this.resetExOutControls();
         this.damageFeetFormArray.controls.forEach(ctrl => {
             ctrl.get('value').reset();

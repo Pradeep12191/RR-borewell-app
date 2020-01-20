@@ -689,7 +689,7 @@
                         <!-- <div fxLayoutAlign="start center">TCD no</div> -->
                         <mat-form-field class="calc-field" fxFlex="40">
                             <mat-label>Serial no</mat-label>
-                            <mat-select formControlName="hammer"
+                            <mat-select formControlName="hammer" #hammerSelect
                                 (selectionChange)="updateHammerTotalFeet($event.value)">
                                 <mat-option value="">Select Hammer</mat-option>
                                 <mat-option [value]="hammer" *ngFor="let hammer of assignedHammers">
@@ -825,7 +825,7 @@
                                         </mat-form-field>
                                         <mat-form-field class="calc-field m-r-10" fxFlex="30">
                                             <mat-label>Rpm no</mat-label>
-                                            <input matInput (keydown.enter)="onExRpmNoEnter('out')" positiveNumber
+                                            <input matInput (keydown.enter)="onExOutRpmNoEnter(outCtrlIndex)" positiveNumber
                                                 (input)="onExOutRpmNoInput(outCtrl)" formControlName="rpmNo"
                                                 #outRpmInput="matInput">
                                         </mat-form-field>
@@ -840,7 +840,7 @@
                                 class="cell b-b-0" [class.b-r-0]="!last">
                                 <ng-container [formGroup]="ctrl">
                                     <div class="input-wrapper h-100" fxFlex>
-                                        <input type="text" (keydown)="onInputKeyUp($event, 1, index)" #outFeetInput
+                                        <input type="text" (keydown)="onInputKeyUp($event, outCtrlIndex, index)" #feetInput
                                             class="h-100" (input)="updateAvailableStock(+ctrl.get('pipeId').value)"
                                             formControlName="value" placeholder="Feet" positiveNumber
                                             [allowDecimal]="true">
@@ -869,7 +869,7 @@
                             class="cell b-b-0" [class.b-r-0]="!last">
                             <ng-container [formGroup]="ctrl">
                                 <div class="input-wrapper h-100" fxFlex>
-                                    <input (keydown)="onInputKeyUp($event, 2, index)" type="text" #damageFeetInput
+                                    <input (keydown)="onInputKeyUp($event, veicleExOutFormArray.controls.length, index)" type="text" #feetInput
                                         (input)="updateAvailableStock(+ctrl.get('pipeId').value)" class="h-100"
                                         formControlName="value" placeholder="Feet" positiveNumber [allowDecimal]="true">
                                     <mat-icon class="input-edit-icon">edit</mat-icon>
@@ -899,7 +899,7 @@
                             class="cell b-b-0" [class.b-r-0]="!last">
                             <ng-container [formGroup]="ctrl">
                                 <div class="input-wrapper h-100" fxFlex>
-                                    <input #expenseFeetInput (keydown)="onInputKeyUp($event, 3, index, ctrl)"
+                                    <input #feetInput (keydown)="onInputKeyUp($event, veicleExOutFormArray.controls.length + 1, index, ctrl)"
                                         type="text"
                                         (input)="validateAndUpdateBalanceStock(+ctrl.get('pipeId').value, ctrl.get('value'))"
                                         class="h-100" formControlName="value" placeholder="Feet" positiveNumber

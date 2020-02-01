@@ -220,7 +220,7 @@ export class RpmEntryService {
     }
 
     submitRpm(payload: RpmEntrySheet) {
-        return console.log(JSON.stringify(payload, null, 2));
+        // return console.log(JSON.stringify(payload, null, 2));
         return this.http.put<RpmEntrySheet>(this.submitRpmUrl, payload).pipe(map((lastRpmEntrySheet) => {
             return lastRpmEntrySheet;
         }), catchError((err) => {

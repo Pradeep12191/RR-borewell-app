@@ -167,8 +167,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             pointExpenseFeet: this.fb.array([]),
             vehicleExOut: this.fb.array([
                 this.fb.group({
-                    vehicle: ['', Validators.required],
-                    rpmNo: ['', Validators.required],
+                    vehicle: '',
+                    rpmNo: '',
                     pipes: this.fb.array([])
                 })
             ]),
@@ -431,7 +431,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         // hammer
         if (this.app.rpmEntryData.formValue.hammer) {
-            const selectedHammer = this.assignedHammers.find(t => t.serial_no === this.app.rpmEntryData.formValue.bit.serial_no);
+            const selectedHammer = this.assignedHammers.find(t => t.serial_no === this.app.rpmEntryData.formValue.hammer.serial_no);
             this.form.get('hammer').setValue(selectedHammer);
         }
         // air vehicle
@@ -449,7 +449,6 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         }
         // ex out vehicles
-        const selectedOutVehicles = [];
         if (this.app.rpmEntryData.formValue.vehicleExOut && this.app.rpmEntryData.formValue.vehicleExOut.length) {
             this.app.rpmEntryData.formValue.vehicleExOut.forEach((vExOut, index) => {
                 if (index !== 0) {
@@ -471,6 +470,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                 }
             })
+        }
+
+        // damage feet
+        if (this.app.rpmEntryData.formValue.isDamage) {
+            this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
         }
     }
 
@@ -851,8 +855,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
             if (event.key === 'ArrowUp') {
                 // go upto one level enabled row, and focus the input as same index of current row;
-                let upInput: HTMLInputElement= null;
-                for (let i = inputPos - 8; i >= 0; i-=8) {
+                let upInput: HTMLInputElement = null;
+                for (let i = inputPos - 8; i >= 0; i -= 8) {
                     upInput = this.feetInputs.toArray()[i].nativeElement as HTMLInputElement;
                     if (upInput && !upInput.disabled) {
                         break;
@@ -866,7 +870,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             if (event.key === 'ArrowDown') {
                 // go upto one level enabled row, and focus the input as same index of current row;
                 let downInput: HTMLInputElement = null;
-                for (let i = inputPos + 8; i < this.feetInputs.length; i+=8) {
+                for (let i = inputPos + 8; i < this.feetInputs.length; i += 8) {
                     downInput = this.feetInputs.toArray()[i].nativeElement as HTMLInputElement;
                     if (downInput && !downInput.disabled) {
                         break;
@@ -918,7 +922,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             // focus currently at first input, try traversing to previous row enabled control
             let prevInput: HTMLInputElement = null;
-            for (let i = inputPos - 9; i >= 0; i-=8) {
+            for (let i = inputPos - 9; i >= 0; i -= 8) {
                 prevInput = this.feetInputs.toArray()[i].nativeElement as HTMLInputElement;
                 if (prevInput && !prevInput.disabled) {
                     break;
@@ -2027,51 +2031,51 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             payload.f_rpm_table_data.push(rpmEntry);
         };
-        this.rpmEntryService.submitRpm(payload);
-        // this.rpmEntryService.submitRpm(payload).pipe(
-        //     mergeMap((lastRpmEntrySheet) => {
+        // this.rpmEntryService.submitRpm(payload);
+        this.rpmEntryService.submitRpm(payload).pipe(
+            mergeMap((lastRpmEntrySheet) => {
 
-        //         const bits$ = this.rpmEntryService.getAssignedBits(this.selectedVehicle);
-        //         const hammers$ = this.rpmEntryService.getAssignedHammers(this.selectedVehicle);
-        //         const tractor$ = this.rpmEntryService.getTractors();
+                const bits$ = this.rpmEntryService.getAssignedBits(this.selectedVehicle);
+                const hammers$ = this.rpmEntryService.getAssignedHammers(this.selectedVehicle);
+                const tractor$ = this.rpmEntryService.getTractors();
 
-        //         return zip(bits$, tractor$, hammers$).pipe(map(([assignedBits, tractors, hammers]) => {
-        //             return { lastRpmEntrySheet, assignedBits, tractors, hammers }
-        //         }));
-        //     }),
-        // ).subscribe(({ lastRpmEntrySheet, assignedBits, tractors, hammers }) => {
-        //     this.toastr.success('Rpm Saved Successfully', null, { timeOut: 3000 });
-        //     this.resetAll();
-        //     this.disableAllControls();
-        //     if (assignedBits) {
-        //         this.assignedBits = assignedBits;
-        //         this.form.get('bit').reset();
-        //     }
-        //     if (hammers) {
-        //         this.assignedHammers = hammers;
-        //         this.form.get('hammer').reset('')
-        //     }
-        //     if (tractors) {
-        //         this.tractors = tractors;
-        //     }
-        //     if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
-        //         this.resetBook();
-        //         this.common.scrollTop();
-        //         this.addBook(true);
-        //         return;
-        //     }
+                return zip(bits$, tractor$, hammers$).pipe(map(([assignedBits, tractors, hammers]) => {
+                    return { lastRpmEntrySheet, assignedBits, tractors, hammers }
+                }));
+            }),
+        ).subscribe(({ lastRpmEntrySheet, assignedBits, tractors, hammers }) => {
+            this.toastr.success('Rpm Saved Successfully', null, { timeOut: 3000 });
+            this.resetAll();
+            this.disableAllControls();
+            if (assignedBits) {
+                this.assignedBits = assignedBits;
+                this.form.get('bit').reset();
+            }
+            if (hammers) {
+                this.assignedHammers = hammers;
+                this.form.get('hammer').reset('')
+            }
+            if (tractors) {
+                this.tractors = tractors;
+            }
+            if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
+                this.resetBook();
+                this.common.scrollTop();
+                this.addBook(true);
+                return;
+            }
 
-        //     this.openDatePicker();
-        //     this.rpmSheet = lastRpmEntrySheet;
-        //     if (this.rpmSheet.rpm) {
-        //         this.previousDieselRpm = this.rpmSheet.rpm.prev_diesel_rpm;
-        //         this.pointDieselRpm = this.rpmSheet.rpm.point_diesel;
-        //     }
-        //     this.addDepthToSheet();
-        //     this.updatePreviousStockFeet(lastRpmEntrySheet);
-        // }, () => {
-        //     this.toastr.error('Error while saving RPM Entry Sheet')
-        // })
+            this.openDatePicker();
+            this.rpmSheet = lastRpmEntrySheet;
+            if (this.rpmSheet.rpm) {
+                this.previousDieselRpm = this.rpmSheet.rpm.prev_diesel_rpm;
+                this.pointDieselRpm = this.rpmSheet.rpm.point_diesel;
+            }
+            this.addDepthToSheet();
+            this.updatePreviousStockFeet(lastRpmEntrySheet);
+        }, () => {
+            this.toastr.error('Error while saving RPM Entry Sheet')
+        })
     }
 
     private buildPointExpenseForm(pipeType, pipeId, pipeSize, value = '') {

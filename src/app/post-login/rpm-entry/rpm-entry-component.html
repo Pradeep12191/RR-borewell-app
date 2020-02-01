@@ -795,10 +795,10 @@
                             class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">
                             <div fxLayout="column" fxFlex>
                                 <div *ngIf="firstOutCtrl" [class.m-t-10]="isOutVehicle.value" fxFlex="40" fxLayout>
-                                    <mat-checkbox color="primary" [formControl]="isOutVehicle"
-                                        (change)="onExOutCheckChange($event)">
+                                    <!-- <mat-checkbox color="primary" [formControl]="isOutVehicle"
+                                        (change)="onExOutCheckChange($event)"> -->
                                         Vehicle Exchange Out
-                                    </mat-checkbox>
+                                    <!-- </mat-checkbox> -->
                                 </div>
                                 <ng-container [formGroupName]="outCtrlIndex">
                                     <div *ngIf="isOutVehicle.value" [class.m-t-10] ="!firstOutCtrl" fxLayout fxLayoutAlign="start center" fxFlex

@@ -2003,6 +2003,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             new_vehicle_out: this.form.value.vehicleExOut.map(vExOut => (
                 {
                     ...vExOut,
+                    rpmNo: +vExOut.rpmNo,
                     pipes: vExOut.pipes.map(p => ({ id: +p.pipeId, type: p.pipeType, feet: +p.value || 0, size: +p.pipeSize }))
                 }
             ))
@@ -2021,11 +2022,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 pipe_size: +pipe.size,
                 pipe_type: pipe.type,
                 damage_feet: +this.form.value.damageFeet.find(p => +p.pipeId === +pipe.id).value || 0,
-                vehicle_ex_out: this.form.value.vehicleExOut.map(vEx => ({
-                    vehicle: vEx.vehicle,
-                    rpm_no: vEx.rpmNo,
-                    feet: vEx.pipes.find(p => +p.pipeId === +pipe.id).value || 0
-                })),
+                vehicle_ex_out: 0,
+                // vehicle_ex_out: this.form.value.vehicleExOut.map(vEx => ({
+                //     vehicle: vEx.vehicle,
+                //     rpm_no: vEx.rpmNo,
+                //     feet: vEx.pipes.find(p => +p.pipeId === +pipe.id).value || 0
+                // })),
                 vehicle_ex_in: 0,
                 point_expenses_feet: +this.form.value.pointExpenseFeet.find(p => +p.pipeId === +pipe.id).value || 0,
             }

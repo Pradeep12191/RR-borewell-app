@@ -11,7 +11,7 @@ export interface RpmEntry {
     previous_stock_feet: number;
     rr_income: number;
     vehicle_ex_in: number;
-    vehicle_ex_out: any[];
+    vehicle_ex_out: any;
     rr_income_feet?: number;
     mm_income_feet?: number;
     available_stock_feet?: number;

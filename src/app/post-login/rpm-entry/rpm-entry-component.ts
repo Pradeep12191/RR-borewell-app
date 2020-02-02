@@ -2003,7 +2003,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             new_vehicle_out: this.form.value.vehicleExOut.map(vExOut => (
                 {
                     ...vExOut,
-                    pipes: vExOut.pipes.map(p => ({ id: +p.pipeId, type: p.pipeType, feet: +p.value, size: +p.pipeSize }))
+                    pipes: vExOut.pipes.map(p => ({ id: +p.pipeId, type: p.pipeType, feet: +p.value || 0, size: +p.pipeSize }))
                 }
             ))
         }

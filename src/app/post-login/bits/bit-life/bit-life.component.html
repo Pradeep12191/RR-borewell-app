@@ -40,8 +40,13 @@
                     </svg>
                 </div>
             </div>
-            <div class="right">
-                <button (click)="downloadPdf()" mat-raised-button color="primary">Download Pdf</button>
+            <div class="right" fxLayout>
+                <div class="m-r-10">
+                    <button [disabled]="!bitLifes[0]?.status" (click)="openConfirm()" mat-raised-button color="primary">Un-Finish</button>
+                </div>
+                <div>
+                    <button (click)="downloadPdf()" mat-raised-button color="primary">Download Pdf</button>
+                </div>
             </div>
         </div>
 

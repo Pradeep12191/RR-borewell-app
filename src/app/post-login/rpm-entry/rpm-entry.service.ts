@@ -269,8 +269,9 @@ export class RpmEntryService {
         return this.http.put(this.vehicleServicesUrl, payload)
     }
 
+    // status 1 - finish, 0 - unfinish
     finishBit(bitInfo: any) {
-        return this.http.put<BitSerialNo[]>(this.finishBitUrl, bitInfo);
+        return this.http.put<BitSerialNo[]>(this.finishBitUrl, { ...bitInfo, status: 1 });
     }
 
     finishHammer(hammerInfo: any) {

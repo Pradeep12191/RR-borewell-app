@@ -21,7 +21,7 @@ import { RpmHourFeetResolver } from '../../guards/resolveGuard/rpm-hour-feet.res
 import { OverlayCardService } from '../../services/overlay-card.service';
 import { CompressorAirFilterLimitResolver } from '../../guards/resolveGuard/compressor-air-filter-service-limt.resolver';
 import { AddDieselPopupComponent } from './add-diesel-popup/add-diesel-popup.component';
-import { ServiceCompleteConfirmDialog } from './service-complete-confirm-dialog/service-complete-confirm-dialog.component';
+// import { ServiceCompleteConfirmDialog } from './service-complete-confirm-dialog/service-complete-confirm-dialog.component';
 import { TractorsResolver } from '../../guards/resolveGuard/tractors.resolver';
 import { CompressorOilServiceLimitResolver } from '../../guards/resolveGuard/compresso-oil-service-limit.resolver';
 import { UserDetailsComponent } from './user-details/user-details.component';
@@ -30,6 +30,7 @@ import { HammersService } from '../hammers/hammers.service';
 import { HammerListResolver } from 'src/app/guards/resolveGuard/hammer/hammer-list.resolver';
 import { AssignHammerDialogComponent } from './assing-hammer-dialog/assign-hammer-dialog.component';
 import { AssignHammerConfirmDialogComponent } from './assing-hammer-dialog/assign-hammer-confirm-dialog/assign-hammer-confirm-dialog.component';
+import { AssignedBitsResolver } from 'src/app/guards/resolveGuard/assigned-bits.resolver';
 
 @NgModule({
     imports: [
@@ -51,14 +52,13 @@ import { AssignHammerConfirmDialogComponent } from './assing-hammer-dialog/assig
         AssignBitConfirmDialogComponent,
         AssignHammerDialogComponent,
         AssignHammerConfirmDialogComponent,
-        ServiceCompleteConfirmDialog,
         AddDieselPopupComponent,
         UserDetailsComponent
     ],
     entryComponents: [
         AssignVehicleDialogComponent,
         RpmConfirmAssignVehicleDialogComponent,
-        ServiceCompleteConfirmDialog,
+        // ServiceCompleteConfirmDialog,
         AssignBitDialogComponent,
         AssignBitConfirmDialogComponent,
         AssignHammerDialogComponent,
@@ -77,7 +77,8 @@ import { AssignHammerConfirmDialogComponent } from './assing-hammer-dialog/assig
         CompressorOilServiceLimitResolver,
         TractorsResolver,
         HammersService,
-        HammerListResolver
+        HammerListResolver,
+        AssignedBitsResolver
     ]
 })
 export class RpmEntryModule {

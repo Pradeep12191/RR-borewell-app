@@ -12,6 +12,7 @@ import { TractorsResolver } from '../../guards/resolveGuard/tractors.resolver';
 import { BoreTypesResolver } from '../../guards/resolveGuard/bore-types.resolver';
 import { CompressorOilServiceLimitResolver } from '../../guards/resolveGuard/compresso-oil-service-limit.resolver';
 import { HammerListResolver } from 'src/app/guards/resolveGuard/hammer/hammer-list.resolver';
+import { AssignedBitsResolver } from 'src/app/guards/resolveGuard/assigned-bits.resolver';
 
 const routes: Routes = [
     {
@@ -26,7 +27,8 @@ const routes: Routes = [
             compressorOilServiceLimits: CompressorOilServiceLimitResolver,
             tractors: TractorsResolver,
             boreTypes: BoreTypesResolver,
-            hammers: HammerListResolver
+            hammers: HammerListResolver,
+            assignedBits: AssignedBitsResolver
         }
     }
 ]

@@ -4,10 +4,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material.module';
 import { MonthPickerComponent } from './month-picker/month-picker.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ServiceCompleteConfirmDialog } from '../post-login/rpm-entry/service-complete-confirm-dialog/service-complete-confirm-dialog.component';
 
 @NgModule({
     declarations: [
-        MonthPickerComponent
+        MonthPickerComponent,
+        ServiceCompleteConfirmDialog,
     ],
     imports: [
         ReactiveFormsModule,
@@ -16,7 +18,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     ],
     exports: [
         TranslateModule,
-        MonthPickerComponent
+        MonthPickerComponent,
+        ServiceCompleteConfirmDialog
+    ],
+    entryComponents: [
+        ServiceCompleteConfirmDialog
     ]
 })
 export class SharedModule {

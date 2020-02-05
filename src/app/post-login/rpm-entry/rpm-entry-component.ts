@@ -221,6 +221,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     ngOnInit() {
+        // resolved data
         this.routeDataSubscription = this.route.data.subscribe((data) => {
             this.pipes = data.pipes;
             this.reversePipes = [...this.pipes].reverse();
@@ -236,6 +237,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.pipeFlex = this.pipeTotalFlex / this.pipes.length;
             this.pipeFlex = Math.round(this.pipeFlex * 100) / 100;
             this.boreTypes = data.boreTypes;
+            if (data.assignedBits && data.assignedBits.length) {
+                this.assignedBits = data.assignedBits;
+            }
 
             // this.veicleExOutFormArray.push(this.buildVehicleExchangeOutForm());
             console.log(this.veicleExOutFormArray);
@@ -389,7 +393,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.tractors = this.app.rpmEntryData.tractors;
         }
         if (this.app.rpmEntryData.assignedBits && this.app.rpmEntryData.assignedBits.length) {
-            this.assignedBits = this.app.rpmEntryData.assignedBits;
+            if (this.assignedBits) {
+                if (!this.assignedBits.length) {
+                    this.assignedBits = this.app.rpmEntryData.assignedBits;
+                }
+            }
         }
         if (this.app.rpmEntryData.assignedHammers && this.app.rpmEntryData.assignedHammers.length) {
             this.assignedHammers = this.app.rpmEntryData.assignedHammers;

@@ -59,7 +59,7 @@
                 <mat-radio-button class="m-r-10" value="list">List</mat-radio-button>
                 <mat-radio-button value="count">Count</mat-radio-button>
             </mat-radio-group>
-            <button (click)="downloadReport()" mat-raised-button color="primary" fxFlexAlign="end center">Download
+            <button (click)="downloadReport()" [disabled]="!entries?.length || filterForm.value.type === 'count'" mat-raised-button color="primary" fxFlexAlign="end center">Download
                 Pdf</button>
         </div>
     </div>

@@ -184,7 +184,13 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 plumberMobile: { value: '', disabled: true },
             }),
             rpm: this.fb.group({
-                end: [{ value: '', disabled: true }, this.endValueValidator('start', 'rpmError').bind(this)],
+                end: [
+                    { value: '', disabled: true },
+                    [
+                        this.endValueValidator('start', 'rpmError').bind(this),
+                        this.decimalValidator
+                    ]
+                ],
                 manual: { value: '', disabled: true },
                 tracEndHour: [{ value: '', disabled: true }, this.endValueValidator('tractor_start_hour', 'tracError').bind(this)],
                 trac: { value: '', disabled: true },
@@ -503,6 +509,15 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 return {
                     [errorName]: true
                 }
+            }
+        }
+    }
+
+    decimalValidator(control: AbstractControl) {
+        var regexp = /^\d+\.\d{1,30}$/;
+        if (control.value && !regexp.test(control.value)) {
+            return {
+                decimalError: true
             }
         }
     }

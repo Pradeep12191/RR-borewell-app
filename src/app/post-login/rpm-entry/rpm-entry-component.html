@@ -200,9 +200,14 @@
                                 <mat-label>RPM</mat-label>
                                 <input formControlName="end" [allowDecimal]="true" (keydown.enter)="onRpmInputEnter(1)"
                                     #rpmInput (input)="onRpmEndInput()" type="text" matInput positiveNumber>
-                                <mat-error *ngIf="form.get('rpm.end').hasError('rpmError')">
-                                    End Rpm should be greater than Start Rpm
+                                <mat-error *ngIf="form.get('rpm.end').hasError('rpmError'); else decimalErrorTpl">
+                                    End Rpm should be greater than Start Rpm.
                                 </mat-error>
+                                <ng-template #decimalErrorTpl>
+                                    <mat-error *ngIf="form.get('rpm.end').hasError('decimalError')">
+                                        End Rpm should have atleast one value after decimal point.
+                                    </mat-error>
+                                </ng-template>
                             </mat-form-field>
                         </div>
                         <div fxLayout fxLayoutAlign="start center">

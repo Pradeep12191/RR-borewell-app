@@ -1713,7 +1713,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onDepthInput() {
         const bit: BitSerialNo = this.form.get('bit').value;
-        const hammer: BitSerialNo = this.form.get('hammer').value;
+        const hammer: HammerSerialNo = this.form.get('hammer').value;
         const boreType: BoreType = this.form.get('depth.boreType').value;
         const pipeErection = this.form.get('depth.pipeErection').value;
         const depth = this.form.get('depth.bore').value;

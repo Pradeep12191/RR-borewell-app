@@ -15,6 +15,7 @@ import { ServiceLimit } from '../../models/Limit';
 import { VehicleServices } from '../../models/VehicleServices';
 import { Tractor } from '../../models/Tractor';
 import { HammerSerial } from '../hammers/add-hammer-dialog/add-hammer/add-hammer.component';
+import { HammerSerialNo } from 'src/app/models/HammerSerialNo';
 
 @Injectable()
 export class RpmEntryService {
@@ -262,7 +263,7 @@ export class RpmEntryService {
 
     getAssignedHammers(vehicle: Vehicle) {
         const params = new HttpParams().set('user_id', this.auth.userid).append('vehicle_id', vehicle.vehicle_id);
-        return this.http.get<BitSerialNo[]>(this.assignedHammerSerialNoUrl, { params })
+        return this.http.get<HammerSerialNo[]>(this.assignedHammerSerialNoUrl, { params })
     }
 
     updateCompressorAirFilter(payload) {
@@ -275,7 +276,7 @@ export class RpmEntryService {
     }
 
     finishHammer(hammerInfo: any) {
-        return this.http.put<BitSerialNo[]>(this.finishHammerUrl, hammerInfo);
+        return this.http.put<HammerSerialNo[]>(this.finishHammerUrl, hammerInfo);
     }
 
     buildPointExpenseForm(pipeType) {

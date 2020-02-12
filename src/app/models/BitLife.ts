@@ -1,5 +1,5 @@
 export interface BitLife {
-    bit_no: number,
+    bit_no: string,
     bit_type: string,
     company_name: string,
     status: number,

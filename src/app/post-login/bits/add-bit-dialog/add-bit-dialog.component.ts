@@ -74,7 +74,7 @@ export class AddBitDialogComponent {
         this.form.value.bits.forEach(b => {
             const bit = {
                 serial_no: b.serialNo,
-                no: b.bitNo ? +b.bitNo : 0,
+                no: b.bitNo || '',
                 size: b.bit.size,
                 type: b.bit.type,
                 id: b.bit.id,

@@ -784,87 +784,106 @@
                     <div class="row" fxLayout>
                         <div fxFlex="28" fxLayoutAlign="start center" fxLayoutGap="10px"
                             class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">
-                            Vehicle Exchange In
+                            <div fxLayout="column" fxFlex>
+                                <div [class.m-t-10]="form.get('isInVehicle').value" fxLayout fxFlex="40">
+                                    <mat-checkbox color="primary" formControlName="isInVehicle"
+                                        (change)="onCheckChange($event, 'in')">
+                                        Vehicle Exchange In
+                                    </mat-checkbox>
+                                </div>
+                                <div *ngIf="form.get('isInVehicle').value" fxLayout fxLayoutGap="10px" fxFlex
+                                    class="m-r-16">
+                                    <mat-form-field class="calc-field" fxFlex="70">
+                                        <mat-label>Select Vehicle</mat-label>
+                                        <mat-select (selectionChange)="onExVehicleChange('in')"
+                                            formControlName="inVehicle" #inVehicleSelect>
+                                            <mat-option [value]="vehicle" *ngFor="let vehicle of vehicles">{{
+                                                vehicle.regNo }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field class="calc-field" fxFlex="30">
+                                        <mat-label>Rpm no</mat-label>
+                                        <input matInput positiveNumber (keydown.enter)="onExRpmNoEnter('in')"
+                                            (input)="onExRpmNoInput('in')" formControlName="inRpmNo"
+                                            #inRpmInput="matInput">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
                         </div>
                         <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" fxLayoutAlign="center center"
-                            *ngFor="let vehicleExIn of rpmEntryTable.vehicleExIn; let last = last; let index = index"
+                            formArrayName="vehicleExIn"
+                            *ngFor="let ctrl of veicleExInFormArray.controls; let last = last; let index = index"
                             class="cell b-b-0" [class.b-r-0]="!last">
+                            <ng-container [formGroup]="ctrl">
+                                <div class="input-wrapper h-100" fxFlex>
+                                    <input #inFeetInput #feetInput (keydown)="onInputKeyUp($event, 0, index)"
+                                        (input)="updateAvailableStock(+ctrl.get('pipeId').value)" type="text"
+                                        class="h-100" formControlName="value" placeholder="Feet" positiveNumber
+                                        [allowDecimal]="true">
+                                    <mat-icon class="input-edit-icon">edit</mat-icon>
+                                    <!-- <label>Count</label> -->
+                                    <span class="focus-border">
+                                        <i></i>
+                                    </span>
+                                </div>
+                            </ng-container>
 
                         </div>
                     </div>
-                    <div class="row" fxLayout
-                        [class.no-border]="veicleExOutFormArray.controls.length > 1 && !lastOutCtrl"
-                        *ngFor="let outCtrl of veicleExOutFormArray.controls; let outCtrlIndex = index; let lastOutCtrl = last; let firstOutCtrl = first"
-                        formArrayName="vehicleExOut">
+                    <div class="row" fxLayout>
                         <div fxFlex="28" fxLayoutAlign="start center" fxLayoutGap="10px"
                             class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">
                             <div fxLayout="column" fxFlex>
-                                <div *ngIf="firstOutCtrl" [class.m-t-10]="isOutVehicle.value" fxFlex="40" fxLayout>
-                                    <!-- <mat-checkbox color="primary" [formControl]="isOutVehicle"
-                                        (change)="onExOutCheckChange($event)"> -->
+                                <div [class.m-t-10]="form.get('isOutVehicle').value" fxFlex="40" fxLayout>
+                                    <mat-checkbox color="primary" formControlName="isOutVehicle"
+                                        (change)="onCheckChange($event, 'out')">
                                         Vehicle Exchange Out
-                                    <!-- </mat-checkbox> -->
+                                    </mat-checkbox>
                                 </div>
-                                <ng-container [formGroupName]="outCtrlIndex">
-                                    <div *ngIf="isOutVehicle.value" [class.m-t-10] ="!firstOutCtrl" fxLayout fxLayoutAlign="start center" fxFlex
-                                        class="m-r-16 m-l-n-10">
-                                        <div fxFlex="10">
-                                            <button (click)="removeVehicleOut(outCtrlIndex)" *ngIf="outCtrlIndex !== 0" class="small-icon delete" mat-icon-button
-                                                color="primary">
-                                                <mat-icon>clear</mat-icon>
-                                            </button>
-                                        </div>
-                                        <div class="m-r-10" fxFlex="10">
-                                            <button *ngIf="lastOutCtrl" (click)="addVehilceOut()" class="small-icon"
-                                                mat-icon-button color="primary">
-                                                <mat-icon>add</mat-icon>
-                                            </button>
-                                        </div>
-                                        <mat-form-field class="calc-field m-r-10" fxFlex="50">
-                                            <mat-label>Select Vehicle</mat-label>
-                                            <mat-select (selectionChange)="onExOutVehicleChange(outCtrl, outRpmInput)"
-                                                formControlName="vehicle" #outVehicleSelect>
-                                                <mat-option [value]="vehicle" *ngFor="let vehicle of vehicles">{{
-                                        vehicle.regNo }}</mat-option>
-                                            </mat-select>
-                                        </mat-form-field>
-                                        <mat-form-field class="calc-field m-r-10" fxFlex="30">
-                                            <mat-label>Rpm no</mat-label>
-                                            <input matInput (keydown.enter)="onExOutRpmNoEnter(outCtrlIndex)" positiveNumber
-                                                (input)="onExOutRpmNoInput(outCtrl)" formControlName="rpmNo"
-                                                #outRpmInput="matInput">
-                                        </mat-form-field>
-                                    </div>
-                                </ng-container>
+                                <div *ngIf="form.get('isOutVehicle').value" fxLayout fxLayoutGap="10px" fxFlex
+                                    class="m-r-16">
+                                    <mat-form-field class="calc-field" fxFlex="70">
+                                        <mat-label>Select Vehicle</mat-label>
+                                        <mat-select (selectionChange)="onExVehicleChange('out')"
+                                            formControlName="outVehicle" #outVehicleSelect>
+                                            <mat-option [value]="vehicle" *ngFor="let vehicle of vehicles">{{
+                                                vehicle.regNo }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field class="calc-field" fxFlex="30">
+                                        <mat-label>Rpm no</mat-label>
+                                        <input matInput (keydown.enter)="onExRpmNoEnter('out')" positiveNumber
+                                            (input)="onExRpmNoInput('out')" formControlName="outRpmNo"
+                                            #outRpmInput="matInput">
+                                    </mat-form-field>
+                                </div>
                             </div>
+
                         </div>
-                        <ng-container [formGroup]="outCtrl">
-                            <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" fxLayoutAlign="center center"
-                                formArrayName="pipes"
-                                *ngFor="let ctrl of getVehicleExchangePipesFormArray(outCtrlIndex).controls; let last = last; let index = index"
-                                class="cell b-b-0" [class.b-r-0]="!last">
-                                <ng-container [formGroup]="ctrl">
-                                    <div class="input-wrapper h-100" fxFlex>
-                                        <input type="text" (keydown)="onInputKeyUp($event, outCtrlIndex, index)" #feetInput
-                                            class="h-100" (input)="updateAvailableStock(+ctrl.get('pipeId').value)"
-                                            formControlName="value" placeholder="Feet" positiveNumber
-                                            [allowDecimal]="true">
-                                        <mat-icon class="input-edit-icon">edit</mat-icon>
-                                        <!-- <label>Count</label> -->
-                                        <span class="focus-border">
-                                            <i></i>
-                                        </span>
-                                    </div>
-                                </ng-container>
+                        <div fxLayoutAlign="center center" [fxFlex]="pipeFlex" fxLayoutAlign="center center"
+                            formArrayName="vehicleExOut"
+                            *ngFor="let ctrl of veicleExOutFormArray.controls; let last = last; let index = index"
+                            class="cell b-b-0" [class.b-r-0]="!last">
+                            <ng-container [formGroup]="ctrl">
+                                <div class="input-wrapper h-100" fxFlex>
+                                    <input type="text" (keydown)="onInputKeyUp($event, 1, index)" #feetInput #outFeetInput
+                                        class="h-100" (input)="updateAvailableStock(+ctrl.get('pipeId').value)"
+                                        formControlName="value" placeholder="Feet" positiveNumber [allowDecimal]="true">
+                                    <mat-icon class="input-edit-icon">edit</mat-icon>
+                                    <!-- <label>Count</label> -->
+                                    <span class="focus-border">
+                                        <i></i>
+                                    </span>
+                                </div>
+                            </ng-container>
 
-                            </div>
-                        </ng-container>
-
+                        </div>
                     </div>
                     <div class="row" fxLayout>
                         <div fxFlex="28" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">
                             <mat-checkbox color="primary" formControlName="isDamage"
-                                (change)="onDamageCheckChange($event)">
+                                (change)="onCheckChange($event, 'damage')">
                                 Damage Feet
                             </mat-checkbox>
                         </div>
@@ -874,9 +893,10 @@
                             class="cell b-b-0" [class.b-r-0]="!last">
                             <ng-container [formGroup]="ctrl">
                                 <div class="input-wrapper h-100" fxFlex>
-                                    <input (keydown)="onInputKeyUp($event, veicleExOutFormArray.controls.length, index)" type="text" #feetInput
-                                        (input)="updateAvailableStock(+ctrl.get('pipeId').value)" class="h-100"
-                                        formControlName="value" placeholder="Feet" positiveNumber [allowDecimal]="true">
+                                    <input (keydown)="onInputKeyUp($event, 2, index)"
+                                        type="text" #feetInput #damageFeetInput (input)="updateAvailableStock(+ctrl.get('pipeId').value)"
+                                        class="h-100" formControlName="value" placeholder="Feet" positiveNumber
+                                        [allowDecimal]="true">
                                     <mat-icon class="input-edit-icon">edit</mat-icon>
                                     <!-- <label>Count</label> -->
                                     <span class="focus-border">
@@ -904,7 +924,8 @@
                             class="cell b-b-0" [class.b-r-0]="!last">
                             <ng-container [formGroup]="ctrl">
                                 <div class="input-wrapper h-100" fxFlex>
-                                    <input #feetInput (keydown)="onInputKeyUp($event, veicleExOutFormArray.controls.length + 1, index, ctrl)"
+                                    <input #feetInput
+                                        (keydown)="onInputKeyUp($event, 3, index, ctrl)"
                                         type="text"
                                         (input)="validateAndUpdateBalanceStock(+ctrl.get('pipeId').value, ctrl.get('value'))"
                                         class="h-100" formControlName="value" placeholder="Feet" positiveNumber

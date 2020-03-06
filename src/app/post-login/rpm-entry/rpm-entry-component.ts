@@ -110,15 +110,17 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     lastResetDate;
     lastResetRpmNo;
     dateSelected$ = new Subject();
-    isOutVehicle = new FormControl({ value: '', disabled: true });
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
     @ViewChild('inVehicleSelect', { static: false }) inVehicleSelect: MatSelect;
-    @ViewChildren('outVehicleSelect') outVehicleSelect: QueryList<MatSelect>;
+    @ViewChild('outVehicleSelect', { static: false }) outVehicleSelect: MatSelect;
     @ViewChild('inRpmInput', { static: false }) inRpmNoInput: MatInput;
     @ViewChild('outRpmInput', { static: false }) outRpmNoInput: MatInput;
     @ViewChild('picker', { static: false }) picker: MatDatepicker<any>;
     @ViewChild('dateInput', { static: false }) dateInput: ElementRef;
+    @ViewChildren('inFeetInput') inFeetInputs: QueryList<ElementRef>;
+    @ViewChildren('outFeetInput') outFeetInputs: QueryList<ElementRef>;
+    @ViewChildren('damageFeetInput') damageFeetInputs: QueryList<ElementRef>;
     @ViewChildren('feetInput') feetInputs: QueryList<ElementRef>;
     @ViewChildren('remarksInput', { read: ElementRef }) remarksInput: QueryList<ElementRef>;
     @ViewChild('compressorInput', { static: false }) diselCompEl: ElementRef;
@@ -137,16 +139,16 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         return this.form.get('pointExpenseFeet') as FormArray
     }
 
+    get veicleExInFormArray() {
+        return this.form.get('vehicleExIn') as FormArray;
+    }
+
     get veicleExOutFormArray() {
         return this.form.get('vehicleExOut') as FormArray;
     }
 
     get damageFeetFormArray() {
         return this.form.get('damageFeet') as FormArray;
-    }
-
-    get vehicleExOutPipesFormArrray() {
-        return this.veicleExOutFormArray.controls[0].get('pipes') as FormArray;
     }
 
     constructor(
@@ -165,15 +167,16 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.form = this.fb.group({
             pointExpenseFeet: this.fb.array([]),
-            vehicleExOut: this.fb.array([
-                this.fb.group({
-                    vehicle: '',
-                    rpmNo: '',
-                    pipes: this.fb.array([])
-                })
-            ]),
+            vehicleExOut: this.fb.array([]),
+            vehicleExIn: this.fb.array([]),
             isDamage: { value: false, disabled: true },
             damageFeet: this.fb.array([]),
+            isInVehicle: { value: false, disabled: true },
+            inVehicle: '',
+            inRpmNo: '',
+            isOutVehicle: { value: false, disabled: true },
+            outVehicle: '',
+            outRpmNo: '',
             remarks: { value: '', disabled: false },
             user: this.fb.group({
                 drillerName: { value: '', disabled: true },
@@ -247,9 +250,6 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.assignedBits = data.assignedBits;
             }
 
-            // this.veicleExOutFormArray.push(this.buildVehicleExchangeOutForm());
-            console.log(this.veicleExOutFormArray);
-
             this.reversePipes.forEach(pipe => {
                 const pipeData: RpmValue = { pipeType: pipe.type, feet: 0, pipeId: +pipe.id, pipeSize: +pipe.size, length: 0 }
                 this.rpmEntryTable.previousStockFeet.push({ ...pipeData });
@@ -260,7 +260,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.rpmEntryTable.damageFeet.push({ ...pipeData });
                 this.rpmEntryTable.vehicleExIn.push({ ...pipeData });
                 this.pointExpenseFeetFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
-                this.vehicleExOutPipesFormArrray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size));
+                this.veicleExOutFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size));
+                this.veicleExInFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size));
                 this.damageFeetFormArray.push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size))
             });
             this.form.get('depth.boreType').setValue(this.boreTypes[0]);
@@ -338,17 +339,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     }
 
-    getVehicleExchangePipesFormArray(index) {
-        return this.veicleExOutFormArray.controls[index].get('pipes') as FormArray
-    }
-
     setAppData() {
         // set bore type as it is dropdown
         if (this.app.rpmEntryData.selectedVehcileId) {
             this.selectedVehicle = this.vehicles.find(v => v.vehicle_id === this.app.rpmEntryData.selectedVehcileId);
-        }
-        if (this.app.rpmEntryData.isOutVehicleFormValue !== null) {
-            this.isOutVehicle.setValue(this.app.rpmEntryData.isOutVehicleFormValue)
         }
         if (this.app.rpmEntryData.date) {
             this.date = this.app.rpmEntryData.date;
@@ -463,28 +457,6 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         }
         // ex out vehicles
-        if (this.app.rpmEntryData.formValue.vehicleExOut && this.app.rpmEntryData.formValue.vehicleExOut.length) {
-            this.app.rpmEntryData.formValue.vehicleExOut.forEach((vExOut, index) => {
-                if (index !== 0) {
-                    // not first control, as first control value is set by patchValue
-                    this.veicleExOutFormArray.push(this.buildVehicleExchangeOutForm(vExOut.rpmNo));
-                    this.reversePipes.forEach(pipe => {
-                        const currentPipe = vExOut.pipes.find(p => +p.pipeId === +pipe.id);
-                        (this.veicleExOutFormArray.controls[index].get('pipes') as FormArray)
-                            .push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size, currentPipe.value));
-                    });
-                }
-                if (vExOut.vehicle) {
-                    const selectedVehicle = this.vehicles.find(v => v.vehicle_id === vExOut.vehicle.vehicle_id);
-                    if (selectedVehicle) {
-                        this.veicleExOutFormArray.controls[index].get('vehicle').setValue(selectedVehicle);
-                        if (selectedVehicle && vExOut.rpmNo) {
-                            this.veicleExOutFormArray.controls[index].get('pipes').enable();
-                        }
-                    }
-                }
-            })
-        }
 
         // damage feet
         if (this.app.rpmEntryData.formValue.isDamage) {
@@ -960,50 +932,56 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    onExOutCheckChange(event: MatCheckboxChange) {
-        if (event.checked) {
-            setTimeout(() => {
-                this.outVehicleSelect.toArray()[0].open();
-                this.outVehicleSelect.toArray()[0].focus();
-            }, 100);
-        } else {
-            // remove all vehicle ex out control except first, 
-            // first control reset and disable
-            this.resetExOutControls();
-            this.updateAllPipeStockFeet();
-        }
-    }
 
-    resetExOutControls() {
-        // remove all vehicle ex out control except first, 
-        // first control reset and disable
-        while (this.veicleExOutFormArray.controls.length > 1) {
-            this.veicleExOutFormArray.removeAt(this.veicleExOutFormArray.controls.length - 1);
-        }
-        this.veicleExOutFormArray.controls[0].get('vehicle').reset('');
-        this.veicleExOutFormArray.controls[0].get('rpmNo').reset('');
-        (this.veicleExOutFormArray.controls[0].get('pipes') as FormArray).controls.forEach((ctrl) => {
-            ctrl.get('value').reset('');
-            ctrl.get('value').disable();
-        });
-    }
+    onCheckChange(event: MatCheckboxChange, type: 'in' | 'out' | 'damage') {
+        if (type === 'in') {
+            if (event.checked) {
+                setTimeout(() => {
+                    this.inVehicleSelect.open();
+                    this.inVehicleSelect.focus();
+                }, 100);
 
-    onDamageCheckChange(event: MatCheckboxChange) {
-        const damageFeetRowIndex = this.veicleExOutFormArray.controls.length;
-        const firstDamageFeetPos = damageFeetRowIndex * 8;
-        if (event.checked) {
-            this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
-            setTimeout(() => {
-                const firstDamageFeet = this.feetInputs.toArray()[firstDamageFeetPos].nativeElement as HTMLInputElement;
-                if (firstDamageFeet && !firstDamageFeet.disabled) {
-                    firstDamageFeet.focus();
-                }
-            }, 100)
-        } else {
-            this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').setValue(''));
-            this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
-            this.updateAllPipeStockFeet();
+                // this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+            } else {
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').reset(''));
+                this.form.get('inVehicle').reset('')
+                this.form.get('inRpmNo').reset('')
+            }
         }
+
+        if (type === 'out') {
+            if (event.checked) {
+                setTimeout(() => {
+                    this.outVehicleSelect.open();
+                    this.outVehicleSelect.focus();
+                }, 100);
+                // this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+            } else {
+                this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
+                this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').reset(''));
+                this.form.get('outVehicle').reset('');
+                this.form.get('outRpmNo').reset('');
+            }
+
+        }
+
+        if (type === 'damage') {
+            if (event.checked) {
+                this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+                setTimeout(() => {
+                    const firstDamageFeet = this.damageFeetInputs.toArray()[0].nativeElement as HTMLInputElement;
+                    if (firstDamageFeet && !firstDamageFeet.disabled) {
+                        firstDamageFeet.focus();
+                    }
+                }, 100)
+            } else {
+                this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').setValue(''));
+                this.damageFeetFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
+            }
+
+        }
+        this.updateAllPipeStockFeet();
     }
 
     /**
@@ -1015,18 +993,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         const mmIncome = this.rpmEntryTable.mmIncome.find(mm => mm.pipeId === pipeId).feet;
         const previousStockFeet = this.rpmEntryTable.previousStockFeet.find(ps => ps.pipeId === pipeId).feet;
         const availableStock = this.rpmEntryTable.availableStockFeet.find(as => as.pipeId === pipeId);
-        let vehicleInExchangeFeet = +this.rpmEntryTable.vehicleExIn.find(vExIn => vExIn.pipeId === pipeId).feet;
-        let vehicleOutExchange = +this.form.value.vehicleExOut.reduce((acc, cur) => {
-            return acc + (cur.pipes.find(p => +p.pipeId === pipeId).value ? +cur.pipes.find(p => +p.pipeId === pipeId).value : 0);
-        }, 0);
-        // vehicle in exchange comes from rpmEntryTable
-        // let vehicleInExchange = this.veicleExInFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value').value;
+        let vehicleInExchange = this.veicleExInFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value').value;
+        let vehicleOutExchange = this.veicleExOutFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value').value;
         let damageFeet = this.damageFeetFormArray.controls.find(ctrl => +ctrl.get('pipeId').value === pipeId).get('value').value;
-        // vehicleInExchange = vehicleInExchange ? +vehicleInExchange : 0;
+        vehicleInExchange = vehicleInExchange ? +vehicleInExchange : 0;
+        vehicleOutExchange = vehicleOutExchange ? +vehicleOutExchange : 0;
         damageFeet = damageFeet ? +damageFeet : 0;
 
-        // const availableStockFeet = (rrIncome + mmIncome + previousStockFeet + vehicleInExchange) - (vehicleOutExchange + damageFeet);
-        const availableStockFeet = (rrIncome + mmIncome + previousStockFeet + vehicleInExchangeFeet) - (vehicleOutExchange + damageFeet);
+        const availableStockFeet = (rrIncome + mmIncome + previousStockFeet + vehicleInExchange) - (vehicleOutExchange + damageFeet);
         if (availableStockFeet > 0) {
             availableStock.feet = this.roundValue(availableStockFeet, 10);
         } else {
@@ -1066,46 +1040,54 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         })
     }
 
-    addVehilceOut() {
-        this.veicleExOutFormArray.push(this.buildVehicleExchangeOutForm());
-        const lastCtrlIndex = this.veicleExOutFormArray.length;
-        this.reversePipes.forEach(pipe => {
-            (this.veicleExOutFormArray.controls[lastCtrlIndex - 1].get('pipes') as FormArray).push(this.buildPointExpenseForm(pipe.type, pipe.id, pipe.size));
-        });
-    }
-
-    removeVehicleOut(ctrlIndex) {
-        this.veicleExOutFormArray.removeAt(ctrlIndex);
-        this.updateAllPipeStockFeet();
-    }
-
-    onExOutVehicleChange(ctrl: FormGroup, rpmInputEl: MatInput) {
-        const pipesFormArray = ctrl.get('pipes') as FormArray;
-        if (ctrl.get('vehicle').valid && ctrl.get('rpmNo').valid) {
-            pipesFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+    onExVehicleChange(type: 'in' | 'out') {
+        if (type === 'in') {
+            if (this.form.get('inVehicle').valid && this.form.get('inRpmNo').valid) {
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').enable())
+            } else {
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').disable())
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').reset(''));
+            }
+            return setTimeout(() => {
+                this.inRpmNoInput.focus();
+            }, 100)
+        }
+        if (this.form.get('outVehicle').valid && this.form.get('outRpmNo').valid) {
+            this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
         } else {
-            pipesFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
-            pipesFormArray.controls.forEach(ctrl => ctrl.get('value').reset(''));
+            this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
+            this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').reset(''));
         }
         setTimeout(() => {
-            rpmInputEl.focus();
+            this.outRpmNoInput.focus();
         }, 100);
     }
 
-    onExOutRpmNoInput(ctrl: FormGroup) {
-        const pipesFormArray = ctrl.get('pipes') as FormArray;
-        if (ctrl.get('vehicle').valid && ctrl.get('rpmNo').valid) {
-            pipesFormArray.controls.forEach(ctrl => ctrl.get('value').enable());
+    onExRpmNoInput(type: 'in' | 'out') {
+        if (type === 'in') {
+            if (this.form.get('inVehicle').valid && this.form.get('inRpmNo').valid) {
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').enable())
+            } else {
+                this.veicleExInFormArray.controls.forEach(ctrl => ctrl.get('value').disable())
+
+            }
+        }
+        if (this.form.get('outVehicle').valid && this.form.get('outRpmNo').valid) {
+            this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').enable())
         } else {
-            pipesFormArray.controls.forEach(ctrl => ctrl.get('value').disable());
-            pipesFormArray.controls.forEach(ctrl => ctrl.get('value').reset(''));
-            this.updateAllPipeStockFeet();
+            this.veicleExOutFormArray.controls.forEach(ctrl => ctrl.get('value').disable())
         }
     }
 
-    onExOutRpmNoEnter(outCtrlIndex) {
-        const inputPos = (outCtrlIndex * 8);
-        const firstOutFeetInput = this.feetInputs.toArray()[inputPos].nativeElement as HTMLInputElement;
+    onExRpmNoEnter(type: 'in' | 'out') {
+        if (type === 'in') {
+            const firstInFeetInput = this.inFeetInputs.toArray()[0].nativeElement as HTMLInputElement;
+            if (!firstInFeetInput.disabled) {
+                firstInFeetInput.focus();
+            }
+            return;
+        }
+        const firstOutFeetInput = this.outFeetInputs.toArray()[0].nativeElement as HTMLInputElement;
         if (firstOutFeetInput && !firstOutFeetInput.disabled) {
             firstOutFeetInput.focus();
         }
@@ -1113,7 +1095,6 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnDestroy() {
         this.app.rpmEntryData.formValue = this.form.value;
-        this.app.rpmEntryData.isOutVehicleFormValue = this.isOutVehicle.value;
         this.app.rpmEntryData.rpmEntryNo = this.rpmEntryNo; // set
         this.app.rpmEntryData.bookId = this.bookId; //set
         this.app.rpmEntryData.bookStartNo = this.bookStartNo; //set
@@ -1558,13 +1539,23 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('depth.boreType').reset(this.boreTypes[0]);
         this.form.get('bit').reset('');
         this.form.get('hammer').reset('');
-        // this.form.get('outVehicle').reset();
-        // this.form.get('outRpmNo').reset();
+        this.form.get('inVehicle').reset();
+        this.form.get('outVehicle').reset();
+        this.form.get('inRpmNo').reset();
+        this.form.get('outRpmNo').reset();
         this.form.get('isDamage').reset();
+        this.form.get('isInVehicle').reset();
+        this.form.get('isOutVehicle').reset();
         this.form.get('remarks').reset('');
         this.date = null;
-        this.isOutVehicle.reset();
-        this.resetExOutControls();
+        this.veicleExInFormArray.controls.forEach(ctrl => {
+            ctrl.get('value').reset();
+            ctrl.get('value').disable();
+        })
+        this.veicleExOutFormArray.controls.forEach(ctrl => {
+            ctrl.get('value').reset();
+            ctrl.get('value').disable();
+        })
         this.damageFeetFormArray.controls.forEach(ctrl => {
             ctrl.get('value').reset();
             ctrl.get('value').disable();
@@ -1613,8 +1604,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('diesel').disable();
         this.form.get('depth').disable();
         this.form.get('rpm').disable();
-
-        this.isOutVehicle.disable();
+        this.form.get('isInVehicle').disable();
+        this.form.get('isOutVehicle').disable();
         this.form.get('isDamage').disable();
         this.form.get('remarks').disable();
         this.pointExpenseFeetFormArray.controls.forEach(ctrl => ctrl.disable());
@@ -1637,7 +1628,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('rpm.manual').enable();
         this.form.get('rpm.trac').enable();
 
-        this.isOutVehicle.enable();
+        this.form.get('isInVehicle').enable();
+        this.form.get('isOutVehicle').enable();
         this.form.get('isDamage').enable();
         this.form.get('remarks').enable();
         this.pointExpenseFeetFormArray.controls.forEach(ctrl => ctrl.enable());
@@ -2022,15 +2014,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 place: this.form.value.user.place,
                 plumber: this.form.value.user.plumber,
                 plumber_mobile: this.form.value.user.plumberMobile
-            },
-            new_vehicle_out: this.form.value.vehicleExOut.map(vExOut => (
-                {
-                    ...vExOut,
-                    rpmNo: +vExOut.rpmNo,
-                    vehicle: vExOut.vehilce || { vehicle_id: 0, regNo: '', type: '' },
-                    pipes: vExOut.pipes.map(p => ({ id: +p.pipeId, type: p.pipeType, feet: +p.value || 0, size: +p.pipeSize }))
-                }
-            ))
+            }
         }
 
         for (const pipe of this.pipes) {
@@ -2046,18 +2030,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 pipe_size: +pipe.size,
                 pipe_type: pipe.type,
                 damage_feet: +this.form.value.damageFeet.find(p => +p.pipeId === +pipe.id).value || 0,
-                vehicle_ex_out: 0,
-                // vehicle_ex_out: this.form.value.vehicleExOut.map(vEx => ({
-                //     vehicle: vEx.vehicle,
-                //     rpm_no: vEx.rpmNo,
-                //     feet: vEx.pipes.find(p => +p.pipeId === +pipe.id).value || 0
-                // })),
-                vehicle_ex_in: 0,
+                vehicle_ex_out: +this.form.value.vehicleExOut.find(p => +p.pipeId === +pipe.id).value || 0,
+                vehicle_ex_in: +this.form.value.vehicleExIn.find(p => +p.pipeId === +pipe.id).value || 0,
                 point_expenses_feet: +this.form.value.pointExpenseFeet.find(p => +p.pipeId === +pipe.id).value || 0,
             }
             payload.f_rpm_table_data.push(rpmEntry);
         };
-        // this.rpmEntryService.submitRpm(payload);
         this.rpmEntryService.submitRpm(payload).pipe(
             mergeMap((lastRpmEntrySheet) => {
 
@@ -2106,10 +2084,6 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private buildPointExpenseForm(pipeType, pipeId, pipeSize, value = '') {
         return this.fb.group({ pipeType, pipeId, pipeSize, value: { value, disabled: true } })
-    }
-
-    private buildVehicleExchangeOutForm(rpmNo = '') {
-        return this.fb.group({ vehicle: ['', Validators.required], rpmNo: [rpmNo, Validators.required], pipes: this.fb.array([]) })
     }
 
 

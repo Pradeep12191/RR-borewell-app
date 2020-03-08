@@ -472,9 +472,21 @@
                         }}</div>
                 </div>
                 <div class="row" fxLayout>
-                    <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Vehicle
-                        Exchange
-                        In</div>
+                    <div fxFlex="20" fxLayoutAlign="start center"
+                        class="cell b-r-0 p-l-10 b-b-0 bold bg-grey p-b-5 p-t-5">
+                        <div fxLayout="column" fxLayoutGap="5px">
+                            <div>Vehicle Exchange In</div>
+                            <div fxLayout fxLayoutGap="2px" *ngIf="rpmEntry?.rpm_vehicle_exchange.vehicle_in_no">
+                                <div class="text-left" fxFlex="60">Vehicle No: </div>
+                                <div class="text-left font-normal" fxFlex>{{rpmEntry?.rpm_vehicle_exchange.vehicle_in_no}}</div>
+                            </div>
+                            <div fxLayout fxLayoutGap="2px" *ngIf="rpmEntry?.rpm_vehicle_exchange.vehicle_in_rpm_sheet_no">
+                                <div class="text-left" fxFlex="60">Rpm No: </div>
+                                <div class="text-left font-normal" fxFlex>{{rpmEntry?.rpm_vehicle_exchange.vehicle_in_rpm_sheet_no}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div fxLayoutAlign="center center" [fxFlex]="pipeFlex"
                         *ngFor="let vehicleExIn of rpmEntry?.rpmTableData.vehicleExIn; let last = last"
                         class="cell b-b-0" [class.added]="vehicleExIn.feet" [class.b-r-0]="!last">{{ vehicleExIn.feet
@@ -482,9 +494,20 @@
                         }}</div>
                 </div>
                 <div class="row" fxLayout>
-                    <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey">Vehicle
-                        Exchange
-                        Out</div>
+                    <div fxFlex="20" fxLayoutAlign="start center" class="cell b-r-0 p-l-10 b-b-0 bold bg-grey p-b-5 p-t-5">
+                        <div fxLayout="column" fxLayoutGap="5px">
+                            <div>Vehicle Exchange Out</div>
+                            <div fxLayout fxLayoutGap="2px" *ngIf="rpmEntry?.rpm_vehicle_exchange.vehicle_out_no">
+                                <div class="text-left" fxFlex="60">Vehicle No: </div>
+                                <div class="text-left font-normal" fxFlex>{{rpmEntry?.rpm_vehicle_exchange.vehicle_out_no}}</div>
+                            </div>
+                            <div fxLayout fxLayoutGap="2px" *ngIf="rpmEntry?.rpm_vehicle_exchange.vehicle_out_rpm_sheet_no">
+                                <div class="text-left" fxFlex="60">Rpm No: </div>
+                                <div class="text-left font-normal" fxFlex>{{rpmEntry?.rpm_vehicle_exchange.vehicle_out_rpm_sheet_no}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div fxLayoutAlign="center center" [fxFlex]="pipeFlex"
                         *ngFor="let vehicleExOut of rpmEntry?.rpmTableData.vehicleExOut; let last = last"
                         class="cell b-b-0" [class.removed]="vehicleExOut.feet" [class.b-r-0]="!last">{{

@@ -100,7 +100,7 @@ export class AddHammerDialogComponent implements OnInit, OnDestroy {
         this.serialNos.forEach(h => {
             const hammer = {
                 serial_no: h.serialNo,
-                no: h.bitNo ? +h.bitNo : 0,
+                no: h.bitNo || '',
                 size: h.hammer.size,
                 type: h.hammer.type,
                 id: h.hammer.id,

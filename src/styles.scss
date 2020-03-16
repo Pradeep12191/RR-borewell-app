@@ -264,10 +264,11 @@ mat-form-field.calc-field{
 
  .mat-option:hover:not(.mat-option-disabled),
  .mat-option:focus:not(.mat-option-disabled),
- .mat-option.mat-active,
- .mat-primary .mat-option.mat-selected:not(.mat-option-disabled){
-     background-color: #006064;
-     color: white;
+ .mat-option.mat-active
+//  .mat-primary .mat-option.mat-selected:not(.mat-option-disabled)
+ {
+     background-color: #006064 !important;
+     color: white !important;
      font-weight: 400;
  }
 

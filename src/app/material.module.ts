@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
 import {
     MatToolbarModule, MatSidenavModule, MatExpansionModule, MatFormFieldModule,
-    MatInputModule, MatRadioModule, MatButtonModule, MatMenuModule, MatSelectModule, MatTreeModule, MatIconModule, MatDatepickerModule, MatCheckboxModule, MatProgressSpinnerModule, MatCardModule, MatStepperModule, MatSnackBarModule, MatDividerModule, MatDialogModule, MatTableModule, MatListModule, MatTooltipModule
+    MatInputModule, MatRadioModule, MatButtonModule, MatMenuModule, MatSelectModule,
+    MatTreeModule, MatIconModule, MatDatepickerModule, MatCheckboxModule,
+    MatProgressSpinnerModule, MatCardModule, MatStepperModule, MatSnackBarModule, MatDividerModule,
+    MatDialogModule, MatTableModule, MatListModule, MatTooltipModule,
+
 } from '@angular/material';
 import { MomentDateModule } from '@angular/material-moment-adapter';
 
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatDatepicker } from '@angular/material/datepicker';
 
 import * as _moment from 'moment';
 // tslint:disable-next-line:no-duplicate-imports

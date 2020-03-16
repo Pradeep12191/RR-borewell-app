@@ -262,6 +262,15 @@ mat-form-field.calc-field{
     }
  }
 
+ .mat-option:hover:not(.mat-option-disabled),
+ .mat-option:focus:not(.mat-option-disabled),
+ .mat-option.mat-active,
+ .mat-primary .mat-option.mat-selected:not(.mat-option-disabled){
+     background-color: #006064;
+     color: white;
+     font-weight: 400;
+ }
+
  .dashed{
     border-bottom: 1px dashed #006064;
     // margin-bottom: 20px;

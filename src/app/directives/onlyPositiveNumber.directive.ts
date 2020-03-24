@@ -13,5 +13,5 @@ export class PositiveNumberDirective {
     }
     @HostBinding('autocomplete') autocomplete = 'off'
     @HostBinding('pattern') pattern = '[0-9]*'
-    @HostBinding('attr.inputmode') inputmode = 'numeric'
+    @HostBinding('attr.inputmode') inputmode = 'decimal'
 }

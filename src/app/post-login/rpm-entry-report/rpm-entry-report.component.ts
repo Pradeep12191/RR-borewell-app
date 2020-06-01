@@ -15,6 +15,9 @@ import { Vehicle } from '../../models/Vehicle';
 import { PipeSize } from '../../models/PipeSize';
 import { BoreType } from 'src/app/models/BoreType';
 
+
+const ALL_VEHICLE_OPTION: Vehicle = { regNo: 'All Vehicle', type: '', vehicle_id: 'all' }
+
 const sheetNoValidation = (control: AbstractControl) => {
     const fromSheetNo = +control.get('fromRpmSheetNo').value;
     const toSheetNo = +control.get('toRpmSheetNo').value;
@@ -80,6 +83,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
             };
             this.pipes = data.pipes.reverse();
             this.vehicles = data.vehicles;
+            this.vehicles.unshift(ALL_VEHICLE_OPTION);
             this.boreTypes = data.boreTypes;
             setTimeout(() => {
                 this.filterForm.get('boreType').setValue(this.boreTypes[0])

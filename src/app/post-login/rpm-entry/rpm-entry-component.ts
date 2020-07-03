@@ -37,6 +37,7 @@ import { AssignHammerDialogComponent } from './assing-hammer-dialog/assign-hamme
 import { HammerSize } from '../hammers/hammer-size.model';
 import { HammerSerialNo } from 'src/app/models/HammerSerialNo';
 import { AppService } from 'src/app/services/app.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 interface VehicleChangeData {
     lastRpmEntrySheet: RpmEntrySheet;
@@ -109,6 +110,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     boreTypes: BoreType[];
     lastResetDate;
     lastResetRpmNo;
+    userRole;
     dateSelected$ = new Subject();
     @ViewChild('addBookBtn', { static: false, read: ElementRef }) addBookBtn: ElementRef;
     @ViewChild('vehicleSelect', { static: false }) vehicleSelect: MatSelect;
@@ -136,7 +138,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('airRpmNoInput', { static: false }) airRpmNoInput: MatSelect;
 
     get pointExpenseFeetFormArray() {
-        return this.form.get('pointExpenseFeet') as FormArray
+        return this.form.get('pointExpenseFeet') as FormArray;
     }
 
     get veicleExInFormArray() {
@@ -162,9 +164,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         private loader: LoaderService,
         private common: CommonService,
         private toastr: ToastrService,
-        private app: AppService
+        private app: AppService,
+        private auth: AuthService
     ) {
-
+        this.userRole = this.auth.userrole;
         this.form = this.fb.group({
             pointExpenseFeet: this.fb.array([]),
             vehicleExOut: this.fb.array([]),
@@ -196,6 +199,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 ],
                 manual: { value: '', disabled: true },
                 tracEndHour: [{ value: '', disabled: true }, this.endValueValidator('tractor_start_hour', 'tracError').bind(this)],
+                tracStartHour: { value: '', disabled: true },
                 trac: { value: '', disabled: true },
                 // isManual: false
             }),
@@ -734,7 +738,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         return extraRpm;
     }
 
-    onRpmInputEnter(currentIndex) {
+    onRpmInputEnter(rpmInput: HTMLInputElement) {
+        const currentIndex = this.rpmInputs.toArray().findIndex(r => r.nativeElement === rpmInput);
         const nextInput = this.rpmInputs.toArray()[currentIndex + 1];
         if (nextInput) {
             (nextInput.nativeElement as HTMLInputElement).focus();
@@ -2209,10 +2214,13 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     onTractorChange($event: MatSelectChange) {
         if ($event.value) {
             this.rpmSheet.rpm.tractor_start_hour = $event.value.start_hour ? +$event.value.start_hour : 0;
-            return this.form.get('rpm.tracEndHour').enable();
+            this.form.get('rpm.tracEndHour').enable();
+            return this.form.get('rpm.tracStartHour').enable();
         }
         this.form.get('rpm.tracEndHour').disable();
         this.form.get('rpm.tracEndHour').reset();
+        this.form.get('rpm.tracStartHour').disable();
+        this.form.get('rpm.tracStartHour').reset();
         this.tracRunningRpm = 0;
     }
 

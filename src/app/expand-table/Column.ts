@@ -8,5 +8,6 @@ export interface Column {
     action?: string,
     iconName?: string;
     isCenter?: boolean,
+    show?: (data: any) => boolean;
     style?: any;
 }

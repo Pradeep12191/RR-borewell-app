@@ -3,7 +3,7 @@ import { Subscription, of, throwError, noop } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { RpmEntrySheet } from '../../models/RpmEntrySheet';
 import { Column } from '../../expand-table/Column';
-import { MatTableDataSource, MatDatepicker, MatSelect, MatSelectChange, } from '@angular/material';
+import { MatTableDataSource, MatDatepicker, MatSelect, MatSelectChange, MatDialog, } from '@angular/material';
 import { RpmEntryService } from '../rpm-entry/rpm-entry.service';
 import { RpmEntryReportService } from './rpm-entry-report.service';
 import { LoaderService } from '../../services/loader-service';
@@ -14,6 +14,9 @@ import * as moment from 'moment';
 import { Vehicle } from '../../models/Vehicle';
 import { PipeSize } from '../../models/PipeSize';
 import { BoreType } from 'src/app/models/BoreType';
+import { AuthService } from 'src/app/services/auth.service';
+import { ServiceCompleteConfirmDialog } from '../rpm-entry/service-complete-confirm-dialog/service-complete-confirm-dialog.component';
+import { ToastrService } from 'ngx-toastr';
 
 
 const ALL_VEHICLE_OPTION: Vehicle = { regNo: 'All Vehicle', type: '', vehicle_id: 'all' }
@@ -65,17 +68,34 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
     ]
     public columns: Column[] = [
         { id: 'serialNo', name: 'COLUMN.SERIAL_NO', type: 'index', width: '10' },
-        { id: 'rpm_sheet_no', name: 'RPM Sheet No.', type: 'string', width: '15', isCenter: true, style: { fontSize: '20px', fontWeight: 'bold' } },
-        { id: 'vehicle_no', name: 'Vehicle No.', type: 'string', width: '20', isCenter: true, style: { fontSize: '20px', fontWeight: 'bold', textTransform: 'uppercase' } },
+        {
+            id: 'rpm_sheet_no', name: 'RPM Sheet No.', type: 'string', width: '25', isCenter: true, style: {
+                fontSize: '20px', fontWeight: 'bold'
+            }
+        },
+        {
+            id: 'vehicle_no', name: 'Vehicle No.', type: 'string', width: '20', isCenter: true, style: {
+                fontSize: '20px', fontWeight: 'bold', textTransform: 'uppercase'
+            }
+        },
         { id: 'date', name: 'Date', type: 'string', width: '25', style: { fontSize: '20px', fontWeight: 'bold' } },
-        { id: 'more_details', name: 'Collapse All', type: 'toggle', width: '20', isCenter: true }
+        { id: 'delete', name: '', type: 'button', width: '5', show: (index) => index === 0 && this.auth.userrole === 'owner' },
+        {
+            id: 'more_details', name: 'Collapse All', type: 'toggle', width: '15', isCenter: true,
+        }
     ];
     constructor(
         private route: ActivatedRoute,
         private rpmEntryReportService: RpmEntryReportService,
         private loader: LoaderService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private auth: AuthService,
+        private dialog: MatDialog,
+        private toastr: ToastrService
     ) {
+        if (this.auth.userrole !== 'owner') {
+            this.columns = this.columns.filter(c => c.id !== 'delete');
+        }
         this.routeDataSubcription = this.route.data.subscribe((data) => {
             if (data.entries) {
                 this.entries = data.entries;
@@ -256,6 +276,47 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                 this.filterForm.enable({ emitEvent: false })
             }
         })
+    }
+
+    onAction(event) {
+        console.log(event.rowData);
+        const { rpm_sheet_no, vehicle_id, book_id, bit, hammer } = event.rowData;
+        if (event.action === 'delete') {
+            const dialogRef = this.dialog.open(ServiceCompleteConfirmDialog, {
+                data: {
+                    title: 'Confirm Delete',
+                    message: `Would you like to delete the  rpm sheet <strong>${rpm_sheet_no}</strong>  ?`
+                }
+            })
+            dialogRef.afterClosed().subscribe(res => {
+                if (res === 'yes') {
+                    this.loader.showSaveLoader('Deleting');
+                    // delete
+                    this.rpmEntryReportService.deleteRpmSheet({
+                        rpm_sheet_no,
+                        vehicle_id,
+                        book_no: book_id,
+                        bit_serial_no: bit.serial_no || '',
+                        hammer_serial_no: hammer.serial_no || ''
+                    })
+                    .pipe(
+                        switchMap(() => {
+                            const vehicle_id = this.filterForm.get('vehicle').value.vehicle_id;
+                            return this.rpmEntryReportService.getRpmEntries({
+                                vehicle_id,
+                                type: 'list', bore_type: 'Bore Depth'
+                            });
+                        })
+                    )
+                    .subscribe((entries) => {
+                        this.bindData(entries);
+                        this.loader.hideSaveLoader();
+                        this.toastr.success(`Rpm Entry ${rpm_sheet_no} deleted successfully `, 'Success', { timeOut: 2500 });
+                    });
+                }
+            });
+        }
+
     }
 
     downloadReport() {

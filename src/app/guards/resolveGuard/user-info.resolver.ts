@@ -25,7 +25,10 @@ export class UserInfoResolver implements Resolve<any>{
             if (response) {
                 if (!this.auth.userid) {
                     this.auth.userid = response.user_id;
-                }   
+                }
+                if (!this.auth.userrole) {
+                    this.auth.userrole = response.usertype;
+                }
             }
         }));
     }

@@ -12,6 +12,7 @@ import { throwError } from 'rxjs';
 @Injectable()
 export class RpmEntryReportService {
     rpmEntryReportUrl: string;
+    deleteRpmSheetUrl: string;
     reportUrl: string;
     pdfDownloadUrl: string
     constructor(
@@ -21,13 +22,14 @@ export class RpmEntryReportService {
         private toastr: ToastrService
     ) {
         this.rpmEntryReportUrl = this.config.getAbsoluteUrl('rpmReport');
+        this.deleteRpmSheetUrl = this.config.getAbsoluteUrl('Delete RPM Sheet');
         this.reportUrl = this.config.getReportGenerateUrl('rpmEntry');
         this.pdfDownloadUrl = this.config.getReportDownloadUrl();
     }
 
     downloadPdf(inputParams) {
 
-        const params = {...inputParams, user_id: this.auth.userid}
+        const params = { ...inputParams, user_id: this.auth.userid }
         return this.http.get<{ success: string; filename: string }>(this.reportUrl, { params }).pipe(
             map((response) => {
                 this.toastr.success('Report generated successfully', null, { timeOut: 2000 });
@@ -93,5 +95,10 @@ export class RpmEntryReportService {
             return sheets
 
         }))
+    }
+
+    deleteRpmSheet(qParams) {
+        const params = { ...qParams, user_id: this.auth.userid };
+        return this.http.delete(this.deleteRpmSheetUrl, { params });
     }
 }

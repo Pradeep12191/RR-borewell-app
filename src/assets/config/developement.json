@@ -1,7 +1,7 @@
 {
     "formAppearance": "outline",
     "apiUrl": "http://103.207.4.72:18082/RR_borewell_api1/webapi/resource/",
-    "reportBaseUrl": "http://localhost:3001/",
+    "reportBaseUrl": "http://localhost:3002/",
     "mobileNav": false,
     "classicSidenav": true,
     "errorMessageTimeout": 2000,
@@ -257,6 +257,10 @@
         {
             "name": "hammerLife",
             "url": "hammer_life"
+        },
+        {
+            "name": "Delete RPM Sheet",
+            "url": "delete_rpm_sheet"
         }
     ],
     "reportGenerateUrls": [

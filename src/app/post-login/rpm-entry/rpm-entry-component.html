@@ -168,17 +168,30 @@
                             </mat-form-field>
                             <div fxFlex="40" class="font-14">Tractor Start Hour</div>
                             <div class="bold font-16">
-                                <div
-                                    *ngIf="form.get('rpm.trac').value || form.get('rpm.trac').value?.start_hour === 0; else hyphenTpl">
-                                    {{ form.get('rpm.trac').value?.start_hour }}
-                                </div>
+                                <ng-container *ngIf="userRole !== 'owner'; else editTracStartHour">
+                                    <div
+                                        *ngIf="form.get('rpm.trac').value || form.get('rpm.trac').value?.start_hour === 0; else hyphenTpl">
+                                        {{ form.get('rpm.trac').value?.start_hour }}
+                                    </div>
+                                </ng-container>
+                                <ng-template #editTracStartHour>
+                                    <mat-form-field fxFlex="50">
+                                        <mat-label>Hour</mat-label>
+                                        <input (input)="onTracEndInput()" (keydown.enter)="onRpmInputEnter(rpmInput)" #rpmInput
+                                            formControlName="tracStartHour" [allowDecimal]="true" (input)="onRpmEndInput()"
+                                            type="text" matInput positiveNumber>
+                                        <mat-error *ngIf="form.get('rpm.tracEndHour').hasError('tracError')">
+                                            End hour Should be greater than start hour
+                                        </mat-error>
+                                    </mat-form-field>
+                                </ng-template>
                             </div>
                         </div>
                         <div fxLayout fxLayoutAlign="start center">
                             <div fxFlex="40">Tractor End Hour</div>
                             <mat-form-field fxFlex="50">
                                 <mat-label>Hour</mat-label>
-                                <input (input)="onTracEndInput()" (keydown.enter)="onRpmInputEnter(0)" #rpmInput
+                                <input (input)="onTracEndInput()" (keydown.enter)="onRpmInputEnter(rpmInput)" #rpmInput
                                     formControlName="tracEndHour" [allowDecimal]="true" (input)="onRpmEndInput()"
                                     type="text" matInput positiveNumber>
                                 <mat-error *ngIf="form.get('rpm.tracEndHour').hasError('tracError')">
@@ -198,7 +211,7 @@
                             <div fxFlex="40">End RPM</div>
                             <mat-form-field fxFlex="50">
                                 <mat-label>RPM</mat-label>
-                                <input formControlName="end" [allowDecimal]="true" (keydown.enter)="onRpmInputEnter(1)"
+                                <input formControlName="end" [allowDecimal]="true" (keydown.enter)="onRpmInputEnter(rpmInput)"
                                     #rpmInput (input)="onRpmEndInput()" type="text" matInput positiveNumber>
                                 <mat-error *ngIf="form.get('rpm.end').hasError('rpmError'); else decimalErrorTpl">
                                     End Rpm should be greater than Start Rpm.
@@ -217,7 +230,7 @@
                             <mat-form-field fxFlex="50">
                                 <mat-label>RPM</mat-label>
                                 <input type="text" [allowDecimal]="true" (input)="onRpmEndInput()"
-                                    (keydown.enter)="onRpmInputEnter(2)" matInput #rpmInput positiveNumber
+                                    (keydown.enter)="onRpmInputEnter(rpmInput)" matInput #rpmInput positiveNumber
                                     formControlName="manual">
                             </mat-form-field>
                         </div>
@@ -867,8 +880,9 @@
                             class="cell b-b-0" [class.b-r-0]="!last">
                             <ng-container [formGroup]="ctrl">
                                 <div class="input-wrapper h-100" fxFlex>
-                                    <input type="text" (keydown)="onInputKeyUp($event, 1, index)" #feetInput #outFeetInput
-                                        class="h-100" (input)="updateAvailableStock(+ctrl.get('pipeId').value)"
+                                    <input type="text" (keydown)="onInputKeyUp($event, 1, index)" #feetInput
+                                        #outFeetInput class="h-100"
+                                        (input)="updateAvailableStock(+ctrl.get('pipeId').value)"
                                         formControlName="value" placeholder="Feet" positiveNumber [allowDecimal]="true">
                                     <mat-icon class="input-edit-icon">edit</mat-icon>
                                     <!-- <label>Count</label> -->
@@ -893,8 +907,8 @@
                             class="cell b-b-0" [class.b-r-0]="!last">
                             <ng-container [formGroup]="ctrl">
                                 <div class="input-wrapper h-100" fxFlex>
-                                    <input (keydown)="onInputKeyUp($event, 2, index)"
-                                        type="text" #feetInput #damageFeetInput (input)="updateAvailableStock(+ctrl.get('pipeId').value)"
+                                    <input (keydown)="onInputKeyUp($event, 2, index)" type="text" #feetInput
+                                        #damageFeetInput (input)="updateAvailableStock(+ctrl.get('pipeId').value)"
                                         class="h-100" formControlName="value" placeholder="Feet" positiveNumber
                                         [allowDecimal]="true">
                                     <mat-icon class="input-edit-icon">edit</mat-icon>
@@ -924,9 +938,7 @@
                             class="cell b-b-0" [class.b-r-0]="!last">
                             <ng-container [formGroup]="ctrl">
                                 <div class="input-wrapper h-100" fxFlex>
-                                    <input #feetInput
-                                        (keydown)="onInputKeyUp($event, 3, index, ctrl)"
-                                        type="text"
+                                    <input #feetInput (keydown)="onInputKeyUp($event, 3, index, ctrl)" type="text"
                                         (input)="validateAndUpdateBalanceStock(+ctrl.get('pipeId').value, ctrl.get('value'))"
                                         class="h-100" formControlName="value" placeholder="Feet" positiveNumber
                                         [allowDecimal]="true">

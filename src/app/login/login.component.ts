@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
     this.auth.password = password;
     this.auth.token = this.auth.createToken(username, password);
     this.http.get(this.loginUrl).subscribe(() => {
-      this.auth.password = null;    
+      this.auth.password = null; 
       this.router.navigate(['postlogin', 'pipes'])
     }, (err: HttpErrorResponse) => {
       this.onLogin = false;

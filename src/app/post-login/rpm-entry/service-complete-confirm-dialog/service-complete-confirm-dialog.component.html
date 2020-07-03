@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{ title || 'Confirm Service Completion' }}</h1>
 <div mat-dialog-content>
-    <p>{{ message }}</p>
+    <p [innerHtml]="message"></p>
 </div>
 <div mat-dialog-actions>
     <button mat-raised-button color="warn" mat-dialog-close>NO</button>

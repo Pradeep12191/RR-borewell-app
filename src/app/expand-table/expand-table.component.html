@@ -26,8 +26,8 @@
                             <mat-icon>edit</mat-icon>
                         </button>
                     </ng-container>
-                    <ng-container *ngIf="col.id === 'delete'">
-                        <button mat-icon-button color="primary">
+                    <ng-container *ngIf="col.id === 'delete' && col.show && col.show(i)">
+                        <button mat-icon-button color="primary" (click)="buttonIconClick(col.id, row)">
                             <mat-icon>delete_outline</mat-icon>
                         </button>
                     </ng-container>

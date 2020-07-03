@@ -19,11 +19,11 @@ export class AuthInterceptorService implements HttpInterceptor {
             modifiedRequest = req.clone({
                 body: { user: this.auth.username, user_id: this.auth.userid, ...req.body },
                 headers: req.headers.append('Authorization', this.auth.token ? this.auth.token : '')
-            })
-        } else if (req.method === 'GET') {
+            });
+        } else if (req.method === 'GET' || req.method === 'DELETE') {
             modifiedRequest = req.clone({
                 headers: req.headers.append('Authorization', this.auth.token ? this.auth.token : '')
-            })
+            });
         }
 
         return next.handle(modifiedRequest);

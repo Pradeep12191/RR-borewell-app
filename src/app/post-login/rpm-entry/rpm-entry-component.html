@@ -790,7 +790,7 @@
                         <mat-form-field class="calc-field" fxFlex="40">
                             <mat-label>Serial no</mat-label>
                             <mat-select formControlName="hammer" #hammerSelect
-                                (selectionChange)="updateHammerTotalFeet($event.value)">
+                                (selectionChange)="setHammerPreviousFeet($event.value); updateHammerTotalFeet($event.value)">
                                 <mat-option value="">Select Hammer</mat-option>
                                 <mat-option [value]="hammer" *ngFor="let hammer of assignedHammers">
                                     {{ hammer.serial_no }}</mat-option>
@@ -818,9 +818,16 @@
                     <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
                         <div fxLayoutAlign="start center" fxFlex="50">Hammer Previous Feet</div>
                         <div class="bold font-16">
-                            <div *ngIf="form.get('hammer').value; else hyphenTpl">
-                                {{ form.get('hammer').value?.previous_feet }}
-                            </div>
+                            <mat-form-field *ngIf="userRole === 'owner' || (form.get('hammer').value && !form.get('hammer').value.previous_feet); else displayHammerPreviousFeet">
+                                <mat-label>Feet</mat-label>
+                                <input (input)="updateHammerTotalFeet(true)" type="text" matInput formControlName="hammerPreviousFeet">
+                            </mat-form-field>
+                            <ng-template #displayHammerPreviousFeet>
+                                <div *ngIf="form.get('hammer').value; else hyphenTpl">
+                                    {{ form.get('hammerPreviousFeet').value }}
+                                </div>
+                            </ng-template>
+                            
                         </div>
                     </div>
                     <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">

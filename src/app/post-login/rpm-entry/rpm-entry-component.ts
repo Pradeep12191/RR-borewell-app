@@ -328,7 +328,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
         this.hammerSelect._closedStream.subscribe(() => {
-            this.moveNextInput(-1);
+            // this.moveNextInput(-1);
         });
 
         this.picker.closedStream.subscribe(() => {
@@ -447,11 +447,19 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.app.rpmEntryData.formValue.bit) {
             const selectedBit = this.assignedBits.find(t => t.serial_no === this.app.rpmEntryData.formValue.bit.serial_no);
             this.form.get('bit').setValue(selectedBit);
+            if (selectedBit) {
+                this.form.get('bitPreviousFeet').enable();
+                this.form.get('bitPreviousFeet').setValue(selectedBit.previous_feet);
+            }
         }
         // hammer
         if (this.app.rpmEntryData.formValue.hammer) {
             const selectedHammer = this.assignedHammers.find(t => t.serial_no === this.app.rpmEntryData.formValue.hammer.serial_no);
             this.form.get('hammer').setValue(selectedHammer);
+            if (selectedHammer) {
+                this.form.get('hammerPreviousFeet').enable();
+                this.form.get('hammerPreviousFeet').setValue(selectedHammer.previous_feet);
+            }
         }
         // air vehicle
         if (this.app.rpmEntryData.formValue.depth.air && this.app.rpmEntryData.formValue.depth.air.vehicle) {
@@ -1273,6 +1281,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                     .subscribe((hammers) => {
                         this.assignedHammers = hammers;
                         this.form.get('hammer').reset('');
+                        this.form.get('hammerPreviousFeet').reset();
                         this.toastr.success('Finish Hammer Updated  Sucessfully', null, { timeOut: 2000 })
                     });
             }
@@ -1637,6 +1646,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('depth.boreType').reset(this.boreTypes[0]);
         this.form.get('bit').reset('');
         this.form.get('hammer').reset('');
+        this.form.get('hammerPreviousFeet').reset('');
+        this.form.get('bitPreviousFeet').reset('');
         this.form.get('inVehicle').reset();
         this.form.get('outVehicle').reset();
         this.form.get('inRpmNo').reset();
@@ -1706,6 +1717,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('isOutVehicle').disable();
         this.form.get('isDamage').disable();
         this.form.get('remarks').disable();
+        this.form.get('bitPreviousFeet').disable();
+        this.form.get('hammerPreviousFeet').disable();
         this.pointExpenseFeetFormArray.controls.forEach(ctrl => ctrl.disable());
 
     }
@@ -2001,14 +2014,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
+        hammerPreviousFeet = +this.form.get('hammerPreviousFeet').value;
         if (hammer) {
-            hammerPreviousFeet = +hammer.previous_feet;
         } else {
             return;
         }
 
         if (pipeErectionDepth && (boreDepth >= pipeErectionDepth)) {
-            runningFeet = boreDepth - pipeErectionDepth
+            runningFeet = boreDepth - pipeErectionDepth;
         } else {
             runningFeet = 0;
         }
@@ -2016,6 +2029,20 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.rpmSheet && this.rpmSheet.hammer) {
             this.rpmSheet.hammer.running_feet = runningFeet;
             this.rpmSheet.hammer.total_feet = runningFeet + hammerPreviousFeet;
+        }
+    }
+
+    setHammerPreviousFeet(hammer) {
+        const ctrl = this.form.get('hammerPreviousFeet');
+        if (hammer) {
+            // enable bit previous feet
+            const hammerPreviousFeet = +hammer.previous_feet;
+            ctrl.setValue(hammerPreviousFeet);
+            ctrl.enable();
+        } else {
+            ctrl.reset();
+            ctrl.disable();
+            return;
         }
     }
 

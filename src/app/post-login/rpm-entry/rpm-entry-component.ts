@@ -229,7 +229,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 }),
             }),
             bit: { value: '', disabled: true },
-            hammer: { value: '', disable: true }
+            bitPreviousFeet: { value: '', disabled: true },
+            hammer: { value: '', disable: true },
+            hammerPreviousFeet: { value: '', disabled: true },
         })
         this.appearance = this.config.getConfig('formAppearance');
     }
@@ -1243,6 +1245,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                     .subscribe((bits) => {
                         this.assignedBits = bits;
                         this.form.get('bit').reset();
+                        this.form.get('bitPreviousFeet').reset();
                         this.toastr.success('Finish Bit Updated  Sucessfully', null, { timeOut: 2000 })
                     });
             }
@@ -1937,19 +1940,22 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         let runningFeet = 0;
         let bitPreviousFeet = 0;
 
+
         if ((boreType.type !== 'Bore Depth' && boreType.id !== 1) && (boreType.type !== 'Rebore' && boreType.id !== 4)) {
             this.resetDepth();
             return;
         }
 
+        bitPreviousFeet = +this.form.get('bitPreviousFeet').value;
         if (bit) {
-            bitPreviousFeet = +bit.previous_feet
+            // enable bit previous feet
+            // bitPreviousFeet = +bit.previous_feet;
         } else {
             return;
         }
 
         if (pipeErectionDepth && (boreDepth >= pipeErectionDepth)) {
-            runningFeet = boreDepth - pipeErectionDepth
+            runningFeet = boreDepth - pipeErectionDepth;
         } else {
             runningFeet = 0;
         }
@@ -1958,7 +1964,23 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.rpmSheet.bit.running_feet = runningFeet;
             this.rpmSheet.bit.total_feet = runningFeet + bitPreviousFeet;
         }
+
     }
+
+    setBitPreviousFeet(bit) {
+        const ctrl = this.form.get('bitPreviousFeet');
+        if (bit) {
+            // enable bit previous feet
+            const bitPreviousFeet = +bit.previous_feet;
+            ctrl.setValue(bitPreviousFeet);
+            ctrl.enable();
+        } else {
+            ctrl.reset();
+            ctrl.disable();
+            return;
+        }
+    }
+
     /**
      * 
      * @param hammer 

@@ -699,7 +699,7 @@
                             <mat-form-field class="calc-field" fxFlex="25">
                                 <mat-label>Serial no</mat-label>
                                 <mat-select placeholder="Select serial no" #bitSelect
-                                    (selectionChange)="updateBitTotalFeet($event.value)" formControlName="bit">
+                                    (selectionChange)="setBitPreviousFeet($event.value); updateBitTotalFeet($event.value)" formControlName="bit">
                                     <mat-option value="">Select Bit</mat-option>
                                     <mat-option [value]="bit" *ngFor="let bit of assignedBits">{{
                                         bit.serial_no + ' - ' + bit.bit_no}}</mat-option>
@@ -728,9 +728,17 @@
                         <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">
                             <div fxLayoutAlign="start center" fxFlex="40">Bit Previous Feet</div>
                             <div class="bold font-16">
-                                <div *ngIf="form.get('bit').value; else hyphenTpl">
-                                    {{ form.get('bit').value?.previous_feet }}
-                                </div>
+                                <mat-form-field *ngIf="userRole === 'owner' || (form.get('bit').value && !form.get('bit').value.previous_feet); else displayBitPreviousFeet">
+                                    <mat-label>Feet</mat-label>
+                                    <input type="text" (input)="updateBitTotalFeet(true)" matInput formControlName="bitPreviousFeet">
+                                </mat-form-field>
+                                
+                                <ng-template #displayBitPreviousFeet>
+                                    <div *ngIf="form.get('bit').value; else hyphenTpl">
+                                        {{ form.get('bitPreviousFeet').value }}
+                                    </div>
+                                </ng-template>
+                                
                             </div>
                         </div>
                         <div fxLayout fxLayoutGap="15px" class="h-40" fxLayoutAlign="start center">

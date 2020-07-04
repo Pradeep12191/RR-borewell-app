@@ -44,9 +44,10 @@ export class AuthService {
     }
 
     get userrole() {
+        // return 'owner';
         const userroleExists = this.cookie.check('userrole');
         if (userroleExists) {
-            return this.cookie.get('userrole')
+            return this.cookie.get('userrole');
         }
         return this._userrole;
     }

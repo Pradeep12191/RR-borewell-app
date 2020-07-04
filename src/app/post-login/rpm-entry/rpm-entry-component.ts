@@ -198,8 +198,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                     ]
                 ],
                 manual: { value: '', disabled: true },
-                tracEndHour: [{ value: '', disabled: true }, this.endValueValidator('tractor_start_hour', 'tracError').bind(this)],
-                tracStartHour: { value: '', disabled: true },
+                tracEndHour: [{ value: '', disabled: true }],
+                tracStartHour: [{ value: '', disabled: true }],
                 trac: { value: '', disabled: true },
                 // isManual: false
             }),
@@ -245,7 +245,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.hammers = data.hammers;
             this.rpmHourFeets = data.rpmHourFeets;
             this.compressorAirFilterServiceLimits = data.compressorAirFilterServiceLimits;
-            this.compressorOilServiceLimits = data.compressorOilServiceLimits
+            this.compressorOilServiceLimits = data.compressorOilServiceLimits;
             this.tractors = data.tractors;
             this.pipeFlex = this.pipeTotalFlex / this.pipes.length;
             this.pipeFlex = Math.round(this.pipeFlex * 100) / 100;
@@ -315,17 +315,17 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             const tractor = this.form.get('rpm.trac').value;
             if (tractor) {
                 setTimeout(() => {
-                    (this.rpmInputs.toArray()[0].nativeElement as HTMLInputElement).focus()
+                    (this.rpmInputs.toArray()[0].nativeElement as HTMLInputElement).focus(); // tractor start or end hour based on user role
                 })
             } else {
-                (this.rpmInputs.toArray()[1].nativeElement as HTMLInputElement).focus()
+                (this.rpmInputs.toArray()[1].nativeElement as HTMLInputElement).focus(); // rpm start input
             }
-        })
+        });
 
 
         this.hammerSelect._closedStream.subscribe(() => {
             this.moveNextInput(-1);
-        })
+        });
 
         this.picker.closedStream.subscribe(() => {
             // date set for app.
@@ -435,6 +435,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             const selectedTractor = this.tractors.find(t => t.id === this.app.rpmEntryData.formValue.rpm.trac.id);
             this.form.get('rpm.trac').setValue(selectedTractor);
             this.form.get('rpm.tracEndHour').enable();
+            this.form.get('rpm.tracStartHour').enable();
         }
         // bit
         if (this.app.rpmEntryData.formValue.bit) {
@@ -484,6 +485,19 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             if (end && end < start) {
                 return {
                     [errorName]: true
+                }
+            }
+        }
+    }
+
+    tractorValidator() {
+        return (control: AbstractControl) => {
+            const start = this.form.get('rpm.tracStartHour').value ? +this.form.get('rpm.tracStartHour').value : 0;
+            const end = this.form.get('rpm.tracEndHour').value ? +this.form.get('rpm.tracEndHour').value : 0;
+
+            if (end && end < start) {
+                return {
+                    tracError: true
                 }
             }
         }
@@ -1127,10 +1141,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     confirmServiceCompletion(name, propName, type: 'service' | 'bit' | 'tractor' = 'service') {
         let message = '';
         if (type === 'service' || type === 'tractor') {
-            message = `Would you like to complete ${name} service ?`
+            message = `Would you like to complete ${name} service ?`;
         }
         if (type === 'bit') {
-            message = `Would you like to finish the ${name} ?`
+            message = `Would you like to finish the ${name} ?`;
         }
         const dialogRef = this.dialog.open(ServiceCompleteConfirmDialog, {
             data: {
@@ -1151,7 +1165,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
 
             }
-        })
+        });
     }
 
     confirmResetTotal() {
@@ -1328,8 +1342,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onTracEndInput() {
+        const tracStartHour = +this.form.get('rpm.tracStartHour').value;
         const tracEndHour = +this.form.get('rpm.tracEndHour').value;
-        const tracStartHour = +this.form.get('rpm.trac').value.start_hour;
         let runningTracRpm = 0;
 
         if (tracEndHour > tracStartHour) {
@@ -1339,6 +1353,15 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             runningTracRpm = 0;
         }
         this.tracRunningRpm = runningTracRpm;
+
+        // validate tractor start and end hour - end hour should be greater that start hour
+        if (tracStartHour > tracEndHour) {
+            this.form.get('rpm.tracStartHour').setErrors({ tracError: true });
+            this.form.get('rpm.tracEndHour').setErrors({ tracError: true });
+        } else {
+            this.form.get('rpm.tracStartHour').setErrors(null);
+            this.form.get('rpm.tracEndHour').setErrors(null);
+        }
     }
 
     assignVehicle() {
@@ -1521,6 +1544,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('rpm.manual').reset('');
         this.form.get('rpm.end').reset('');
         this.form.get('rpm.tracEndHour').reset('');
+        this.form.get('rpm.tracStartHour').reset('');
         this.form.get('rpm.trac').reset('');
         this.form.get('user').reset({
             drillerName: '',
@@ -1938,8 +1962,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             date: this.date ? (this.date as Moment).format('DD-MM-YYYY') : '',
             f_rpm_table_data: [],
             rpm: {
-                tractor_start_hour: this.form.value.rpm.trac ? this.form.value.rpm.trac.start_hour : 0,
-                tractor_end_hour: this.form.value.rpm.tracEndHour ? +this.form.value.rpm.tracEndHour : this.form.value.rpm.trac.start_hour,
+                tractor_start_hour: this.form.value.rpm.tracStartHour ? +this.form.value.rpm.tracStartHour : 0,
+                tractor_end_hour: this.form.value.rpm.tracEndHour ? +this.form.value.rpm.tracEndHour : this.form.value.tracStartHour,
                 tractor_id: this.form.value.rpm.trac ? +this.form.value.rpm.trac.id : 0,
                 tractor_no: this.form.value.rpm.trac ? this.form.value.rpm.trac.no : '',
                 start: this.rpmSheet.rpm.start,
@@ -2215,7 +2239,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if ($event.value) {
             this.rpmSheet.rpm.tractor_start_hour = $event.value.start_hour ? +$event.value.start_hour : 0;
             this.form.get('rpm.tracEndHour').enable();
-            return this.form.get('rpm.tracStartHour').enable();
+            this.form.get('rpm.tracStartHour').enable();
+            this.form.get('rpm.tracStartHour').setValue(this.rpmSheet.rpm.tractor_start_hour);
+            return;
         }
         this.form.get('rpm.tracEndHour').disable();
         this.form.get('rpm.tracEndHour').reset();

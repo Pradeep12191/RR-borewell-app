@@ -17,6 +17,7 @@ import { BoreType } from 'src/app/models/BoreType';
 import { AuthService } from 'src/app/services/auth.service';
 import { ServiceCompleteConfirmDialog } from '../rpm-entry/service-complete-confirm-dialog/service-complete-confirm-dialog.component';
 import { ToastrService } from 'ngx-toastr';
+import { AppService } from 'src/app/services/app.service';
 
 
 const ALL_VEHICLE_OPTION: Vehicle = { regNo: 'All Vehicle', type: '', vehicle_id: 'all' }
@@ -91,7 +92,8 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
         private fb: FormBuilder,
         private auth: AuthService,
         private dialog: MatDialog,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private app: AppService
     ) {
         if (this.auth.userrole !== 'owner') {
             this.columns = this.columns.filter(c => c.id !== 'delete');
@@ -103,7 +105,9 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
             };
             this.pipes = data.pipes.reverse();
             this.vehicles = data.vehicles;
-            this.vehicles.unshift(ALL_VEHICLE_OPTION);
+            if (this.auth.userrole !== 'owner') {
+                this.vehicles.unshift(ALL_VEHICLE_OPTION);
+            }
             this.boreTypes = data.boreTypes;
             setTimeout(() => {
                 this.filterForm.get('boreType').setValue(this.boreTypes[0])
@@ -299,20 +303,21 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
                         bit_serial_no: bit.serial_no || '',
                         hammer_serial_no: hammer.serial_no || ''
                     })
-                    .pipe(
-                        switchMap(() => {
-                            const vehicle_id = this.filterForm.get('vehicle').value.vehicle_id;
-                            return this.rpmEntryReportService.getRpmEntries({
-                                vehicle_id,
-                                type: 'list', bore_type: 'Bore Depth'
-                            });
-                        })
-                    )
-                    .subscribe((entries) => {
-                        this.bindData(entries);
-                        this.loader.hideSaveLoader();
-                        this.toastr.success(`Rpm Entry ${rpm_sheet_no} deleted successfully `, 'Success', { timeOut: 2500 });
-                    });
+                        .pipe(
+                            switchMap(() => {
+                                const vehicle_id = this.filterForm.get('vehicle').value.vehicle_id;
+                                return this.rpmEntryReportService.getRpmEntries({
+                                    vehicle_id,
+                                    type: 'list', bore_type: 'Bore Depth'
+                                });
+                            })
+                        )
+                        .subscribe((entries) => {
+                            this.bindData(entries);
+                            this.loader.hideSaveLoader();
+                            this.app.resetRpmData();
+                            this.toastr.success(`Rpm Entry ${rpm_sheet_no} deleted successfully `, 'Success', { timeOut: 2500 });
+                        });
                 }
             });
         }

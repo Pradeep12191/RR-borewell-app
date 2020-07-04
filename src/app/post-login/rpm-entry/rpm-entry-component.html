@@ -201,11 +201,29 @@
                         </div>
                         <div fxLayout fxLayoutAlign="start center">
                             <div fxFlex="40" class="font-14">Start RPM</div>
-                            <div class="bold font-16">
-                                <div *ngIf="rpmSheet?.rpm?.start || rpmSheet?.rpm?.start === 0; else hyphenTpl">
-                                    {{rpmSheet?.rpm?.start}}
+                            <ng-container *ngIf="userRole !== 'owner'; else editStartRpm">
+                                <div class="bold font-16">
+                                    <div *ngIf="form.get('rpm.start').value || form.get('rpm.start').value === 0; else hyphenTpl">
+                                        {{form.get('rpm.start').value}}
+                                    </div>
                                 </div>
-                            </div>
+                            </ng-container>
+                            <ng-template #editStartRpm>
+                                <mat-form-field fxFlex="50">
+                                    <mat-label>RPM</mat-label>
+                                    <input formControlName="start" [allowDecimal]="true" #rpmStartIp
+                                        (keydown.enter)="onRpmInputEnter(rpmStartIp)" #rpmInput (input)="onRpmEndInput()"
+                                        type="text" matInput positiveNumber>
+                                    <mat-error *ngIf="form.get('rpm.start').hasError('rpmError'); else decimalErrorTpl">
+                                        Start Rpm should be lesser than End Rpm.
+                                    </mat-error>
+                                    <ng-template #decimalErrorTpl>
+                                        <mat-error *ngIf="form.get('rpm.start').hasError('decimalError')">
+                                            Start Rpm should have atleast one value after decimal point.
+                                        </mat-error>
+                                    </ng-template>
+                                </mat-form-field>
+                            </ng-template>
                         </div>
                         <div fxLayout fxLayoutAlign="start center">
                             <div fxFlex="40">End RPM</div>
@@ -307,10 +325,19 @@
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="45">Tractor Gear Oil Service</div>
-                            <div fxLayoutAlign="start center" fxFlex class="bold font-14"
+                            <ng-container *ngIf="userRole !== 'owner'; else editGearOil">
+                                <div fxLayoutAlign="start center" fxFlex class="bold font-14"
                                 *ngIf="form.get('rpm.trac').value; else hyphenTpl">
-                                {{ roundValue(form.get('rpm.trac').value?.g_oil_service + tracRunningRpm) }}
+                                {{ roundValue(form.get('rpm.tracGearOil').value) }}
                             </div>
+                            </ng-container>
+
+                            <ng-template #editGearOil>
+                                <mat-form-field fxFlex>
+                                    <mat-label>Rpm</mat-label>
+                                    <input matInput type="text" formControlName="tracGearOil">
+                                </mat-form-field>
+                            </ng-template>
 
                             <div fxLayoutAlign="end center">
                                 <button [disabled]="!selectedVehicle || !bookId || !date || !form.get('rpm.trac').value"

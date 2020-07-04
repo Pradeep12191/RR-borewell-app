@@ -192,11 +192,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             rpm: this.fb.group({
                 end: [
                     { value: '', disabled: true },
-                    [
-                        this.endValueValidator('start', 'rpmError').bind(this),
-                        this.decimalValidator
-                    ]
+                    [this.decimalValidator]
                 ],
+                start: { value: '', disabled: true },
                 manual: { value: '', disabled: true },
                 tracEndHour: [{ value: '', disabled: true }],
                 tracStartHour: [{ value: '', disabled: true }],
@@ -357,7 +355,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.enableAllControls();
         }
         if (this.app.rpmEntryData.rpmEntryNo) {
-            this.rpmEntryNo = this.app.rpmEntryData.rpmEntryNo
+            this.rpmEntryNo = this.app.rpmEntryData.rpmEntryNo;
         }
         if (this.app.rpmEntryData.bookStartNo) {
             this.bookStartNo = this.app.rpmEntryData.bookStartNo;
@@ -439,6 +437,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.form.get('rpm.tracEndHour').enable();
             this.form.get('rpm.tracStartHour').enable();
             this.form.get('rpm.tracEngOil').enable();
+            this.form.get('rpm.tracGearOil').enable();
         }
         // bit
         if (this.app.rpmEntryData.formValue.bit) {
@@ -1165,6 +1164,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
                 if (type === 'tractor') {
                     this.form.get('rpm.trac').value[propName] = 0;
+                    if (propName === 'g_oil_service') {
+                        this.form.get('rpm.tracGearOil').setValue(0);
+                    }
+                    if (propName === 'e_oil_service') {
+                        this.form.get('rpm.tracEngOil').setValue(0);
+                    }
                 }
 
             }
@@ -1297,6 +1302,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 if (this.rpmSheet.rpm) {
                     this.previousDieselRpm = this.rpmSheet.rpm.prev_diesel_rpm;
                     this.pointDieselRpm = this.rpmSheet.rpm.point_diesel;
+                    this.form.get('rpm.start').setValue(this.rpmSheet.rpm.start);
                 }
                 this.openDatePicker();
                 this.enableAllControls();
@@ -1316,14 +1322,15 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         once reseted service rpm starts from current running rpm ie, previous service rpm will be 0)
      */
     onRpmEndInput() {
-        let start = 0;
+        // let start = 0;
         // let running = 0;
         const end = +this.form.get('rpm.end').value;
         const manual = +this.form.get('rpm.manual').value;
+        const start = +this.form.get('rpm.start').value;
         // const endRpm = end + manual;
-        if (this.rpmSheet.rpm && this.rpmSheet.rpm.start) {
-            start = this.rpmSheet.rpm.start
-        }
+        // if (this.rpmSheet.rpm && this.rpmSheet.rpm.start) {
+        //     start = this.rpmSheet.rpm.start
+        // }
         let machineRunningRpm = end - start;
         if (machineRunningRpm <= 0) {
             machineRunningRpm = 0;
@@ -1339,6 +1346,14 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.rpmSheet.rpm.running = machineRunningRpm;
             this.rpmSheet.rpm.point_diesel = this.rpmSheet.rpm.prev_diesel_rpm + machineRunningRpm;
             this.rpmSheet.rpm.point_diesel = Math.round(this.rpmSheet.rpm.point_diesel * 100) / 100;
+        }
+
+        if (start > end) {
+            this.form.get('rpm.start').setErrors({ rpmError: true });
+            this.form.get('rpm.end').setErrors({ rpmError: true });
+        } else {
+            this.form.get('rpm.start').setErrors(null);
+            this.form.get('rpm.end').setErrors(null);
         }
 
         this.updateFeetAvg();
@@ -1359,8 +1374,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         this.tracRunningRpm = runningTracRpm;
         const updatedTracEngOil = tracEngOil + runningTracRpm;
+        const updatedTracGearOil = tracGearOil + runningTracRpm;
 
         this.form.get('rpm.tracEngOil').setValue(updatedTracEngOil);
+        this.form.get('rpm.tracGearOil').setValue(updatedTracGearOil);
 
         // validate tractor start and end hour - end hour should be greater that start hour
         if (tracStartHour > tracEndHour) {
@@ -1495,6 +1512,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             if (this.rpmSheet.rpm) {
                 this.previousDieselRpm = this.rpmSheet.rpm.prev_diesel_rpm;
                 this.pointDieselRpm = this.rpmSheet.rpm.point_diesel;
+                this.form.get('rpm.start').setValue(this.rpmSheet.rpm.start);
             }
             this.addDepthToSheet();
             this.enableAllControls();
@@ -1551,9 +1569,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.form.get('rpm.manual').reset('');
         this.form.get('rpm.end').reset('');
+        this.form.get('rpm.start').reset('');
         this.form.get('rpm.tracEndHour').reset('');
         this.form.get('rpm.tracStartHour').reset('');
         this.form.get('rpm.tracEngOil').reset('');
+        this.form.get('rpm.tracGearOil').reset('');
         this.form.get('rpm.trac').reset('');
         this.form.get('user').reset({
             drillerName: '',
@@ -1663,6 +1683,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('depth.boreType').enable();
         // this.form.get('rpm').enable();
         this.form.get('rpm.end').enable();
+        this.form.get('rpm.start').enable();
         this.form.get('rpm.manual').enable();
         this.form.get('rpm.trac').enable();
 
@@ -1944,11 +1965,12 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.rpmEntryTable.pointExpenseFeet = pointExpenseFeet;
 
         const end = +this.form.value.rpm.end;
+        const start = +this.form.value.rpm.start;
 
-        if (end && end > this.rpmSheet.rpm.start) {
+        if (end && end > start) {
             this.rpmSheet.rpm.total = Math.round(end * 100) / 100;
         } else {
-            this.rpmSheet.rpm.total = this.rpmSheet.rpm.start
+            this.rpmSheet.rpm.total = start;
         }
 
 
@@ -1975,9 +1997,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 tractor_end_hour: this.form.value.rpm.tracEndHour ? +this.form.value.rpm.tracEndHour : this.form.value.tracStartHour,
                 tractor_id: this.form.value.rpm.trac ? +this.form.value.rpm.trac.id : 0,
                 tractor_no: this.form.value.rpm.trac ? this.form.value.rpm.trac.no : '',
-                start: this.rpmSheet.rpm.start,
+                start: +this.form.value.rpm.start,
                 manual: +this.form.value.rpm.manual,
-                end: +this.form.value.rpm.end ? this.form.value.rpm.end : this.rpmSheet.rpm.start,
+                end: +this.form.value.rpm.end ? this.form.value.rpm.end : this.form.value.rpm.start,
                 running: this.rpmSheet.rpm.running,
                 point_diesel: this.rpmSheet.rpm.point_diesel,
                 total: this.rpmSheet.rpm.total,
@@ -1994,7 +2016,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             service: {
                 tractor_e_oil_service: +this.form.get('rpm.tracEngOil').value,
-                tractor_g_oil_service: this.form.get('rpm.trac').value ? this.roundValue(this.form.get('rpm.trac').value.g_oil_service + this.tracRunningRpm) : 0,
+                tractor_g_oil_service: +this.form.get('rpm.tracGearOil').value,
                 c_air_filter: this.roundValue(this.rpmSheet.service.c_air_filter + this.rpmSheet.rpm.running),
                 c_oil_service: this.roundValue(this.rpmSheet.service.c_oil_service + this.rpmSheet.rpm.running),
                 e_air_filter: this.roundValue(this.rpmSheet.service.e_air_filter + this.rpmSheet.rpm.running),
@@ -2112,6 +2134,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             if (this.rpmSheet.rpm) {
                 this.previousDieselRpm = this.rpmSheet.rpm.prev_diesel_rpm;
                 this.pointDieselRpm = this.rpmSheet.rpm.point_diesel;
+                this.form.get('rpm.start').setValue(this.rpmSheet.rpm.start);
             }
             this.addDepthToSheet();
             this.updatePreviousStockFeet(lastRpmEntrySheet);
@@ -2246,22 +2269,29 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onTractorChange($event: MatSelectChange) {
         if ($event.value) {
+            this.form.get('rpm.tracEndHour').reset();
             this.rpmSheet.rpm.tractor_start_hour = $event.value.start_hour ? +$event.value.start_hour : 0;
-            const tractEngOilService = $event.value.e_oil_service ? +$event.value.e_oil_service : 0;
+            const tracEngOilService = $event.value.e_oil_service ? +$event.value.e_oil_service : 0;
+            const tracGearOilService = $event.value.g_oil_service ? +$event.value.g_oil_service : 0;
             this.form.get('rpm.tracEndHour').enable();
             this.form.get('rpm.tracStartHour').enable();
             this.form.get('rpm.tracEngOil').enable();
+            this.form.get('rpm.tracGearOil').enable();
+
             this.form.get('rpm.tracStartHour').setValue(this.rpmSheet.rpm.tractor_start_hour);
-            this.form.get('rpm.tracEngOil').setValue(tractEngOilService);
+            this.form.get('rpm.tracEngOil').setValue(tracEngOilService);
+            this.form.get('rpm.tracGearOil').setValue(tracGearOilService);
             return;
         }
         this.form.get('rpm.tracEndHour').disable();
         this.form.get('rpm.tracStartHour').disable();
         this.form.get('rpm.tracEngOil').disable();
+        this.form.get('rpm.tracGearOil').disable();
 
         this.form.get('rpm.tracEndHour').reset();
         this.form.get('rpm.tracStartHour').reset();
         this.form.get('rpm.tracEngOil').reset();
+        this.form.get('rpm.tracGearOil').reset();
         this.tracRunningRpm = 0;
     }
 

@@ -90,7 +90,7 @@ export class RpmEntryReportComponent implements OnDestroy, AfterViewInit {
         private rpmEntryReportService: RpmEntryReportService,
         private loader: LoaderService,
         private fb: FormBuilder,
-        private auth: AuthService,
+        public auth: AuthService,
         private dialog: MatDialog,
         private toastr: ToastrService,
         private app: AppService

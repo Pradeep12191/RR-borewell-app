@@ -305,7 +305,7 @@
                             <ng-template #editTracEngOil>
                                 <mat-form-field fxFlex>
                                     <mat-label>Rpm</mat-label>
-                                    <input matInput type="text" formControlName="tracEngOil">
+                                    <input matInput type="text" positiveNumber [allowDecimal]="true"  formControlName="tracEngOil">
                                 </mat-form-field>
                             </ng-template>
 
@@ -335,7 +335,7 @@
                             <ng-template #editGearOil>
                                 <mat-form-field fxFlex>
                                     <mat-label>Rpm</mat-label>
-                                    <input matInput type="text" formControlName="tracGearOil">
+                                    <input matInput type="text" positiveNumber [allowDecimal]="true" formControlName="tracGearOil">
                                 </mat-form-field>
                             </ng-template>
 
@@ -362,7 +362,7 @@
                             <ng-template #editEngOil>
                                 <mat-form-field fxFlex>
                                     <mat-label>Rpm</mat-label>
-                                    <input matInput type="text" formControlName="engOil">
+                                    <input matInput type="text" positiveNumber [allowDecimal]="true" formControlName="engOil">
                                 </mat-form-field>
                             </ng-template>
                             <div fxLayoutAlign="end center">
@@ -395,7 +395,7 @@
                             <ng-template #editCompOil>
                                 <mat-form-field fxFlex>
                                     <mat-label>Rpm</mat-label>
-                                    <input matInput type="text" formControlName="compOil">
+                                    <input matInput type="text" positiveNumber [allowDecimal]="true" formControlName="compOil">
                                 </mat-form-field>
                             </ng-template>
                             
@@ -422,7 +422,7 @@
                             <ng-template #editEngAir>
                                 <mat-form-field fxFlex>
                                     <mat-label>Rpm</mat-label>
-                                    <input matInput type="text" formControlName="engAir">
+                                    <input matInput type="text" positiveNumber [allowDecimal]="true" formControlName="engAir">
                                 </mat-form-field>
                             </ng-template>
 
@@ -449,7 +449,7 @@
                             <ng-template #editCompAir>
                                 <mat-form-field fxFlex>
                                     <mat-label>Rpm</mat-label>
-                                    <input matInput type="text" formControlName="compAir">
+                                    <input matInput type="text" positiveNumber [allowDecimal]="true" formControlName="compAir">
                                 </mat-form-field>
                             </ng-template>
                             <div fxLayoutAlign="end center">
@@ -472,7 +472,7 @@
                             <ng-template #editSeperator>
                                 <mat-form-field fxFlex>
                                     <mat-label>Rpm</mat-label>
-                                    <input matInput type="text" formControlName="seperator">
+                                    <input matInput positiveNumber [allowDecimal]="true" type="text" formControlName="seperator">
                                 </mat-form-field>
                             </ng-template>
                             <div fxLayoutAlign="end center">
@@ -730,7 +730,7 @@
                             <div class="bold font-16">
                                 <mat-form-field *ngIf="userRole === 'owner' || (form.get('bit').value && !form.get('bit').value.previous_feet); else displayBitPreviousFeet">
                                     <mat-label>Feet</mat-label>
-                                    <input type="text" (input)="updateBitTotalFeet(true)" matInput formControlName="bitPreviousFeet">
+                                    <input type="text" (input)="updateBitTotalFeet(true)" positiveNumber [allowDecimal]="true" matInput formControlName="bitPreviousFeet">
                                 </mat-form-field>
                                 
                                 <ng-template #displayBitPreviousFeet>
@@ -820,7 +820,7 @@
                         <div class="bold font-16">
                             <mat-form-field *ngIf="userRole === 'owner' || (form.get('hammer').value && !form.get('hammer').value.previous_feet); else displayHammerPreviousFeet">
                                 <mat-label>Feet</mat-label>
-                                <input (input)="updateHammerTotalFeet(true)" type="text" matInput formControlName="hammerPreviousFeet">
+                                <input (input)="updateHammerTotalFeet(true)" type="text" positiveNumber [allowDecimal]="true" matInput formControlName="hammerPreviousFeet">
                             </mat-form-field>
                             <ng-template #displayHammerPreviousFeet>
                                 <div *ngIf="form.get('hammer').value; else hyphenTpl">

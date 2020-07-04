@@ -200,6 +200,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 manual: { value: '', disabled: true },
                 tracEndHour: [{ value: '', disabled: true }],
                 tracStartHour: [{ value: '', disabled: true }],
+                tracEngOil: [{ value: '', disabled: true }],
+                tracGearOil: [{ value: '', disabled: true }],
                 trac: { value: '', disabled: true },
                 // isManual: false
             }),
@@ -436,6 +438,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.form.get('rpm.trac').setValue(selectedTractor);
             this.form.get('rpm.tracEndHour').enable();
             this.form.get('rpm.tracStartHour').enable();
+            this.form.get('rpm.tracEngOil').enable();
         }
         // bit
         if (this.app.rpmEntryData.formValue.bit) {
@@ -1344,6 +1347,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     onTracEndInput() {
         const tracStartHour = +this.form.get('rpm.tracStartHour').value;
         const tracEndHour = +this.form.get('rpm.tracEndHour').value;
+        const tracEngOil = (this.form.get('rpm.trac').value && +this.form.get('rpm.trac').value.e_oil_service) || 0;
+        const tracGearOil = (this.form.get('rpm.trac').value && +this.form.get('rpm.trac').value.g_oil_service) || 0;
         let runningTracRpm = 0;
 
         if (tracEndHour > tracStartHour) {
@@ -1353,6 +1358,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             runningTracRpm = 0;
         }
         this.tracRunningRpm = runningTracRpm;
+        const updatedTracEngOil = tracEngOil + runningTracRpm;
+
+        this.form.get('rpm.tracEngOil').setValue(updatedTracEngOil);
 
         // validate tractor start and end hour - end hour should be greater that start hour
         if (tracStartHour > tracEndHour) {
@@ -1545,6 +1553,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.get('rpm.end').reset('');
         this.form.get('rpm.tracEndHour').reset('');
         this.form.get('rpm.tracStartHour').reset('');
+        this.form.get('rpm.tracEngOil').reset('');
         this.form.get('rpm.trac').reset('');
         this.form.get('user').reset({
             drillerName: '',
@@ -1984,7 +1993,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 tractor: +this.form.value.diesel.tractor
             },
             service: {
-                tractor_e_oil_service: this.form.get('rpm.trac').value ? this.roundValue(this.form.get('rpm.trac').value.e_oil_service + this.tracRunningRpm) : 0,
+                tractor_e_oil_service: +this.form.get('rpm.tracEngOil').value,
                 tractor_g_oil_service: this.form.get('rpm.trac').value ? this.roundValue(this.form.get('rpm.trac').value.g_oil_service + this.tracRunningRpm) : 0,
                 c_air_filter: this.roundValue(this.rpmSheet.service.c_air_filter + this.rpmSheet.rpm.running),
                 c_oil_service: this.roundValue(this.rpmSheet.service.c_oil_service + this.rpmSheet.rpm.running),
@@ -2238,15 +2247,21 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     onTractorChange($event: MatSelectChange) {
         if ($event.value) {
             this.rpmSheet.rpm.tractor_start_hour = $event.value.start_hour ? +$event.value.start_hour : 0;
+            const tractEngOilService = $event.value.e_oil_service ? +$event.value.e_oil_service : 0;
             this.form.get('rpm.tracEndHour').enable();
             this.form.get('rpm.tracStartHour').enable();
+            this.form.get('rpm.tracEngOil').enable();
             this.form.get('rpm.tracStartHour').setValue(this.rpmSheet.rpm.tractor_start_hour);
+            this.form.get('rpm.tracEngOil').setValue(tractEngOilService);
             return;
         }
         this.form.get('rpm.tracEndHour').disable();
-        this.form.get('rpm.tracEndHour').reset();
         this.form.get('rpm.tracStartHour').disable();
+        this.form.get('rpm.tracEngOil').disable();
+
+        this.form.get('rpm.tracEndHour').reset();
         this.form.get('rpm.tracStartHour').reset();
+        this.form.get('rpm.tracEngOil').reset();
         this.tracRunningRpm = 0;
     }
 

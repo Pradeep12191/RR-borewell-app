@@ -177,9 +177,9 @@
                                 <ng-template #editTracStartHour>
                                     <mat-form-field>
                                         <mat-label>Hour</mat-label>
-                                        <input (input)="onTracEndInput()" (keydown.enter)="onRpmInputEnter(tracStartIp)" #tracStartIp #rpmInput
-                                            formControlName="tracStartHour" [allowDecimal]="true" (input)="onRpmEndInput()"
-                                            type="text" matInput positiveNumber>
+                                        <input (input)="onTracEndInput()" (keydown.enter)="onRpmInputEnter(tracStartIp)"
+                                            #tracStartIp #rpmInput formControlName="tracStartHour" [allowDecimal]="true"
+                                            (input)="onRpmEndInput()" type="text" matInput positiveNumber>
                                         <mat-error *ngIf="form.get('rpm.tracEndHour').hasError('tracError')">
                                             End hour Should be greater than start hour
                                         </mat-error>
@@ -191,9 +191,9 @@
                             <div fxFlex="40">Tractor End Hour</div>
                             <mat-form-field fxFlex="50">
                                 <mat-label>Hour</mat-label>
-                                <input (input)="onTracEndInput()" (keydown.enter)="onRpmInputEnter(tracEndIp)" #tracEndIp #rpmInput
-                                    formControlName="tracEndHour" [allowDecimal]="true" (input)="onRpmEndInput()"
-                                    type="text" matInput positiveNumber>
+                                <input (input)="onTracEndInput()" (keydown.enter)="onRpmInputEnter(tracEndIp)"
+                                    #tracEndIp #rpmInput formControlName="tracEndHour" [allowDecimal]="true"
+                                    (input)="onRpmEndInput()" type="text" matInput positiveNumber>
                                 <mat-error *ngIf="form.get('rpm.tracEndHour').hasError('tracError')">
                                     End hour Should be greater than start hour
                                 </mat-error>
@@ -211,8 +211,9 @@
                             <div fxFlex="40">End RPM</div>
                             <mat-form-field fxFlex="50">
                                 <mat-label>RPM</mat-label>
-                                <input formControlName="end" [allowDecimal]="true" #rpmEndIp (keydown.enter)="onRpmInputEnter(rpmEndIp)"
-                                    #rpmInput (input)="onRpmEndInput()" type="text" matInput positiveNumber>
+                                <input formControlName="end" [allowDecimal]="true" #rpmEndIp
+                                    (keydown.enter)="onRpmInputEnter(rpmEndIp)" #rpmInput (input)="onRpmEndInput()"
+                                    type="text" matInput positiveNumber>
                                 <mat-error *ngIf="form.get('rpm.end').hasError('rpmError'); else decimalErrorTpl">
                                     End Rpm should be greater than Start Rpm.
                                 </mat-error>
@@ -230,8 +231,8 @@
                             <mat-form-field fxFlex="50">
                                 <mat-label>RPM</mat-label>
                                 <input type="text" [allowDecimal]="true" (input)="onRpmEndInput()"
-                                    (keydown.enter)="onRpmInputEnter(manualRpmIp)" #manualRpmIp matInput #rpmInput positiveNumber
-                                    formControlName="manual">
+                                    (keydown.enter)="onRpmInputEnter(manualRpmIp)" #manualRpmIp matInput #rpmInput
+                                    positiveNumber formControlName="manual">
                             </mat-form-field>
                         </div>
 
@@ -255,7 +256,7 @@
                     </div>
                 </mat-card-content>
             </mat-card>
-            <mat-card fxFlex class="custom-card">
+            <mat-card formGroupName="rpm" fxFlex class="custom-card">
                 <mat-card-header>
                     <mat-card-title>
                         Service Details
@@ -277,10 +278,19 @@
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="45">Tractor Engine Oil Service</div>
-                            <div fxLayoutAlign="start center" fxFlex class="bold font-14"
-                                *ngIf="form.get('rpm.trac').value; else hyphenTpl">
-                                {{ roundValue(form.get('rpm.trac').value?.e_oil_service + tracRunningRpm) }}
-                            </div>
+                            <ng-container *ngIf="userRole !== 'owner'; else editEngOil">
+                                <div fxLayoutAlign="start center" fxFlex class="bold font-14"
+                                    *ngIf="form.get('rpm.tracEngOil').value; else hyphenTpl">
+                                    {{ roundValue(form.get('rpm.tracEngOil').value) }}
+                                </div>
+                            </ng-container>
+                            <ng-template #editEngOil>
+                                <mat-form-field fxFlex>
+                                    <mat-label>Rpm</mat-label>
+                                    <input matInput type="text" formControlName="tracEngOil">
+                                </mat-form-field>
+                            </ng-template>
+
 
                             <div fxLayoutAlign="end center">
                                 <button [disabled]="!selectedVehicle || !bookId || !date || !form.get('rpm.trac').value"

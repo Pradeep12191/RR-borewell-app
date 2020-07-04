@@ -190,10 +190,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 plumberMobile: { value: '', disabled: true },
             }),
             rpm: this.fb.group({
-                end: [
-                    { value: '', disabled: true },
-                    [this.decimalValidator]
-                ],
+                end: { value: '', disabled: true },
                 start: { value: '', disabled: true },
                 manual: { value: '', disabled: true },
                 tracEndHour: [{ value: '', disabled: true }],
@@ -1365,13 +1362,19 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.updateService(this.rpmSheet.rpm.running);
         }
 
+        // validate
 
         if (start > end) {
             this.form.get('rpm.start').setErrors({ rpmError: true });
             this.form.get('rpm.end').setErrors({ rpmError: true });
         } else {
             this.form.get('rpm.start').setErrors(null);
-            this.form.get('rpm.end').setErrors(null);
+            let regexp = /^\d+\.\d{1,30}$/;
+            if (end && !regexp.test(end.toString())) {
+                this.form.get('rpm.end').setErrors({ decimalError: true });
+            } else {
+                this.form.get('rpm.end').setErrors(null);
+            }
         }
 
         this.updateFeetAvg();

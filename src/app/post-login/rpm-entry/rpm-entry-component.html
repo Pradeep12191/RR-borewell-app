@@ -296,13 +296,13 @@
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="45">Tractor Engine Oil Service</div>
-                            <ng-container *ngIf="userRole !== 'owner'; else editEngOil">
+                            <ng-container *ngIf="userRole !== 'owner'; else editTracEngOil">
                                 <div fxLayoutAlign="start center" fxFlex class="bold font-14"
                                     *ngIf="form.get('rpm.tracEngOil').value; else hyphenTpl">
                                     {{ roundValue(form.get('rpm.tracEngOil').value) }}
                                 </div>
                             </ng-container>
-                            <ng-template #editEngOil>
+                            <ng-template #editTracEngOil>
                                 <mat-form-field fxFlex>
                                     <mat-label>Rpm</mat-label>
                                     <input matInput type="text" formControlName="tracEngOil">
@@ -354,13 +354,20 @@
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="45">Engine Oil Service</div>
-                            <div fxLayoutAlign="start center" fxFlex class="bold font-14">
-                                {{ roundValue(rpmSheet?.service?.e_oil_service + rpmSheet?.rpm?.running) }}
-                            </div>
-
+                            <ng-container *ngIf="userRole !== 'owner'; else editEngOil">
+                                <div fxLayoutAlign="start center" fxFlex class="bold font-14">
+                                    {{ roundValue(form.get('rpm.engOil').value) }}
+                                </div>
+                            </ng-container>
+                            <ng-template #editEngOil>
+                                <mat-form-field fxFlex>
+                                    <mat-label>Rpm</mat-label>
+                                    <input matInput type="text" formControlName="engOil">
+                                </mat-form-field>
+                            </ng-template>
                             <div fxLayoutAlign="end center">
                                 <button [disabled]="!selectedVehicle || !bookId || !date" mat-icon-button
-                                    color="primary" (click)="confirmServiceCompletion('Engine Oil', 'e_oil_service')">
+                                    color="primary" (click)="confirmServiceCompletion('Engine Oil', 'e_oil_service', 'service', 'engOil')">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -380,13 +387,22 @@
                                 </span>
                             </div> -->
                             <div fxLayoutAlign="start center" fxFlex="45">Compressor Oil Service</div>
-                            <div fxLayoutAlign="start center" fxFlex class="bold font-14">
-                                {{ roundValue(rpmSheet?.service?.c_oil_service + rpmSheet?.rpm?.running) }}
-                            </div>
+                            <ng-container *ngIf="userRole !== 'owner'; else editCompOil">
+                                <div fxLayoutAlign="start center" fxFlex class="bold font-14">
+                                    {{ roundValue(form.get('rpm.compOil').value) }}
+                                </div>
+                            </ng-container>
+                            <ng-template #editCompOil>
+                                <mat-form-field fxFlex>
+                                    <mat-label>Rpm</mat-label>
+                                    <input matInput type="text" formControlName="compOil">
+                                </mat-form-field>
+                            </ng-template>
+                            
                             <div fxLayoutAlign="end center">
                                 <button [disabled]="!selectedVehicle || !bookId || !date" mat-icon-button
                                     color="primary"
-                                    (click)="confirmServiceCompletion('Compressor Oil', 'c_oil_service')">
+                                    (click)="confirmServiceCompletion('Compressor Oil', 'c_oil_service', 'service', 'compOil')">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -398,13 +414,22 @@
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="45">Engine Air Filter</div>
-                            <div fxLayoutAlign="start center" fxFlex class="bold font-14">
-                                {{ roundValue(rpmSheet?.service?.e_air_filter + rpmSheet?.rpm?.running) }}
-                            </div>
+                            <ng-container *ngIf="userRole !== 'owner'; else editEngAir">
+                                <div fxLayoutAlign="start center" fxFlex class="bold font-14">
+                                    {{ roundValue(form.get('rpm.engAir').value) }}
+                                </div>
+                            </ng-container>
+                            <ng-template #editEngAir>
+                                <mat-form-field fxFlex>
+                                    <mat-label>Rpm</mat-label>
+                                    <input matInput type="text" formControlName="engAir">
+                                </mat-form-field>
+                            </ng-template>
+
                             <div fxLayoutAlign="end center">
                                 <button [disabled]="!selectedVehicle || !bookId || !date" mat-icon-button
                                     color="primary"
-                                    (click)="confirmServiceCompletion('Engine Air Filter', 'e_air_filter')">
+                                    (click)="confirmServiceCompletion('Engine Air Filter', 'e_air_filter', 'service', 'engAir')">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -418,11 +443,17 @@
                                 <mat-icon>arrow_drop_down</mat-icon>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="45">Compressor Air Filter</div>
-                            <div fxLayoutAlign="start center" fxFlex class="bold font-14">
-                                {{ roundValue(rpmSheet?.service?.c_air_filter + rpmSheet?.rpm?.running) }}
+                            <div fxLayoutAlign="start center" fxFlex class="bold font-14" *ngIf="userRole !== 'owner'; else editCompAir">
+                                {{ roundValue(form.get('rpm.compAir').value) }}
                             </div>
+                            <ng-template #editCompAir>
+                                <mat-form-field fxFlex>
+                                    <mat-label>Rpm</mat-label>
+                                    <input matInput type="text" formControlName="compAir">
+                                </mat-form-field>
+                            </ng-template>
                             <div fxLayoutAlign="end center">
-                                <button (click)="confirmServiceCompletion('Compressor Air Filter', 'c_air_filter')"
+                                <button (click)="confirmServiceCompletion('Compressor Air Filter', 'c_air_filter', 'service', 'compAir')"
                                     [disabled]="!selectedVehicle || !bookId || !date" mat-icon-button color="primary">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
@@ -435,12 +466,18 @@
                                 </span>
                             </div>
                             <div fxLayoutAlign="start center" fxFlex="45">Seperator</div>
-                            <div fxLayoutAlign="start center" fxFlex class="bold font-14">
-                                {{ roundValue(rpmSheet?.service?.seperator + rpmSheet?.rpm?.running) }}
+                            <div fxLayoutAlign="start center" fxFlex class="bold font-14" *ngIf="userRole !== 'owner'; else editSeperator">
+                                {{ roundValue(form.get('rpm.seperator').value) }}
                             </div>
+                            <ng-template #editSeperator>
+                                <mat-form-field fxFlex>
+                                    <mat-label>Rpm</mat-label>
+                                    <input matInput type="text" formControlName="seperator">
+                                </mat-form-field>
+                            </ng-template>
                             <div fxLayoutAlign="end center">
                                 <button [disabled]="!selectedVehicle || !bookId || !date" mat-icon-button
-                                    color="primary" (click)="confirmServiceCompletion('Seperator', 'seperator')">
+                                    color="primary" (click)="confirmServiceCompletion('Seperator', 'seperator', 'service', 'seperator')">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>

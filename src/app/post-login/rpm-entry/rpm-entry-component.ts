@@ -1332,6 +1332,19 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.pointDieselRpm = this.rpmSheet.rpm.point_diesel;
                     this.form.get('rpm.start').setValue(this.rpmSheet.rpm.start);
                 }
+                if (this.rpmSheet.bit) {
+                    const selectedHammerSerialNo = this.rpmSheet.bit.hammer_serial_no;
+                    const selectedHammer = this.assignedHammers.find(h => h.serial_no === selectedHammerSerialNo);
+                    if (selectedHammer) {
+                        // this.form.get('hammer').enable();
+                        setTimeout(() => {
+                            this.form.get('hammer').setValue(selectedHammer);
+                            this.setHammerPreviousFeet(selectedHammer);
+                            this.updateHammerTotalFeet(selectedHammer);
+                        });
+                    }
+                }
+
                 if (this.rpmSheet.service) {
                     this.form.get('rpm.engOil').setValue(this.rpmSheet.service.e_oil_service);
                     this.form.get('rpm.compOil').setValue(this.rpmSheet.service.c_oil_service);
@@ -1536,16 +1549,19 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.lastResetRpmNo = lastReset.rpm_no;
             this.assignedBits = assignedBits;
             this.assignedHammers = assignedHammers;
-            const selectedHammerSerialNo = lastRpmEntrySheet.bit.hammer_serial_no;
-            const selectedHammer = this.assignedHammers.find(h => h.serial_no === selectedHammerSerialNo);
-            if (selectedHammer) {
-                // this.form.get('hammer').enable();
-                setTimeout(() => {
-                    this.form.get('hammer').setValue(selectedHammer);
-                    this.setHammerPreviousFeet(selectedHammer);
-                    this.updateHammerTotalFeet(selectedHammer);
-                })
+            if (lastRpmEntrySheet.bit) {
+                const selectedHammerSerialNo = lastRpmEntrySheet.bit.hammer_serial_no;
+                const selectedHammer = this.assignedHammers.find(h => h.serial_no === selectedHammerSerialNo);
+                if (selectedHammer) {
+                    // this.form.get('hammer').enable();
+                    setTimeout(() => {
+                        this.form.get('hammer').setValue(selectedHammer);
+                        this.setHammerPreviousFeet(selectedHammer);
+                        this.updateHammerTotalFeet(selectedHammer);
+                    });
+                }
             }
+
             if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
                 this.resetAll();
                 this.resetBook();
@@ -2010,7 +2026,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (bit) {
             // enable bit previous feet
             const bitPreviousFeet = +bit.previous_feet;
-            ctrl.setValue(bitPreviousFeet);
+            if (bitPreviousFeet === 0) {
+                ctrl.setValue('');
+            } else {
+                ctrl.setValue(bitPreviousFeet);
+            }
             ctrl.enable();
         } else {
             ctrl.reset();
@@ -2063,7 +2083,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (hammer) {
             // enable bit previous feet
             const hammerPreviousFeet = +hammer.previous_feet;
-            ctrl.setValue(hammerPreviousFeet);
+            if (hammerPreviousFeet === 0) {
+                ctrl.setValue('');
+            } else {
+                ctrl.setValue(hammerPreviousFeet);
+            }
             ctrl.enable();
         } else {
             ctrl.reset();
@@ -2235,7 +2259,20 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             if (hammers) {
                 this.assignedHammers = hammers;
-                this.form.get('hammer').reset('')
+                // this.form.get('hammer').reset('');
+                if (lastRpmEntrySheet.bit) {
+                    const selectedHammerSerialNo = lastRpmEntrySheet.bit.hammer_serial_no;
+                    const selectedHammer = this.assignedHammers.find(h => h.serial_no === selectedHammerSerialNo);
+                    if (selectedHammer) {
+                        // this.form.get('hammer').enable();
+                        setTimeout(() => {
+                            this.form.get('hammer').setValue(selectedHammer);
+                            this.setHammerPreviousFeet(selectedHammer);
+                            this.updateHammerTotalFeet(selectedHammer);
+                        });
+                    }
+                }
+
             }
             if (tractors) {
                 this.tractors = tractors;

@@ -1347,6 +1347,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         // let start = 0;
         // let running = 0;
         const end = +this.form.get('rpm.end').value;
+        const endStr = this.form.get('rpm.end').value;
         const manual = +this.form.get('rpm.manual').value;
         const start = +this.form.get('rpm.start').value;
 
@@ -1382,7 +1383,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.form.get('rpm.start').setErrors(null);
             let regexp = /^\d+\.\d{1,30}$/;
-            if (end && !regexp.test(end.toString())) {
+            if (endStr && !regexp.test(endStr)) {
                 this.form.get('rpm.end').setErrors({ decimalError: true });
             } else {
                 this.form.get('rpm.end').setErrors(null);

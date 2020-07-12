@@ -229,9 +229,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 }),
             }),
             bit: { value: '', disabled: true },
-            bitPreviousFeet: { value: '', disabled: true },
+            bitPreviousFeet: [{ value: '', disabled: true }, Validators.required],
             hammer: { value: '', disable: true },
-            hammerPreviousFeet: { value: '', disabled: true },
+            hammerPreviousFeet: [{ value: '', disabled: true }, Validators.required],
         })
         this.appearance = this.config.getConfig('formAppearance');
     }
@@ -1160,7 +1160,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (type === 'bit') {
             message = `Would you like to finish the ${name} ?`;
         }
-        if ( type === 'piston') {
+        if (type === 'piston') {
             message = `Would you like to reset the ${name} ?`;
         }
         const dialogRef = this.dialog.open(ServiceCompleteConfirmDialog, {
@@ -1292,6 +1292,9 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.assignedHammers = hammers;
                         this.form.get('hammer').reset('');
                         this.form.get('hammerPreviousFeet').reset();
+                        this.rpmSheet.hammer.running_feet_piston = 0;
+                        this.rpmSheet.hammer.running_feet = 0;
+                        this.rpmSheet.hammer.previous_feet = 0;
                         this.toastr.success('Finish Hammer Updated  Sucessfully', null, { timeOut: 2000 })
                     });
             }
@@ -1533,6 +1536,16 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.lastResetRpmNo = lastReset.rpm_no;
             this.assignedBits = assignedBits;
             this.assignedHammers = assignedHammers;
+            const selectedHammerSerialNo = lastRpmEntrySheet.bit.hammer_serial_no;
+            const selectedHammer = this.assignedHammers.find(h => h.serial_no === selectedHammerSerialNo);
+            if (selectedHammer) {
+                // this.form.get('hammer').enable();
+                setTimeout(() => {
+                    this.form.get('hammer').setValue(selectedHammer);
+                    this.setHammerPreviousFeet(selectedHammer);
+                    this.updateHammerTotalFeet(selectedHammer);
+                })
+            }
             if (lastRpmEntrySheet && lastRpmEntrySheet.book_page_over) {
                 this.resetAll();
                 this.resetBook();

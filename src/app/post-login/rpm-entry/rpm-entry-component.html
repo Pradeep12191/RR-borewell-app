@@ -820,7 +820,7 @@
                         <div class="bold font-16">
                             <mat-form-field *ngIf="userRole === 'owner' || (form.get('hammer').value && !form.get('hammer').value.previous_feet); else displayHammerPreviousFeet">
                                 <mat-label>Feet</mat-label>
-                                <input (input)="updateHammerTotalFeet(true)" type="text" positiveNumber [allowDecimal]="true" matInput formControlName="hammerPreviousFeet">
+                                <input (input)="updateHammerTotalFeet(form.get('hammer').value)" type="text" positiveNumber [allowDecimal]="true" matInput formControlName="hammerPreviousFeet">
                             </mat-form-field>
                             <ng-template #displayHammerPreviousFeet>
                                 <div *ngIf="form.get('hammer').value; else hyphenTpl">

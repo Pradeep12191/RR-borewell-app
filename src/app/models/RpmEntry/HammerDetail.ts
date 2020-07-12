@@ -3,4 +3,5 @@ export interface HammerDetail {
     running_feet: number;
     previous_feet: number;
     total_feet: number;
+    running_feet_piston?: number;
 }

@@ -3,4 +3,5 @@ export interface HammerSize {
     id: number;
     size: number;
     type: string;
+    running_feet_piston?: number
 }

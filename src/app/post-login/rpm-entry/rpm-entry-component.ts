@@ -1152,13 +1152,16 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.routeDataSubscription) { this.routeDataSubscription.unsubscribe() }
     }
 
-    confirmServiceCompletion(name, propName, type: 'service' | 'bit' | 'tractor' = 'service', formName?: string) {
+    confirmServiceCompletion(name, propName, type: 'service' | 'piston' | 'bit' | 'tractor' = 'service', formName?: string) {
         let message = '';
         if (type === 'service' || type === 'tractor') {
             message = `Would you like to complete ${name} service ?`;
         }
         if (type === 'bit') {
             message = `Would you like to finish the ${name} ?`;
+        }
+        if ( type === 'piston') {
+            message = `Would you like to reset the ${name} ?`;
         }
         const dialogRef = this.dialog.open(ServiceCompleteConfirmDialog, {
             data: {
@@ -1182,6 +1185,13 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                     if (propName === 'e_oil_service') {
                         this.form.get('rpm.tracEngOil').setValue(0);
+                    }
+                }
+                if (type === 'piston') {
+                    const selectedHammer = this.form.get('hammer').value;
+                    this.rpmSheet.hammer.running_feet_piston = this.rpmSheet.hammer.running_feet;
+                    if (selectedHammer) {
+                        this.assignedHammers.find(h => h.serial_no === selectedHammer.serial_no).running_feet_piston = 0;
                     }
                 }
 
@@ -1261,7 +1271,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     finishHammer(hammer: HammerSerialNo) {
-        const message = 'Would you like to Finist Hammer ' + hammer.serial_no + ' ?'
+        const message = 'Would you like to Finish Hammer ' + hammer.serial_no + ' ?'
         const dialogRef = this.dialog.open(ServiceCompleteConfirmDialog, {
             data: {
                 title: 'Finish Hammer',
@@ -1909,10 +1919,10 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         let hammerPreviousFeet = 0;
 
         if (bit) {
-            bitPreviousFeet = +bit.previous_feet
+            bitPreviousFeet = +bit.previous_feet;
         }
         if (hammer) {
-            hammerPreviousFeet = +hammer.previous_feet
+            hammerPreviousFeet = +hammer.previous_feet;
         }
         this.resetExtraFeet();
         if (this.rpmSheet && this.rpmSheet.bit) {
@@ -1921,6 +1931,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         if (this.rpmSheet && this.rpmSheet.hammer) {
             this.rpmSheet.hammer.running_feet = 0;
+            this.rpmSheet.hammer.running_feet_piston = hammer.running_feet_piston;
             this.rpmSheet.hammer.total_feet = hammerPreviousFeet;
         }
     }
@@ -2030,6 +2041,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.rpmSheet && this.rpmSheet.hammer) {
             this.rpmSheet.hammer.running_feet = runningFeet;
             this.rpmSheet.hammer.total_feet = runningFeet + hammerPreviousFeet;
+            this.rpmSheet.hammer.running_feet_piston = this.roundValue(runningFeet + hammer.running_feet_piston);
         }
     }
 
@@ -2157,7 +2169,8 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             hammer: {
                 ...this.form.value.hammer,
                 running_feet: this.rpmSheet.hammer.running_feet,
-                total_feet: this.rpmSheet.hammer.total_feet
+                total_feet: this.rpmSheet.hammer.total_feet,
+                running_feet_piston: this.rpmSheet.hammer.running_feet_piston
             },
             user_address: {
                 driller_name: this.form.value.user.drillerName,
@@ -2289,11 +2302,11 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         const cAir = (this.rpmSheet.service && +this.rpmSheet.service.c_air_filter) || 0;
         const seperator = (this.rpmSheet.service && +this.rpmSheet.service.seperator) || 0;
 
-        this.form.get('rpm.engOil').setValue(eOil + runningRpm);
-        this.form.get('rpm.compOil').setValue(cOil + runningRpm);
-        this.form.get('rpm.engAir').setValue(eAir + runningRpm);
-        this.form.get('rpm.compAir').setValue(cAir + runningRpm);
-        this.form.get('rpm.seperator').setValue(seperator + runningRpm);
+        this.form.get('rpm.engOil').setValue(this.roundValue(eOil + runningRpm));
+        this.form.get('rpm.compOil').setValue(this.roundValue(cOil + runningRpm));
+        this.form.get('rpm.engAir').setValue(this.roundValue(eAir + runningRpm));
+        this.form.get('rpm.compAir').setValue(this.roundValue(cAir + runningRpm));
+        this.form.get('rpm.seperator').setValue(this.roundValue(seperator + runningRpm));
     }
 
     private getCurrentExtraRpm() {

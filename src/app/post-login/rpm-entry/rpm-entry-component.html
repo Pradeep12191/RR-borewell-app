@@ -753,7 +753,7 @@
                                 </ng-container>
                             </div>
                         </div>
-                        <div fxLayout fxLayoutGap="15px">
+                        <!-- <div fxLayout fxLayoutGap="15px">
                             <div fxLayoutAlign="start center" fxFlex="40">Hammer</div>
                             <div fxLayoutAlign="start center" class="bold font-16">
                                 <div *ngIf="rpmSheet?.bit?.hammer || rpmSheet?.bit?.hammer === 0; else hyphenTpl">
@@ -776,7 +776,7 @@
                                 color="primary" [disabled]="!selectedVehicle || !bookId || !date">
                                 <mat-icon>refresh</mat-icon>
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                 </mat-card-content>
             </mat-card>
@@ -841,6 +841,18 @@
                                 </div>
                             </ng-container>
                         </div>
+                    </div>
+                    <div fxLayout fxLayoutGap="15px">
+                        <div fxLayoutAlign="start center" fxFlex="50">Piston Running Feet</div>
+                        <div fxLayoutAlign="start center" class="bold font-16">
+                            <div *ngIf="form.get('hammer').value; else hyphenTpl">
+                                {{ rpmSheet?.hammer?.running_feet_piston }}
+                            </div>
+                        </div>
+                        <button (click)="confirmServiceCompletion('Piston', 'hammer', 'piston')" mat-icon-button
+                            color="primary" [disabled]="!selectedVehicle || !bookId || !date || !form.get('hammer').value">
+                            <mat-icon>refresh</mat-icon>
+                        </button>
                     </div>
                 </mat-card-content>
             </mat-card>

@@ -1382,7 +1382,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.form.get('rpm.end').setErrors({ rpmError: true });
         } else {
             this.form.get('rpm.start').setErrors(null);
-            let regexp = /^\d+\.\d{1,2}$/;
+            let regexp = /^\d+\.\d{1}$/;
             if (endStr && !regexp.test(endStr)) {
                 this.form.get('rpm.end').setErrors({ decimalError: true });
             } else {

@@ -2,14 +2,14 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, Vie
 import { Subscription, of, Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { PipeSize } from '../../models/PipeSize';
-import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { Vehicle } from '../../models/Vehicle';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { OverlayCardService } from '../../services/overlay-card.service';
 import { CardOverlayref } from '../../services/card-overlay-ref';
 import { AddBookPopupComponent } from './add-book-popup/add-book-popup.component';
-import { MatDialog, MatSelect, MatSnackBar, MatDatepicker, MatInput, MatCheckboxChange, MatSelectChange } from '@angular/material';
+import { MatDialog, MatSelect, MatSnackBar, MatDatepicker, MatInput, MatCheckboxChange, MatSelectChange, ErrorStateMatcher } from '@angular/material';
 import { AssignVehicleDialogComponent } from './assign-vehicle-dialog/assign-vehicle-dialog.component';
 import { Godown } from '../pipe/Godown';
 import { ConfigService } from '../../services/config.service';
@@ -57,11 +57,19 @@ interface VehicleChangeData {
 // 7. m_extra_hrs, m_extra_min - hrs, min running total
 
 
+export class CustomMatcher implements ErrorStateMatcher {
+    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        return control.invalid;
+    }
+}
+
 @Component({
     templateUrl: './rpm-entry-component.html',
-    styleUrls: ['./rpm-entry-component.scss']
+    styleUrls: ['./rpm-entry-component.scss'],
+    // providers: [{provide: ErrorStateMatcher, useClass: CustomMatcher}]
 })
 export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
+    matcher = new CustomMatcher();
     rpmSheet: RpmEntrySheet;
     rpmEntryTable: RpmTableData = {
         previousStockFeet: [],
@@ -100,7 +108,7 @@ export class RpmEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     bookId;
     bookEndNo;
     rpmEntryNo;
-    vehicleServiceLimits: VehicleServices
+    vehicleServiceLimits: VehicleServices;
     book: Book;
     bookRequired = false;
     tracRunningRpm = 0;

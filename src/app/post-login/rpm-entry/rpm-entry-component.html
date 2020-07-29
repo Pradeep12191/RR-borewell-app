@@ -730,7 +730,7 @@
                             <div class="bold font-16">
                                 <mat-form-field *ngIf="userRole === 'owner' || (form.get('bit').value && !form.get('bit').value.previous_feet); else displayBitPreviousFeet">
                                     <mat-label>Feet</mat-label>
-                                    <input type="text" (input)="updateBitTotalFeet(true)" positiveNumber [allowDecimal]="true" matInput formControlName="bitPreviousFeet">
+                                    <input required [errorStateMatcher]="matcher" type="text" (input)="updateBitTotalFeet(true)" positiveNumber [allowDecimal]="true" matInput formControlName="bitPreviousFeet">
                                     <mat-error *ngIf="form.get('bitPreviousFeet').hasError('required')">Bit Previous Feet is required</mat-error>
                                 </mat-form-field>
                                 
@@ -821,7 +821,7 @@
                         <div class="bold font-16">
                             <mat-form-field *ngIf="userRole === 'owner' || (form.get('hammer').value && !form.get('hammer').value.previous_feet); else displayHammerPreviousFeet">
                                 <mat-label>Feet</mat-label>
-                                <input (input)="updateHammerTotalFeet(form.get('hammer').value)" type="text" positiveNumber [allowDecimal]="true" matInput formControlName="hammerPreviousFeet">
+                                <input required [errorStateMatcher]="matcher" (input)="updateHammerTotalFeet(form.get('hammer').value)" type="text" positiveNumber [allowDecimal]="true" matInput formControlName="hammerPreviousFeet">
                                 <mat-error *ngIf="form.get('hammerPreviousFeet').hasError('required')">Hammer Previous Feet is required</mat-error>
                             </mat-form-field>
                             <ng-template #displayHammerPreviousFeet>
